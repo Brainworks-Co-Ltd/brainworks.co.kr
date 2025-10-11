@@ -1,0 +1,14 @@
+<svg width="960" height="540" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#052e16"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#grad)"/>
+  <g fill="#ccfbf1" font-family="'Segoe UI', Arial, sans-serif" text-anchor="middle">
+    <text x="480" y="230" font-size="48" font-weight="600">AI SmartCity &amp; Safety</text>
+    <text x="480" y="290" font-size="24">Replace with smart city monitoring visual</text>
+    <text x="480" y="340" font-size="20" fill="#99f6e4">스마트시티 이미지를 등록해주세요</text>
+  </g>
+</svg>

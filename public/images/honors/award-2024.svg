@@ -1,0 +1,14 @@
+<svg width="640" height="400" viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="awardGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" rx="32" fill="url(#awardGradient)" />
+  <g fill="#f8fafc" font-family="'Segoe UI', 'Pretendard', sans-serif" text-anchor="middle">
+    <text x="320" y="150" font-size="48" font-weight="600">AI 혁신대상</text>
+    <text x="320" y="210" font-size="24">과학기술정보통신부 · 2024</text>
+    <text x="320" y="260" font-size="18" fill="#e0f2fe">실제 시상 사진으로 교체해주세요</text>
+  </g>
+</svg>

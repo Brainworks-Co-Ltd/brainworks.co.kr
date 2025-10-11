@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80">
+  <title>CEO Signature Placeholder</title>
+  <desc>A placeholder signature graphic that can be replaced with the actual CEO signature.</desc>
+  <path
+    d="M12 54 C38 18, 70 78, 104 46 S160 22, 196 56 S224 28, 232 50"
+    fill="none"
+    stroke="#1f2937"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
