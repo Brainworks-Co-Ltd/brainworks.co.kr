@@ -61,7 +61,7 @@ export default function Services() {
             {language === 'ko' ? '브레인웍스 사업 영역' : 'Brainworks Business Domains'}
           </p>
           <h2 className="text-4xl font-semibold md:text-5xl">
-            {language === 'ko' ? 'AI가 이끄는 핵심 사업 분야' : 'Core Business Areas Powered by AI'}
+            {language === 'ko' ? '핵심 AI 사업 분야' : 'Core AI Business Domains'}
           </h2>
           <p className="text-lg text-slate-600">{activeArea.subtitle}</p>
         </div>

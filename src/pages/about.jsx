@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Honors from '@/components/Honors';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const historyItems = [
@@ -111,7 +112,7 @@ export default function About() {
       <section className="bg-white py-20">
         <div className="container mx-auto px-4 mt-16">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-900 text-center mb-16 md:text-5xl">
               {language === 'ko' ? 'CEO 메시지' : 'CEO Message'}
             </h2>
             <div className="space-y-6 text-lg text-gray-600 leading-relaxed text-left">
@@ -126,11 +127,11 @@ export default function About() {
                   : 'We keep learning and experimenting to become the most trusted AI companion. Growing together with our clients is the reason we exist.'}
               </p>
             </div>
-            <div className="mt-12 flex flex-col items-end space-y-4">
+            <div className="mt-24 flex flex-col items-end space-y-4">
               <img
                 src="/images/대표사진.png"
-                alt={language === 'ko' ? 'CEO 서명' : 'CEO Portrait'}
-                className="h-40 object-contain"
+                alt={language === 'ko' ? 'CEO 사진' : 'CEO photo'}
+                className="h-50 object-contain"
               />
               <p className="text-xl font-semibold text-gray-900 text-right">
                 {language === 'ko' ? '브레인웍스 CEO 강우현' : 'Austin Kang, CEO of Brainworks'}
@@ -139,6 +140,8 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      <Honors />
 
       <section className="bg-gradient-to-b from-slate-50 via-white to-slate-50 py-24">
         <div className="max-w-5xl mx-auto px-6">

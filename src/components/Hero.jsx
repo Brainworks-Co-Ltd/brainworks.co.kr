@@ -72,9 +72,6 @@ export default function Hero() {
             >
               {language === 'ko' ? '서비스 보기' : 'View Services'}
             </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
-              {language === 'ko' ? '문의하기' : 'Contact Us'}
-            </Button>
           </motion.div>
 
           {/* 스크롤 다운 애니메이션 */}
