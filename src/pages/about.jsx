@@ -127,11 +127,11 @@ export default function About() {
                   : 'We keep learning and experimenting to become the most trusted AI companion. Growing together with our clients is the reason we exist.'}
               </p>
             </div>
-            <div className="mt-24 flex flex-col items-end space-y-4">
+            <div className="mt-12 flex flex-col items-end space-y-4">
               <img
                 src="/images/대표사진.png"
                 alt={language === 'ko' ? 'CEO 사진' : 'CEO photo'}
-                className="h-50 object-contain"
+                className="h-60 object-contain"
               />
               <p className="text-xl font-semibold text-gray-900 text-right">
                 {language === 'ko' ? '브레인웍스 CEO 강우현' : 'Austin Kang, CEO of Brainworks'}
