@@ -646,11 +646,11 @@ export default function Education() {
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div>
             <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === 'ko' ? '통합 지원 체계' : 'Integrated Support System'}
+              {language === 'ko' ? '교육 프로그램 특장점' : 'Program Support Pillars'}
             </h2>
             <p className="mt-2 text-sm text-slate-500">
               {language === 'ko'
-                ? '학습·프로젝트·커리어 지원을 연결해 교육 성과가 채용으로 이어지도록 돕습니다.'
+                ? '학습·프로젝트·커리어 지원을 연결해 교육 성과가 채용으로 이어지는 교육 프로그램'
                 : 'Dedicated support connects learning, projects, and career services to turn outcomes into job offers.'}
             </p>
           </div>

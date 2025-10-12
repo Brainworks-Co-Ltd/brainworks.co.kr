@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Header from '../components/Header';
-import emailjs from '@emailjs/browser';
 import Footer from '@/components/Footer';
+import { sendContactMail } from '@/lib/mail';
+
+const createInitialFormState = () => ({
+  name: '',
+  email: '',
+  company: '',
+  subject: '',
+  message: ''
+});
 
 export default function Contact() {
   const { language } = useLanguage();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    subject: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(createInitialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -30,23 +32,16 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      await emailjs.send(
-        'YOUR_SERVICE_ID', // EmailJS 서비스 ID
-        'YOUR_TEMPLATE_ID', // EmailJS 템플릿 ID
-        formData,
-        'YOUR_PUBLIC_KEY' // EmailJS 퍼블릭 키
-      );
+      await sendContactMail(formData);
       setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        subject: '',
-        message: ''
-      });
+      setFormData(createInitialFormState());
     } catch (error) {
       console.error('Error sending email:', error);
-      setSubmitStatus('error');
+      if (error?.message === 'Missing EmailJS configuration') {
+        setSubmitStatus('configError');
+      } else {
+        setSubmitStatus('error');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -175,6 +170,14 @@ export default function Contact() {
                   {language === 'ko'
                     ? '문의 전송 중 오류가 발생했습니다. 다시 시도해주세요.'
                     : 'An error occurred while sending your inquiry. Please try again.'}
+                </div>
+              )}
+
+              {submitStatus === 'configError' && (
+                <div className="p-4 bg-yellow-100 text-yellow-700 rounded-md">
+                  {language === 'ko'
+                    ? '이메일 전송 설정이 완료되지 않았습니다. 관리자에게 문의해주세요.'
+                    : 'Email delivery is not configured. Please contact the site administrator.'}
                 </div>
               )}
             </form>
