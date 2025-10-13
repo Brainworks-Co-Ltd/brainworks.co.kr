@@ -5,10 +5,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const copy = {
   ko: {
-    heroBadge: 'Global Accelerator',
-    heroTitle: '글로벌 엑셀러레이터 프로그램',
+    heroBadge: 'Global Program',
+    heroTitle: '글로벌 프로그램',
     heroSubtitle:
-      '해외 비즈니스 네트워크 구축과 글로벌 확장을 동시에 지원하는 풀 패키지 프로그램',
+      '해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램',
     ctaPrimary: '프로그램 상담 신청',
     ctaSecondary: '문의하기',
     sectionTitle: '주요 프로그램',
@@ -19,10 +19,10 @@ const copy = {
     contactCta: '엑셀러레이터 문의하기',
   },
   en: {
-    heroBadge: 'Global Accelerator Program',
-    heroTitle: 'Global Accelerator Program',
+    heroBadge: 'Global Program',
+    heroTitle: 'Global Program',
     heroSubtitle:
-      'A full-service accelerator that secures overseas buyers and accelerates your global expansion.',
+      'A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.',
     ctaPrimary: 'Request Programme Consultation',
     ctaSecondary: 'Download Brochure',
     sectionTitle: 'Programme Components',
@@ -164,11 +164,11 @@ export default function Outbound() {
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === 'ko' ? '글로벌 네트워크' : 'Global Network'}
+              {language === 'ko' ? '글로벌 엑셀레이터 프로그램' : 'Global Accelerator Program'}
             </h2>
             <p className="mt-3 text-sm text-slate-500">
               {language === 'ko'
-                ? '12개국 이상의 파트너와 연결된 글로벌 엑셀러레이터 네트워크를 구축했습니다.'
+                ? '전세계 12개국 이상의 파트너와 연결된 글로벌 엑셀러레이터 네트워크'
                 : 'We operate an accelerator network connected to partners across more than 12 countries.'}
             </p>
           </div>
@@ -260,11 +260,6 @@ export default function Outbound() {
         </section>
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{t.sectionTitle}</h2>
-            <p className="mt-3 text-sm text-slate-500">{t.sectionSubtitle}</p>
-          </div>
-
           <div className="grid gap-8 md:grid-cols-2">
             {programs.map((program, index) => (
               <article

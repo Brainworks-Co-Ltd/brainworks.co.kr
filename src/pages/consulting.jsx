@@ -135,50 +135,6 @@ const processSteps = [
   }
 ];
 
-const caseStudies = [
-  {
-    client: {
-      ko: '제조 대기업',
-      en: 'Manufacturing Enterprise'
-    },
-    challenge: {
-      ko: '설비 비가동 시간과 품질 이슈로 인한 생산성 저하',
-      en: 'Productivity loss due to downtime and quality deviations'
-    },
-    outcome: {
-      ko: '진동 데이터 기반 예지 보전 모델과 MLOps 체계를 구축해 다운타임 27% 절감',
-      en: 'Built vibration-based predictive maintenance with MLOps, reducing downtime by 27%'
-    }
-  },
-  {
-    client: {
-      ko: '공공 연구기관',
-      en: 'Public Research Institute'
-    },
-    challenge: {
-      ko: '연구 인력의 생성형 AI 활용 가이드와 보안 체계 부족',
-      en: 'Lack of generative AI guidance and guardrails for researchers'
-    },
-    outcome: {
-      ko: '생성형 AI 활용 가이드라인, 교육, 보안 아키텍처 수립으로 생산성 32% 개선',
-      en: 'Delivered GenAI policies, education, and secure architecture, improving productivity by 32%'
-    }
-  },
-  {
-    client: {
-      ko: '금융 플랫폼 스타트업',
-      en: 'Fintech Startup'
-    },
-    challenge: {
-      ko: '데이터 파이프라인 부재로 인한 AI 서비스 출시 지연',
-      en: 'AI feature launch delays due to missing data pipelines'
-    },
-    outcome: {
-      ko: '데이터 레이크와 자동화된 학습/배포 파이프라인을 구축, 출시 주기 40% 단축',
-      en: 'Implemented data lake and automated training/deployment pipelines, cutting launch cycles by 40%'
-    }
-  }
-];
 
 export default function Consulting() {
   const { language } = useLanguage();
@@ -242,21 +198,6 @@ export default function Consulting() {
                   <div className="text-sm font-semibold text-slate-400">0{step.id}</div>
                   <h3 className="mt-3 text-xl font-semibold text-slate-900">{step.title[language]}</h3>
                   <p className="mt-4 text-sm text-slate-600">{step.desc[language]}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <h2 className="text-3xl font-semibold text-slate-900">{t.caseTitle}</h2>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              {caseStudies.map((item, index) => (
-                <div key={index} className="rounded-3xl border border-slate-200 p-8 shadow-sm">
-                  <div className="text-sm font-semibold text-blue-600">{item.client[language]}</div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-900">{item.challenge[language]}</h3>
-                  <p className="mt-4 text-sm text-slate-600">{item.outcome[language]}</p>
                 </div>
               ))}
             </div>
