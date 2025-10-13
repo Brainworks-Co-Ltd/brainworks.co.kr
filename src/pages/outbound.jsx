@@ -13,6 +13,8 @@ const copy = {
     ctaSecondary: '문의하기',
     sectionTitle: '주요 프로그램',
     sectionSubtitle: '현지 파트너 매칭부터 글로벌 전시회, 연수까지 한 번에 준비하세요.',
+    aiSectionTitle: '글로벌 AI 전문 교육 프로그램',
+    aiSectionSubtitle: '실전 중심의 해커톤, 인턴십, 교육 과정을 통해 글로벌 AI 인재를 양성합니다.',
     contactTitle: '해외 진출 계획을 알려주세요',
     contactSubtitle:
       '희망 지역과 목표를 공유해 주시면 맞춤형 글로벌 엑셀러레이션 로드맵과 제휴 네트워크를 제안드립니다.',
@@ -27,6 +29,8 @@ const copy = {
     ctaSecondary: 'Download Brochure',
     sectionTitle: 'Programme Components',
     sectionSubtitle: 'From business matching to exhibitions and executive training, everything is covered.',
+    aiSectionTitle: 'Global AI Professional Programmes',
+    aiSectionSubtitle: 'Develop global-ready AI talent through hackathons, internships, and expert-led courses.',
     contactTitle: 'Tell Us Your Global Plan',
     contactSubtitle:
       'Share your target regions and objectives so we can craft a tailored accelerator roadmap and introduce partners.',
@@ -128,6 +132,69 @@ const programs = [
         'Assess capability gaps and build tailored curricula',
         'Deliver seminars and workshops with partner universities and enterprises',
         'Provide post-programme coaching to execute global strategies',
+      ],
+    },
+  },
+];
+
+const aiPrograms = [
+  {
+    id: 'global-hackathon',
+    title: { ko: '글로벌 해커톤', en: 'Global Hackathon' },
+    description: {
+      ko: '다국적 팀 빌딩과 글로벌 멘토단의 피드백으로 실전 문제를 해결하는 집중 프로그램',
+      en: 'An immersive hackathon where multinational teams solve real briefs with guidance from global mentors.',
+    },
+    bullets: {
+      ko: [
+        '3~5인 다국적 팀 구성 및 문제 정의 워크숍',
+        '글로벌 멘토·투자자 피드백과 데모 세션',
+        '우수 팀 글로벌 데모데이 참가 및 파트너 연계',
+      ],
+      en: [
+        'Form 3-5 member cross-border teams with facilitated problem framing',
+        'Daily feedback from global mentors and investors',
+        'Top teams invited to international demo days and partner intros',
+      ],
+    },
+  },
+  {
+    id: 'global-ai-internship',
+    title: { ko: '글로벌 AI 인턴십', en: 'Global AI Internship' },
+    description: {
+      ko: '해외 파트너 기업과 연계한 8~12주 프로젝트 인턴십으로 현장 실무 역량 강화',
+      en: 'An 8-12 week placement with overseas partners delivering hands-on AI projects.',
+    },
+    bullets: {
+      ko: [
+        '도메인 맞춤형 프로젝트 매칭과 온보딩',
+        '현지 멘토와 주간 성과 리뷰·코칭',
+        '귀국 후 포트폴리오 및 커리어 상담 제공',
+      ],
+      en: [
+        'Tailored project matching and onboarding support',
+        'Weekly performance reviews with on-site mentors',
+        'Post-programme portfolio and career coaching',
+      ],
+    },
+  },
+  {
+    id: 'global-ai-education',
+    title: { ko: '글로벌 AI 교육', en: 'Global AI Education' },
+    description: {
+      ko: '대학·기관 연계형 커리큘럼으로 최신 AI 기술과 글로벌 사례 학습',
+      en: 'Modular courses for universities and organisations covering advanced AI and global best practices.',
+    },
+    bullets: {
+      ko: [
+        'LLM·생성형 AI·윤리 등 최신 트렌드 AI 심화 모듈',
+        '해외 대학 연계 AI 전문 교육 및 인증',
+        '수료생 글로벌 커뮤니티 및 후속 프로젝트 연계',
+      ],
+      en: [
+        'Deep-dive modules on LLMs, generative AI, ethics, and deployment',
+        'Case studies anchored in global enterprise implementations',
+        'Alumni community access with follow-on project opportunities',
       ],
     },
   },
@@ -270,6 +337,33 @@ export default function Outbound() {
                   <span className="h-1.5 w-6 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500" />
                   <span>{program.badge[language]}</span>
                 </div>
+                <h3 className="text-xl font-semibold text-slate-900">{program.title[language]}</h3>
+                <p className="text-sm leading-relaxed text-slate-600">{program.description[language]}</p>
+                <ul className="mt-auto space-y-2 text-sm text-slate-700">
+                  {program.bullets[language].map((bullet) => (
+                    <li key={[program.id, bullet].join('-')} className="flex gap-2">
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-sky-500" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto mt-20 max-w-6xl px-6">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{t.aiSectionTitle}</h2>
+            <p className="mt-3 text-sm text-slate-500">{t.aiSectionSubtitle}</p>
+          </div>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {aiPrograms.map((program) => (
+              <article
+                key={program.id}
+                className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
                 <h3 className="text-xl font-semibold text-slate-900">{program.title[language]}</h3>
                 <p className="text-sm leading-relaxed text-slate-600">{program.description[language]}</p>
                 <ul className="mt-auto space-y-2 text-sm text-slate-700">

@@ -287,65 +287,7 @@ const generativeAITracks = [
   },
 ];
 
-const educationCases = [
-  {
-    id: 'smart-manufacturing',
-    title: {
-      ko: '제조 라인 실시간 품질 진단',
-      en: 'Real-time Manufacturing Quality Diagnostics',
-    },
-    org: {
-      ko: '경북 중견 제조사',
-      en: 'Gyeongbuk Mid-sized Manufacturer',
-    },
-    challenge: {
-      ko: '현장 직원의 데이터 역량 격차로 AI 기반 품질관리 시스템의 도입이 지연되고 있었습니다.',
-      en: 'Plant staff lacked data fluency, delaying rollout of the AI-driven quality system.',
-    },
-    result: {
-      ko: '12주 AI 전문 교육 후 공정 이상 탐지 정확도가 18% 향상되고, 라인 리드 20명이 자체 모델을 운영 중입니다.',
-      en: 'After a 12-week academy, anomaly detection accuracy improved by 18% and 20 line leads now self-manage the models.',
-    },
-  },
-  {
-    id: 'public-sector',
-    title: {
-      ko: '지자체 공무원 생성형 AI 역량 강화',
-      en: 'Generative AI Upskilling for Public Officials',
-    },
-    org: {
-      ko: '충남 광역 지자체',
-      en: 'Chungnam Metropolitan Government',
-    },
-    challenge: {
-      ko: '민원 응대와 정책 문서 작성에 생성형 AI를 활용하고 싶지만, 활용 가이드와 윤리 기준이 부재했습니다.',
-      en: 'Officials sought to use GenAI for citizen services and policy drafting without clear guardrails.',
-    },
-    result: {
-      ko: '프롬프트 가이드와 윤리 매뉴얼을 구축하고, 챗봇 기반 민원 대응 시간이 평균 32% 단축되었습니다.',
-      en: 'Established prompt and ethics playbooks, cutting chatbot support turnaround time by 32% on average.',
-    },
-  },
-  {
-    id: 'finance',
-    title: {
-      ko: '금융사 리스크 리포트 자동화',
-      en: 'Financial Risk Reporting Automation',
-    },
-    org: {
-      ko: '국내 금융 서비스 그룹',
-      en: 'Domestic Financial Services Group',
-    },
-    challenge: {
-      ko: '규제 보고서를 생성하는 과정이 수작업 위주로 진행되어 월 160시간의 인력 투입이 필요했습니다.',
-      en: 'Regulatory reporting relied on manual work, consuming 160 human-hours every month.',
-    },
-    result: {
-      ko: 'AI 전문 교육 후 자동화 파이프라인을 구축해 보고서 작성 시간이 70% 단축되고 오류율이 0.6%로 감소했습니다.',
-      en: 'Post-training, teams built an automated pipeline reducing reporting time by 70% and lowering errors to 0.6%.',
-    },
-  },
-];
+
 
 const educationClients = [
   { id: 'jeonnamtp', name: '전남tp', logo: '/images/education/전남tp.png'},
@@ -392,11 +334,11 @@ const supportPillars = [
   {
     id: 'career',
     title: {
-      ko: '커리어 전환 지원 시스템',
+      ko: '기업 채용 연계 프로그램',
       en: 'Career Transition Support',
     },
     description: {
-      ko: '포트폴리오, 면접, 인턴십을 연결해 채용 전환을 돕습니다.',
+      ko: '포트폴리오, 면접, 인턴십을 연결해 채용 전환까지 연계하는 교육 프로그램',
       en: 'Connect portfolio building, interview prep, and internships to convert outcomes into offers.',
     },
     points: {
@@ -604,31 +546,6 @@ export default function Education() {
           </div>
         </section>
         
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{language === 'ko' ? '교육 성공 사례' : 'Education Case Studies'}</h2>
-            <p className="mt-3 text-sm text-slate-500">{language === 'ko' ? '산업 현장에서 검증된 교육 사례로 브레인웍스의 프로그램 가치를 확인하세요.' : 'See how organisations across industries unlocked value with Brainworks training.'}</p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {educationCases.map((item) => (
-              <article key={item.id} className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-slate-500">{item.org[language]}</p>
-                  <h3 className="mt-2 text-lg font-semibold text-slate-900">{item.title[language]}</h3>
-                </div>
-                <div className="space-y-2 text-sm text-slate-600">
-                  <p className="font-medium text-slate-500">{language === 'ko' ? '과제' : 'Challenge'}</p>
-                  <p>{item.challenge[language]}</p>
-                </div>
-                <div className="mt-auto space-y-2 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-                  <p className="font-medium text-slate-500">{language === 'ko' ? '성과' : 'Result'}</p>
-                  <p>{item.result[language]}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">{language === 'ko' ? '함께하는 주요 고객' : 'Key Clients'}</h2>
