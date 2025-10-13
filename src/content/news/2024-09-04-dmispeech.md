@@ -15,6 +15,7 @@
     "ko": "대구기계부품연구원이 개최한 레전드 50+ 기술교류회에서 브레인웍스가 빅데이터·AI 적용 사례를 공유했습니다.",
     "en": "At the Legend 50+ technology exchange hosted by the Daegu Machinery Parts Research Institute, Brainworks shared real-world ABB and AI adoption insights."
 }
+}
 ---
 <!--ko-->
 ## 레전드 50+ 기술교류회 특별 강연 진행
