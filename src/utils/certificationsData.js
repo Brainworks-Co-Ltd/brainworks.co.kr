@@ -1,20 +1,20 @@
 const certificationsData = [
   {
-    slug: 'ai-voucher-provider',
+    slug: 'smartfactory-provider',
     year: 2025,
     title: {
-      ko: 'AI 바우처 공급기업',
-      en: 'Certified AI Voucher Provider',
+      ko: '스마트팩토리 공급기업 선정',
+      en: 'Selected as Smartfactory Provider',
     },
     org: {
-      ko: '정보통신산업진흥원',
-      en: 'NIPA',
+      ko: '중소벤처기업부',
+      en: 'Ministry of SMEs and Startups',
     },
     description: {
-      ko: 'AI 구축 및 컨설팅 전문기업',
-      en: 'AI implementation and consulting specialist',
+      ko: 'AI 기반 스마트팩토리 구축 전문기업',
+      en: 'AI based smart factory specialist',
     },
-    image: '/images/honors/AI바우처.png',
+    image: '/images/honors/스마트팩토리공급기업.png',
   },
   {
     slug: 'kisti-family-company',
@@ -32,6 +32,40 @@ const certificationsData = [
       en: 'Collaborative research partner within the national science network',
     },
     image: '/images/honors/KISTI.png',
+  },
+  {
+    slug: 'ai-voucher-provider',
+    year: 2025,
+    title: {
+      ko: 'AI 바우처 공급기업',
+      en: 'Certified AI Voucher Provider',
+    },
+    org: {
+      ko: '정보통신산업진흥원',
+      en: 'NIPA',
+    },
+    description: {
+      ko: 'AI 구축 및 컨설팅 전문기업',
+      en: 'AI implementation and consulting specialist',
+    },
+    image: '/images/honors/AI바우처.png',
+  },
+  {
+    slug: 'data-voucher-provider',
+    year: 2025,
+    title: {
+      ko: '데이터 바우처 공급기업 선정',
+      en: 'Selected as Data Voucher Provider',
+    },
+    org: {
+      ko: '한국데이터산업진흥원',
+      en: 'Korea Data Industry Institute'
+    },
+    description: {
+      ko: '데이터 가공 및 AI 구축, 컨설팅 전문기업',
+      en: 'Data processing, AI implementation and consulting specialist',
+    },
+    image: '/images/honors/데이터바우처공급기업.png',
   },
 ];
 

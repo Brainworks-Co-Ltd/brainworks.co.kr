@@ -13,8 +13,8 @@ export default function CTA() {
         </h2>
         <p className="text-xl mb-8">
           {language === 'ko'
-            ? '브레인웍스와 함께 AX를 준비하세요.'
-            : 'Prepare for the AX with Brainworks.'}
+            ? '브레인웍스와 함께 AX를 준비하세요'
+            : 'Prepare for the AX with Brainworks'}
         </p>
         <Link 
           href="/contact" 

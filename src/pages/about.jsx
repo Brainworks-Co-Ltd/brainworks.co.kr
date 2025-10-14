@@ -1,106 +1,10 @@
 ﻿import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Honors from '@/components/Honors';
+import AboutSidebar from '@/components/AboutSidebar';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-const historyItems = [
-  {
-    year: '2025',
-    title: { ko: '글로벌 확장과 사업 고도화', en: 'Global Expansion and Business Scale-up' },
-    summary: {
-      ko: '국가 R&D 및 공공사업을 다수 수주하며 산업별 AI 솔루션 포트폴리오를 확장하고 글로벌 파트너십을 강화했습니다.',
-      en: 'Secured multiple national R&D and public innovation programs while broadening industry-specific AI solutions and strengthening global partnerships.',
-    },
-    bullets: {
-      ko: [
-        '25.01. 한국항공우주산업주식회사 공급협력사 등록',
-        '25.04. 브레인웍스 광주AI연구소, 경남 미래모빌리티 연구소, 경북 본사 창립',
-        '25.04. 2024 창업진흥원 예비창업패키지 우수기업 선정 - 딥러닝 기반 CNN 공정 이상 감시 솔루션',
-        '25.04. 경남 지역디지털혁신챌린지 사업 수행 - AI CNN 공정 진동이상 감지 플랫폼 개발',
-        '25.05. 한국과학기술정보연구원(KISTI) 패밀리기업 선정',
-        '25.05. 2025 창업진흥원 초기창업패키지 사업 선정 - 경량 LLM 기반 실시간 음성 통번역 솔루션',
-        '25.05. 대구디지털혁신진흥원 SW인재양성사업 선정',
-        '25.06. NIPA 지역디지털 글로벌 브릿지사업 1차 대구기업 대표 선정',
-        '25.06. 인도네시아, 베트남 거점 기업과 다수 MOU 체결',
-        '25.06. 대구디지털혁신진흥원 데이터가공사업 선정 - 3D Dental 이미지 데이터 가공',
-        '25.06. 대구디지털혁신진흥원 에듀테크 콘텐츠 개발 사업 선정 - RAG+MCP 다국어 Q&A 솔루션',
-        '25.06. 2025 대한민국리딩기업 스타트업대상 수상 (머니투데이)',
-        '25.07. NIPA 지역디지털 글로벌 브릿지사업 2차 대구기업 대표 선정',
-        '25.08. NIPA 지역디지털 글로벌 브릿지사업 3차 대구기업 대표 선정',
-      ],
-      en: [
-        'Jan 2025: Registered as an authorized supplier for Korea Aerospace Industries (KAI).',
-        'Apr 2025: Launched Gwangju AI Lab, Gyeongnam Future Mobility Lab, and the new Gyeongbuk headquarters.',
-        'Apr 2025: Named an Excellent Startup in the 2024 K-Startup Pre-Startup Package with a CNN-based process anomaly monitoring solution.',
-        'Apr 2025: Delivered the Gyeongnam Regional Digital Innovation Challenge with an AI CNN vibration anomaly detection platform.',
-        'May 2025: Selected as a family company by the Korea Institute of Science and Technology Information (KISTI).',
-        'May 2025: Won the 2025 K-Startup Initial Startup Package for a lightweight LLM real-time speech translation solution.',
-        "May 2025: Chosen for DGDI's software talent cultivation program.",
-        "Jun 2025: Represented Daegu firms in phase 1 of NIPA's Regional Digital Global Bridge initiative.",
-        'Jun 2025: Signed multiple MOUs with partner companies in Indonesia and Vietnam.',
-        "Jun 2025: Awarded DGDI's data processing project for 3D dental image datasets.",
-        "Jun 2025: Won DGDI's edtech content program with an RAG+MCP multilingual Q&A solution.",
-        'Jun 2025: Received the 2025 Korea Leading Company Startup Award (MoneyToday).',
-        "Jul 2025: Represented Daegu firms in phase 2 of NIPA's Regional Digital Global Bridge initiative.",
-        "Aug 2025: Represented Daegu firms in phase 3 of NIPA's Regional Digital Global Bridge initiative.",
-      ],
-    },
-  },
-  {
-    year: '2024',
-    title: { ko: '법인 설립과 제조 AI 고도화', en: 'Incorporation and Manufacturing AI Advances' },
-    summary: {
-      ko: '법인 전환과 동시에 제조 공정 AI 솔루션을 상용화하고 국내외 거점 확대를 추진했습니다.',
-      en: 'Transitioned into a corporation, commercialised manufacturing AI suites, and expanded our domestic and global footprint.',
-    },
-    bullets: {
-      ko: [
-        '24.05. 브레인웍스 법인 설립',
-        '24.05. AI 공정 수율 예측 및 공정 탐지 모델 개발',
-        '24.05. AI 공정 수율 예측 및 공정 탐지 솔루션 개발',
-        '24.09. AI VAE 기반 양불 판정 솔루션 개발',
-        '24.09. 브레인웍스 충남 지사 설립',
-        '24.10. 미국 조지아 주립대학교와 MOU 체결',
-      ],
-      en: [
-        'May 2024: Incorporated Brainworks as a legal entity.',
-        'May 2024: Built AI models for process yield prediction and anomaly detection.',
-        'May 2024: Delivered full AI solutions for process yield prediction and fault detection.',
-        'Sep 2024: Developed a VAE-based quality inspection solution.',
-        'Sep 2024: Opened the Brainworks Chungnam branch office.',
-        'Oct 2024: Signed an MOU with Georgia State University, USA.',
-      ],
-    },
-  },
-  {
-    year: '2023',
-    title: { ko: '초기 역량 구축', en: 'Laying the Foundations' },
-    summary: {
-      ko: '데이터 기반 기술 역량을 집중 강화하며 환경 분석 AI 솔루션의 기반을 다졌습니다.',
-      en: 'Focused on building data-driven capabilities and laid the groundwork for environmental analytics solutions.',
-    },
-    bullets: {
-      ko: [
-        '23.09. Startup-Digup 프로그램 선정',
-        '23.10. AI 머신러닝 기반 환경 분석 모델 개발',
-        '23.12. AI 환경 분석 솔루션 개발',
-      ],
-      en: [
-        'Sep 2023: Selected for the Startup-Digup program.',
-        'Oct 2023: Developed an AI machine-learning environmental analysis model.',
-        'Dec 2023: Released an AI-powered environmental analysis solution.',
-      ],
-    },
-  },
-];
 
-const accentPalette = [
-  'from-sky-500 via-blue-500 to-sky-400',
-  'from-violet-500 via-indigo-500 to-blue-500',
-  'from-emerald-500 via-teal-500 to-sky-400',
-  'from-amber-500 via-orange-500 to-rose-400',
-];
 
 export default function About() {
   const { language } = useLanguage();
@@ -110,83 +14,62 @@ export default function About() {
       <Header />
 
       <section className="bg-white py-20">
-        <div className="container mx-auto px-4 mt-16">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-slate-900 text-center mb-16 md:text-5xl">
-              {language === 'ko' ? 'CEO 메시지' : 'CEO Message'}
-            </h2>
-            <div className="space-y-6 text-lg text-gray-600 leading-relaxed text-left">
-              <p>
-                {language === 'ko'
-                  ? '브레인웍스는 데이터와 AI가 만들어 내는 가치로 고객의 변화를 이끌어가는 파트너입니다. 우리는 기술이 아니라 문제 해결을 중심에 두고, 고객의 현장 속에서 답을 찾습니다.'
-                  : "Brainworks is a partner that drives client transformation through the value created by data and AI. We focus on solving real problems first and discover answers directly from our clients' businesses."}
-              </p>
-              <p>
-                {language === 'ko'
-                  ? '끊임없이 배우고 실험하며 가장 믿을 수 있는 AI 동반자가 되겠습니다. 고객과 함께 성장하는 것이 우리의 존재 이유입니다.'
-                  : 'We keep learning and experimenting to become the most trusted AI companion. Growing together with our clients is the reason we exist.'}
-              </p>
-            </div>
-            <div className="mt-12 flex flex-col items-end space-y-4">
-              <img
-                src="/images/대표사진.png"
-                alt={language === 'ko' ? 'CEO 사진' : 'CEO photo'}
-                className="h-60 object-contain"
-              />
-              <p className="text-xl font-semibold text-gray-900 text-right">
-                {language === 'ko' ? '브레인웍스 CEO 강우현' : 'Austin Kang, CEO of Brainworks'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        <div className="container mx-auto mt-16 px-4">
+          <div className="flex flex-col gap-12 lg:flex-row">
+            <AboutSidebar active="overview" />
 
-      <Honors />
-
-      <section className="bg-gradient-to-b from-slate-50 via-white to-slate-50 py-24">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center">
-            <span className="text-sm uppercase tracking-[0.3em] text-sky-500">
-              {language === 'ko' ? '회사 연혁' : 'Timeline'}
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === 'ko' ? '브레인웍스의 발자취' : 'Milestones of Brainworks'}
-            </h2>
-          </div>
-
-          <div className="mt-12 space-y-6">
-            {historyItems.map((item, index) => {
-              const accent = accentPalette[index % accentPalette.length];
-              return (
-                <article
-                  key={item.year}
-                  className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <div
-                    className={'absolute inset-x-0 top-0 h-1 bg-gradient-to-r ' + accent}
-                    aria-hidden="true"
-                  />
-                  <div className="grid gap-6 p-6 md:grid-cols-[minmax(0,_120px)_1fr] md:p-8">
-                    <div className="flex flex-col gap-3">
-                      <span className="text-3xl font-semibold text-slate-900">{item.year}</span>
-                    </div>
-                    <div className="space-y-4">
-                      <ul className="space-y-3 text-sm text-slate-700">
-                        {item.bullets[language].map((bullet, idx) => (
-                          <li key={idx} className="flex items-start gap-3">
-                            <span
-                              className={'mt-1 inline-flex h-1.5 w-6 rounded-full bg-gradient-to-r ' + accent}
-                              aria-hidden="true"
-                            />
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+            <div className="flex-1 lg:max-w-5xl xl:max-w-6xl">
+              <h2 className="mb-16 text-center text-4xl font-bold text-slate-900 md:text-5xl">
+                {language === 'ko' ? 'CEO 메시지' : 'CEO Message'}
+              </h2>
+              <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
+                <div className="flex justify-center lg:w-1/2">
+                  <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-lg">
+                    <img
+                      src="/images/대표사진.png"
+                      alt={language === 'ko' ? 'CEO 사진' : 'CEO photo'}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
-                </article>
-              );
-            })}
+                </div>
+                <div className="space-y-6 text-left text-lg leading-relaxed text-slate-800 lg:w-1/2">
+                  <p>
+                    {language === 'ko'
+                      ? '안녕하세요, 브레인웍스 대표 강우현입니다.'
+                      : "Hello, I am Austin Kang, CEO of Brainworks."}
+                  </p>
+                  <p>
+                    {language === 'ko'
+                      ? '브레인웍스는 "최고의 AI·빅데이터 전문기업"을 목표로 창업한 회사로, 기술이 아닌 ‘고객이 해결해야 할 문제’를 중심에 두고 있습니다. 우리는 현장의 목소리를 직접 듣고, 문제를 정확히 정의하며, 실제 업무 흐름에 스며드는 AI 적용 솔루션을 설계합니다. 이 과정에서 가장 중요한 기준은 화려한 성능 지표가 아니라, 현장에서 곧바로 쓰이고 지속적으로 가치를 쌓아갈 수 있는지입니다.'
+                      : "Founded with the vision of becoming the 'best AI and big data specialist company,' Brainworks focuses on the 'real-world problems' that technology should solve rather than the technology itself. We listen directly to our customers, accurately define their problems, and create AI application solutions that seamlessly integrate into actual workflows. The most important criterion in this process is not flashy performance metrics but whether the solutions can be immediately used in the field and continuously accumulate value."}
+                  </p>
+                  <p>
+                    {language === 'ko'
+                      ? '브레인웍스는 존재 이유가 분명합니다. 고객의 고민을 함께 나누고, 해결로 가는 여정에 동행하며, 그 과정에서 함께 성장하는 것. 우리는 프로젝트를 납품으로 끝내지 않습니다. 데이터 수집과 정제, 모델 설계와 검증, 운영 단계의 모니터링과 개선까지 전 과정을 고객과 함께 설계합니다. 이를 통해 현장에서 체감하는 생산성 향상, 의사결정 정확도 향상, 운영 리스크 감소의 결과를 만들어 왔습니다.'
+                      : "The reason for Brainworks' existence is clear. We share our customers' concerns, accompany them on their journey to solutions, and grow together in the process. We do not end projects with mere delivery. We collaboratively design the entire lifecycle, from data collection and cleaning to model design and validation, as well as monitoring and improvement during the operational phase. Through this approach, we have achieved tangible results that enhance productivity felt by the field, improve decision-making accuracy, and significantly reduce operational risks."}
+                  </p>
+                  <p>
+                    {language === 'ko'
+                      ? '우리는 AI 기술이 모든 산업과 조직에 보편적으로 적용될 수 있다고 믿지 않습니다. 각 산업과 조직이 처한 환경과 문제는 다르고, 따라서 해결책도 달라야 합니다. 브레인웍스는 제조, 에이전트, 헬스케어, 스마트시티 등 다양한 산업 분야에서 축적된 데이터와 현장 경험을 바탕으로 고객의 문제를 깊이 이해하고, 가장 적합한 AI 솔루션을 제안합니다. 이를 통해 고객은 빠르게 도입 가능한 AI 서비스를 경험할 수 있습니다.'
+                      : "We do not believe that AI technology can be universally applied to all industries and organizations. Each industry and organization faces different environments and problems, and therefore, the solutions must also differ. Based on accumulated data and field experience in various industries such as manufacturing, agents, healthcare, and smart cities, Brainworks deeply understands our customers' problems and proposes the most suitable AI solutions. This allows our customers to experience rapidly deployable AI services."}
+                  </p>
+                  <p>
+                    {language === 'ko'
+                      ? '기술 철학 또한 분명합니다. 첫째, 문제 정의 우선의 ‘Problem-First’ 접근. 둘째, 학습과 개선을 빠르게 반복하는 ‘Lean AI’ 문화. 셋째, 고객의 데이터와 맥락을 존중하는 ‘Responsible AI’ 원칙입니다. 우리는 최신 모델과 프레임워크를 무분별하게 도입하기보다, 데이터 품질과 활용 시나리오에 맞춘 가장 경제적이고 탄력적인 아키텍처를 선택합니다. 또한 보안과 개인정보 보호, 거버넌스를 기본값으로 설계해 신뢰 가능한 AI를 지향합니다.'
+                      : "Our technological philosophy is also clear. First, a 'Problem-First' approach that prioritizes problem definition. Second, a 'Lean AI' culture that rapidly iterates learning and improvement. Third, 'Responsible AI' principles that respect customers' data and context. Rather than indiscriminately adopting the latest models and frameworks, we choose the most economical and flexible architecture tailored to data quality and usage scenarios. We also design with security, privacy protection, and governance as defaults, aiming for trustworthy AI."}
+                  </p>
+                  <p>
+                    {language === 'ko'
+                      ? '브레인웍스를 믿고 함께해 주시는 모든 분들께 감사드립니다. 오늘의 작은 개선이 내일의 큰 도약이 되도록, 우리는 현장의 언어로 답하는 AI, 지속 가능한 가치를 만드는 AI를 꾸준히 만들어 가겠습니다. 감사합니다.'
+                      : "We are grateful to everyone who trusts and collaborates with Brainworks. To ensure that today's small improvements lead to tomorrow's significant leaps, we will continue to create AI that responds in the language of the field and generates sustainable value. Thank you."}
+                  </p>
+                  <div className="pt-6 text-right text-xl font-semibold text-gray-900">
+                    {language === 'ko' ? '브레인웍스 CEO 강우현' : 'Austin Kang, CEO of Brainworks'}
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -195,6 +78,9 @@ export default function About() {
     </div>
   );
 }
+
+
+
 
 
 

@@ -14,6 +14,7 @@
     image: '/images/honors/대한민국리딩기업스타트업대상.avif',
     highlight: true,
   },
+
   {
     slug: 'innovation-startup-2024',
     year: 2025,
@@ -28,6 +29,8 @@
     },
     image: '/images/honors/예창우수기업.png',
   },
+
+  
 ];
 
 export default awardsData;

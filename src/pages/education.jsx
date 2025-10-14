@@ -396,7 +396,7 @@ export default function Education() {
         <section className="relative overflow-hidden bg-gradient-to-r from-sky-700 via-sky-600 to-indigo-600 text-white">
           <div className="absolute inset-y-0 right-[-20%] h-full w-1/2 rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
           <div className="mx-auto max-w-5xl px-6 py-24">
-            <span className="text-sm uppercase tracking-[0.3em] text-white/70">AI Talent Pipeline</span>
+            <span className="text-sm uppercase tracking-[0.3em] text-white/70">AI Professional Education Program</span>
             <h1 className="mt-4 text-4xl font-semibold md:text-5xl">
               {language === 'ko'
                 ? '체계적인 AI 전문 인재 양성'

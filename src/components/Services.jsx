@@ -95,16 +95,18 @@ export default function Services() {
                 priority
               />
             </div>
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent p-8 text-white">
-              <div className="flex items-center justify-between text-sm text-white/80">
-                <span>{String(activeIndex + 1).padStart(2, '0')} / {String(totalAreas).padStart(2, '0')}</span>
+            <div className="absolute inset-x-0 bottom-0 p-8">
+              <div className="rounded-3xl bg-black/60 p-6 text-white shadow-[0_18px_45px_rgba(0,0,0,0.4)] backdrop-blur-sm">
+                <div className="flex items-center justify-between text-sm text-white/80">
+                  <span>{String(activeIndex + 1).padStart(2, '0')} / {String(totalAreas).padStart(2, '0')}</span>
+                </div>
+                <h3 className="mt-4 text-3xl font-semibold">
+                  {activeArea.title}
+                </h3>
+                <p className="mt-3 text-base text-white/90">
+                  {activeArea.description}
+                </p>
               </div>
-              <h3 className="mt-4 text-3xl font-semibold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
-                {activeArea.title}
-              </h3>
-              <p className="mt-3 text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">
-                {activeArea.description}
-              </p>
             </div>
           </div>
         </div>
