@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getLocalizedBusinessAreas } from '@/data/businessAreas';
 
-const ROTATION_MS = 8000;
+const ROTATION_MS = 6000;
 
 export default function Services() {
   const { language } = useLanguage();
@@ -53,12 +53,12 @@ export default function Services() {
   };
 
   return (
-    <section id="services" className="relative bg-gradient-to-b from-white via-slate-50 to-white py-24 text-slate-900">
-      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-slate-50 to-white" aria-hidden="true" />
+    <section id="services" className="relative bg-slate-200 py-24 text-slate-900">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-200 via-white to-slate-200" aria-hidden="true" />
       <div className="relative container mx-auto flex flex-col gap-12 px-4">
-        <div className="space-y-4 text-center md:text-left">
+        <div className="mx-auto w-full max-w-5xl space-y-4 text-left">
           <p className="text-sm uppercase tracking-[0.3em] text-slate-500">
-            {language === 'ko' ? '브레인웍스 사업 영역' : 'Brainworks Business Domains'}
+            {language === 'ko' ? '브레인웍스 사업 분야' : 'Brainworks Business Domains'}
           </p>
           <h2 className="text-4xl font-semibold md:text-5xl">
             {language === 'ko' ? '핵심 AI 사업 분야' : 'Core AI Business Domains'}
@@ -66,11 +66,8 @@ export default function Services() {
           <p className="text-lg text-slate-600">{activeArea.subtitle}</p>
         </div>
 
-        <div
-          className="grid gap-10 lg:grid-cols-[minmax(0,_1.2fr)_minmax(0,_0.8fr)]"
-          aria-live="polite"
-        >
-          <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
+        <div className="grid place-items-center gap-10" aria-live="polite">
+          <div className="group relative w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl">
             <button
               type="button"
               onClick={goToPrevious}
@@ -91,57 +88,23 @@ export default function Services() {
             <div className="relative h-full w-full">
               <Image
                 src={activeArea.heroImage}
-                alt={activeArea.title + ' hero'}
+                alt={`${activeArea.title} hero`}
                 width={960}
                 height={540}
                 className="h-full w-full object-cover"
                 priority
               />
-              </div>
+            </div>
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent p-8 text-white">
               <div className="flex items-center justify-between text-sm text-white/80">
-                <span>
-                  {String(activeIndex + 1).padStart(2, '0')} / {String(totalAreas).padStart(2, '0')}
-                </span>
-                <span>{language === 'ko' ? '자동 슬라이드' : 'Auto rotating'}</span>
+                <span>{String(activeIndex + 1).padStart(2, '0')} / {String(totalAreas).padStart(2, '0')}</span>
               </div>
-              <h3 className="mt-4 text-3xl font-semibold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">{activeArea.title}</h3>
-              <p className="mt-3 text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">{activeArea.description}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between gap-6">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-              <h4 className="text-xl font-semibold text-slate-900">
-                {language === 'ko' ? '대표 솔루션' : 'Representative Solutions'}
-              </h4>
-              <p className="mt-2 text-sm text-slate-600">
-                {language === 'ko'
-                  ? '분야별 주요 솔루션을 통해 즉시 도입 가능한 AI 가치를 확인하세요.'
-                  : 'Discover deployable AI assets tailored to each business domain.'}
+              <h3 className="mt-4 text-3xl font-semibold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.35)]">
+                {activeArea.title}
+              </h3>
+              <p className="mt-3 text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.25)]">
+                {activeArea.description}
               </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {activeArea.solutions.map((solution) => (
-                <div
-                  key={solution.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-sky-300 hover:shadow-lg"
-                >
-                  <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-100 sm:h-44 lg:h-48">
-                    <Image
-                      src={solution.image}
-                      alt={solution.title + ' thumbnail'}
-                      fill
-                      sizes="(min-width: 1024px) 260px, 80vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="space-y-1 px-4 py-4">
-                    <p className="text-sm font-semibold text-slate-900">{solution.title}</p>
-                    <p className="text-xs text-slate-600">{solution.description}</p>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </div>
@@ -156,9 +119,7 @@ export default function Services() {
                 onClick={() => handleSelect(index)}
                 className={getDotClasses(isActive)}
                 aria-label={
-                  language === 'ko'
-                    ? area.title + ' 슬라이드로 이동'
-                    : 'Go to ' + area.title + ' slide'
+                  language === 'ko' ? `${area.title} 슬라이드 이동` : `Go to ${area.title} slide`
                 }
               />
             );

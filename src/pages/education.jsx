@@ -196,17 +196,17 @@ const generativeAITracks = [
   {
     id: 'foundations',
     title: {
-      ko: '생성형 AI 기초 & 윤리',
+      ko: '생성형 AI 기초',
       en: 'GenAI Foundations & Ethics',
     },
     description: {
-      ko: 'AI 개념과 최신 트렌드, 공공·기업 활용 원칙 교육',
+      ko: 'AI 개념과 최신 트렌드, 공공·기업 활용 방안 교육',
       en: 'Covers AI fundamentals, current trends, and safe adoption principles for public and enterprise teams.',
     },
     points: {
       ko: [
         'AI 발전 흐름과 주요 활용 사례 점검',
-        '오남용 사례로 윤리·보안 체크리스트 작성',
+        '조직에서 생성형 AI 도입 영역 및 활용 방안',
         '조직 도입을 위한 필수 정책과 설정 실습',
       ],
       en: [
@@ -242,16 +242,16 @@ const generativeAITracks = [
   {
     id: 'workflow-automation',
     title: {
-      ko: '생성형 AI 업무 자동화',
+      ko: '생성형 AI 업무 활용',
       en: 'Gen AI Workflow Automation',
     },
     description: {
-      ko: '문서 자동화와 톤 변환, 협업 도구 연동까지 실무 위주 교육',
+      ko: '문서 작성와 톤 변환, 협업 도구 연동까지 실무 위주 교육',
       en: 'Focuses on document automation, tone adjustments, and integrations with everyday collaboration tools.',
     },
     points: {
       ko: [
-        '보고서·기안·FAQ 등 반복 문서 자동화 실습',
+        '보고서·기안·FAQ 등 반복 문서 작성 실습',
         '정중/간결 등 톤·형식 변환으로 메시지 다듬기',
         'Google Workspace 등 협업 플랫폼과 연동 체험',
       ],
@@ -323,7 +323,7 @@ const supportPillars = [
       en: 'Real-world Project Delivery',
     },
     description: {
-      ko: '기업 실무 데이터를 기반으로 기획부터 배포·검증까지 전 과정을 수행합니다.',
+      ko: '기업 실무 데이터를 기반으로 기획부터 배포·검증까지 단계별 프로젝트',
       en: 'Handle projects end to end from data collection to deployment and validation.',
     },
     points: {
@@ -355,7 +355,7 @@ const faqItems = [
       en: 'How is the programme delivered?',
     },
     answer: {
-      ko: '집중 오프라인 워크숍과 실시간 온라인 세션을 병행하며 프로젝트와 코칭을 단계별로 연동합니다.',
+      ko: '집중 오프라인 워크숍과 실시간 온라인 세션을 병행하며 프로젝트와 코칭을 단계별로 제공합니다.',
       en: 'We blend on-site intensives with live online sessions, synchronising projects and coaching at every stage.',
     },
   },
@@ -404,7 +404,7 @@ export default function Education() {
             </h1>
             <p className="mt-4 max-w-3xl text-lg text-white/80">
               {language === 'ko'
-                ? 'AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오로 이어지는 실무 여정을 제공합니다.'
+                ? 'AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성'
                 : 'We deliver a practical journey that spans specialist education, generative AI training, hackathons, internships, and job-ready portfolios.'}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">

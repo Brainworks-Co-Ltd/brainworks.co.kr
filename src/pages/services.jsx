@@ -25,6 +25,11 @@ export default function Services() {
       : base + 'border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-800';
   };
 
+  const solutionGridClasses =
+    (activeArea?.id ?? '') === 'smartcity'
+      ? 'grid gap-6 md:grid-cols-2 xl:grid-cols-3'
+      : 'grid gap-6 md:grid-cols-2';
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <Header />
@@ -125,7 +130,7 @@ export default function Services() {
                   <h3 className="text-2xl font-semibold">
                     {language === 'ko' ? 'AI 솔루션' : 'AI Solution Line-up'}
                   </h3>
-                  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  <div className={solutionGridClasses}>
                     {activeArea.solutions.map((solution) => (
                       <div
                         key={solution.id}

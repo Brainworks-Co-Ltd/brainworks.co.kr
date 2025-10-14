@@ -1,39 +1,5 @@
 const certificationsData = [
   {
-    slug: 'smart-factory-partner',
-    year: 2025,
-    title: {
-      ko: '스마트팩토리 솔루션 공급기업',
-      en: 'Certified Smart Factory Solution Partner',
-    },
-    org: {
-      ko: '스마트제조혁신추진단',
-      en: 'Smart Manufacturing Innovation Alliance',
-    },
-    description: {
-      ko: 'AI 기반 스마트팩토리 구축 전문기업',
-      en: 'AI-driven smart factory deployment specialist',
-    },
-    image: '/images/honors/스마트팩토리공급기업.png',
-  },
-  {
-    slug: 'data-voucher-provider',
-    year: 2025,
-    title: {
-      ko: '데이터 바우처 공급기업',
-      en: 'Accredited Data Voucher Provider',
-    },
-    org: {
-      ko: '한국데이터산업진흥원',
-      en: 'Korea Data Agency',
-    },
-    description: {
-      ko: 'AI 구축을 위한 데이터 가공·컨설팅 전문기업',
-      en: 'Data curation and consulting expert for AI adoption',
-    },
-    image: '/images/honors/데이터바우처공급기업.png',
-  },
-  {
     slug: 'ai-voucher-provider',
     year: 2025,
     title: {

@@ -9,12 +9,12 @@ export default function CTA() {
     <section className="py-20 bg-blue-600 text-white">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-6">
-          {language === 'ko' ? 'AI 혁신의 여정에 함께하세요' : 'Join Us in the AI Innovation Journey'}
+          {language === 'ko' ? 'AX 혁신을 함께하세요' : 'Join Us in the AX Innovation Journey'}
         </h2>
         <p className="text-xl mb-8">
           {language === 'ko'
-            ? '브레인웍스와 함께 미래를 준비하세요.'
-            : 'Prepare for the future with Brainworks.'}
+            ? '브레인웍스와 함께 AX를 준비하세요.'
+            : 'Prepare for the AX with Brainworks.'}
         </p>
         <Link 
           href="/contact" 

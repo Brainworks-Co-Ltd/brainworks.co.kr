@@ -2,8 +2,8 @@ export const businessAreas = [
   {
     id: 'manufacturing',
     name: {
-      ko: 'AI Manufacturing',
-      en: 'AI Manufacturing',
+      ko: 'Manufacturing AI',
+      en: 'Manufacturing AI',
     },
     subtitle: {
       ko: '공정 데이터 기반의 생산 혁신',
@@ -113,8 +113,8 @@ export const businessAreas = [
   {
     id: 'healthcare',
     name: {
-      ko: 'AI Healthcare & Bio',
-      en: 'AI Healthcare & Bio',
+      ko: 'Healthcare & Bio AI',
+      en: 'Healthcare & Bio AI',
     },
     subtitle: {
       ko: '의료·치과 데이터 분석으로 정밀 진단 구현',
@@ -156,8 +156,8 @@ export const businessAreas = [
   {
     id: 'smartcity',
     name: {
-      ko: 'AI SmartCity & Safety',
-      en: 'AI SmartCity & Safety',
+      ko: 'SmartCity & Safety AI',
+      en: 'SmartCity & Safety AI',
     },
     subtitle: {
       ko: '도시 안전과 운영을 위한 데이터 기반 관제',

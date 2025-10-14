@@ -47,7 +47,7 @@ const programs = [
       en: 'Personalised Matching with Overseas Buyers',
     },
     description: {
-      ko: '인도네시아, 베트남, 우즈베키스탄 등 주요 신흥 시장의 기업과 연결하여 신규 바이어 확보와 파트너십 발굴을 지원합니다.',
+      ko: '인도네시아, 베트남, 우즈베키스탄 등 주요 신흥 시장의 기업과 연결하여 신규 바이어 확보와 파트너십 매칭',
       en: 'Connect with vetted companies in Indonesia, Vietnam, Uzbekistan, and other growth markets to secure new buyers and partners.',
     },
     bullets: {
@@ -71,7 +71,7 @@ const programs = [
       en: 'End-to-end Support for Global Exhibitions',
     },
     description: {
-      ko: '베트남 ICTCOMM, 일본 IT WEEK, 미국 CES, 스페인 MWC 등 글로벌 전시회 참가를 위한 부스 설계와 홍보를 담당합니다.',
+      ko: '베트남 ICTCOMM, 일본 IT WEEK, 미국 CES, 스페인 MWC 등 글로벌 전시회 참가를 위한 부스 설계 및 홍보, 프로그램 기획',
       en: 'Handle booth design and marketing for shows such as Vietnam ICTCOMM, Japan IT WEEK, CES, and MWC.',
     },
     bullets: {
@@ -95,7 +95,7 @@ const programs = [
       en: 'Scouting Tours for New Buyers & Partners',
     },
     description: {
-      ko: '전시회 현장을 탐방하며 바이어와 파트너를 발굴할 수 있도록 이동, 숙박, 네트워킹 프로그램을 제공합니다.',
+      ko: '전시회 현장을 탐방하며 바이어와 파트너를 발굴할 수 있도록 이동, 숙박, 네트워킹 프로그램',
       en: 'Discover buyers and partners through curated exhibition tours covering travel, lodging, and networking.',
     },
     bullets: {
@@ -119,7 +119,7 @@ const programs = [
       en: 'Executive Programmes & Immersion Trips',
     },
     description: {
-      ko: '미국과 베트남 주요 대학 및 기업과 연계한 연수 프로그램으로 글로벌 역량을 강화합니다.',
+      ko: '미국과 베트남 주요 대학 및 기업과 연계한 연수 프로그램으로 글로벌 역량 강화',
       en: 'Strengthen global capability through immersion programmes with universities and companies across the US and Vietnam.',
     },
     bullets: {
@@ -218,12 +218,6 @@ export default function Outbound() {
             <h1 className="mt-4 text-4xl font-semibold md:text-5xl">{t.heroTitle}</h1>
             <p className="mt-4 max-w-3xl text-lg text-white/80">{t.heroSubtitle}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-sky-700 transition hover:bg-slate-100"
-              >
-                {t.ctaPrimary}
-              </a>
             </div>
           </div>
         </section>

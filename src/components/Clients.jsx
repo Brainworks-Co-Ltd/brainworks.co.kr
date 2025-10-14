@@ -22,28 +22,31 @@ export default function Clients() {
   ];
 
   return (
-    <section id="clients" className="py-20 bg-gray-50">
-      <h2 className="text-4xl font-bold mb-12 text-center">Clients & Partners</h2>
-      
-      <div className="relative overflow-hidden">
-        <div 
-          className="flex"
-          style={{
-            animation: 'scroll 30s linear infinite',
-            width: 'fit-content'
-          }}
-        >
-          {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
-            <div key={`logo-${index}`} className="flex-shrink-0 px-12">
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={120}
-                height={120}
-                className="h-24 w-auto grayscale hover:grayscale-0 transition-all duration-300 hover:scale-110"
-              />
-            </div>
-          ))}
+    <section id="clients" className="relative py-20 text-slate-900">
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-200 via-white to-slate-200" aria-hidden="true" />
+      <div className="relative container mx-auto px-4">
+        <h2 className="mb-12 text-center text-4xl font-bold">Clients & Partners</h2>
+
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white/80 shadow-xl">
+          <div
+            className="flex"
+            style={{
+              animation: 'scroll 30s linear infinite',
+              width: 'fit-content'
+            }}
+          >
+            {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
+              <div key={`logo-${index}`} className="flex-shrink-0 px-12 py-10">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={120}
+                  height={120}
+                  className="h-24 w-auto transition-all duration-300 grayscale hover:scale-110 hover:grayscale-0"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

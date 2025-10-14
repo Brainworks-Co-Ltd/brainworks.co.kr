@@ -10,7 +10,7 @@ const copy = {
     heroSubtitle: '전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공',
     heroCta: '상담 요청하기',
     heroSecondary: '포트폴리오 보기',
-    valueTitle: '이런 가치를 제공합니다',
+    valueTitle: '주요 컨설팅 가치',
     processTitle: '컨설팅 단계',
     caseTitle: '주요 컨설팅 사례',
     contactTitle: 'AI로 어떤 문제를 해결하고 싶으신가요?',
@@ -149,20 +149,6 @@ export default function Consulting() {
             <div className="max-w-3xl">
               <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">{t.heroTitle}</h1>
               <p className="mt-6 text-lg sm:text-xl text-slate-200">{t.heroSubtitle}</p>
-              <div className="mt-10 flex flex-wrap gap-4">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-lg bg-blue-500 px-6 py-3 text-base font-semibold text-white shadow hover:bg-blue-400 transition"
-                >
-                  {t.heroCta}
-                </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center rounded-lg border border-white/40 px-6 py-3 text-base font-semibold text-white hover:bg-white/10 transition"
-                >
-                  {t.heroSecondary}
-                </Link>
-              </div>
             </div>
           </div>
         </section>
