@@ -174,24 +174,6 @@ export default function News({ newsItems }) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {filterOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => setActiveFilter(option.value)}
-                className={[
-                  'rounded-full border px-4 py-2 text-sm transition',
-                  activeFilter === option.value
-                    ? 'border-sky-500 bg-sky-500 text-white shadow'
-                    : 'border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:text-slate-800',
-                ].join(' ')}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-
           {filteredItems.length === 0 ? (
             <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center text-slate-500 shadow-sm">
               {language === 'ko'
