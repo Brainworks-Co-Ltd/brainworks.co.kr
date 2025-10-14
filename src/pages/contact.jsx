@@ -60,7 +60,7 @@ export default function Contact() {
           <p className="text-base text-gray-600 sm:text-lg max-w-2xl">
             {language === 'ko'
               ? 'AI 솔루션 협업, 교육 관련 협의, 사업 문의를 원하시는 경우 아래 양식을 작성해 주세요.'
-              : 'Please fill out the form below for any inquiries about our AI solutions.'}
+              : 'For AI solution collaboration, training inquiries, or business questions, please fill out the form below.'}
           </p>
         </div>
       </div>

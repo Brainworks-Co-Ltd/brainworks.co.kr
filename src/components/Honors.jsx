@@ -8,7 +8,7 @@ import certificationsData from '@/utils/certificationsData';
 const copy = {
   ko: {
     title: '수상 및 인증',
-    subtitle: '산업 현장에서 검증된 브레인웍스의 AI 기술력입니다.',
+    subtitle: '브레인웍스 AI 기술의 우수성',
     awardsLabel: '주요 수상 경력',
     certificationsLabel: '주요 인증 현황',
     awardAltSuffix: '수상 이미지',

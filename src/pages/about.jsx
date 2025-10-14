@@ -152,11 +152,6 @@ export default function About() {
             <h2 className="mt-3 text-3xl font-semibold text-slate-900 md:text-4xl">
               {language === 'ko' ? '브레인웍스의 발자취' : 'Milestones of Brainworks'}
             </h2>
-            <p className="mt-3 text-sm text-slate-500">
-              {language === 'ko'
-                ? '고객과 함께 성장하며 쌓아온 주요 성과를 한눈에 확인하세요.'
-                : 'Take a look at the milestones we have built together with our clients.'}
-            </p>
           </div>
 
           <div className="mt-12 space-y-6">
@@ -174,16 +169,8 @@ export default function About() {
                   <div className="grid gap-6 p-6 md:grid-cols-[minmax(0,_120px)_1fr] md:p-8">
                     <div className="flex flex-col gap-3">
                       <span className="text-3xl font-semibold text-slate-900">{item.year}</span>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-                        <span
-                          className={'h-2 w-2 rounded-full bg-gradient-to-br ' + accent}
-                          aria-hidden="true"
-                        />
-                        {item.title[language]}
-                      </span>
                     </div>
                     <div className="space-y-4">
-                      <p className="text-sm leading-relaxed text-slate-600">{item.summary[language]}</p>
                       <ul className="space-y-3 text-sm text-slate-700">
                         {item.bullets[language].map((bullet, idx) => (
                           <li key={idx} className="flex items-start gap-3">
