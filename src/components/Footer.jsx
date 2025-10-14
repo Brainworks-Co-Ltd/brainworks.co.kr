@@ -5,7 +5,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const quickLinks = [
   { href: '/', label: { ko: '홈', en: 'Home' } },
   { href: '/about', label: { ko: '회사소개', en: 'About' } },
-  { href: '/services', label: { ko: 'AI 사업분야', en: 'AI Business Areas' } },
+  { href: '/services', label: { ko: 'AI 솔루션', en: 'AI Business Areas' } },
+  { href: '/consulting', label: { ko: 'AI 컨설팅', en: 'AI Consulting' } },
   { href: '/education', label: { ko: 'AI 전문교육', en: 'AI Academy' } },
   { href: '/news', label: { ko: '소식', en: 'News' } },
   { href: '/contact', label: { ko: '문의하기', en: 'Contact' } },
@@ -77,7 +78,7 @@ export default function Footer() {
               ))}
             </div>
             <div className="space-y-1 text-sm">
-              <p className="text-slate-300">Email · contact@brainworks.co.kr / austin@brainworks.co.kr</p>
+              <p className="text-slate-300">Email · austin@brainworks.co.kr</p>
               <p className="text-slate-300">Tel · +82-10-6639-4084</p>
             </div>
           </div>
