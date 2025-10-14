@@ -201,12 +201,6 @@ export default function Consulting() {
               >
                 {t.heroCta}
               </Link>
-              <Link
-                href="/education"
-                className="inline-flex items-center justify-center rounded-lg border border-white/30 px-6 py-3 text-base font-semibold text-white hover:bg-white/10 transition"
-              >
-                {language === 'ko' ? 'AI 교육 살펴보기' : 'Explore AI Training'}
-              </Link>
             </div>
           </div>
         </section>
