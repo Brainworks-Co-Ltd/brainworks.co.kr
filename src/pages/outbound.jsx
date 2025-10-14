@@ -15,10 +15,10 @@ const copy = {
     sectionSubtitle: '현지 파트너 매칭부터 글로벌 전시회, 연수까지 한 번에 준비하세요.',
     aiSectionTitle: '글로벌 AI 전문 교육 프로그램',
     aiSectionSubtitle: '실전 중심의 해커톤, 인턴십, 교육 과정을 통해 글로벌 AI 인재를 양성합니다.',
-    contactTitle: '해외 진출 계획을 알려주세요',
+    contactTitle: '해외 진출, 글로벌 AI 교육 문의',
     contactSubtitle:
       '희망 지역과 목표를 공유해 주시면 맞춤형 글로벌 엑셀러레이션 로드맵과 제휴 네트워크를 제안드립니다.',
-    contactCta: '엑셀러레이터 문의하기',
+    contactCta: '글로벌 프로그램 문의하기',
   },
   en: {
     heroBadge: 'Global Program',
@@ -34,7 +34,7 @@ const copy = {
     contactTitle: 'Tell Us Your Global Plan',
     contactSubtitle:
       'Share your target regions and objectives so we can craft a tailored accelerator roadmap and introduce partners.',
-    contactCta: 'Contact Accelerator Team',
+    contactCta: 'Inquire About Global Programs',
   },
 };
 
