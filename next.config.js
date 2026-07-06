@@ -4,15 +4,26 @@ const path = require('path');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // GitHub Pages용 정적 export
+  output: 'export',
+
+  // /about → /about/index.html 구조로 생성
+  trailingSlash: true,
+
   webpack(config) {
-    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@': path.resolve(__dirname, 'src'),
+    };
+
     return config;
   },
+
   images: {
     domains: [],
     unoptimized: true,
   },
-  // (기존 allowedDevOrigins 등 다른 설정은 그대로 둡니다)
-}
+};
 
 module.exports = nextConfig;
