@@ -1,4 +1,4 @@
-name: Deploy React JSX App to GitHub Pages
+name: Deploy Next.js static export to GitHub Pages
 
 on:
   push:
@@ -36,30 +36,22 @@ jobs:
             npm install
           fi
 
-      - name: Build
+      - name: Build static export
         run: npm run build
 
-      - name: Detect build output directory
-        id: detect
+      - name: Check static export output
         run: |
-          echo "Searching for generated index.html..."
-          find . -maxdepth 4 -iname "index.html" -not -path "./.git/*" -print
+          echo "Checking out directory..."
+          ls -la
+          ls -la out || true
 
-          for dir in dist build out; do
-            if [ -f "$dir/index.html" ]; then
-              echo "Found build output: $dir"
-              echo "deploy_dir=$dir" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done
+          if [ ! -f out/index.html ]; then
+            echo "::error::out/index.html 파일이 없습니다. next.config.js에 output: 'export' 설정이 적용됐는지 확인하세요."
+            exit 1
+          fi
 
-          echo "::error::dist, build, out 폴더 안에서 index.html을 찾지 못했습니다. npm run build 결과를 확인하세요."
-          exit 1
-
-      - name: Show deploy files
-        run: |
-          echo "Deploying from: ${{ steps.detect.outputs.deploy_dir }}"
-          ls -la "${{ steps.detect.outputs.deploy_dir }}"
+      - name: Add nojekyll
+        run: touch out/.nojekyll
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -67,7 +59,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ${{ steps.detect.outputs.deploy_dir }}
+          path: ./out
 
   deploy:
     runs-on: ubuntu-latest
