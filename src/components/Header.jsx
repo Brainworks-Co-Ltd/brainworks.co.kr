@@ -10,6 +10,7 @@ const navItems = [
   { href: '/education', label: { ko: 'AI 전문교육', en: 'AI Academy' } },
   { href: '/outbound', label: { ko: '글로벌 프로그램', en: 'Global Programs' } },
   { href: '/news', label: { ko: '소식', en: 'News' } },
+  { href: '/bid-notice', label: { ko: '입찰공고', en: 'Bid Notices' } },
   { href: '/contact', label: { ko: '문의하기', en: 'Contact' } },
 ];
 
@@ -29,7 +30,7 @@ export default function Header() {
             <span className="sr-only">Brainworks</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}

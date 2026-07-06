@@ -5,12 +5,15 @@ import Services from '@/components/Services';
 import Clients from '@/components/Clients';
 import CTA from '@/components/CTA';
 import Footer from '@/components/Footer';
+import BidNoticePopup from '@/components/BidNoticePopup';
 import { getLatestNews } from '@/lib/news';
+import { getActivePopups } from '@/data/popups';
 
-export default function Home({ newsItems }) {
+export default function Home({ newsItems, popups }) {
   return (
     <div className="min-h-screen">
       <Header />
+      <BidNoticePopup popups={popups} />
       <Hero />
       <Services />
       <Clients />
@@ -22,10 +25,12 @@ export default function Home({ newsItems }) {
 
 export async function getStaticProps() {
   const newsItems = getLatestNews(3);
+  const popups = getActivePopups();
 
   return {
     props: {
       newsItems,
+      popups,
     },
   };
 }

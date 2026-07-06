@@ -1,0 +1,126 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title{font:700 20px 'Noto Sans',Pretendard,Apple SD Gothic Neo,Malgun Gothic,sans-serif; fill:#111}
+      .txt{font:600 14px 'Noto Sans',Pretendard,Apple SD Gothic Neo,Malgun Gothic,sans-serif; fill:#111}
+      .cap{font:500 12px 'Noto Sans',Pretendard,Apple SD Gothic Neo,Malgun Gothic,sans-serif; fill:#333}
+      .small{font:500 11px 'Noto Sans',Pretendard,Apple SD Gothic Neo,Malgun Gothic,sans-serif; fill:#333}
+      .box{fill:#fff; stroke:#222; stroke-width:1.5}
+      .head{fill:#F3F6FF; stroke:#3B5BDB; stroke-width:1.5}
+      .muted{fill:#FAFAFA; stroke:#BBB; stroke-width:1.2}
+      .dashed{stroke-dasharray:6 6}
+      .line{stroke:#444; stroke-width:1.6; fill:none}
+      .soft{filter:url(#shadow)}
+    </style>
+    <marker id="arrow" orient="auto" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#444"/>
+    </marker>
+    <marker id="arrowBlue" orient="auto" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5">
+      <path d="M0,0 L7,3.5 L0,7 Z" fill="#3B5BDB"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- 제목 -->
+  <text x="600" y="40" text-anchor="middle" class="title">사업추진체계(거버넌스  역할·흐름)</text>
+
+  <!-- 1. 광역 정책/전담 -->
+  <rect x="70" y="80" width="420" height="100" rx="12" class="head soft"/>
+  <text x="280" y="110" text-anchor="middle" class="txt">경상북도 · 경북문화관광공사</text>
+  <text x="280" y="135" text-anchor="middle" class="small">정책·브랜딩·광역 캠페인 · 데이터 표준 · 예산·협력</text>
+
+  <rect x="710" y="80" width="420" height="100" rx="12" class="head soft"/>
+  <text x="920" y="110" text-anchor="middle" class="txt">포항테크노파크 경북디지털혁신본부(전담)</text>
+  <text x="920" y="135" text-anchor="middle" class="small">사업 총괄 · 협약/집행 · 중간점검/연차평가 · 성과관리</text>
+
+  <!-- 2. 운영위원회(거버넌스 코어) -->
+  <rect x="335" y="210" width="530" height="90" rx="12" class="box soft"/>
+  <text x="600" y="238" text-anchor="middle" class="txt">사업운영위원회(Steering)</text>
+  <text x="600" y="262" text-anchor="middle" class="small">위원장 · PM(30%↑) · MP(전문가) · 수요처 대표 · 품질/SP 자문</text>
+
+  <!-- 상단 → 운영위원회 화살표 -->
+  <path d="M280,180 L280,210" class="line" marker-end="url(#arrow)"/>
+  <path d="M920,180 L920,210" class="line" marker-end="url(#arrow)"/>
+
+  <!-- 3. 주관/참여(실행조직) -->
+  <rect x="70" y="330" width="540" height="160" rx="12" class="box soft"/>
+  <text x="340" y="358" text-anchor="middle" class="txt">주관기관(컨소시엄) · 플랫폼 운영본부</text>
+  <!-- 서브팀 -->
+  <rect x="90" y="380" width="160" height="90" rx="10" class="muted"/>
+  <text x="170" y="405" text-anchor="middle" class="cap">플랫폼/앱팀</text>
+  <text x="170" y="425" text-anchor="middle" class="small">모바일·웹 · UI/UX</text>
+
+  <rect x="270" y="380" width="160" height="90" rx="10" class="muted"/>
+  <text x="350" y="405" text-anchor="middle" class="cap">AI/sLLM팀</text>
+  <text x="350" y="425" text-anchor="middle" class="small">지식팩·RAG · 통역</text>
+
+  <rect x="450" y="380" width="140" height="90" rx="10" class="muted"/>
+  <text x="520" y="405" text-anchor="middle" class="cap">DevOps/보안</text>
+  <text x="520" y="425" text-anchor="middle" class="small">배포·모니터링·보안</text>
+
+  <rect x="610" y="330" width="520" height="160" rx="12" class="box soft"/>
+  <text x="870" y="358" text-anchor="middle" class="txt">참여기관</text>
+  <!-- 참여 서브 -->
+  <rect x="630" y="380" width="160" height="90" rx="10" class="muted"/>
+  <text x="710" y="405" text-anchor="middle" class="cap">콘텐츠/지식 파트너</text>
+  <text x="710" y="425" text-anchor="middle" class="small">세계유산·행사 데이터</text>
+
+  <rect x="810" y="380" width="160" height="90" rx="10" class="muted"/>
+  <text x="890" y="405" text-anchor="middle" class="cap">품질·테스트 기관</text>
+  <text x="890" y="425" text-anchor="middle" class="small">SW품질 · 접근성 · SP자문</text>
+
+  <rect x="990" y="380" width="120" height="90" rx="10" class="muted"/>
+  <text x="1050" y="405" text-anchor="middle" class="cap">홍보/마케팅</text>
+  <text x="1050" y="425" text-anchor="middle" class="small">온·오프라인 캠페인</text>
+
+  <!-- 운영위원회 → 실행조직 화살표 -->
+  <path d="M600,300 L340,330" class="line" marker-end="url(#arrow)"/>
+  <path d="M600,300 L870,330" class="line" marker-end="url(#arrow)"/>
+
+  <!-- 4. 수요처/도입기관 -->
+  <rect x="70" y="520" width="1060" height="130" rx="12" class="box soft"/>
+  <text x="600" y="548" text-anchor="middle" class="txt">수요처·도입기관</text>
+
+  <rect x="90" y="560" width="240" height="70" rx="10" class="muted"/>
+  <text x="210" y="585" text-anchor="middle" class="cap">시·군(관광과/축제TF)</text>
+
+  <rect x="360" y="560" width="240" height="70" rx="10" class="muted"/>
+  <text x="480" y="585" text-anchor="middle" class="cap">관광지/박물관/세계유산</text>
+
+  <rect x="630" y="560" width="240" height="70" rx="10" class="muted"/>
+  <text x="750" y="585" text-anchor="middle" class="cap">숙박·식음·체험/투어 상권</text>
+
+  <rect x="900" y="560" width="210" height="70" rx="10" class="muted"/>
+  <text x="1005" y="585" text-anchor="middle" class="cap">교통거점(공항·역·터미널)</text>
+
+  <!-- 실행조직 → 수요처 -->
+  <path d="M340,490 L340,520" class="line" marker-end="url(#arrow)"/>
+  <path d="M870,490 L870,520" class="line" marker-end="url(#arrow)"/>
+
+  <!-- 5. 최종 사용자 -->
+  <rect x="70" y="680" width="1060" height="90" rx="12" class="box soft"/>
+  <text x="600" y="710" text-anchor="middle" class="txt">최종 사용자</text>
+  <text x="600" y="735" text-anchor="middle" class="small">관광객(국내·외) · 운영자(안내소·기관) · 지역 소상공인</text>
+
+  <!-- 수요처 → 사용자 -->
+  <path d="M600,650 L600,680" class="line" marker-end="url(#arrow)"/>
+
+  <!-- 피드백/보고 라인들 -->
+  <path d="M600,770 C600,820 920,820 920,750" class="line dashed" marker-end="url(#arrowBlue)"/>
+  <text x="920" y="840" text-anchor="end" class="small" fill="#3B5BDB">성과지표·현장 피드백</text>
+
+  <path d="M210,650 C210,780 280,780 280,180" class="line dashed" marker-end="url(#arrowBlue)"/>
+  <text x="215" y="805" class="small" fill="#3B5BDB">현장 요구/정책 제안</text>
+
+  <!-- 주석 라벨 -->
+  <text x="92" y="515" class="small">※ 도입의사 확약서(MOU) 체결 후 시범·확산</text>
+  <text x="92" y="860" class="small">※ 품질/테스트/SP자문 결과는 전담(포항TP) 및 운영위에 정기 보고</text>
+
+  <!-- 흐름 라벨 -->
+  <text x="455" y="315" class="small">의사결정·우선순위</text>
+  <text x="735" y="315" class="small">가이드라인·검토</text>
+  <text x="352" y="505" class="small">서비스 제공/운영지원</text>
+  <text x="884" y="505" class="small">콘텐츠·품질/마케팅 지원</text>
+</svg>
