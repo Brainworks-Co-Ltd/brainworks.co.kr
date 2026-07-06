@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Deploy React JSX App to GitHub Pages
 
 on:
   push:
@@ -16,16 +16,50 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Build
+        run: npm run build
+
+      - name: Detect build output directory
+        id: detect
+        run: |
+          echo "Searching for generated index.html..."
+          find . -maxdepth 4 -iname "index.html" -not -path "./.git/*" -print
+
+          for dir in dist build out; do
+            if [ -f "$dir/index.html" ]; then
+              echo "Found build output: $dir"
+              echo "deploy_dir=$dir" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+
+          echo "::error::dist, build, out 폴더 안에서 index.html을 찾지 못했습니다. npm run build 결과를 확인하세요."
+          exit 1
+
+      - name: Show deploy files
+        run: |
+          echo "Deploying from: ${{ steps.detect.outputs.deploy_dir }}"
+          ls -la "${{ steps.detect.outputs.deploy_dir }}"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -33,8 +67,17 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: ${{ steps.detect.outputs.deploy_dir }}
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
