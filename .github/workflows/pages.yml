@@ -23,30 +23,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Show config
+        run: |
+          echo "===== next.config.js ====="
+          cat next.config.js
+          echo "===== package.json ====="
+          cat package.json
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm ci
 
       - name: Build static export
         run: npm run build
 
       - name: Check static export output
         run: |
-          echo "Checking out directory..."
+          echo "===== root ====="
           ls -la
+
+          echo "===== out ====="
           ls -la out || true
 
           if [ ! -f out/index.html ]; then
-            echo "::error::out/index.html 파일이 없습니다. next.config.js에 output: 'export' 설정이 적용됐는지 확인하세요."
+            echo "::error::out/index.html 파일이 없습니다. next.config.js의 output: 'export' 적용 여부와 서버 전용 기능 사용 여부를 확인하세요."
             exit 1
           fi
 
