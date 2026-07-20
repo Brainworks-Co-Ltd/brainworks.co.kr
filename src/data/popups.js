@@ -12,13 +12,13 @@ export function getActivePopups() {
       id: `bid-${latestBid.slug}`,
       type: 'bid',
       title: {
-        ko: '공개경쟁입찰 공고',
-        en: 'Bid Notice',
+        ko: '공개경쟁입찰 재공고',
+        en: 'Bid Reannouncement',
       },
       message: latestBid.popupMessage ?? latestBid.summary,
       ctaLabel: {
-        ko: '공고·첨부파일 확인',
-        en: 'View Bid Notice',
+        ko: '재공고·첨부파일 확인',
+        en: 'View Reannounced Bid',
       },
       href: `/bid-notice/${latestBid.slug}`,
       dismissKey: `brainworks-popup-${latestBid.slug}`,

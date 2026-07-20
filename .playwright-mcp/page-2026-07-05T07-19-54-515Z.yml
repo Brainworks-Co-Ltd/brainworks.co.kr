@@ -1,0 +1,154 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - link "브레인웍스 로고 Brainworks" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "브레인웍스 로고" [ref=e8]
+          - generic [ref=e9]: Brainworks
+        - navigation [ref=e10]:
+          - link "홈" [ref=e11] [cursor=pointer]:
+            - /url: /
+          - link "회사소개" [ref=e12] [cursor=pointer]:
+            - /url: /about
+          - link "AI 솔루션" [ref=e13] [cursor=pointer]:
+            - /url: /services
+          - link "AI 컨설팅" [ref=e14] [cursor=pointer]:
+            - /url: /consulting
+          - link "AI 전문교육" [ref=e15] [cursor=pointer]:
+            - /url: /education
+          - link "글로벌 프로그램" [ref=e16] [cursor=pointer]:
+            - /url: /outbound
+          - link "소식" [ref=e17] [cursor=pointer]:
+            - /url: /news
+          - link "입찰공고" [ref=e18] [cursor=pointer]:
+            - /url: /bid-notice
+          - link "문의하기" [ref=e19] [cursor=pointer]:
+            - /url: /contact
+        - button "EN" [ref=e20] [cursor=pointer]
+    - main [ref=e21]:
+      - article [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - generic [ref=e25]: 공개경쟁입찰
+            - generic [ref=e26]: 공고중
+            - generic [ref=e27]: BW-BID-2026-001
+          - heading "국산 NPU 기반 온디바이스 AI 노면 진단 스마트 시티 솔루션 인도네시아 실증 인프라 구축 및 관리 대행 용역" [level=1] [ref=e28]
+          - paragraph [ref=e29]: 브레인웍스 주식회사는 인도네시아 자카르타 및 주변 권역 현지 실증을 위한 차량·운전자·운행·장비 탑재 지원 및 운영관리 수행사를 공개 모집합니다.
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - term [ref=e32]: 게시일
+              - definition [ref=e33]: 2026. 07. 06.
+            - generic [ref=e34]:
+              - term [ref=e35]: 접수 시작
+              - definition [ref=e36]: 2026. 07. 06.
+            - generic [ref=e37]:
+              - term [ref=e38]: 접수 마감
+              - definition [ref=e39]: 2026. 07. 17.
+          - generic [ref=e40]:
+            - generic [ref=e41]:
+              - term [ref=e42]: 용역기간
+              - definition [ref=e43]: 계약일 ~ 2026. 11. 30. (현지 집중 실증운영 2개월, 세부 일정 협의)
+            - generic [ref=e44]:
+              - term [ref=e45]: 사업예산
+              - definition [ref=e46]: 금 156,430,000원 이내 (부가가치세 및 제반비용 포함 기준)
+            - generic [ref=e47]:
+              - term [ref=e48]: 계약방식
+              - definition [ref=e49]: 공개경쟁 / 제안평가 및 협상에 의한 계약
+            - generic [ref=e50]:
+              - term [ref=e51]: 제출방법
+              - definition [ref=e52]: "이메일 접수만 가능: kdh0401@brainworks.co.kr"
+            - generic [ref=e53]:
+              - term [ref=e54]: 대금지급
+              - definition [ref=e55]: 계약금액의 70% 선금, 30% 사업완료 및 검수 후 지급
+          - generic [ref=e56]:
+            - paragraph [ref=e57]: 브레인웍스 주식회사는 국산 AI반도체(NPU), GNSS-RTK, 영상기반 AI 기술을 융합한 온디바이스 노면 진단 솔루션의 인도네시아 현지 실증을 안정적으로 지원하기 위해 용역 수행사를 공개 모집합니다.
+            - paragraph [ref=e58]: "사업목적: 인도네시아 자카르타 및 주변 권역 현지 실증을 위한 차량·운전자·운행·장비 탑재 지원 및 운영관리"
+            - paragraph [ref=e59]: "용역기간: 계약일 ~ 2026. 11. 30. (현지 집중 실증운영 2개월, 세부 일정은 협의)"
+            - paragraph [ref=e60]: "입찰·계약방식: 공개경쟁 / 제안평가 및 협상에 의한 계약"
+            - paragraph [ref=e61]: "공고·접수기간: 2026. 7. 06.(월) ~ 2026. 7. 17.(금) 18:00"
+            - paragraph [ref=e62]: "제출방법: 이메일 접수만 가능하며 방문·현장 제출 및 우편 제출은 접수하지 않습니다."
+            - paragraph [ref=e63]: "이메일 제목: [입찰제안] 인도네시아 실증 인프라 구축 및 관리 대행_업체명"
+            - paragraph [ref=e64]: "제출서류: 제안요청서 및 제출서류 목록을 참조해 주시기 바랍니다."
+            - paragraph [ref=e65]: "대금지급: 계약금액의 70% 선금, 30% 사업완료 및 검수 후 지급"
+            - paragraph [ref=e66]: 세부 과업, 제안서 작성방법 및 평가기준은 첨부된 제안요청서를 확인해 주시기 바랍니다.
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - img [ref=e69]
+              - heading "첨부파일 다운로드" [level=2] [ref=e72]
+            - generic [ref=e73]:
+              - link "입찰공고서 공개경쟁입찰 공고 원문" [ref=e74] [cursor=pointer]:
+                - /url: /files/bid-notices/indonesia-infra-bid-notice.docx
+                - generic [ref=e75]:
+                  - generic [ref=e76]: 입찰공고서
+                  - generic [ref=e77]: 공개경쟁입찰 공고 원문
+                - img [ref=e78]
+              - link "제안요청서 세부 과업, 제출서류, 평가기준 및 제출 서식" [ref=e81] [cursor=pointer]:
+                - /url: /files/bid-notices/indonesia-infra-rfp.docx
+                - generic [ref=e82]:
+                  - generic [ref=e83]: 제안요청서
+                  - generic [ref=e84]: 세부 과업, 제출서류, 평가기준 및 제출 서식
+                - img [ref=e85]
+          - generic [ref=e89]:
+            - img [ref=e90]
+            - generic [ref=e93]:
+              - paragraph [ref=e94]: 입찰 문의 및 제출처
+              - paragraph [ref=e95]:
+                - text: 브레인웍스 주식회사 입찰 담당자 ·
+                - link "kdh0401@brainworks.co.kr" [ref=e96] [cursor=pointer]:
+                  - /url: mailto:kdh0401@brainworks.co.kr
+              - paragraph [ref=e97]:
+                - img [ref=e98]
+                - link "010-5521-0401" [ref=e100] [cursor=pointer]:
+                  - /url: tel:010-5521-0401
+        - link "입찰 공고 목록으로 돌아가기" [ref=e102] [cursor=pointer]:
+          - /url: /bid-notice
+    - contentinfo [ref=e103]:
+      - generic [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - text: Brainworks
+              - paragraph [ref=e108]: 데이터와 AI로 고객의 혁신을 실현하는 파트너, 브레인웍스입니다.
+            - generic [ref=e109]:
+              - link "홈" [ref=e110] [cursor=pointer]:
+                - /url: /
+              - link "회사소개" [ref=e111] [cursor=pointer]:
+                - /url: /about
+              - link "AI 솔루션" [ref=e112] [cursor=pointer]:
+                - /url: /services
+              - link "AI 컨설팅" [ref=e113] [cursor=pointer]:
+                - /url: /consulting
+              - link "AI 전문교육" [ref=e114] [cursor=pointer]:
+                - /url: /education
+              - link "소식" [ref=e115] [cursor=pointer]:
+                - /url: /news
+              - link "문의하기" [ref=e116] [cursor=pointer]:
+                - /url: /contact
+            - generic [ref=e117]:
+              - paragraph [ref=e118]: Email · austin@brainworks.co.kr
+              - paragraph [ref=e119]: Tel · +82-10-6639-4084
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - paragraph [ref=e122]: 본사
+              - paragraph [ref=e123]: 대구광역시 동구 장등로 76, 대구콘텐츠기업지원센터 211호
+            - generic [ref=e124]:
+              - paragraph [ref=e125]: 경북본사
+              - paragraph [ref=e126]: 경북 경산시 진량읍 대구대로 230, C동 102호, C-13
+            - generic [ref=e127]:
+              - paragraph [ref=e128]: 경남본사
+              - paragraph [ref=e129]: 경남 창원시 의창구 차룡로48번길 44, 스마트업타워 2층 알204호
+            - generic [ref=e130]:
+              - paragraph [ref=e131]: 충남본사
+              - paragraph [ref=e132]: 충남 아산시 배방읍 광장로 210, 202동 1층 a125호
+            - generic [ref=e133]:
+              - paragraph [ref=e134]: 광주본사
+              - paragraph [ref=e135]: 광주 동구 금남로 193-22 광주AI창업캠프 1호, 4층 403호
+        - generic [ref=e136]:
+          - paragraph [ref=e137]: © 2026 Brainworks. 모든 권리 보유.
+          - generic [ref=e138]:
+            - link "개인정보처리방침" [ref=e139] [cursor=pointer]:
+              - /url: /privacy
+            - link "이용약관" [ref=e140] [cursor=pointer]:
+              - /url: /terms
+  - alert [ref=e141]

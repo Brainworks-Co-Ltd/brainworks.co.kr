@@ -24,6 +24,12 @@ function formatDate(dateString, language) {
   }).format(date);
 }
 
+function getStatusClassName(notice) {
+  return notice.status?.ko === '마감'
+    ? 'bg-slate-100 text-slate-600'
+    : 'bg-emerald-50 text-emerald-700';
+}
+
 export default function BidNoticeBoard({ notices }) {
   const { language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
@@ -120,7 +126,9 @@ export default function BidNoticeBoard({ notices }) {
                       </span>
                     </span>
                     <span>
-                      <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                      <span
+                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getStatusClassName(notice)}`}
+                      >
                         {translate(notice.status, language)}
                       </span>
                     </span>

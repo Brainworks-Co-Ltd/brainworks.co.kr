@@ -33,6 +33,8 @@ export default function BidNoticeDetail({ notice }) {
 
   const details = notice.details?.[language] ?? notice.details?.ko ?? [];
   const attachments = notice.attachments ?? [];
+  const emails = notice.emails ?? (notice.email ? [notice.email] : []);
+  const isClosed = notice.status?.ko === '마감';
 
   const overviewItems = [
     {
@@ -68,7 +70,11 @@ export default function BidNoticeDetail({ notice }) {
               <span className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 {translate(notice.category, language)}
               </span>
-              <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+              <span
+                className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                  isClosed ? 'bg-slate-100 text-slate-600' : 'bg-emerald-50 text-emerald-700'
+                }`}
+              >
                 {translate(notice.status, language)}
               </span>
               <span className="text-sm text-slate-500">{notice.noticeNo}</span>
@@ -168,11 +174,21 @@ export default function BidNoticeDetail({ notice }) {
                     {language === 'ko' ? '입찰 문의 및 제출처' : 'Bid Contact and Submission'}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-blue-900">
-                    {translate(notice.contact, language)} ·{' '}
-                    <a href={`mailto:${notice.email}`} className="font-semibold underline">
-                      {notice.email}
-                    </a>
+                    {translate(notice.contact, language)}
                   </p>
+                  {emails.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm leading-6 text-blue-900">
+                      {emails.map((email) => (
+                        <a
+                          key={email}
+                          href={`mailto:${email}`}
+                          className="font-semibold underline"
+                        >
+                          {email}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                   {notice.phone && (
                     <p className="mt-2 flex items-center gap-2 text-sm leading-6 text-blue-900">
                       <Phone className="h-4 w-4" aria-hidden="true" />

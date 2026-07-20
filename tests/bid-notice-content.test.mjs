@@ -32,13 +32,13 @@ test('bid notice detail page exposes downloadable bid notice and RFP files', () 
   const expectedDownloads = [
     {
       label: '입찰공고서',
-      path: '/files/bid-notices/indonesia-infra-bid-notice.docx',
-      file: 'public/files/bid-notices/indonesia-infra-bid-notice.docx',
+      path: '/files/bid-notices/입찰공고문(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
+      file: 'public/files/bid-notices/입찰공고문(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
     },
     {
       label: '제안요청서',
-      path: '/files/bid-notices/indonesia-infra-rfp.docx',
-      file: 'public/files/bid-notices/indonesia-infra-rfp.docx',
+      path: '/files/bid-notices/제안요청서(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
+      file: 'public/files/bid-notices/제안요청서(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
     },
   ];
 
@@ -48,7 +48,41 @@ test('bid notice detail page exposes downloadable bid notice and RFP files', () 
 
   for (const item of expectedDownloads) {
     assert.match(dataSource, new RegExp(item.label));
-    assert.match(dataSource, new RegExp(item.path.replaceAll('/', '\\/')));
+    assert.ok(dataSource.includes(item.path), `${item.path} should be referenced`);
     assert.ok(existsSync(path.join(root, item.file)), `${item.file} should exist`);
+  }
+});
+
+test('reannounced bid closes the original notice and uses the new schedule and recipients', () => {
+  const dataSource = readProjectFile('src/data/bidNotices.js');
+  const popupSource = readProjectFile('src/data/popups.js');
+  const detailPage = readProjectFile('src/pages/bid-notice/[slug].jsx');
+
+  assert.match(dataSource, /indonesia-road-ai-infra-reannouncement-2026/);
+  assert.match(dataSource, /BW-BID-2026-002/);
+  assert.match(dataSource, /재공고/);
+  assert.match(dataSource, /ko: '마감'/);
+  assert.match(dataSource, /2026-07-20/);
+  assert.match(dataSource, /2026-07-24/);
+  assert.match(dataSource, /kdh0401@brainworks\.co\.kr/);
+  assert.match(dataSource, /austin@brainworks\.co\.kr/);
+  assert.match(
+    dataSource,
+    /\/files\/bid-notices\/\[재공고\]입찰공고문\(인도네시아 실증 인프라 구축 및 관리 대행\)\.hwpx/,
+  );
+  assert.match(
+    dataSource,
+    /\/files\/bid-notices\/\[재공고\]제안요청서\(인도네시아 실증 인프라 구축 및 관리 대행\)\.hwpx/,
+  );
+  assert.match(popupSource, /재공고/);
+  assert.match(detailPage, /notice\.emails/);
+
+  const reannouncementFiles = [
+    'public/files/bid-notices/[재공고]입찰공고문(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
+    'public/files/bid-notices/[재공고]제안요청서(인도네시아 실증 인프라 구축 및 관리 대행).hwpx',
+  ];
+
+  for (const file of reannouncementFiles) {
+    assert.ok(existsSync(path.join(root, file)), `${file} should exist`);
   }
 });
