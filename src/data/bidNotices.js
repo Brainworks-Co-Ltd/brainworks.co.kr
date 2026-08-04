@@ -3,8 +3,8 @@ export const bidNotices = [
     slug: 'indonesia-road-ai-infra-reannouncement-2026',
     noticeNo: 'BW-BID-2026-002',
     status: {
-      ko: '접수중',
-      en: 'Open',
+      ko: '마감',
+      en: 'Closed',
     },
     category: {
       ko: '공개경쟁입찰 재공고',

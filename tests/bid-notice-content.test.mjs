@@ -53,7 +53,7 @@ test('bid notice detail page exposes downloadable bid notice and RFP files', () 
   }
 });
 
-test('reannounced bid closes the original notice and uses the new schedule and recipients', () => {
+test('all bid notices are closed and bid popups are disabled', () => {
   const dataSource = readProjectFile('src/data/bidNotices.js');
   const popupSource = readProjectFile('src/data/popups.js');
   const detailPage = readProjectFile('src/pages/bid-notice/[slug].jsx');
@@ -61,7 +61,9 @@ test('reannounced bid closes the original notice and uses the new schedule and r
   assert.match(dataSource, /indonesia-road-ai-infra-reannouncement-2026/);
   assert.match(dataSource, /BW-BID-2026-002/);
   assert.match(dataSource, /재공고/);
-  assert.match(dataSource, /ko: '마감'/);
+  assert.equal(dataSource.match(/ko: '마감'/g)?.length, 2);
+  assert.equal(dataSource.match(/en: 'Closed'/g)?.length, 2);
+  assert.doesNotMatch(dataSource, /ko: '접수중'/);
   assert.match(dataSource, /2026-07-20/);
   assert.match(dataSource, /2026-07-24/);
   assert.match(dataSource, /kdh0401@brainworks\.co\.kr/);
@@ -74,7 +76,8 @@ test('reannounced bid closes the original notice and uses the new schedule and r
     dataSource,
     /\/files\/bid-notices\/\[재공고\]제안요청서\(인도네시아 실증 인프라 구축 및 관리 대행\)\.hwpx/,
   );
-  assert.match(popupSource, /재공고/);
+  assert.match(popupSource, /return \[\];/);
+  assert.doesNotMatch(popupSource, /latestBid|재공고/);
   assert.match(detailPage, /notice\.emails/);
 
   const reannouncementFiles = [
