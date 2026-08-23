@@ -8,6 +8,7 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { useLocale } from "@/shared/routing/useLocale";
 import awardsData from "@/utils/awardsData";
 import certificationsData from "@/utils/certificationsData";
+import { getPublishedHonors } from "@/server/modules/honors/queries";
 
 const copy = {
   ko: {
@@ -41,7 +42,7 @@ const formatAwardPeriod = (year, date) => {
   return String(year);
 };
 
-export default function HonorsPage() {
+export default function HonorsPage({ awards = awardsData, certifications = certificationsData }) {
   const { language } = useLocale();
   const t = copy[language];
 
@@ -71,7 +72,7 @@ export default function HonorsPage() {
                     {t.awardsLabel}
                   </h2>
                   <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-                    {awardsData.map((award, index) => (
+                    {awards.map((award, index) => (
                       <article
                         key={[award.slug || award.title.ko, award.year].join(
                           "-",
@@ -111,7 +112,7 @@ export default function HonorsPage() {
                     {t.certificationsLabel}
                   </h2>
                   <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-                    {certificationsData.map((cert) => (
+                    {certifications.map((cert) => (
                       <article
                         key={[cert.slug || cert.title.ko, cert.org.ko].join(
                           "-",
@@ -152,4 +153,9 @@ export default function HonorsPage() {
       <Footer />
     </div>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  const data = await getPublishedHonors(locale === "en" ? "en" : "ko");
+  return { props: data };
 }
