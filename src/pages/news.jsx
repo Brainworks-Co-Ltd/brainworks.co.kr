@@ -236,10 +236,12 @@ export default function News({ newsItems }) {
 }
 
 export async function getServerSideProps({ locale, query }) {
-  const newsItems = getPublishedNewsList({
-    locale: locale === "en" ? "en" : "ko",
-    query,
-  }).items;
+  const newsItems = (
+    await getPublishedNewsList({
+      locale: locale === "en" ? "en" : "ko",
+      query,
+    })
+  ).items;
 
   return {
     props: {

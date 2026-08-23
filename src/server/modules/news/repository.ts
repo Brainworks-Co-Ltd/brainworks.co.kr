@@ -74,15 +74,29 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         updatedByActorId: actorId,
       })),
     );
-    await tx
-      .insert(newsSlugs)
-      .values({
-        newsId: created.id,
-        slug: input.slug,
-        createdByActorId: actorId,
-      });
+    await tx.insert(newsSlugs).values({
+      newsId: created.id,
+      slug: input.slug,
+      createdByActorId: actorId,
+    });
     return created;
   });
+}
+
+export async function getAdminNews(id: string) {
+  const db = getDb();
+  const parent = await db.select().from(news).where(eq(news.id, id)).limit(1);
+  if (!parent[0]) throw new HttpError("NOT_FOUND");
+  const locales = await db
+    .select()
+    .from(newsLocales)
+    .where(eq(newsLocales.newsId, id));
+  const slug = await db
+    .select({ slug: newsSlugs.slug })
+    .from(newsSlugs)
+    .where(and(eq(newsSlugs.newsId, id), eq(newsSlugs.isCurrent, true)))
+    .limit(1);
+  return { ...parent[0], slug: slug[0]?.slug || "", locales };
 }
 
 export async function saveNews(

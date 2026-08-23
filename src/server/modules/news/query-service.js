@@ -3,6 +3,10 @@ import {
   readStaticNewsDetail,
   readStaticNewsList,
 } from "@/server/modules/news/static-source";
+import {
+  readDatabaseNewsDetail,
+  readDatabaseNewsList,
+} from "@/server/modules/news/database-source";
 
 function matches(item, q, category) {
   const searchable = [item.title, item.summary, item.category]
@@ -14,7 +18,10 @@ function matches(item, q, category) {
   );
 }
 
-export function getPublishedNewsList({ locale = "ko", query = {} } = {}) {
+export async function getPublishedNewsList({ locale = "ko", query = {} } = {}) {
+  if (process.env.DATABASE_URL) {
+    return readDatabaseNewsList(locale, query);
+  }
   const options = validateNewsQuery(query);
   const items = readStaticNewsList(locale).filter((item) =>
     matches(item, options.q, options.category),
@@ -29,6 +36,9 @@ export function getPublishedNewsList({ locale = "ko", query = {} } = {}) {
   };
 }
 
-export function getPublishedNewsDetail({ slug, locale = "ko" }) {
+export async function getPublishedNewsDetail({ slug, locale = "ko" }) {
+  if (process.env.DATABASE_URL) {
+    return readDatabaseNewsDetail(slug, locale);
+  }
   return readStaticNewsDetail(slug, locale);
 }

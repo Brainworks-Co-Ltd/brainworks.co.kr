@@ -18,11 +18,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     !Number.isInteger(expectedVersion) ||
     typeof request.body?.slug !== "string"
   ) {
-    response
-      .status(400)
-      .json({
-        error: { code: "BAD_REQUEST", message: "슬러그와 버전이 필요합니다." },
-      });
+    response.status(400).json({
+      error: { code: "BAD_REQUEST", message: "슬러그와 버전이 필요합니다." },
+    });
     return;
   }
   const result = await changeNewsSlug(

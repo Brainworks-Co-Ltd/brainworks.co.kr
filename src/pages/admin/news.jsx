@@ -20,17 +20,31 @@ export default function AdminNews({ items }) {
       />
       <section className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {items.length === 0 ? (
-          <p className="p-6 text-sm text-[var(--bw-color-muted)]">등록된 뉴스가 없습니다.</p>
+          <p className="p-6 text-sm text-[var(--bw-color-muted)]">
+            등록된 뉴스가 없습니다.
+          </p>
         ) : (
           <ul className="divide-y divide-slate-200">
             {items.map((item) => (
-              <li key={item.slug} className="flex flex-col gap-2 p-5 md:flex-row md:items-center md:justify-between">
+              <li
+                key={item.slug}
+                className="flex flex-col gap-2 p-5 md:flex-row md:items-center md:justify-between"
+              >
                 <div>
-                  <p className="text-xs text-[var(--bw-color-muted)]">{item.category} · {item.date}</p>
+                  <p className="text-xs text-[var(--bw-color-muted)]">
+                    {item.category} · {item.date}
+                  </p>
                   <h2 className="mt-1 font-semibold">{item.title}</h2>
-                  <p className="mt-1 text-sm text-[var(--bw-color-muted)]">{item.summary}</p>
+                  <p className="mt-1 text-sm text-[var(--bw-color-muted)]">
+                    {item.summary}
+                  </p>
                 </div>
-                <a href={`/news/${item.slug}`} className="text-sm font-semibold underline-offset-4 hover:underline">공개 보기</a>
+                <a
+                  href={`/news/${item.slug}`}
+                  className="text-sm font-semibold underline-offset-4 hover:underline"
+                >
+                  공개 보기
+                </a>
               </li>
             ))}
           </ul>
@@ -43,6 +57,6 @@ export default function AdminNews({ items }) {
 export async function getServerSideProps(context) {
   const guard = await requireAdminPage(context);
   if ("redirect" in guard) return guard;
-  const items = getPublishedNewsList({ locale: "ko" }).items;
+  const items = (await getPublishedNewsList({ locale: "ko" })).items;
   return { props: { items } };
 }

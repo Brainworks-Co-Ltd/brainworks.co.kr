@@ -109,10 +109,18 @@ export default function NewsDetail({ news }) {
 }
 
 export async function getServerSideProps({ params, locale }) {
-  const news = getPublishedNewsDetail({
+  const result = await getPublishedNewsDetail({
     slug: params.slug,
     locale: locale === "en" ? "en" : "ko",
   });
+
+  if (result?.redirect) {
+    return {
+      redirect: { destination: `/news/${result.redirect}`, permanent: true },
+    };
+  }
+
+  const news = result?.news || result;
 
   if (!news) {
     return {

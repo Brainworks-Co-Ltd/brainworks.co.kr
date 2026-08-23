@@ -21,11 +21,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
         : null;
   const expectedVersion = Number(request.body?.expectedVersion);
   if (!locale || !Number.isInteger(expectedVersion)) {
-    response
-      .status(400)
-      .json({
-        error: { code: "BAD_REQUEST", message: "로케일과 버전이 필요합니다." },
-      });
+    response.status(400).json({
+      error: { code: "BAD_REQUEST", message: "로케일과 버전이 필요합니다." },
+    });
     return;
   }
   const result = await publishNewsLocale(
