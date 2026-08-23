@@ -4,7 +4,9 @@ import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
-import { getAllNewsMeta } from "@/lib/news";
+import { PageHero } from "@/components/public/PageHero";
+import { SeoMetadata } from "@/components/public/SeoMetadata";
+import { getPublishedNewsList } from "@/server/modules/news/query-service";
 
 function translate(value, language) {
   if (!value) return "";
@@ -153,10 +155,27 @@ export default function News({ newsItems }) {
   }, [newsItems, activeFilter, searchQuery]);
 
   return (
-    <div id="main-content" className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900">
       <Header />
+      <SeoMetadata
+        title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
+        description={
+          language === "ko"
+            ? "브레인웍스의 최신 소식과 협업 기록을 확인합니다."
+            : "Explore Brainworks updates and partnerships."
+        }
+      />
 
-      <main className="pt-28 pb-16">
+      <main id="main-content" className="pb-16">
+        <PageHero
+          eyebrow="Brainworks News"
+          title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
+          description={
+            language === "ko"
+              ? "회사 동향부터 파트너십, 수상 소식까지 한눈에 확인하세요."
+              : "Track company updates, partnerships, and awards in one place."
+          }
+        />
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="space-y-2">
@@ -216,8 +235,11 @@ export default function News({ newsItems }) {
   );
 }
 
-export async function getStaticProps() {
-  const newsItems = getAllNewsMeta();
+export async function getServerSideProps({ locale, query }) {
+  const newsItems = getPublishedNewsList({
+    locale: locale === "en" ? "en" : "ko",
+    query,
+  }).items;
 
   return {
     props: {
