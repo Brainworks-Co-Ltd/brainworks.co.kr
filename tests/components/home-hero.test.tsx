@@ -42,6 +42,13 @@ describe("HomeHero", () => {
     ).toBeVisible();
   });
 
+  it("단일 장면에서는 자동 진행 상태 영역을 표시하지 않는다", () => {
+    render(<HomeHero scenes={[scenes[0]]} />);
+
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
+    expect(screen.queryByText("자동 진행")).not.toBeInTheDocument();
+  });
+
   it("장면 미디어 오류 시 텍스트와 CTA는 유지한다", () => {
     render(<HomeHero scenes={[scenes[0]]} />);
     fireEvent.error(screen.getByRole("img", { name: "첫 장면" }));

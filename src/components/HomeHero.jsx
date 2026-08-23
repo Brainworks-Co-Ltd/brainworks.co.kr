@@ -161,37 +161,33 @@ export default function HomeHero({ scenes = defaultScenes }) {
             </Link>
           </div>
 
-          <div className="mt-12 max-w-xl">
-            <div className="flex items-center justify-between gap-4 text-xs text-white/70">
-              {multipleScenes ? (
+          {multipleScenes ? (
+            <div className="mt-12 max-w-xl">
+              <div className="flex items-center justify-between gap-4 text-xs text-white/70">
                 <span>
                   {String(activeIndex + 1).padStart(2, "0")} /{" "}
                   {String(resolvedScenes.length).padStart(2, "0")}
                 </span>
-              ) : (
-                <span />
-              )}
-              <span>
-                {reducedMotion
-                  ? language === "ko"
-                    ? "정적 표시"
-                    : "Static mode"
-                  : isPlaying
+                <span>
+                  {reducedMotion
                     ? language === "ko"
-                      ? "자동 진행"
-                      : "Auto play"
-                    : language === "ko"
-                      ? "일시정지"
-                      : "Paused"}
-              </span>
-            </div>
-            <ProgressTrack
-              value={multipleScenes ? elapsed : 100}
-              max={100}
-              label={`${title} ${language === "ko" ? "진행률" : "progress"}`}
-              className="mt-3"
-            />
-            {multipleScenes ? (
+                      ? "정적 표시"
+                      : "Static mode"
+                    : isPlaying
+                      ? language === "ko"
+                        ? "자동 진행"
+                        : "Auto play"
+                      : language === "ko"
+                        ? "일시정지"
+                        : "Paused"}
+                </span>
+              </div>
+              <ProgressTrack
+                value={elapsed}
+                max={100}
+                label={`${title} ${language === "ko" ? "진행률" : "progress"}`}
+                className="mt-3"
+              />
               <div className="mt-4 flex items-center justify-between gap-4">
                 <CarouselControls
                   isPlaying={isPlaying}
@@ -243,8 +239,8 @@ export default function HomeHero({ scenes = defaultScenes }) {
                   })}
                 </div>
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
           <p className="sr-only" aria-live="polite">
             {title}
           </p>
