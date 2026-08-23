@@ -33,6 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
+      - run: npx prettier --check package.json next.config.js .github/workflows/ci.yml
       - run: npm test
       - run: npm run test:db
       - run: npm run build
