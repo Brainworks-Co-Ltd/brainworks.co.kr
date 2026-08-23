@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Services from "@/components/Services";
+import HomeHero from "@/components/HomeHero";
+import BusinessAreaCarousel from "@/components/home/BusinessAreaCarousel";
 import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
@@ -14,8 +14,8 @@ export default function Home({ newsItems, popups }) {
     <div id="main-content" className="min-h-screen">
       <Header />
       <BidNoticePopup popups={popups} />
-      <Hero />
-      <Services />
+      <HomeHero />
+      <BusinessAreaCarousel />
       <Clients />
       <CTA />
       <Footer />

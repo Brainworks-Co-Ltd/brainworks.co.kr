@@ -3,13 +3,14 @@ export function CarouselControls({
   onPrevious,
   onNext,
   onTogglePlay,
+  labels = { previous: "이전", next: "다음", pause: "일시정지", play: "재생" },
   className = "",
 }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <button
         type="button"
-        aria-label="이전"
+        aria-label={labels.previous}
         className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white hover:bg-white/10"
         onClick={onPrevious}
       >
@@ -17,7 +18,7 @@ export function CarouselControls({
       </button>
       <button
         type="button"
-        aria-label={isPlaying ? "일시정지" : "재생"}
+        aria-label={isPlaying ? labels.pause : labels.play}
         className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white hover:bg-white/10"
         onClick={onTogglePlay}
       >
@@ -25,7 +26,7 @@ export function CarouselControls({
       </button>
       <button
         type="button"
-        aria-label="다음"
+        aria-label={labels.next}
         className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white hover:bg-white/10"
         onClick={onNext}
       >
