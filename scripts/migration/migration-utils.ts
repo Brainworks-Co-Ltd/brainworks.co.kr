@@ -14,5 +14,5 @@ export function writeUnresolved(runId: string, rows: Array<{ sourceKey: string; 
 
 export function summarize(sources: MigrationSource[], contentType: string, dryRun: boolean): MigrationSummary {
   const selected = sources.filter((source) => source.contentType === contentType);
-  return { runId: selected[0]?.runId || "", dryRun, contentType, counts: { source: selected.length, created: dryRun ? 0 : selected.length, updated: 0, skipped: 0, unresolved: 0 }, sourceKeys: selected.map((source) => source.sourceKey), sourceChecksums: Object.fromEntries(selected.map((source) => [source.sourceKey, source.sourceChecksum])) };
+  return { runId: selected[0]?.runId || "", dryRun, contentType, counts: { source: selected.length, created: 0, updated: 0, skipped: selected.length, unresolved: 0 }, sourceKeys: selected.map((source) => source.sourceKey), sourceChecksums: Object.fromEntries(selected.map((source) => [source.sourceKey, source.sourceChecksum])) };
 }
