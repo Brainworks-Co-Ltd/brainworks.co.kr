@@ -6,3 +6,5 @@ export * from "@/server/db/schema/common";
 export * from "@/server/db/schema/contact";
 export * from "@/server/db/schema/honors";
 export * from "@/server/db/schema/news";
+export * from "@/server/db/schema/notices";
+export * from "@/server/db/schema/popup-notices";
