@@ -6,10 +6,10 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 import { StatePanel } from "@/components/ui/state-panel";
 
-export default function BusinessAreaExplorer() {
+export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
   const router = useRouter();
   const { language } = useLocale();
-  const areas = useMemo(() => getLocalizedBusinessAreas(language), [language]);
+  const areas = useMemo(() => providedAreas || getLocalizedBusinessAreas(language), [language, providedAreas]);
   const queryArea =
     typeof router.query.area === "string" ? router.query.area : "";
   const [activeId, setActiveId] = useState(queryArea || areas[0]?.id || "");

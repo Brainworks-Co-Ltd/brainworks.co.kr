@@ -4,8 +4,9 @@ import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import { useLocale } from "@/shared/routing/useLocale";
+import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
-export default function Services() {
+export default function Services({ areas }) {
   const { language } = useLocale();
 
   return (
@@ -38,10 +39,14 @@ export default function Services() {
           }}
         />
         <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-          <BusinessAreaExplorer />
+          <BusinessAreaExplorer areas={areas} />
         </div>
       </main>
       <Footer />
     </div>
   );
+}
+
+export async function getServerSideProps({ locale }) {
+  return { props: { areas: await getPublishedBusinessAreas(locale === "en" ? "en" : "ko") } };
 }

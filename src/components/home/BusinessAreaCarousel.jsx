@@ -8,9 +8,9 @@ import { ProgressTrack } from "@/components/ui/progress-track";
 
 const ROTATION_MS = 6000;
 
-export default function BusinessAreaCarousel() {
+export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
   const { language } = useLocale();
-  const areas = useMemo(() => getLocalizedBusinessAreas(language), [language]);
+  const areas = useMemo(() => providedAreas || getLocalizedBusinessAreas(language), [language, providedAreas]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [elapsed, setElapsed] = useState(0);

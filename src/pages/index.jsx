@@ -9,15 +9,16 @@ import Footer from "@/components/Footer";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { getPublishedPopupNotices } from "@/server/modules/popup-notices/queries";
+import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
-export default function Home({ newsItems, popupNotices }) {
+export default function Home({ newsItems, popupNotices, areas }) {
   return (
     <div className="min-h-screen">
       <Header />
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
         <HomeHero />
-        <BusinessAreaCarousel />
+        <BusinessAreaCarousel areas={areas} />
         <Clients />
         <LatestNews items={newsItems} />
         <CTA />
@@ -35,11 +36,13 @@ export async function getServerSideProps({ locale }) {
     })
   ).items;
   const popupNotices = await getPublishedPopupNotices(currentLocale);
+  const areas = await getPublishedBusinessAreas(currentLocale);
 
   return {
     props: {
       newsItems,
       popupNotices,
+      areas,
     },
   };
 }
