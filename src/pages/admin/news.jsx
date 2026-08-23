@@ -1,59 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import NewsForm from '@/components/admin/NewsForm';
-import NewsList from '@/components/admin/NewsList';
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { AdminShell } from "@/components/admin/AdminShell";
+import { requireAdminPage } from "@/server/auth/require-admin";
 
-export default function NewsAdmin() {
-  const sessionInfo = useSession();
-  const session = sessionInfo?.data;
-  const status = sessionInfo?.status ?? 'loading';
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (status === 'loading') {
-      return;
-    }
-
-    if (status === 'unauthenticated') {
-      router.replace('/auth/signin');
-      return;
-    }
-
-    if (!session?.user?.isAdmin) {
-      router.replace('/');
-      return;
-    }
-
-    setIsLoading(false);
-  }, [status, session, router]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
+export default function AdminNewsPlaceholder() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">뉴스 관리</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">새 뉴스 작성</h2>
-          <NewsForm />
-        </div>
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">뉴스 목록</h2>
-          <NewsList />
-        </div>
-      </div>
-    </div>
+    <AdminShell activePath="/admin/news">
+      <AdminPageHeader
+        title="뉴스"
+        description="뉴스 수직 슬라이스에서 목록과 편집 기능을 연결합니다."
+      />
+      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
+        <p className="text-sm leading-7 text-[var(--bw-color-muted)]">
+          관리자 인증이 적용된 영역입니다. 콘텐츠 편집 기능은 다음
+          체크포인트에서 연결됩니다.
+        </p>
+      </section>
+    </AdminShell>
   );
 }
 
-export function getServerSideProps({ locale }) {
-  if (locale === 'en') {
-    return { notFound: true };
-  }
-
-  return { props: {} };
-}
+export const getServerSideProps = requireAdminPage;
