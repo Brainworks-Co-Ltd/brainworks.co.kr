@@ -15,6 +15,7 @@ const navItems = [
     label: { ko: "글로벌 프로그램", en: "Global Programs" },
   },
   { href: "/news", label: { ko: "소식", en: "News" } },
+  { href: "/notices", label: { ko: "공지사항", en: "Notices" } },
   { href: "/contact", label: { ko: "문의하기", en: "Contact" } },
 ];
 

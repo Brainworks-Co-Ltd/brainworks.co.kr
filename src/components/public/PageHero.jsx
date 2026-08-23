@@ -4,8 +4,8 @@ export function PageHero({
   eyebrow,
   title,
   description,
-  action,
-  secondaryAction,
+  action = null,
+  secondaryAction = null,
   dark = false,
 }) {
   const surface = dark
