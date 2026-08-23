@@ -1,0 +1,38 @@
+name: Build release artifact
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*.*.*"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Assemble immutable release
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_dir="release/${GITHUB_SHA}"
+          mkdir -p "$release_dir"
+          cp -R .next/standalone "$release_dir/standalone"
+          cp -R .next/static "$release_dir/standalone/.next/static"
+          cp -R public "$release_dir/standalone/public"
+          cp -R src/server/db/migrations "$release_dir/migrations"
+          cp scripts/migrate.cjs "$release_dir/migrate.cjs"
+          printf '{"sha":"%s","createdAt":"%s"}\n' "$GITHUB_SHA" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$release_dir/release-manifest.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: brainworks-release-${{ github.sha }}
+          path: release/${{ github.sha }}
+          if-no-files-found: error
