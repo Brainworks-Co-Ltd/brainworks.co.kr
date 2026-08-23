@@ -1,3 +1,10 @@
+---
+wiki_type: guide
+status: review
+updated: 2026-08-23
+sources: []
+---
+
 # 뉴스 업데이트 가이드
 
 이 문서는 회사 웹사이트의 뉴스 섹션을 Markdown 파일 기반으로 업데이트하는 방법을 설명합니다. 모든 뉴스 콘텐츠는 빌드 시 정적으로 수집되므로, Markdown 파일을 추가/수정한 뒤에는 `next build` 혹은 `next dev`를 다시 실행해야 변경 사항이 반영됩니다.
