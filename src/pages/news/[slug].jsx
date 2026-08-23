@@ -1,26 +1,27 @@
-import React from 'react';
-import Link from 'next/link';
-import { useLocale } from '@/shared/routing/useLocale';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import { getNewsSlugs, getNewsDetail } from '@/lib/news';
+import React from "react";
+import Link from "next/link";
+import { useLocale } from "@/shared/routing/useLocale";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { getNewsSlugs, getNewsDetail } from "@/lib/news";
 
 function translate(value, language) {
-  if (!value) return '';
-  if (typeof value === 'string') return value;
-  return value[language] ?? value.ko ?? value.en ?? '';
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  return value[language] ?? value.ko ?? value.en ?? "";
 }
 
 export default function NewsDetail({ news }) {
   const { language } = useLocale();
-  const contentHtml = news?.content?.[language] ?? news?.content?.ko ?? news?.content?.en ?? '';
+  const contentHtml =
+    news?.content?.[language] ?? news?.content?.ko ?? news?.content?.en ?? "";
 
   if (!news) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div id="main-content" className="min-h-screen bg-gray-50">
       <Header />
 
       <div className="bg-white py-24">
@@ -31,9 +32,7 @@ export default function NewsDetail({ news }) {
           <h1 className="text-4xl font-bold text-gray-900 mb-6">
             {translate(news.title, language)}
           </h1>
-          <div className="text-gray-500 text-sm">
-            {news.date}
-          </div>
+          <div className="text-gray-500 text-sm">{news.date}</div>
         </div>
       </div>
 
@@ -47,21 +46,27 @@ export default function NewsDetail({ news }) {
             />
           </div>
         )}
-        <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+        <div
+          className="prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: contentHtml }}
+        />
 
         {news.externalLinks?.length > 0 && (
           <div className="mt-12 rounded-3xl border border-slate-200 bg-slate-50 p-8 shadow-sm">
             <h2 className="text-xl font-semibold text-slate-900">
-              {language === 'ko' ? '관련 외부 기사' : 'External Coverage'}
+              {language === "ko" ? "관련 외부 기사" : "External Coverage"}
             </h2>
             <p className="mt-2 text-sm text-slate-600">
-              {language === 'ko'
-                ? '아래 링크를 통해 보도 내용을 직접 확인하세요.'
-                : 'Explore the original coverage through the links below.'}
+              {language === "ko"
+                ? "아래 링크를 통해 보도 내용을 직접 확인하세요."
+                : "Explore the original coverage through the links below."}
             </p>
             <ul className="mt-6 space-y-3">
               {news.externalLinks.map((link, index) => (
-                <li key={[link.url, index].join('-')} className="flex items-start gap-3 text-sm">
+                <li
+                  key={[link.url, index].join("-")}
+                  className="flex items-start gap-3 text-sm"
+                >
                   <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-sky-500" />
                   <a
                     href={link.url}
@@ -79,9 +84,14 @@ export default function NewsDetail({ news }) {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <Link href="/news" className="inline-flex items-center gap-2 text-sky-600 hover:text-sky-800">
+        <Link
+          href="/news"
+          className="inline-flex items-center gap-2 text-sky-600 hover:text-sky-800"
+        >
           <span aria-hidden="true">←</span>
-          <span>{language === 'ko' ? '뉴스 목록으로 돌아가기' : 'Back to News List'}</span>
+          <span>
+            {language === "ko" ? "뉴스 목록으로 돌아가기" : "Back to News List"}
+          </span>
         </Link>
       </div>
 
