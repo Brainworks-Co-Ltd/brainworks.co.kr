@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
+import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -12,7 +13,6 @@ const copy = {
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
     ctaPrimary: "프로그램 상담 신청",
-    ctaSecondary: "문의하기",
     sectionTitle: "주요 프로그램",
     sectionSubtitle:
       "현지 파트너 매칭부터 글로벌 전시회, 연수까지 한 번에 준비하세요.",
@@ -30,7 +30,6 @@ const copy = {
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
     ctaPrimary: "Request Programme Consultation",
-    ctaSecondary: "Download Brochure",
     sectionTitle: "Programme Components",
     sectionSubtitle:
       "From business matching to exhibitions and executive training, everything is covered.",
@@ -221,25 +220,17 @@ export default function Outbound() {
         description={t.heroSubtitle}
       />
 
-      <main id="main-content" className="pt-24 pb-16">
-        <section className="relative overflow-hidden bg-gradient-to-r from-sky-700 via-blue-600 to-indigo-600 text-white">
-          <div
-            className="absolute inset-y-0 right-[-20%] h-full w-1/2 rounded-full bg-white/10 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="mx-auto max-w-5xl px-6 py-24">
-            <span className="text-sm uppercase tracking-[0.3em] text-white/70">
-              {t.heroBadge}
-            </span>
-            <h1 className="mt-4 text-4xl font-semibold md:text-5xl">
-              {t.heroTitle}
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg text-white/80">
-              {t.heroSubtitle}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3"></div>
-          </div>
-        </section>
+      <main id="main-content" className="pb-16">
+        <PageHero
+          eyebrow={t.heroBadge}
+          title={t.heroTitle}
+          description={t.heroSubtitle}
+          action={{
+            href: "/contact?topic=global",
+            label: t.ctaPrimary,
+          }}
+          dark
+        />
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">

@@ -7,6 +7,7 @@ export function PageHero({
   action = null,
   secondaryAction = null,
   dark = false,
+  children = null,
 }) {
   const surface = dark
     ? "bg-[var(--bw-color-ink)] text-white"
@@ -52,6 +53,7 @@ export function PageHero({
             ) : null}
           </div>
         ) : null}
+        {children ? <div className="mt-8">{children}</div> : null}
       </div>
     </section>
   );

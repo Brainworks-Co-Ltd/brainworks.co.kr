@@ -1,9 +1,9 @@
 import React from "react";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
+import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -11,7 +11,6 @@ const copy = {
     heroTitle: "AI 컨설팅",
     heroSubtitle: "전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공",
     heroCta: "상담 요청하기",
-    heroSecondary: "포트폴리오 보기",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
     caseTitle: "주요 컨설팅 사례",
@@ -24,7 +23,6 @@ const copy = {
     heroSubtitle:
       "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
     heroCta: "Request a Consultation",
-    heroSecondary: "View Portfolio",
     valueTitle: "How We Create Value",
     processTitle: "Consulting Methodology",
     caseTitle: "Representative Engagements",
@@ -181,19 +179,22 @@ export default function Consulting() {
         title={`${t.heroTitle} | Brainworks`}
         description={t.heroSubtitle}
       />
-      <main id="main-content" className="pt-20">
-        <section className="bg-slate-900 text-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl sm:text-5xl font-semibold leading-tight">
-                {t.heroTitle}
-              </h1>
-              <p className="mt-6 text-lg sm:text-xl text-slate-200">
-                {t.heroSubtitle}
-              </p>
-            </div>
-          </div>
-        </section>
+      <main id="main-content">
+        <PageHero
+          eyebrow="Brainworks Consulting"
+          title={t.heroTitle}
+          description={t.heroSubtitle}
+          action={{
+            href: "/contact?topic=consulting",
+            label: t.heroCta,
+          }}
+          secondaryAction={{
+            href: "/services",
+            label:
+              language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
+          }}
+          dark
+        />
 
         <section className="bg-white">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">

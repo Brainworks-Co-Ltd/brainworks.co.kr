@@ -4,6 +4,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
+import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const processSteps = [
@@ -504,38 +505,36 @@ export default function Education() {
         }
       />
 
-      <main id="main-content" className="pt-24 pb-16">
-        <section className="relative overflow-hidden bg-gradient-to-r from-sky-700 via-sky-600 to-indigo-600 text-white">
-          <div
-            className="absolute inset-y-0 right-[-20%] h-full w-1/2 rounded-full bg-white/10 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="mx-auto max-w-5xl px-6 py-24">
-            <span className="text-sm uppercase tracking-[0.3em] text-white/70">
-              AI Professional Education Program
-            </span>
-            <h1 className="mt-4 text-4xl font-semibold md:text-5xl">
-              {language === "ko"
-                ? "체계적인 AI 전문 인재 양성"
-                : "Structured development of AI specialists"}
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg text-white/80">
-              {language === "ko"
-                ? "AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성"
-                : "We deliver a practical journey that spans specialist education, generative AI training, hackathons, internships, and job-ready portfolios."}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {chips.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full bg-white/15 px-4 py-2 text-sm font-medium backdrop-blur"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
+      <main id="main-content" className="pb-16">
+        <PageHero
+          eyebrow="AI Professional Education"
+          title={
+            language === "ko"
+              ? "체계적인 AI 전문 인재 양성"
+              : "Structured development of AI specialists"
+          }
+          description={
+            language === "ko"
+              ? "AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성"
+              : "We deliver a practical journey that spans specialist education, generative AI training, hackathons, internships, and job-ready portfolios."
+          }
+          action={{
+            href: "/contact?topic=education",
+            label: language === "ko" ? "교육 상담" : "Discuss education",
+          }}
+          dark
+        >
+          <div className="flex flex-wrap gap-3">
+            {chips.map((item) => (
+              <span
+                key={item}
+                className="rounded-full bg-white/15 px-4 py-2 text-sm font-medium backdrop-blur"
+              >
+                {item}
+              </span>
+            ))}
           </div>
-        </section>
+        </PageHero>
 
         <section className="mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
           <div>
