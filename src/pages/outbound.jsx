@@ -229,7 +229,6 @@ export default function Outbound() {
             href: "/contact?topic=global",
             label: t.ctaPrimary,
           }}
-          dark
         />
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">

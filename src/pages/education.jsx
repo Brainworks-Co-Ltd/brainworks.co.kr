@@ -522,13 +522,12 @@ export default function Education() {
             href: "/contact?topic=education",
             label: language === "ko" ? "교육 상담" : "Discuss education",
           }}
-          dark
         >
           <div className="flex flex-wrap gap-3">
             {chips.map((item) => (
               <span
                 key={item}
-                className="rounded-full bg-white/15 px-4 py-2 text-sm font-medium backdrop-blur"
+                className="rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-medium text-[var(--bw-color-ink)]"
               >
                 {item}
               </span>

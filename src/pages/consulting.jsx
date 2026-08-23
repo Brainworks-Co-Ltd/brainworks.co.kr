@@ -193,7 +193,6 @@ export default function Consulting() {
             label:
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
-          dark
         />
 
         <section className="bg-white">
