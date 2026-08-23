@@ -176,7 +176,7 @@ export default function News({ newsItems }) {
               : "Track company updates, partnerships, and awards in one place."
           }
         />
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pt-16 md:pt-20">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="space-y-2">
               <h1 className="text-3xl font-semibold md:text-4xl">
