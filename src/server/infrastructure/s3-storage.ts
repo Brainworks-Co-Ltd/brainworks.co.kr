@@ -3,13 +3,9 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
+import type { PrivateObjectStorage } from "@/server/modules/assets/storage-port";
 
-export interface ObjectStorage {
-  put(key: string, body: Buffer, contentType: string): Promise<void>;
-  remove(key: string): Promise<void>;
-}
-
-export class S3ObjectStorage implements ObjectStorage {
+export class S3ObjectStorage implements PrivateObjectStorage {
   private readonly client: S3Client;
   private readonly bucket: string;
 

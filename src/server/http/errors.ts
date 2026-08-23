@@ -38,7 +38,7 @@ export class HttpError extends Error {
   readonly code: ErrorCode;
   readonly status: number;
 
-  constructor(code: ErrorCode, message = code) {
+  constructor(code: ErrorCode, message: string = code) {
     super(message);
     this.name = "HttpError";
     this.code = code;
