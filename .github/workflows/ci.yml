@@ -37,4 +37,3 @@ jobs:
       - run: npm run test:db
       - run: npm run build
       - run: npm audit --audit-level=high
-
