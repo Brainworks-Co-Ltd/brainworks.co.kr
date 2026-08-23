@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { getAllNewsMeta } from '@/lib/news';
 
 function translate(value, language) {
@@ -83,7 +83,7 @@ function NewsCard({ item, language }) {
 }
 
 export default function News({ newsItems }) {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 

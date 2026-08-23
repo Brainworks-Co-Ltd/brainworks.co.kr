@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AboutSidebar from '@/components/AboutSidebar';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import awardsData from '@/utils/awardsData';
 import certificationsData from '@/utils/certificationsData';
 
@@ -39,7 +39,7 @@ const formatAwardPeriod = (year, date) => {
 };
 
 export default function HonorsPage() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = copy[language];
 
   return (

@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const navItems = [
   {
@@ -30,7 +30,7 @@ const navItems = [
 ];
 
 export default function AboutSidebar({ active }) {
-  const { language } = useLanguage();
+  const { language } = useLocale();
 
   return (
     <nav className="lg:w-64">

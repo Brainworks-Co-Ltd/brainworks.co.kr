@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const quickLinks = [
   { href: '/', label: { ko: '홈', en: 'Home' } },
@@ -51,7 +51,7 @@ const offices = [
 ];
 
 export default function Footer() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
 
   return (
     <footer className="bg-slate-950 text-slate-200">

@@ -82,4 +82,12 @@ export default function SignIn() {
       </div>
     </div>
   );
-} 
+}
+
+export function getServerSideProps({ locale }) {
+  if (locale === 'en') {
+    return { notFound: true };
+  }
+
+  return { props: {} };
+}

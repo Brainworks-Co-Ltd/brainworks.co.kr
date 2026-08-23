@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { getLocalizedBusinessAreas } from '@/data/businessAreas';
 
 const ROTATION_MS = 6000;
 
 export default function Services() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const localizedAreas = useMemo(() => getLocalizedBusinessAreas(language), [language]);

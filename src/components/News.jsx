@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 export default function News({ items = [] }) {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const displayedItems = items.slice(0, 3);
 
   const translate = (value) => {

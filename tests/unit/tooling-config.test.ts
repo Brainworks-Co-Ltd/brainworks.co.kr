@@ -16,12 +16,13 @@ describe("기반 도구 설정", () => {
     expect(tsconfig.compilerOptions.noEmit).toBe(true);
   });
 
-  it("Pages Router 정적 기준선과 검사 명령을 유지한다", () => {
+  it("Pages Router 서버 실행 기준과 검사 명령을 유지한다", () => {
     const nextConfig = read("next.config.js");
     const packageJson = JSON.parse(read("package.json"));
 
-    expect(nextConfig).toContain('output: "export"');
+    expect(nextConfig).toContain('output: "standalone"');
     expect(nextConfig).toContain("trailingSlash: true");
+    expect(nextConfig).toContain('locales: ["ko", "en"]');
     expect(packageJson.scripts).toMatchObject({
       typecheck: "tsc --noEmit",
       lint: "eslint .",

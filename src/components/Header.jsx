@@ -1,6 +1,8 @@
 ﻿import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
+import { useRouter } from 'next/router';
+import { getLocaleSwitchPath } from '@/shared/routing/routes';
 
 const navItems = [
   { href: '/', label: { ko: '홈', en: 'Home' } },
@@ -8,14 +10,21 @@ const navItems = [
   { href: '/services', label: { ko: 'AI 솔루션', en: 'AI Solutions' } },
   { href: '/consulting', label: { ko: 'AI 컨설팅', en: 'AI Consulting' } },
   { href: '/education', label: { ko: 'AI 전문교육', en: 'AI Academy' } },
-  { href: '/outbound', label: { ko: '글로벌 프로그램', en: 'Global Programs' } },
+  { href: '/global-programs', label: { ko: '글로벌 프로그램', en: 'Global Programs' } },
   { href: '/news', label: { ko: '소식', en: 'News' } },
-  { href: '/bid-notice', label: { ko: '입찰공고', en: 'Bid Notices' } },
   { href: '/contact', label: { ko: '문의하기', en: 'Contact' } },
 ];
 
 export default function Header() {
-  const { language, toggleLanguage } = useLanguage();
+  const router = useRouter();
+  const { language } = useLocale();
+  const targetLocale = language === 'ko' ? 'en' : 'ko';
+
+  const toggleLanguage = () => {
+    void router.push(getLocaleSwitchPath(router.asPath, targetLocale), undefined, {
+      locale: targetLocale,
+    });
+  };
 
   return (
     <header className="fixed top-0 z-50 w-full bg-white shadow-md">

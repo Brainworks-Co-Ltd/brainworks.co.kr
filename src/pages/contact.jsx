@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import Header from '../components/Header';
 import Footer from '@/components/Footer';
 import { sendContactMail } from '@/lib/mail';
@@ -13,7 +13,7 @@ const createInitialFormState = () => ({
 });
 
 export default function Contact() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const [formData, setFormData] = useState(createInitialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);

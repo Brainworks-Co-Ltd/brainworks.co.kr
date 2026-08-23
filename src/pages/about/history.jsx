@@ -2,11 +2,11 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import AboutSidebar from '@/components/AboutSidebar';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { historyItems, historyAccentPalette } from '@/data/companyHistory';
 
 export default function CompanyHistoryPage() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
 
   return (
     <div className="min-h-screen bg-gray-50">

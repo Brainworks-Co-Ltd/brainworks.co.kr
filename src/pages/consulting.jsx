@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const copy = {
   ko: {
@@ -137,7 +137,7 @@ const processSteps = [
 
 
 export default function Consulting() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = copy[language];
 
   return (

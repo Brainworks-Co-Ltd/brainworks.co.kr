@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { getNewsSlugs, getNewsDetail } from '@/lib/news';
@@ -12,7 +12,7 @@ function translate(value, language) {
 }
 
 export default function NewsDetail({ news }) {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const contentHtml = news?.content?.[language] ?? news?.content?.ko ?? news?.content?.en ?? '';
 
   if (!news) {

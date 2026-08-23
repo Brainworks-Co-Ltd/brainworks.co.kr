@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import Link from 'next/link';
 
 export default function CTA() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
 
   return (
     <section className="py-20 bg-blue-600 text-white">
@@ -25,4 +25,4 @@ export default function CTA() {
       </div>
     </section>
   );
-} 
+}

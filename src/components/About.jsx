@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { translations } from '@/data/translations';
 
 export default function About() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = translations[language];
 
   const stats = [

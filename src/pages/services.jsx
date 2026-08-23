@@ -2,11 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { getLocalizedBusinessAreas } from '@/data/businessAreas';
 
 export default function Services() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const localizedAreas = useMemo(() => getLocalizedBusinessAreas(language), [language]);
   const [activeId, setActiveId] = useState(() => (localizedAreas[0]?.id ?? ''));
 

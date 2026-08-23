@@ -1,7 +1,8 @@
 ﻿import React from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const copy = {
   ko: {
@@ -201,7 +202,7 @@ const aiPrograms = [
 ];
 
 export default function Outbound() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = copy[language];
 
   const networkMapSrc = language === 'ko' ? '/images/outbound/맵.png' : '/images/outbound/map.png';
@@ -377,7 +378,7 @@ export default function Outbound() {
           <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-slate-900">{t.contactTitle}</h2>
             <p className="mt-2 text-sm text-slate-600">{t.contactSubtitle}</p>
-            <a
+            <Link
               href="/contact"
               className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-600"
             >
@@ -385,7 +386,7 @@ export default function Outbound() {
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6 6 6-6 6" />
               </svg>
-            </a>
+            </Link>
           </div>
         </section>
       </main>

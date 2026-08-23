@@ -48,4 +48,12 @@ export default function NewsAdmin() {
       </div>
     </div>
   );
-} 
+}
+
+export function getServerSideProps({ locale }) {
+  if (locale === 'en') {
+    return { notFound: true };
+  }
+
+  return { props: {} };
+}

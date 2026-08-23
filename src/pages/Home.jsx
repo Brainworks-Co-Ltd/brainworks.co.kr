@@ -1,10 +1,10 @@
 import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import { translations } from '@/data/translations';
 import Link from 'next/link';
 
 export default function Home() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = translations[language];
 
   return (
@@ -112,4 +112,4 @@ export default function Home() {
       </section>
     </div>
   );
-} 
+}

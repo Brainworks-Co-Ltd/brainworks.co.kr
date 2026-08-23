@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const processSteps = [
   {
@@ -382,7 +382,7 @@ const faqItems = [
 ];
 
 export default function Education() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const chips =
     language === 'ko'
       ? ['AI 전문교육', '생성형 AI 심화', '해커톤 & 멘토링', '국내·글로벌 인턴십', '커리어 포트폴리오·면접']
