@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { EditorialList } from "@/components/public/EditorialList";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 
@@ -34,67 +33,6 @@ const FILTER_KEYWORDS = {
   partnership: ["협약", "mou", "업무협약", "partnership", "agreement"],
   awards: ["수상", "award", "awards", "인증", "certification"],
 };
-
-function NewsCard({ item, language }) {
-  const title = translate(item.title, language);
-  const summary = translate(item.summary, language);
-  const category = translate(item.category, language);
-  const dateLabel = formatDate(item.date, language);
-  const image = item.thumbnail;
-
-  return (
-    <Link
-      href={"/news/" + item.slug}
-      className="group flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[var(--bw-color-brand)] hover:shadow-md"
-    >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[var(--bw-color-surface-muted)]">
-        {image ? (
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover transition duration-500 group-hover:scale-105"
-            sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 90vw"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[var(--bw-color-surface-muted)] text-sm text-[var(--bw-color-muted)]">
-            {language === "ko" ? "이미지 없음" : "No image"}
-          </div>
-        )}
-        <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--bw-color-ink)] shadow-sm">
-          {category || (language === "ko" ? "뉴스" : "News")}
-        </span>
-      </div>
-      <div className="flex flex-1 flex-col gap-4 p-6">
-        <div className="flex items-center justify-between text-xs text-[var(--bw-color-muted)]">
-          <span>{dateLabel}</span>
-        </div>
-        <h3 className="text-lg font-semibold text-[var(--bw-color-ink)] group-hover:underline">
-          {title}
-        </h3>
-        <p className="line-clamp-3 text-sm leading-relaxed text-[var(--bw-color-muted)]">
-          {summary}
-        </p>
-        <div className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[var(--bw-color-ink)]">
-          {language === "ko" ? "자세히 보기" : "Read More"}
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 12h14m-6-6l6 6-6 6"
-            />
-          </svg>
-        </div>
-      </div>
-    </Link>
-  );
-}
 
 export default function News({ newsItems }) {
   const { language } = useLocale();
@@ -204,6 +142,25 @@ export default function News({ newsItems }) {
             </div>
           </div>
 
+          <div
+            className="flex gap-5 overflow-x-auto border-b border-[var(--bw-color-line)]"
+            role="tablist"
+            aria-label={language === "ko" ? "소식 분류" : "News categories"}
+          >
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                role="tab"
+                aria-selected={activeFilter === option.value}
+                className={`whitespace-nowrap border-b-2 px-1 pb-3 text-sm font-semibold transition ${activeFilter === option.value ? "border-[var(--bw-color-brand)] text-[var(--bw-color-ink)]" : "border-transparent text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"}`}
+                onClick={() => setActiveFilter(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
           {filteredItems.length === 0 ? (
             <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-12 text-center text-[var(--bw-color-muted)] shadow-sm">
               {language === "ko"
@@ -211,11 +168,27 @@ export default function News({ newsItems }) {
                 : "No news matches your filters. Try a different keyword or category."}
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredItems.map((item) => (
-                <NewsCard key={item.slug} item={item} language={language} />
-              ))}
-            </div>
+            <EditorialList
+              featured={
+                filteredItems[0]
+                  ? {
+                      href: `/news/${filteredItems[0].slug}`,
+                      title: translate(filteredItems[0].title, language),
+                      summary: translate(filteredItems[0].summary, language),
+                      tag: translate(filteredItems[0].category, language),
+                      meta: formatDate(filteredItems[0].date, language),
+                      image: filteredItems[0].thumbnail,
+                    }
+                  : null
+              }
+              items={filteredItems.slice(1).map((item) => ({
+                href: `/news/${item.slug}`,
+                title: translate(item.title, language),
+                summary: translate(item.summary, language),
+                tag: translate(item.category, language),
+                meta: formatDate(item.date, language),
+              }))}
+            />
           )}
         </div>
       </main>

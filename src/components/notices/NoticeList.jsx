@@ -31,34 +31,32 @@ export default function NoticeList({
   return (
     <div>
       {items.length === 0 ? (
-        <p className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-12 text-center text-sm text-[var(--bw-color-muted)] shadow-sm">
+        <p className="border-y border-[var(--bw-color-line)] bg-white p-12 text-center text-sm text-[var(--bw-color-muted)]">
           {language === "ko"
             ? "게시된 공지사항이 없습니다."
             : "No notices have been published."}
         </p>
       ) : (
-        <div className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm">
-          <ul className="divide-y divide-slate-200">
+        <div className="border-y border-[var(--bw-color-line)] bg-white">
+          <ul className="divide-y divide-[var(--bw-color-line)]">
             {items.map((item) => (
               <li key={item.slug}>
                 <Link
                   href={`/notices/${item.slug}`}
-                  className="group flex flex-col gap-3 px-6 py-6 transition hover:bg-[var(--bw-color-surface-muted)] md:flex-row md:items-center md:justify-between md:px-8"
+                  className="group grid gap-3 px-2 py-6 transition hover:bg-[var(--bw-color-surface-muted)] md:grid-cols-[minmax(0,0.3fr)_minmax(0,1fr)_auto] md:items-center md:gap-8 md:px-0"
                 >
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">
-                      {item.isPinned ? (
-                        <span className="rounded-full bg-[var(--bw-color-ink)] px-2 py-1 font-semibold text-white">
-                          {language === "ko" ? "고정" : "Pinned"}
-                        </span>
-                      ) : null}
-                      <span>{formatDate(item.date, language)}</span>
-                    </div>
-                    <h2 className="mt-2 truncate text-lg font-semibold text-[var(--bw-color-ink)] group-hover:underline">
-                      {item.title}
-                    </h2>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">
+                    {item.isPinned ? (
+                      <span className="font-semibold text-[var(--bw-color-brand-strong)]">
+                        {language === "ko" ? "고정" : "Pinned"}
+                      </span>
+                    ) : null}
+                    <span>{formatDate(item.date, language)}</span>
                   </div>
-                  <span className="shrink-0 text-sm font-semibold text-[var(--bw-color-ink)]">
+                  <h2 className="truncate text-lg font-semibold text-[var(--bw-color-ink)] group-hover:underline">
+                    {item.title}
+                  </h2>
+                  <span className="hidden shrink-0 text-sm font-semibold text-[var(--bw-color-ink)] md:block">
                     {language === "ko" ? "자세히 보기 →" : "Read more →"}
                   </span>
                 </Link>

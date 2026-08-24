@@ -51,7 +51,7 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
         />
         <div className="mx-auto max-w-6xl px-6 py-12">
           <form
-            className="mb-8 flex flex-col gap-3 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-5 shadow-sm md:flex-row"
+            className="mb-8 flex flex-col gap-3 border-y border-[var(--bw-color-line)] bg-white py-5 md:flex-row"
             method="get"
           >
             <label className="sr-only" htmlFor="notice-search">

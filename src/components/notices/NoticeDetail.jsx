@@ -5,7 +5,7 @@ export default function NoticeDetail({ notice }) {
   const { language } = useLocale();
   return (
     <article className="mx-auto max-w-4xl px-6 py-16">
-      <div className="border-b border-slate-200 pb-8">
+      <div className="border-y border-[var(--bw-color-line)] py-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--bw-color-muted)]">
           {notice.date}
         </p>
@@ -19,7 +19,7 @@ export default function NoticeDetail({ notice }) {
       />
       {notice.attachments?.length ? (
         <section
-          className="mt-12 rounded-[var(--bw-radius-card)] border border-slate-200 bg-[var(--bw-color-surface-muted)] p-6"
+          className="mt-12 border-y border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-6"
           aria-labelledby="notice-attachments"
         >
           <h2 id="notice-attachments" className="text-lg font-semibold">

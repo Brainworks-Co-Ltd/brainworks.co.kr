@@ -45,7 +45,7 @@ export default function About() {
             <div className="flex-1 lg:max-w-5xl xl:max-w-6xl">
               <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
                 <div className="flex justify-center lg:w-1/2">
-                  <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-[var(--bw-color-surface-muted)] shadow-[var(--bw-shadow-soft)]">
+                  <div className="overflow-hidden rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-surface-muted)]">
                     <img
                       src="/images/대표사진.png"
                       alt={language === "ko" ? "CEO 사진" : "CEO photo"}
@@ -53,7 +53,7 @@ export default function About() {
                     />
                   </div>
                 </div>
-                <div className="space-y-6 text-left text-lg leading-relaxed text-[var(--bw-color-ink)] lg:w-1/2">
+                <div className="space-y-6 border-t border-[var(--bw-color-line)] pt-8 text-left text-lg leading-relaxed text-[var(--bw-color-ink)] lg:w-1/2 lg:border-t-0 lg:pt-0">
                   <p>
                     {language === "ko"
                       ? "안녕하세요, 브레인웍스 대표 강우현입니다."

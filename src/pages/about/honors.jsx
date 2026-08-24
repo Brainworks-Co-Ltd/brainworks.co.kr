@@ -72,15 +72,15 @@ export default function HonorsPage({
               <div className="mt-12 space-y-16">
                 <section>
                   <SectionHeader eyebrow="Awards" title={t.awardsLabel} />
-                  <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
                     {awards.map((award, index) => (
                       <article
                         key={[award.slug || award.title.ko, award.year].join(
                           "-",
                         )}
-                        className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                        className="grid gap-6 bg-white py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                       >
-                        <div className="relative flex h-48 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6">
+                        <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
                           <Image
                             src={award.image}
                             alt={`${award.title[language]} ${t.awardAltSuffix}`}
@@ -89,7 +89,7 @@ export default function HonorsPage({
                             className="object-contain"
                           />
                         </div>
-                        <div className="flex flex-1 flex-col gap-2 p-6">
+                        <div className="flex flex-1 flex-col gap-2">
                           <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
                             <span>#{String(index + 1).padStart(2, "0")}</span>
                             <span>
@@ -113,15 +113,15 @@ export default function HonorsPage({
                     eyebrow="Certifications"
                     title={t.certificationsLabel}
                   />
-                  <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
                     {certifications.map((cert) => (
                       <article
                         key={[cert.slug || cert.title.ko, cert.org.ko].join(
                           "-",
                         )}
-                        className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                        className="grid gap-6 bg-white py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                       >
-                        <div className="relative flex h-48 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6">
+                        <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
                           <Image
                             src={cert.image}
                             alt={`${cert.title[language]} ${t.certAltSuffix}`}
@@ -130,7 +130,7 @@ export default function HonorsPage({
                             className="object-contain"
                           />
                         </div>
-                        <div className="flex flex-1 flex-col gap-2 p-6">
+                        <div className="flex flex-1 flex-col gap-2">
                           <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
                             <span>{cert.org[language]}</span>
                             <span>{cert.year}</span>
