@@ -1,4 +1,10 @@
-export function ProgressTrack({ value, max = 100, label, className = "" }) {
+export function ProgressTrack({
+  value,
+  max = 100,
+  label,
+  tone = "dark",
+  className = "",
+}) {
   const safeMax = Math.max(1, max);
   const safeValue = Math.min(safeMax, Math.max(0, value));
   const percentage = (safeValue / safeMax) * 100;
@@ -11,7 +17,7 @@ export function ProgressTrack({ value, max = 100, label, className = "" }) {
         aria-valuemin={0}
         aria-valuemax={safeMax}
         aria-valuenow={safeValue}
-        className="h-1.5 overflow-hidden rounded-full bg-white/30"
+        className={`h-1.5 overflow-hidden rounded-full ${tone === "light" ? "bg-[var(--bw-color-line)]" : "bg-white/30"}`}
       >
         <span
           className="block h-full rounded-full bg-[var(--bw-color-brand)] transition-[width] duration-300"

@@ -97,11 +97,13 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
             <ProgressTrack
               value={areas.length > 1 ? elapsed : 100}
               max={100}
+              tone="light"
               label={`${activeArea.title} ${language === "ko" ? "진행률" : "progress"}`}
             />
             <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
               <CarouselControls
                 isPlaying={isPlaying}
+                tone="light"
                 onPrevious={() =>
                   selectArea((activeIndex - 1 + areas.length) % areas.length)
                 }
