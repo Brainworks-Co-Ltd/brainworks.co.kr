@@ -1,7 +1,7 @@
 ---
 wiki_type: index
 status: approved
-updated: 2026-08-24
+updated: 2026-08-25
 sources:
   - superpowers/specs/2026-08-22-llm-wiki-graphify-design.md
 ---
@@ -19,6 +19,7 @@ sources:
 ## 개발 계획 진입점
 
 - [개발 문서 인덱스](planning/00-development-document-index.md): 홈페이지 재구축 계획 문서의 단계와 검토 순서를 안내합니다.
+- [멘토님 미팅 기준 홈페이지 개편 범위](planning/00-mentor-meeting-scope.md): Clova Note 원문에서 확인한 관리자 대상과 제외 대상을 정리합니다.
 - [홈페이지 개편 제품 기획](planning/07-homepage-product-strategy-as-is-to-be.md): 개편의 AS-IS와 TO-BE, 제품 가설, 성공 정의, 에픽과 사용자 스토리를 연결합니다.
 - [콘텐츠·자산 준비도 감사](planning/06-content-and-asset-readiness-audit.md): 실제 배포 콘텐츠, 이미지, 관계, 라이선스와 회사 승인 결손을 판정합니다.
 - [멘토님 자료 요청 메시지](planning/06-01-mentor-content-request.md): 감사에서 확인된 결손을 회사 담당자에게 요청하는 전달문과 회신 양식입니다.
@@ -56,6 +57,7 @@ sources:
 - [콘텐츠 데이터 구조](planning/04-admin-and-data/04-04-content-data-structure.md): 홈페이지 콘텐츠의 데이터 구조와 관리 단위를 설계합니다.
 - [ERD와 데이터 관리](planning/04-admin-and-data/04-05-erd-and-data-management.md): 제안 데이터 모델과 관리 원칙을 정리합니다.
 - [로컬 통합 관리자 계정 프로비저닝 설계](superpowers/specs/2026-08-24-local-admin-provisioning-design.md): 로컬에서 통합 관리자 계정을 안전하게 준비하는 절차를 정의합니다.
+- [멘토 요구 기준 관리자 범위 정정 구현 계획](superpowers/plans/2026-08-25-admin-scope-correction.md): 사업 영역을 고정 공개 분류로 되돌리고 관리자 범위를 정정하는 작업 순서입니다.
 
 ## 기술 설계
 
