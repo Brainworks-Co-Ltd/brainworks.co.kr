@@ -28,6 +28,7 @@ export default function About() {
         }
       />
       <PageHero
+        variant="plain"
         eyebrow={language === "ko" ? "About Brainworks" : "About Brainworks"}
         title={language === "ko" ? "CEO 메시지" : "CEO Message"}
         description={

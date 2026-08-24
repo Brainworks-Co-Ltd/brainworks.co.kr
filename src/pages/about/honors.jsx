@@ -58,6 +58,7 @@ export default function HonorsPage({
       <Header />
       <SeoMetadata title={`${t.title} | Brainworks`} description={t.subtitle} />
       <PageHero
+        variant="plain"
         eyebrow="About Brainworks"
         title={t.title}
         description={t.subtitle}

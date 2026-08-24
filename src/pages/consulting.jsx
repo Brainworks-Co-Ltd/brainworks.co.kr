@@ -182,6 +182,7 @@ export default function Consulting() {
       />
       <main id="main-content">
         <PageHero
+          variant="plain"
           eyebrow="Brainworks Consulting"
           title={t.heroTitle}
           description={t.heroSubtitle}

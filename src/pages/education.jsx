@@ -508,6 +508,7 @@ export default function Education() {
 
       <main id="main-content" className="pb-16">
         <PageHero
+          variant="plain"
           eyebrow="AI Professional Education"
           title={
             language === "ko"

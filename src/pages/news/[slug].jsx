@@ -37,6 +37,7 @@ export default function NewsDetail({ news }) {
 
       <main id="main-content">
         <PageHero
+          variant="plain"
           eyebrow={translate(news.category, language)}
           title={translate(news.title, language)}
           description={`${news.date} · ${translate(news.summary, language)}`}

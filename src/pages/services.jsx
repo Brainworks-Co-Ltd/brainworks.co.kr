@@ -26,6 +26,7 @@ export default function Services({ areas }) {
       />
       <main id="main-content">
         <PageHero
+          variant="plain"
           eyebrow={language === "ko" ? "Brainworks AI" : "Brainworks AI"}
           title={language === "ko" ? "AI 솔루션" : "AI Solutions"}
           description={

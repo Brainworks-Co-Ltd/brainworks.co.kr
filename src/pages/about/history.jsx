@@ -29,6 +29,7 @@ export default function CompanyHistoryPage() {
         }
       />
       <PageHero
+        variant="plain"
         eyebrow={language === "ko" ? "About Brainworks" : "About Brainworks"}
         title={
           language === "ko" ? "브레인웍스 주요 연혁" : "Brainworks Milestones"

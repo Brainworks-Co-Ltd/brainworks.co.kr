@@ -31,6 +31,7 @@ export default function NoticeDetailPage({
       />
       <main id="main-content">
         <PageHero
+          variant="plain"
           eyebrow={language === "ko" ? "공지사항" : "Notice"}
           title={notice.title}
           description={notice.date}

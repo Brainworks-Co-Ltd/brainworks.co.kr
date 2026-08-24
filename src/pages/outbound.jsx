@@ -223,6 +223,7 @@ export default function Outbound() {
 
       <main id="main-content" className="pb-16">
         <PageHero
+          variant="plain"
           eyebrow={t.heroBadge}
           title={t.heroTitle}
           description={t.heroSubtitle}

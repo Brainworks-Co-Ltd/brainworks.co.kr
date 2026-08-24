@@ -41,6 +41,7 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
       />
       <main id="main-content" className="pb-20">
         <PageHero
+          variant="plain"
           eyebrow="Brainworks Notices"
           title={language === "ko" ? "공지사항" : "Notices"}
           description={

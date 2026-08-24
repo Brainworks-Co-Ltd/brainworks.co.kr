@@ -249,6 +249,7 @@ export default function News({ newsItems }) {
 
       <main id="main-content" className="pb-16">
         <PageHero
+          variant="plain"
           eyebrow="Brainworks News"
           title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
           description={

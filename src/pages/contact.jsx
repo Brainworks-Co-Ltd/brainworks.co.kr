@@ -114,6 +114,7 @@ export default function Contact() {
       />
       <main id="main-content">
         <PageHero
+          variant="plain"
           eyebrow="Brainworks Contact"
           title={language === "ko" ? "문의하기" : "Contact us"}
           description={
