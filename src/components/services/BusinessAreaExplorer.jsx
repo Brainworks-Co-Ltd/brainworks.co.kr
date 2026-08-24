@@ -159,9 +159,9 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             {activeArea.solutions.map((solution) => (
               <article
                 key={solution.id}
-                className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white"
+                className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="relative aspect-[16/9] bg-slate-100">
+                <div className="relative aspect-[16/9] bg-[var(--bw-color-surface-muted)]">
                   <Image
                     src={solution.image}
                     alt={solution.title}

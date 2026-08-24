@@ -81,7 +81,7 @@ export default function Footer() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-full border border-slate-700 px-4 py-2 text-xs font-medium text-slate-300 transition hover:border-sky-400 hover:text-white"
+                  className="rounded-full border border-white/15 px-4 py-2 text-xs font-medium text-slate-300 transition hover:border-[var(--bw-color-brand)] hover:text-white"
                 >
                   {item.label[language]}
                 </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
             {offices.map((office) => (
               <div
                 key={office.label.en}
-                className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4"
+                className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 p-4"
               >
                 <p className="text-sm font-semibold text-white">
                   {office.label[language]}

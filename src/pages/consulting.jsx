@@ -205,16 +205,16 @@ export default function Consulting() {
                   key={item.id}
                   className="rounded-[var(--bw-radius-card)] border border-slate-200 p-8 shadow-sm transition hover:shadow-md"
                 >
-                  <h3 className="text-2xl font-semibold text-slate-900">
+                  <h3 className="text-2xl font-semibold text-[var(--bw-color-ink)]">
                     {item.title[language]}
                   </h3>
-                  <p className="mt-4 text-slate-600">
+                  <p className="mt-4 text-[var(--bw-color-muted)]">
                     {item.description[language]}
                   </p>
-                  <ul className="mt-6 space-y-2 text-sm text-slate-500">
+                  <ul className="mt-6 space-y-2 text-sm text-[var(--bw-color-muted)]">
                     {item.bullets[language].map((bullet) => (
                       <li key={bullet} className="flex items-start gap-2">
-                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-500" />
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -225,7 +225,7 @@ export default function Consulting() {
           </div>
         </section>
 
-        <section className="bg-slate-50">
+        <section className="bg-[var(--bw-color-surface-muted)]">
           <div className="mx-auto max-w-6xl px-6 py-20">
             <SectionHeader
               eyebrow="Consulting process"
@@ -235,15 +235,15 @@ export default function Consulting() {
               {processSteps.map((step) => (
                 <div
                   key={step.id}
-                  className="rounded-[var(--bw-radius-card)] border border-slate-100 bg-white p-6 shadow-sm"
+                  className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
                 >
-                  <div className="text-sm font-semibold text-slate-400">
+                  <div className="text-sm font-semibold text-[var(--bw-color-muted)]">
                     0{step.id}
                   </div>
-                  <h3 className="mt-3 text-xl font-semibold text-slate-900">
+                  <h3 className="mt-3 text-xl font-semibold text-[var(--bw-color-ink)]">
                     {step.title[language]}
                   </h3>
-                  <p className="mt-4 text-sm text-slate-600">
+                  <p className="mt-4 text-sm text-[var(--bw-color-muted)]">
                     {step.desc[language]}
                   </p>
                 </div>
@@ -256,6 +256,7 @@ export default function Consulting() {
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactDesc}
+            href="/contact?topic=consulting"
             label={t.heroCta}
           />
         </div>

@@ -1,10 +1,10 @@
 ﻿import React from "react";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SectionHeader } from "@/components/public/SectionHeader";
+import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -214,7 +214,7 @@ export default function Outbound() {
     language === "ko" ? "/images/outbound/맵.png" : "/images/outbound/map.png";
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={`${t.heroTitle} | Brainworks`}
@@ -250,7 +250,7 @@ export default function Outbound() {
           </div>
 
           <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
-            <div className="relative h-90 w-full bg-slate-100 md:h-[28rem]">
+            <div className="relative h-90 w-full bg-[var(--bw-color-surface-muted)] md:h-[28rem]">
               <img
                 src={networkMapSrc}
                 alt={
@@ -274,7 +274,7 @@ export default function Outbound() {
               ].map((country) => (
                 <div
                   key={country.key}
-                  className="flex flex-col items-start gap-1 rounded-2xl bg-slate-900 px-4 py-3 text-white"
+                  className="flex flex-col items-start gap-1 rounded-[var(--bw-radius-card)] bg-[var(--bw-color-ink)] px-4 py-3 text-white"
                 >
                   <span className="text-2xl font-semibold">
                     {country.count}
@@ -354,12 +354,12 @@ export default function Outbound() {
             ].map((category) => (
               <div
                 key={category.key}
-                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+                className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <p className="text-sm font-semibold text-slate-900">
+                <p className="text-sm font-semibold text-[var(--bw-color-ink)]">
                   {category.title}
                 </p>
-                <ul className="mt-2 space-y-1 text-xs text-slate-600">
+                <ul className="mt-2 space-y-1 text-xs text-[var(--bw-color-muted)]">
                   {category.lines.map((line, idx) => (
                     <li key={[category.key, idx].join("-")}>{line}</li>
                   ))}
@@ -381,23 +381,23 @@ export default function Outbound() {
                 key={program.id}
                 className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
-                  <span className="h-1.5 w-6 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500" />
+                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
+                  <span className="h-1.5 w-6 rounded-full bg-[var(--bw-color-brand)]" />
                   <span>{program.badge[language]}</span>
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {program.title[language]}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-600">
+                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
                   {program.description[language]}
                 </p>
-                <ul className="mt-auto space-y-2 text-sm text-slate-700">
+                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
                   {program.bullets[language].map((bullet) => (
                     <li
                       key={[program.id, bullet].join("-")}
                       className="flex gap-2"
                     >
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-sky-500" />
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                       <span>{bullet}</span>
                     </li>
                   ))}
@@ -420,19 +420,19 @@ export default function Outbound() {
                 key={program.id}
                 className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {program.title[language]}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-600">
+                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
                   {program.description[language]}
                 </p>
-                <ul className="mt-auto space-y-2 text-sm text-slate-700">
+                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
                   {program.bullets[language].map((bullet) => (
                     <li
                       key={[program.id, bullet].join("-")}
                       className="flex gap-2"
                     >
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-sky-500" />
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                       <span>{bullet}</span>
                     </li>
                   ))}
@@ -443,31 +443,12 @@ export default function Outbound() {
         </section>
 
         <section className="mx-auto mt-20 max-w-5xl px-6">
-          <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-slate-900">
-              {t.contactTitle}
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">{t.contactSubtitle}</p>
-            <Link
-              href="/contact"
-              className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-600"
-            >
-              {t.contactCta}
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 12h14m-6-6 6 6-6 6"
-                />
-              </svg>
-            </Link>
-          </div>
+          <ContactCtaBlock
+            title={t.contactTitle}
+            description={t.contactSubtitle}
+            href="/contact?topic=global"
+            label={t.contactCta}
+          />
         </section>
       </main>
 

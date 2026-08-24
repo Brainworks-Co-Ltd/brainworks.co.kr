@@ -51,7 +51,10 @@ export default function HonorsPage({
   const t = copy[language];
 
   return (
-    <div id="main-content" className="min-h-screen bg-gray-50">
+    <div
+      id="main-content"
+      className="min-h-screen bg-[var(--bw-color-surface-muted)]"
+    >
       <Header />
       <SeoMetadata title={`${t.title} | Brainworks`} description={t.subtitle} />
       <PageHero
@@ -77,7 +80,7 @@ export default function HonorsPage({
                         )}
                         className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                       >
-                        <div className="relative flex h-48 w-full items-center justify-center bg-slate-100 p-6">
+                        <div className="relative flex h-48 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6">
                           <Image
                             src={award.image}
                             alt={`${award.title[language]} ${t.awardAltSuffix}`}
@@ -87,16 +90,16 @@ export default function HonorsPage({
                           />
                         </div>
                         <div className="flex flex-1 flex-col gap-2 p-6">
-                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-500">
+                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
                             <span>#{String(index + 1).padStart(2, "0")}</span>
                             <span>
                               {formatAwardPeriod(award.year, award.date)}
                             </span>
                           </div>
-                          <h3 className="text-lg font-semibold text-slate-900">
+                          <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
                             {award.title[language]}
                           </h3>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-[var(--bw-color-muted)]">
                             {award.org[language]}
                           </p>
                         </div>
@@ -118,7 +121,7 @@ export default function HonorsPage({
                         )}
                         className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                       >
-                        <div className="relative flex h-48 w-full items-center justify-center bg-slate-100 p-6">
+                        <div className="relative flex h-48 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6">
                           <Image
                             src={cert.image}
                             alt={`${cert.title[language]} ${t.certAltSuffix}`}
@@ -128,14 +131,14 @@ export default function HonorsPage({
                           />
                         </div>
                         <div className="flex flex-1 flex-col gap-2 p-6">
-                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-slate-500">
+                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
                             <span>{cert.org[language]}</span>
                             <span>{cert.year}</span>
                           </div>
-                          <h3 className="text-lg font-semibold text-slate-900">
+                          <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
                             {cert.title[language]}
                           </h3>
-                          <p className="text-sm text-slate-600">
+                          <p className="text-sm text-[var(--bw-color-muted)]">
                             {cert.description[language]}
                           </p>
                         </div>

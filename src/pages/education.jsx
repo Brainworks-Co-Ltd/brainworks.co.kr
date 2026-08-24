@@ -1,11 +1,11 @@
 ﻿import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SectionHeader } from "@/components/public/SectionHeader";
+import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const processSteps = [
@@ -491,7 +491,7 @@ export default function Education() {
         ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={
@@ -528,7 +528,7 @@ export default function Education() {
             {chips.map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-medium text-[var(--bw-color-ink)]"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-[var(--bw-color-ink)]"
               >
                 {item}
               </span>
@@ -562,24 +562,24 @@ export default function Education() {
                     } ${isReversed ? "md:flex-row-reverse" : ""}`}
                   >
                     <div className="flex-1 space-y-5">
-                      <div className="inline-flex items-center gap-3 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold text-slate-600">
+                      <div className="inline-flex items-center gap-3 rounded-full bg-[var(--bw-color-surface-muted)] px-4 py-1.5 text-xs font-semibold text-[var(--bw-color-muted)]">
                         <span
-                          className="flex h-2 w-2 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500"
+                          className="flex h-2 w-2 rounded-full bg-[var(--bw-color-brand)]"
                           aria-hidden="true"
                         />
                         {step.stage[language]}
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-xl font-semibold text-slate-900">
+                        <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                           {step.focus[language]}
                         </h3>
-                        <p className="text-sm leading-relaxed text-slate-600">
+                        <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
                           {step.summary[language]}
                         </p>
                       </div>
 
                       <div className="space-y-3">
-                        <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--bw-color-muted)]">
                           {language === "ko"
                             ? "주요 학습 영역"
                             : "Key Components"}
@@ -588,7 +588,7 @@ export default function Education() {
                           {step.modules[language].map((module) => (
                             <span
                               key={module}
-                              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600"
+                              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-[var(--bw-color-muted)]"
                             >
                               {module}
                             </span>
@@ -597,13 +597,13 @@ export default function Education() {
                       </div>
 
                       <div className="space-y-3">
-                        <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--bw-color-muted)]">
                           {language === "ko" ? "특장점" : "Highlights"}
                         </h4>
-                        <ul className="space-y-2 text-sm text-slate-700">
+                        <ul className="space-y-2 text-sm text-[var(--bw-color-ink)]">
                           {step.highlights[language].map((highlight) => (
                             <li key={highlight} className="flex gap-2">
-                              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-sky-500" />
+                              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                               <span>{highlight}</span>
                             </li>
                           ))}
@@ -612,7 +612,7 @@ export default function Education() {
                     </div>
 
                     {hasImage && (
-                      <div className="relative h-64 flex-1 overflow-hidden rounded-2xl md:h-auto">
+                      <div className="relative h-64 flex-1 overflow-hidden rounded-[var(--bw-radius-feature)] md:h-auto">
                         <Image
                           src={step.image.src}
                           alt={imageAlt}
@@ -648,7 +648,7 @@ export default function Education() {
               {generativeAIChips[language].map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600"
+                  className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[var(--bw-color-muted)]"
                 >
                   {chip}
                 </span>
@@ -663,17 +663,17 @@ export default function Education() {
                 className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-slate-900">
+                  <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                     {track.title[language]}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--bw-color-muted)]">
                     {track.description[language]}
                   </p>
                 </div>
-                <ul className="mt-auto space-y-2 text-sm text-slate-700">
+                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
                   {track.points[language].map((point) => (
                     <li key={point} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                       <span>{point}</span>
                     </li>
                   ))}
@@ -699,7 +699,7 @@ export default function Education() {
             {educationClients.map((client) => (
               <div
                 key={client.id}
-                className="flex min-h-[120px] items-center justify-center rounded-2xl bg-slate-50 p-6"
+                className="flex min-h-[120px] items-center justify-center rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)] p-6"
               >
                 <img
                   src={client.logo}
@@ -732,16 +732,16 @@ export default function Education() {
                 key={pillar.id}
                 className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
               >
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {pillar.title[language]}
                 </h3>
-                <p className="text-sm leading-relaxed text-slate-600">
+                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
                   {pillar.description[language]}
                 </p>
-                <ul className="mt-auto space-y-2 text-sm text-slate-700">
+                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
                   {pillar.points[language].map((point) => (
                     <li key={point} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-indigo-500" />
+                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
                       <span>{point}</span>
                     </li>
                   ))}
@@ -751,49 +751,32 @@ export default function Education() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-5xl flex-col gap-6 px-6">
-          <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-slate-900">
-              {language === "ko"
+        <section className="mx-auto mt-20 max-w-5xl px-6">
+          <ContactCtaBlock
+            title={
+              language === "ko"
                 ? "교육 상담 및 제휴 문의"
-                : "Training Enquiries"}
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              {language === "ko"
+                : "Training Enquiries"
+            }
+            description={
+              language === "ko"
                 ? "기관 맞춤 트랙, 제휴, 인턴 연계가 필요하다면 아래 버튼으로 문의해주세요."
-                : "Need a customised track, institutional partnership, or internship linkage? Contact us using the button below."}
-            </p>
-            <Link
-              href="/contact"
-              className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-sky-600"
-            >
-              {language === "ko" ? "상담 신청" : "Request Consultation"}
-              <svg
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 12h14m-6-6 6 6-6 6"
-                />
-              </svg>
-            </Link>
-          </div>
+                : "Need a customised track, institutional partnership, or internship linkage? Contact us using the button below."
+            }
+            href="/contact?topic=education"
+            label={language === "ko" ? "상담 신청" : "Request Consultation"}
+          />
 
           <div className="grid gap-4 md:grid-cols-3">
             {faqItems.map((item, index) => (
               <details
                 key={[item.question[language], index].join("-")}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-sky-200"
+                className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-5 shadow-sm transition hover:border-[var(--bw-color-brand)]"
               >
-                <summary className="cursor-pointer text-sm font-semibold text-slate-900">
+                <summary className="cursor-pointer text-sm font-semibold text-[var(--bw-color-ink)]">
                   {item.question[language]}
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--bw-color-muted)]">
                   {item.answer[language]}
                 </p>
               </details>

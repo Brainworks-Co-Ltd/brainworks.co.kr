@@ -10,7 +10,10 @@ export default function About() {
   const { language } = useLocale();
 
   return (
-    <div id="main-content" className="min-h-screen bg-gray-50">
+    <div
+      id="main-content"
+      className="min-h-screen bg-[var(--bw-color-surface-muted)]"
+    >
       <Header />
       <SeoMetadata
         title={
@@ -42,7 +45,7 @@ export default function About() {
             <div className="flex-1 lg:max-w-5xl xl:max-w-6xl">
               <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
                 <div className="flex justify-center lg:w-1/2">
-                  <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-slate-100 shadow-md">
+                  <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-[var(--bw-color-surface-muted)] shadow-[var(--bw-shadow-soft)]">
                     <img
                       src="/images/대표사진.png"
                       alt={language === "ko" ? "CEO 사진" : "CEO photo"}
@@ -50,7 +53,7 @@ export default function About() {
                     />
                   </div>
                 </div>
-                <div className="space-y-6 text-left text-lg leading-relaxed text-slate-800 lg:w-1/2">
+                <div className="space-y-6 text-left text-lg leading-relaxed text-[var(--bw-color-ink)] lg:w-1/2">
                   <p>
                     {language === "ko"
                       ? "안녕하세요, 브레인웍스 대표 강우현입니다."
@@ -81,7 +84,7 @@ export default function About() {
                       ? "브레인웍스를 믿고 함께해 주시는 모든 분들께 감사드립니다. 오늘의 작은 개선이 내일의 큰 도약이 되도록, 우리는 현장의 언어로 답하는 AI, 지속 가능한 가치를 만드는 AI를 꾸준히 만들어 가겠습니다. 감사합니다."
                       : "We are grateful to everyone who trusts and collaborates with Brainworks. To ensure that today's small improvements lead to tomorrow's significant leaps, we will continue to create AI that responds in the language of the field and generates sustainable value. Thank you."}
                   </p>
-                  <div className="pt-6 text-right text-xl font-semibold text-gray-900">
+                  <div className="pt-6 text-right text-xl font-semibold text-[var(--bw-color-ink)]">
                     {language === "ko"
                       ? "브레인웍스 CEO 강우현"
                       : "Austin Kang, CEO of Brainworks"}

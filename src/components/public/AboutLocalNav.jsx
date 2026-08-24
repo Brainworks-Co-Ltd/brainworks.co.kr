@@ -25,9 +25,9 @@ export function AboutLocalNav({ active }) {
   return (
     <nav
       aria-label={language === "ko" ? "회사소개 하위 메뉴" : "About submenu"}
-      className="mb-10"
+      className="mb-10 lg:mb-0 lg:w-56 lg:shrink-0"
     >
-      <div className="flex gap-2 overflow-x-auto border-b border-slate-200 pb-2">
+      <div className="flex gap-2 overflow-x-auto border-b border-slate-200 pb-2 lg:flex-col lg:overflow-visible lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5">
         {items.map((item) => (
           <Link
             key={item.key}

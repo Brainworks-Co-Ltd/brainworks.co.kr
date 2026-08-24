@@ -5,13 +5,16 @@ import { AboutLocalNav } from "@/components/public/AboutLocalNav";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { useLocale } from "@/shared/routing/useLocale";
-import { historyItems, historyAccentPalette } from "@/data/companyHistory";
+import { historyItems } from "@/data/companyHistory";
 
 export default function CompanyHistoryPage() {
   const { language } = useLocale();
 
   return (
-    <div id="main-content" className="min-h-screen bg-gray-50">
+    <div
+      id="main-content"
+      className="min-h-screen bg-[var(--bw-color-surface-muted)]"
+    >
       <Header />
       <SeoMetadata
         title={
@@ -44,37 +47,33 @@ export default function CompanyHistoryPage() {
 
             <div className="flex-1">
               <div className="mt-12 space-y-8">
-                {historyItems.map((item, index) => {
-                  const accent =
-                    historyAccentPalette[index % historyAccentPalette.length];
+                {historyItems.map((item) => {
+                  const accent = "bg-[var(--bw-color-brand)]";
                   return (
                     <article
                       key={item.year}
                       className="relative overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                     >
                       <div
-                        className={
-                          "absolute inset-x-0 top-0 h-1 bg-gradient-to-r " +
-                          accent
-                        }
+                        className={"absolute inset-x-0 top-0 h-1 " + accent}
                         aria-hidden="true"
                       />
                       <div className="grid gap-6 p-6 md:grid-cols-[minmax(0,_140px)_1fr] md:p-8">
                         <div className="flex flex-col gap-2">
-                          <span className="text-3xl font-semibold text-slate-900">
+                          <span className="text-3xl font-semibold text-[var(--bw-color-ink)]">
                             {item.year}
                           </span>{" "}
                         </div>
                         <div className="space-y-4">
-                          <p className="text-base text-slate-600">
+                          <p className="text-base text-[var(--bw-color-muted)]">
                             {item.summary[language]}
                           </p>
-                          <ul className="space-y-3 text-sm text-slate-700">
+                          <ul className="space-y-3 text-sm text-[var(--bw-color-ink)]">
                             {item.bullets[language].map((bullet, idx) => (
                               <li key={idx} className="flex items-start gap-3">
                                 <span
                                   className={
-                                    "mt-1 inline-flex h-1.5 w-6 rounded-full bg-gradient-to-r " +
+                                    "mt-1 inline-flex h-1.5 w-6 rounded-full " +
                                     accent
                                   }
                                   aria-hidden="true"

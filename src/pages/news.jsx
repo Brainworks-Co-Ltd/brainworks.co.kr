@@ -45,9 +45,9 @@ function NewsCard({ item, language }) {
   return (
     <Link
       href={"/news/" + item.slug}
-      className="group flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-sky-200 hover:shadow-md"
+      className="group flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-[var(--bw-color-brand)] hover:shadow-md"
     >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-[var(--bw-color-surface-muted)]">
         {image ? (
           <Image
             src={image}
@@ -57,25 +57,25 @@ function NewsCard({ item, language }) {
             sizes="(min-width: 1280px) 320px, (min-width: 768px) 40vw, 90vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 text-sm text-slate-500">
+          <div className="flex h-full w-full items-center justify-center bg-[var(--bw-color-surface-muted)] text-sm text-[var(--bw-color-muted)]">
             {language === "ko" ? "이미지 없음" : "No image"}
           </div>
         )}
-        <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-700 shadow">
+        <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--bw-color-ink)] shadow-sm">
           {category || (language === "ko" ? "뉴스" : "News")}
         </span>
       </div>
       <div className="flex flex-1 flex-col gap-4 p-6">
-        <div className="flex items-center justify-between text-xs text-slate-500">
+        <div className="flex items-center justify-between text-xs text-[var(--bw-color-muted)]">
           <span>{dateLabel}</span>
         </div>
-        <h3 className="text-lg font-semibold text-slate-900 group-hover:text-sky-600">
+        <h3 className="text-lg font-semibold text-[var(--bw-color-ink)] group-hover:underline">
           {title}
         </h3>
-        <p className="line-clamp-3 text-sm leading-relaxed text-slate-600">
+        <p className="line-clamp-3 text-sm leading-relaxed text-[var(--bw-color-muted)]">
           {summary}
         </p>
-        <div className="mt-auto inline-flex items-center gap-2 text-sm font-medium text-sky-600">
+        <div className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-[var(--bw-color-ink)]">
           {language === "ko" ? "자세히 보기" : "Read More"}
           <svg
             className="h-4 w-4"
@@ -155,7 +155,7 @@ export default function News({ newsItems }) {
   }, [newsItems, activeFilter, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
@@ -180,7 +180,7 @@ export default function News({ newsItems }) {
           <div className="flex justify-end">
             <div className="relative w-full md:w-72">
               <svg
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--bw-color-muted)]"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -199,13 +199,13 @@ export default function News({ newsItems }) {
                 placeholder={
                   language === "ko" ? "검색어를 입력하세요" : "Search news"
                 }
-                className="w-full rounded-full border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-slate-700 shadow-sm outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                className="w-full rounded-full border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-[var(--bw-color-ink)] shadow-sm outline-none transition focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
               />
             </div>
           </div>
 
           {filteredItems.length === 0 ? (
-            <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-12 text-center text-slate-500 shadow-sm">
+            <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-12 text-center text-[var(--bw-color-muted)] shadow-sm">
               {language === "ko"
                 ? "조건에 맞는 소식이 없습니다. 다른 키워드나 분류를 선택해 보세요."
                 : "No news matches your filters. Try a different keyword or category."}
