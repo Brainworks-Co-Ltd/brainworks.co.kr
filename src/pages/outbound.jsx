@@ -13,7 +13,7 @@ const copy = {
     heroTitle: "글로벌 프로그램",
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
-    ctaPrimary: "프로그램 상담 신청",
+    ctaPrimary: "상담 요청",
     sectionTitle: "주요 프로그램",
     sectionSubtitle:
       "현지 파트너 매칭부터 글로벌 전시회, 연수까지 한 번에 준비하세요.",
@@ -23,14 +23,14 @@ const copy = {
     contactTitle: "해외 진출, 글로벌 AI 교육 문의",
     contactSubtitle:
       "희망 지역과 목표를 공유해 주시면 맞춤형 글로벌 엑셀러레이션 로드맵과 제휴 네트워크를 제안드립니다.",
-    contactCta: "글로벌 프로그램 문의하기",
+    contactCta: "상담 요청",
   },
   en: {
     heroBadge: "Global Program",
     heroTitle: "Global Program",
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
-    ctaPrimary: "Request Programme Consultation",
+    ctaPrimary: "Request a Consultation",
     sectionTitle: "Programme Components",
     sectionSubtitle:
       "From business matching to exhibitions and executive training, everything is covered.",
@@ -40,7 +40,7 @@ const copy = {
     contactTitle: "Tell Us Your Global Plan",
     contactSubtitle:
       "Share your target regions and objectives so we can craft a tailored accelerator roadmap and introduce partners.",
-    contactCta: "Inquire About Global Programs",
+    contactCta: "Request a Consultation",
   },
 };
 

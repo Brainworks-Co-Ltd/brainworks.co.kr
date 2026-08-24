@@ -11,7 +11,7 @@ const copy = {
   ko: {
     heroTitle: "AI 컨설팅",
     heroSubtitle: "전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공",
-    heroCta: "상담 요청하기",
+    heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
     caseTitle: "주요 컨설팅 사례",

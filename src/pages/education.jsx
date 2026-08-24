@@ -523,7 +523,7 @@ export default function Education() {
           }
           action={{
             href: "/contact?topic=education",
-            label: language === "ko" ? "교육 상담" : "Discuss education",
+            label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
         >
           <div className="flex flex-wrap gap-3">
@@ -766,7 +766,7 @@ export default function Education() {
                 : "Need a customised track, institutional partnership, or internship linkage? Contact us using the button below."
             }
             href="/contact?topic=education"
-            label={language === "ko" ? "상담 신청" : "Request Consultation"}
+            label={language === "ko" ? "상담 요청" : "Request a Consultation"}
           />
 
           <div className="mt-6 overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white shadow-[var(--bw-shadow-soft)]">
