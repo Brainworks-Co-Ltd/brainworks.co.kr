@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { BusinessMegaMenu } from "@/components/public/BusinessMegaMenu";
 
 export function DesktopNavigation({
   items,
@@ -85,33 +86,41 @@ export function DesktopNavigation({
               </button>
 
               {isOpen ? (
-                <div
-                  id={`public-nav-panel-${item.id}`}
-                  role="region"
-                  aria-label={`${item.label} 하위 메뉴`}
-                  className="absolute right-0 top-[calc(100%+0.75rem)] z-50 min-w-72 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-3 shadow-xl"
-                >
-                  <ul className="grid gap-1">
-                    {item.children.map((child) => (
-                      <li key={child.id}>
-                        <Link
-                          href={child.href}
-                          aria-current={
-                            child.activeRouteKeys.includes(routeKey)
-                              ? "page"
-                              : undefined
-                          }
-                          onClick={() => setOpenGroup(null)}
-                          className="block rounded-xl px-4 py-3 transition hover:bg-[var(--bw-color-surface-muted)]"
-                        >
-                          <span className="block text-sm font-semibold text-[var(--bw-color-ink)]">
+                item.id === "business" && item.megaMenu ? (
+                  <BusinessMegaMenu
+                    menu={item.megaMenu}
+                    routeKey={routeKey}
+                    onClose={() => setOpenGroup(null)}
+                    panelId={`public-nav-panel-${item.id}`}
+                    panelLabel={`${item.label} 하위 메뉴`}
+                  />
+                ) : (
+                  <div
+                    id={`public-nav-panel-${item.id}`}
+                    role="region"
+                    aria-label={`${item.label} 하위 메뉴`}
+                    className="absolute right-0 top-[calc(100%+0.75rem)] z-50 min-w-72 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-3 shadow-xl"
+                  >
+                    <ul className="grid gap-1">
+                      {item.children.map((child) => (
+                        <li key={child.id}>
+                          <Link
+                            href={child.href}
+                            aria-current={
+                              child.activeRouteKeys.includes(routeKey)
+                                ? "page"
+                                : undefined
+                            }
+                            onClick={() => setOpenGroup(null)}
+                            className="block rounded-xl px-4 py-3 text-sm font-semibold text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)]"
+                          >
                             {child.label}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
               ) : null}
             </li>
           );
