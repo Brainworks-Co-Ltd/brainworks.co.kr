@@ -104,13 +104,17 @@ export default function NewNews() {
         </section>
         <section className="grid gap-6 lg:grid-cols-2">
           {["ko", "en"].map((locale) => (
-            <fieldset
+            <section
               key={locale}
+              aria-labelledby={`news-locale-${locale}`}
               className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-6"
             >
-              <legend className="px-2 text-lg font-semibold">
+              <h2
+                id={`news-locale-${locale}`}
+                className="text-lg font-semibold"
+              >
                 {locale === "ko" ? "한국어" : "English"}
-              </legend>
+              </h2>
               <label className="grid gap-2 text-sm font-medium">
                 제목
                 <input
@@ -144,7 +148,7 @@ export default function NewNews() {
                   className="rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm"
                 />
               </label>
-            </fieldset>
+            </section>
           ))}
         </section>
         {error ? (
