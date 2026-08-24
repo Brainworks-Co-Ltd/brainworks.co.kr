@@ -7,7 +7,6 @@ type NavigationChildDefinition = {
   hrefRouteKey: string;
   activeRouteKeys: string[];
   label: LocalizedText;
-  description: LocalizedText;
 };
 
 type NavigationGroupDefinition = {
@@ -31,10 +30,9 @@ type NavigationDefinition =
 
 export type PublicNavigationChild = Omit<
   NavigationChildDefinition,
-  "label" | "description"
+  "label"
 > & {
   label: string;
-  description: string;
   href: string;
 };
 
@@ -61,30 +59,18 @@ const definitions: NavigationDefinition[] = [
         hrefRouteKey: "about.ceo",
         activeRouteKeys: ["about.ceo"],
         label: { ko: "CEO 인사말", en: "CEO Message" },
-        description: {
-          ko: "브레인웍스의 방향과 책임",
-          en: "Our direction and responsibility",
-        },
       },
       {
         id: "history",
         hrefRouteKey: "about.history",
         activeRouteKeys: ["about.history"],
         label: { ko: "회사 연혁", en: "History" },
-        description: {
-          ko: "주요 성장 과정과 기록",
-          en: "Milestones and company history",
-        },
       },
       {
         id: "honors",
         hrefRouteKey: "about.honors",
         activeRouteKeys: ["about.honors"],
         label: { ko: "수상 및 인증", en: "Awards & Certifications" },
-        description: {
-          ko: "확인 가능한 수상·선정 근거",
-          en: "Verified awards and qualifications",
-        },
       },
     ],
   },
@@ -98,40 +84,24 @@ const definitions: NavigationDefinition[] = [
         hrefRouteKey: "solutions.list",
         activeRouteKeys: ["solutions.list"],
         label: { ko: "AI 솔루션", en: "AI Solutions" },
-        description: {
-          ko: "산업별 AI 사업 영역과 솔루션",
-          en: "AI domains and industry solutions",
-        },
       },
       {
         id: "consulting",
         hrefRouteKey: "consulting",
         activeRouteKeys: ["consulting"],
         label: { ko: "AI 컨설팅", en: "AI Consulting" },
-        description: {
-          ko: "전략부터 구축·확산까지",
-          en: "From strategy through adoption",
-        },
       },
       {
         id: "education",
         hrefRouteKey: "education",
         activeRouteKeys: ["education"],
         label: { ko: "AI 전문교육", en: "AI Academy" },
-        description: {
-          ko: "현장·직무 중심 AI 교육",
-          en: "Practice-led AI education",
-        },
       },
       {
         id: "global",
         hrefRouteKey: "globalPrograms",
         activeRouteKeys: ["globalPrograms"],
         label: { ko: "글로벌 프로그램", en: "Global Programs" },
-        description: {
-          ko: "해외 진출과 국제 협력 프로그램",
-          en: "International growth and collaboration",
-        },
       },
     ],
   },
@@ -145,20 +115,12 @@ const definitions: NavigationDefinition[] = [
         hrefRouteKey: "news.list",
         activeRouteKeys: ["news.list", "news.detail"],
         label: { ko: "뉴스", en: "News" },
-        description: {
-          ko: "사업·협력·교육 소식",
-          en: "Business and partnership stories",
-        },
       },
       {
         id: "notices",
         hrefRouteKey: "notices.list",
         activeRouteKeys: ["notices.list", "notices.detail"],
         label: { ko: "공지사항", en: "Notices" },
-        description: {
-          ko: "주요 안내와 운영 공지",
-          en: "Official notices and updates",
-        },
       },
     ],
   },
@@ -187,7 +149,6 @@ export function buildPublicNavigation(locale: Locale): PublicNavigationItem[] {
       children: item.children.map((child) => ({
         ...child,
         label: child.label[locale],
-        description: child.description[locale],
         href: getLocalizedPath(child.hrefRouteKey, locale),
       })),
     };

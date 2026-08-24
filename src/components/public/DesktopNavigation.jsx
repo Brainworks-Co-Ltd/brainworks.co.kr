@@ -107,9 +107,6 @@ export function DesktopNavigation({
                           <span className="block text-sm font-semibold text-[var(--bw-color-ink)]">
                             {child.label}
                           </span>
-                          <span className="mt-1 block text-xs leading-5 text-[var(--bw-color-muted)]">
-                            {child.description}
-                          </span>
                         </Link>
                       </li>
                     ))}

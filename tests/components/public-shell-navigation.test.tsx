@@ -25,6 +25,7 @@ describe("공개 셸 내비게이션", () => {
     const trigger = screen.getByRole("button", { name: "사업 영역" });
     await user.click(trigger);
     expect(screen.getByRole("link", { name: /AI 컨설팅/ })).toBeVisible();
+    expect(screen.queryByText("전략부터 구축·확산까지")).not.toBeInTheDocument();
 
     await user.keyboard("{Escape}");
 

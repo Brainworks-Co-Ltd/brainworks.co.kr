@@ -37,4 +37,11 @@ describe("공개 내비게이션 계약", () => {
       "/en/global-programs",
     ]);
   });
+
+  it("하위 메뉴는 항목명과 경로만 제공한다", () => {
+    const items = buildPublicNavigation("ko");
+    const children = items.flatMap((item) => item.children ?? []);
+
+    expect(children.every((item) => !("description" in item))).toBe(true);
+  });
 });
