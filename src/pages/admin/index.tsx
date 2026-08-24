@@ -13,8 +13,6 @@ const contentLabels: Record<DashboardContentType, string> = {
   notices: "공지사항",
   "popup-notices": "팝업 공지",
   honors: "수상 및 인증",
-  areas: "사업 영역",
-  solutions: "AI 솔루션",
 };
 
 const statusLabels: Record<string, string> = {
@@ -41,16 +39,6 @@ const quickActions = [
     label: "수상 및 인증 관리",
     href: "/admin/honors",
     detail: "목록과 공개 상태",
-  },
-  {
-    label: "사업 영역 관리",
-    href: "/admin/ai-solutions/areas",
-    detail: "영역과 순서 관리",
-  },
-  {
-    label: "AI 솔루션 관리",
-    href: "/admin/ai-solutions/areas",
-    detail: "사업 영역에서 관리",
   },
 ];
 

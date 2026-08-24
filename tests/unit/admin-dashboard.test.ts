@@ -2,6 +2,17 @@ import { describe, expect, it } from "vitest";
 import { buildAdminDashboardData } from "@/server/modules/admin/dashboard";
 
 describe("관리자 운영 현황 데이터", () => {
+  it("사업 영역을 관리자 운영 콘텐츠로 집계하지 않는다", () => {
+    const result = buildAdminDashboardData([]);
+
+    expect(result.summary.map((item) => item.contentType)).toEqual([
+      "news",
+      "notices",
+      "popup-notices",
+      "honors",
+    ]);
+  });
+
   it("콘텐츠 상태를 집계하고 처리할 항목과 최근 변경을 분리한다", () => {
     const result = buildAdminDashboardData([
       {

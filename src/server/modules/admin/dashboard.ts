@@ -6,8 +6,6 @@ export const dashboardContentTypes = [
   "notices",
   "popup-notices",
   "honors",
-  "areas",
-  "solutions",
 ] as const;
 
 export type DashboardContentType = (typeof dashboardContentTypes)[number];
@@ -58,8 +56,6 @@ const statusSets: Record<DashboardContentType, readonly string[]> = {
   notices: ["DRAFT", "SCHEDULED", "PUBLISHED", "UNPUBLISHED"],
   "popup-notices": ["DRAFT", "SCHEDULED", "PUBLISHED", "UNPUBLISHED"],
   honors: ["DRAFT", "PUBLISHED", "HIDDEN"],
-  areas: ["DRAFT", "PUBLISHED", "HIDDEN"],
-  solutions: ["DRAFT", "PUBLISHED", "HIDDEN"],
 };
 
 function emptyStatusCounts(contentType: DashboardContentType) {
@@ -169,12 +165,6 @@ export async function getAdminDashboardData(): Promise<AdminDashboardData> {
       UNION ALL
       SELECT 'honors'::text, h.id::text, h.item_status::text, hl.locale::text, hl.publication_status::text, h.updated_at, hl.updated_at, hl.title, '/admin/honors'
       FROM honors h INNER JOIN honor_locales hl ON hl.honor_id = h.id
-      UNION ALL
-      SELECT 'areas'::text, a.id::text, a.item_status::text, al.locale::text, al.publication_status::text, a.updated_at, al.updated_at, al.name, ('/admin/ai-solutions/areas')
-      FROM business_areas a INNER JOIN business_area_locales al ON al.business_area_id = a.id
-      UNION ALL
-      SELECT 'solutions'::text, s.id::text, s.item_status::text, sl.locale::text, sl.publication_status::text, s.updated_at, sl.updated_at, sl.name, ('/admin/ai-solutions/areas')
-      FROM ai_solutions s INNER JOIN ai_solution_locales sl ON sl.ai_solution_id = s.id
     )
     SELECT "contentType", "contentId", "itemStatus", locale, "publicationStatus", "itemUpdatedAt", "localeUpdatedAt", title, "adminHref"
     FROM content_items

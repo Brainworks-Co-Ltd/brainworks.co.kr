@@ -6,7 +6,6 @@ const navigation = [
   { href: "/admin/notices", label: "공지사항" },
   { href: "/admin/popup-notices", label: "팝업 공지" },
   { href: "/admin/honors", label: "수상 및 인증" },
-  { href: "/admin/ai-solutions/areas", label: "AI 솔루션" },
 ];
 
 export function AdminShell({ children, activePath = "/admin" }) {
