@@ -1,4 +1,8 @@
 import { getLocalizedPath, type Locale } from "@/shared/routing/routes";
+import {
+  buildBusinessMegaMenu,
+  type PublicBusinessMegaMenu,
+} from "@/shared/navigation/businessMegaMenu";
 
 type LocalizedText = Record<Locale, string>;
 
@@ -40,6 +44,7 @@ export type PublicNavigationItem =
   | (Omit<NavigationGroupDefinition, "label" | "children"> & {
       label: string;
       children: PublicNavigationChild[];
+      megaMenu?: PublicBusinessMegaMenu;
       href?: never;
     })
   | (Omit<NavigationLinkDefinition, "label"> & {
@@ -143,14 +148,20 @@ export function buildPublicNavigation(locale: Locale): PublicNavigationItem[] {
       };
     }
 
+    const localizedChildren = item.children.map((child) => ({
+      ...child,
+      label: child.label[locale],
+      href: getLocalizedPath(child.hrefRouteKey, locale),
+    }));
+
     return {
       ...item,
       label: item.label[locale],
-      children: item.children.map((child) => ({
-        ...child,
-        label: child.label[locale],
-        href: getLocalizedPath(child.hrefRouteKey, locale),
-      })),
+      children: localizedChildren,
+      megaMenu:
+        item.id === "business"
+          ? buildBusinessMegaMenu(locale, localizedChildren)
+          : undefined,
     };
   });
 }

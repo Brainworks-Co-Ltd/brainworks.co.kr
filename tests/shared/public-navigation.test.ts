@@ -28,7 +28,9 @@ describe("공개 내비게이션 계약", () => {
 
   it("영문 메뉴가 영문 경로를 사용한다", () => {
     const items = buildPublicNavigation("en");
-    const business = items.find((item) => item.id === "business");
+    const business = items.find(
+      (item) => item.type === "group" && item.id === "business",
+    );
 
     expect(business?.children?.map((item) => item.href)).toEqual([
       "/en/services",
@@ -43,5 +45,31 @@ describe("공개 내비게이션 계약", () => {
     const children = items.flatMap((item) => item.children ?? []);
 
     expect(children.every((item) => !("description" in item))).toBe(true);
+  });
+
+  it("사업 영역 메가메뉴가 기존 사업 이미지와 실제 라우트를 제공한다", () => {
+    const items = buildPublicNavigation("ko");
+    const business = items.find(
+      (item) => item.type === "group" && item.id === "business",
+    );
+    if (!business || business.type !== "group") {
+      throw new Error("사업 영역 메뉴를 찾을 수 없습니다.");
+    }
+
+    expect(business.megaMenu?.areas.map((area) => area.id)).toEqual([
+      "manufacturing",
+      "agent",
+      "healthcare",
+      "smartcity",
+    ]);
+    expect(business.megaMenu?.areas[0]).toMatchObject({
+      href: "/services?area=manufacturing",
+      image: "/images/services/제조AI.jpg",
+    });
+    expect(business.megaMenu?.services.map((service) => service.href)).toEqual([
+      "/consulting",
+      "/education",
+      "/global-programs",
+    ]);
   });
 });
