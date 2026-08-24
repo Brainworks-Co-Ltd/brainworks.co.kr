@@ -40,7 +40,7 @@ export function AdminShell({ children, activePath = "/admin" }) {
               href="/"
               className="text-sm text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"
             >
-              공개 사이트 보기
+              홈페이지 바로가기
             </Link>
             <Link
               href="/admin/account"
