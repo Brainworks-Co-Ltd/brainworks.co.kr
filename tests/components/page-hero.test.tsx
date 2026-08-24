@@ -20,6 +20,14 @@ vi.mock("next/link", () => ({
 }));
 
 describe("PageHero", () => {
+  it("서비스별 보조 색을 위한 tone 클래스를 plain Hero에 적용한다", () => {
+    render(<PageHero tone="education" title="AI 전문교육" />);
+
+    expect(screen.getByRole("region", { name: "AI 전문교육" })).toHaveClass(
+      "bw-page-hero--education",
+    );
+  });
+
   it("미디어가 없으면 요청 변형과 무관하게 plain으로 대체한다", () => {
     render(<PageHero variant="media" title="AI 컨설팅" description="설명" />);
 

@@ -96,6 +96,41 @@ body {
   letter-spacing: -0.01em;
 }
 
+.bw-page-hero {
+  border-bottom: 1px solid var(--bw-page-hero-line);
+  background: var(--bw-page-hero-surface);
+  color: var(--bw-color-ink);
+}
+
+.bw-page-hero .bw-page-hero__eyebrow {
+  color: var(--bw-page-hero-accent);
+}
+
+.bw-page-hero .bw-page-hero__description {
+  color: var(--bw-page-hero-muted);
+}
+
+.bw-page-hero--consulting {
+  --bw-page-hero-surface: #edf4f8;
+  --bw-page-hero-line: #d3e0e8;
+  --bw-page-hero-accent: #345c79;
+  --bw-page-hero-muted: #5a7081;
+}
+
+.bw-page-hero--education {
+  --bw-page-hero-surface: #eef7f4;
+  --bw-page-hero-line: #d0e3dc;
+  --bw-page-hero-accent: #2f6a5a;
+  --bw-page-hero-muted: #55766a;
+}
+
+.bw-page-hero--global {
+  --bw-page-hero-surface: #fbf1eb;
+  --bw-page-hero-line: #ead8cc;
+  --bw-page-hero-accent: #8b5436;
+  --bw-page-hero-muted: #7c695d;
+}
+
 .bw-prose {
   color: var(--bw-color-ink);
   font-size: 16px;

@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string, tone?: "consulting" | "education" | "global" | null }} PageHeroProps
  */
 
 function HeroContent({
@@ -20,7 +20,7 @@ function HeroContent({
     <>
       {eyebrow ? (
         <p
-          className={`text-sm font-semibold uppercase tracking-[0.22em] ${dark ? "text-[var(--bw-color-brand)]" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__eyebrow text-sm font-semibold uppercase tracking-[0.22em] ${dark ? "text-[var(--bw-color-brand)]" : "text-[var(--bw-color-muted)]"}`}
         >
           {eyebrow}
         </p>
@@ -30,7 +30,7 @@ function HeroContent({
       </h1>
       {description ? (
         <p
-          className={`mt-6 max-w-3xl text-lg leading-8 md:text-xl ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__description mt-6 max-w-3xl text-lg leading-8 md:text-xl ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
         >
           {description}
         </p>
@@ -72,6 +72,7 @@ export function PageHero({
   variant = "plain",
   media = null,
   overlayClassName = "",
+  tone = null,
 }) {
   const effectiveVariant = variant === "plain" || !media ? "plain" : variant;
   const content = (
@@ -123,9 +124,11 @@ export function PageHero({
     );
   }
 
+  const toneClass = tone ? `bw-page-hero bw-page-hero--${tone}` : "";
   const surface = dark
     ? "bg-[var(--bw-color-ink)] text-white"
-    : "border-b border-slate-200 bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]";
+    : toneClass ||
+      "border-b border-slate-200 bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]";
 
   return (
     <section
