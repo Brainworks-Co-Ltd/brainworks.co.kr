@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const navigation = [
-  { href: "/admin", label: "운영 개요" },
+  { href: "/admin", label: "운영 현황" },
   { href: "/admin/news", label: "뉴스" },
   { href: "/admin/notices", label: "공지사항" },
   { href: "/admin/popup-notices", label: "팝업 공지" },
