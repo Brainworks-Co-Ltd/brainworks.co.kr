@@ -41,11 +41,6 @@ export function isPublicContent(
 export function isPublicSolution(
   solutionStatus: "ACTIVE" | "ARCHIVED",
   solutionPublicationStatus: "DRAFT" | "PUBLISHED" | "HIDDEN",
-  areaStatus: "ACTIVE" | "ARCHIVED",
-  areaPublicationStatus: "DRAFT" | "PUBLISHED" | "HIDDEN",
 ) {
-  return (
-    isPublicContent(solutionStatus, solutionPublicationStatus) &&
-    isPublicContent(areaStatus, areaPublicationStatus)
-  );
+  return isPublicContent(solutionStatus, solutionPublicationStatus);
 }

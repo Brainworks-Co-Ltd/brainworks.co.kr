@@ -34,12 +34,9 @@ describe("콘텐츠 무결성 계약", () => {
     expect(isPublicContent("ACTIVE", "DRAFT")).toBe(false);
   });
 
-  it("솔루션은 활성·게시된 사업 영역 아래에서만 공개된다", () => {
-    expect(isPublicSolution("ACTIVE", "PUBLISHED", "ACTIVE", "PUBLISHED")).toBe(
-      true,
-    );
-    expect(
-      isPublicSolution("ACTIVE", "PUBLISHED", "ARCHIVED", "PUBLISHED"),
-    ).toBe(false);
+  it("솔루션은 고정 사업 영역 참조와 무관하게 자체 상태로 공개된다", () => {
+    expect(isPublicSolution("ACTIVE", "PUBLISHED")).toBe(true);
+    expect(isPublicSolution("ARCHIVED", "PUBLISHED")).toBe(false);
+    expect(isPublicSolution("ACTIVE", "DRAFT")).toBe(false);
   });
 });
