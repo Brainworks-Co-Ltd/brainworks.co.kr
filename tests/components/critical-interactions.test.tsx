@@ -22,6 +22,20 @@ describe("공유 UI 상호작용", () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
+  it("Button은 shadcn 슬롯과 호출자 클래스 우선순위를 제공한다", () => {
+    render(
+      <Button variant="outline" className="rounded-full">
+        문의하기
+      </Button>,
+    );
+
+    const button = screen.getByRole("button", { name: "문의하기" });
+    expect(button).toHaveAttribute("data-slot", "button");
+    expect(button).toHaveAttribute("data-variant", "outline");
+    expect(button).toHaveClass("rounded-full");
+    expect(button).not.toHaveClass("rounded-[var(--bw-radius-control)]");
+  });
+
   it("Dialog는 닫기 버튼과 Escape로 닫힌다", () => {
     const onOpenChange = vi.fn();
     render(
