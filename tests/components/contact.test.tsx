@@ -17,6 +17,7 @@ describe("문의 페이지 폼", () => {
   it("대체 연락처 없이 문의 목적 선택과 단계별 폼 위계를 제공한다", () => {
     render(<Contact />);
 
+    expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
     expect(screen.queryByText(/대체 연락처/)).not.toBeInTheDocument();
     expect(screen.queryByText(/대표 이메일/)).not.toBeInTheDocument();
     expect(
