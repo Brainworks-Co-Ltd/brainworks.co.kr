@@ -1,21 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import { buildPublicNavigation } from "@/shared/navigation/publicNavigation";
 import { useLocale } from "@/shared/routing/useLocale";
-
-const quickLinks = [
-  { href: "/", label: { ko: "홈", en: "Home" } },
-  { href: "/about", label: { ko: "회사소개", en: "About" } },
-  { href: "/services", label: { ko: "AI 솔루션", en: "AI Business Areas" } },
-  { href: "/consulting", label: { ko: "AI 컨설팅", en: "AI Consulting" } },
-  { href: "/education", label: { ko: "AI 전문교육", en: "AI Academy" } },
-  {
-    href: "/global-programs",
-    label: { ko: "글로벌 프로그램", en: "Global Programs" },
-  },
-  { href: "/news", label: { ko: "소식", en: "News" } },
-  { href: "/notices", label: { ko: "공지사항", en: "Notices" } },
-  { href: "/contact", label: { ko: "문의하기", en: "Contact" } },
-];
 
 const offices = [
   {
@@ -57,6 +43,9 @@ const offices = [
 
 export default function Footer() {
   const { language } = useLocale();
+  const navigation = buildPublicNavigation(language);
+  const groups = navigation.filter((item) => item.type === "group");
+  const contact = navigation.find((item) => item.id === "contact");
 
   return (
     <footer className="bg-[var(--bw-color-ink)] text-slate-200">
@@ -75,17 +64,40 @@ export default function Footer() {
             </div>
             <nav
               aria-label={language === "ko" ? "보조 메뉴" : "Footer navigation"}
-              className="flex flex-wrap gap-2"
+              className="grid gap-8 sm:grid-cols-3"
             >
-              {quickLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-full border border-white/15 px-4 py-2 text-xs font-medium text-slate-300 transition hover:border-[var(--bw-color-brand)] hover:text-white"
-                >
-                  {item.label[language]}
-                </Link>
+              {groups.map((group) => (
+                <div key={group.id}>
+                  <h2 className="text-sm font-semibold text-white">
+                    {group.label}
+                  </h2>
+                  <ul className="mt-3 space-y-2">
+                    {group.children.map((child) => (
+                      <li key={child.id}>
+                        <Link
+                          href={child.href}
+                          className="text-sm text-slate-400 transition hover:text-white"
+                        >
+                          {child.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
+              {contact ? (
+                <div>
+                  <h2 className="text-sm font-semibold text-white">
+                    {contact.label}
+                  </h2>
+                  <Link
+                    href={contact.href}
+                    className="mt-3 inline-flex text-sm text-slate-400 transition hover:text-white"
+                  >
+                    {contact.label}
+                  </Link>
+                </div>
+              ) : null}
             </nav>
             <div className="space-y-1 text-sm">
               <p className="text-slate-300">Email · austin@brainworks.co.kr</p>
