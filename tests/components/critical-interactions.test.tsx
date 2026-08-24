@@ -1,11 +1,37 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { useState } from "react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Button } from "@/components/ui/button";
 import { CarouselControls } from "@/components/ui/carousel-controls";
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { MediaFrame } from "@/components/ui/media-frame";
 import { ProgressTrack } from "@/components/ui/progress-track";
 import { StatePanel } from "@/components/ui/state-panel";
+
+function DialogHarness() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button variant="outline" />}>
+        공지 열기
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>공지</DialogTitle>
+        </DialogHeader>
+        <Button>확인</Button>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 describe("공유 UI 상호작용", () => {
   it("Button은 기본 type과 disabled 상태를 제공한다", () => {
@@ -36,19 +62,27 @@ describe("공유 UI 상호작용", () => {
     expect(button).not.toHaveClass("rounded-[var(--bw-radius-control)]");
   });
 
-  it("Dialog는 닫기 버튼과 Escape로 닫힌다", () => {
-    const onOpenChange = vi.fn();
-    render(
-      <Dialog open onOpenChange={onOpenChange} title="공지">
-        내용
-      </Dialog>,
-    );
+  it("Dialog는 초점을 가두고 Escape로 닫은 뒤 실행 버튼으로 복귀한다", async () => {
+    const user = userEvent.setup();
+    render(<DialogHarness />);
 
+    const trigger = screen.getByRole("button", { name: "공지 열기" });
+    await user.click(trigger);
     expect(screen.getByRole("dialog", { name: "공지" })).toBeVisible();
-    fireEvent.keyDown(document, { key: "Escape" });
-    expect(onOpenChange).toHaveBeenCalledWith(false);
-    fireEvent.click(screen.getByRole("button", { name: "닫기" }));
-    expect(onOpenChange).toHaveBeenCalledTimes(2);
+
+    const confirm = screen.getByRole("button", { name: "확인" });
+    const close = screen.getByRole("button", { name: "닫기" });
+    await waitFor(() => expect(confirm).toHaveFocus());
+    await user.tab();
+    expect(close).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(confirm).toHaveFocus();
+    await user.keyboard("{Escape}");
+
+    expect(
+      screen.queryByRole("dialog", { name: "공지" }),
+    ).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
   });
 
   it("ProgressTrack은 진행률을 접근성 값으로 노출한다", () => {

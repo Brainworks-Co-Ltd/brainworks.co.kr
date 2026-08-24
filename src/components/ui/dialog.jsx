@@ -1,66 +1,127 @@
-import { useEffect } from "react";
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { XIcon } from "lucide-react";
 
-export function Dialog({
-  open,
-  onOpenChange,
-  title,
-  children,
-  className = "",
-}) {
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        onOpenChange(false);
-      }
-    };
+function Dialog(props) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+}
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onOpenChange, open]);
+function DialogTrigger(props) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
+}
 
-  if (!open) {
-    return null;
-  }
+function DialogPortal(props) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+}
 
+function DialogClose(props) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+}
+
+function DialogOverlay({ className, ...props }) {
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-      role="presentation"
-    >
-      <button
-        type="button"
-        aria-label="배경 닫기"
-        className="absolute inset-0 cursor-default bg-black/50"
-        onClick={() => onOpenChange(false)}
-      />
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="dialog-title"
-        className={`relative z-10 w-full max-w-lg rounded-[var(--bw-radius-feature)] bg-white p-6 shadow-2xl ${className}`}
-      >
-        <div className="flex items-start justify-between gap-4">
-          <h2
-            id="dialog-title"
-            className="text-xl font-semibold text-[var(--bw-color-ink)]"
-          >
-            {title}
-          </h2>
-          <button
-            type="button"
-            aria-label="닫기"
-            className="rounded-[var(--bw-radius-control)] px-2 py-1 text-sm text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)]"
-            onClick={() => onOpenChange(false)}
-          >
-            ×
-          </button>
-        </div>
-        <div className="mt-4">{children}</div>
-      </section>
-    </div>
+    <DialogPrimitive.Backdrop
+      data-slot="dialog-overlay"
+      className={cn(
+        "fixed inset-0 isolate z-50 bg-black/50 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        className,
+      )}
+      {...props}
+    />
   );
 }
+
+function DialogContent({
+  className,
+  children,
+  showCloseButton = true,
+  ...props
+}) {
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Popup
+        data-slot="dialog-content"
+        className={cn(
+          "fixed left-1/2 top-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-surface)] p-6 text-[var(--bw-color-ink)] shadow-2xl outline-none duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 sm:max-w-lg",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+        {showCloseButton ? (
+          <DialogPrimitive.Close
+            render={
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="닫기"
+                className="absolute right-4 top-4"
+              />
+            }
+          >
+            <XIcon aria-hidden="true" />
+          </DialogPrimitive.Close>
+        ) : null}
+      </DialogPrimitive.Popup>
+    </DialogPortal>
+  );
+}
+
+function DialogHeader({ className, ...props }) {
+  return (
+    <div
+      data-slot="dialog-header"
+      className={cn("flex flex-col gap-2", className)}
+      {...props}
+    />
+  );
+}
+
+function DialogFooter({ className, ...props }) {
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn(
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function DialogTitle({ className, ...props }) {
+  return (
+    <DialogPrimitive.Title
+      data-slot="dialog-title"
+      className={cn("text-xl font-semibold leading-tight", className)}
+      {...props}
+    />
+  );
+}
+
+function DialogDescription({ className, ...props }) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn("text-sm text-[var(--bw-color-muted)]", className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+};
