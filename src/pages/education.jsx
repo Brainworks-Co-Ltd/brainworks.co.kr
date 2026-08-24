@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const processSteps = [
@@ -536,11 +537,10 @@ export default function Education() {
         </PageHero>
 
         <section className="mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
-          <div>
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === "ko" ? "교육 프로세스" : "Training Process"}
-            </h2>
-          </div>
+          <SectionHeader
+            eyebrow="Training process"
+            title={language === "ko" ? "교육 프로세스" : "Training Process"}
+          />
 
           <div className="flex flex-col gap-12">
             {processSteps.map((step, index) => {
@@ -554,7 +554,7 @@ export default function Education() {
               return (
                 <article
                   key={step.id}
-                  className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                  className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm"
                 >
                   <div
                     className={`flex flex-col gap-8 p-6 md:gap-10 md:p-10 ${
@@ -631,16 +631,19 @@ export default function Education() {
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === "ko"
-                ? "생성형 AI 전문교육"
-                : "Generative AI Specialist Training"}
-            </h2>
-            <h2 className="mt-3 text-sm text-slate-500">
-              {language === "ko"
-                ? "직무 중심 생성형 AI 활용 역량 강화"
-                : "Level up practical GenAI skills for every team"}
-            </h2>
+            <SectionHeader
+              eyebrow="Generative AI"
+              title={
+                language === "ko"
+                  ? "생성형 AI 전문교육"
+                  : "Generative AI Specialist Training"
+              }
+              description={
+                language === "ko"
+                  ? "직무 중심 생성형 AI 활용 역량 강화"
+                  : "Level up practical GenAI skills for every team"
+              }
+            />
             <div className="mt-6 flex flex-wrap gap-3">
               {generativeAIChips[language].map((chip) => (
                 <span
@@ -657,7 +660,7 @@ export default function Education() {
             {generativeAITracks.map((track) => (
               <article
                 key={track.id}
-                className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
               >
                 <div>
                   <h3 className="text-xl font-semibold text-slate-900">
@@ -682,16 +685,17 @@ export default function Education() {
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === "ko" ? "함께하는 주요 고객" : "Key Clients"}
-            </h2>
-            <p className="mt-3 text-sm text-slate-500">
-              {language === "ko"
-                ? "공공, 제조, 금융, 교육 영역의 고객이 브레인웍스 AI 교육을 선택했습니다."
-                : "Public, manufacturing, finance, and education leaders trust Brainworks as their AI training partner."}
-            </p>
+            <SectionHeader
+              eyebrow="Education clients"
+              title={language === "ko" ? "함께하는 주요 고객" : "Key Clients"}
+              description={
+                language === "ko"
+                  ? "공공, 제조, 금융, 교육 영역의 고객이 브레인웍스 AI 교육을 선택했습니다."
+                  : "Public, manufacturing, finance, and education leaders trust Brainworks as their AI training partner."
+              }
+            />
           </div>
-          <div className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm sm:grid-cols-3">
+          <div className="grid gap-6 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm sm:grid-cols-3">
             {educationClients.map((client) => (
               <div
                 key={client.id}
@@ -708,24 +712,25 @@ export default function Education() {
         </section>
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <div>
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === "ko"
+          <SectionHeader
+            eyebrow="Program support"
+            title={
+              language === "ko"
                 ? "교육 프로그램 특장점"
-                : "Program Support Pillars"}
-            </h2>
-            <p className="mt-2 text-sm text-slate-500">
-              {language === "ko"
+                : "Program Support Pillars"
+            }
+            description={
+              language === "ko"
                 ? "학습·프로젝트·커리어 지원을 연결해 교육 성과가 채용으로 이어지는 교육 프로그램"
-                : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."}
-            </p>
-          </div>
+                : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."
+            }
+          />
 
           <div className="grid gap-6 md:grid-cols-3">
             {supportPillars.map((pillar) => (
               <div
                 key={pillar.id}
-                className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
               >
                 <h3 className="text-xl font-semibold text-slate-900">
                   {pillar.title[language]}
@@ -747,7 +752,7 @@ export default function Education() {
         </section>
 
         <section className="mx-auto mt-20 flex max-w-5xl flex-col gap-6 px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-slate-900">
               {language === "ko"
                 ? "교육 상담 및 제휴 문의"

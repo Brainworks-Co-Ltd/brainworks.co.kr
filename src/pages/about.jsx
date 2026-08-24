@@ -35,14 +35,14 @@ export default function About() {
       />
 
       <section className="bg-white py-20">
-        <div className="container mx-auto mt-16 px-4">
+        <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-col gap-12 lg:flex-row">
             <AboutLocalNav active="overview" />
 
             <div className="flex-1 lg:max-w-5xl xl:max-w-6xl">
               <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
                 <div className="flex justify-center lg:w-1/2">
-                  <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-lg">
+                  <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-slate-100 shadow-md">
                     <img
                       src="/images/대표사진.png"
                       alt={language === "ko" ? "CEO 사진" : "CEO photo"}

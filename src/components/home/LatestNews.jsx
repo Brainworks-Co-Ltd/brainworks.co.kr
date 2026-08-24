@@ -38,7 +38,7 @@ export default function LatestNews({ items = [] }) {
             {items.slice(0, 3).map((item) => (
               <article
                 key={item.slug}
-                className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white"
+                className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm"
               >
                 <div className="relative aspect-[16/9] bg-slate-100">
                   {item.thumbnail ? (

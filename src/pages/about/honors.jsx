@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AboutLocalNav } from "@/components/public/AboutLocalNav";
 import { PageHero } from "@/components/public/PageHero";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { useLocale } from "@/shared/routing/useLocale";
 import awardsData from "@/utils/awardsData";
@@ -42,7 +43,10 @@ const formatAwardPeriod = (year, date) => {
   return String(year);
 };
 
-export default function HonorsPage({ awards = awardsData, certifications = certificationsData }) {
+export default function HonorsPage({
+  awards = awardsData,
+  certifications = certificationsData,
+}) {
   const { language } = useLocale();
   const t = copy[language];
 
@@ -57,27 +61,21 @@ export default function HonorsPage({ awards = awardsData, certifications = certi
       />
 
       <section className="py-20">
-        <div className="container mx-auto mt-16 px-4">
+        <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-col gap-12 lg:flex-row">
             <AboutLocalNav active="honors" />
 
             <div className="flex-1">
-              <header className="max-w-4xl">
-                <p className="mt-4 text-lg text-slate-600">{t.subtitle}</p>
-              </header>
-
               <div className="mt-12 space-y-16">
                 <section>
-                  <h2 className="text-2xl font-semibold text-slate-900">
-                    {t.awardsLabel}
-                  </h2>
+                  <SectionHeader eyebrow="Awards" title={t.awardsLabel} />
                   <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
                     {awards.map((award, index) => (
                       <article
                         key={[award.slug || award.title.ko, award.year].join(
                           "-",
                         )}
-                        className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                        className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                       >
                         <div className="relative flex h-48 w-full items-center justify-center bg-slate-100 p-6">
                           <Image
@@ -108,16 +106,17 @@ export default function HonorsPage({ awards = awardsData, certifications = certi
                 </section>
 
                 <section>
-                  <h2 className="text-2xl font-semibold text-slate-900">
-                    {t.certificationsLabel}
-                  </h2>
+                  <SectionHeader
+                    eyebrow="Certifications"
+                    title={t.certificationsLabel}
+                  />
                   <div className="mt-6 grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
                     {certifications.map((cert) => (
                       <article
                         key={[cert.slug || cert.title.ko, cert.org.ko].join(
                           "-",
                         )}
-                        className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                        className="flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                       >
                         <div className="relative flex h-48 w-full items-center justify-center bg-slate-100 p-6">
                           <Image

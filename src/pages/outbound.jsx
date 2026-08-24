@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -233,19 +234,22 @@ export default function Outbound() {
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {language === "ko"
-                ? "글로벌 엑셀레이터 프로그램"
-                : "Global Accelerator Program"}
-            </h2>
-            <p className="mt-3 text-sm text-slate-500">
-              {language === "ko"
-                ? "전세계 12개국 이상의 파트너와 연결된 글로벌 엑셀러레이터 네트워크"
-                : "We operate an accelerator network connected to partners across more than 12 countries."}
-            </p>
+            <SectionHeader
+              eyebrow="Global network"
+              title={
+                language === "ko"
+                  ? "글로벌 엑셀레이터 프로그램"
+                  : "Global Accelerator Program"
+              }
+              description={
+                language === "ko"
+                  ? "전세계 12개국 이상의 파트너와 연결된 글로벌 엑셀러레이터 네트워크"
+                  : "We operate an accelerator network connected to partners across more than 12 countries."
+              }
+            />
           </div>
 
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
             <div className="relative h-90 w-full bg-slate-100 md:h-[28rem]">
               <img
                 src={networkMapSrc}
@@ -366,11 +370,16 @@ export default function Outbound() {
         </section>
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
+          <SectionHeader
+            eyebrow="Global programs"
+            title={t.sectionTitle}
+            description={t.sectionSubtitle}
+          />
           <div className="grid gap-8 md:grid-cols-2">
             {programs.map((program, index) => (
               <article
                 key={program.id}
-                className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-600">
                   <span className="h-1.5 w-6 rounded-full bg-gradient-to-r from-sky-500 to-indigo-500" />
@@ -399,18 +408,17 @@ export default function Outbound() {
         </section>
 
         <section className="mx-auto mt-20 max-w-6xl px-6">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
-              {t.aiSectionTitle}
-            </h2>
-            <p className="mt-3 text-sm text-slate-500">{t.aiSectionSubtitle}</p>
-          </div>
+          <SectionHeader
+            eyebrow="Global AI education"
+            title={t.aiSectionTitle}
+            description={t.aiSectionSubtitle}
+          />
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {aiPrograms.map((program) => (
               <article
                 key={program.id}
-                className="flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 <h3 className="text-xl font-semibold text-slate-900">
                   {program.title[language]}
@@ -435,7 +443,7 @@ export default function Outbound() {
         </section>
 
         <section className="mx-auto mt-20 max-w-5xl px-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-slate-900">
               {t.contactTitle}
             </h2>

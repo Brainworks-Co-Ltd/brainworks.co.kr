@@ -38,13 +38,11 @@ export default function CompanyHistoryPage() {
       />
 
       <section className="py-20">
-        <div className="container mx-auto mt-16 px-4">
+        <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-col gap-12 lg:flex-row">
             <AboutLocalNav active="history" />
 
             <div className="flex-1">
-              <div className="max-w-4xl"></div>
-
               <div className="mt-12 space-y-8">
                 {historyItems.map((item, index) => {
                   const accent =
@@ -52,7 +50,7 @@ export default function CompanyHistoryPage() {
                   return (
                     <article
                       key={item.year}
-                      className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                      className="relative overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
                     >
                       <div
                         className={

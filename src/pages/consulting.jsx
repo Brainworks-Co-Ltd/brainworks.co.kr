@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -196,15 +197,13 @@ export default function Consulting() {
         />
 
         <section className="bg-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <h2 className="text-3xl font-semibold text-slate-900">
-              {t.valueTitle}
-            </h2>
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHeader eyebrow="Consulting value" title={t.valueTitle} />
             <div className="mt-12 grid gap-8 md:grid-cols-3">
               {offerings.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-3xl border border-slate-200 p-8 shadow-sm hover:shadow-lg transition"
+                  className="rounded-[var(--bw-radius-card)] border border-slate-200 p-8 shadow-sm transition hover:shadow-md"
                 >
                   <h3 className="text-2xl font-semibold text-slate-900">
                     {item.title[language]}
@@ -227,15 +226,16 @@ export default function Consulting() {
         </section>
 
         <section className="bg-slate-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <h2 className="text-3xl font-semibold text-slate-900">
-              {t.processTitle}
-            </h2>
+          <div className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHeader
+              eyebrow="Consulting process"
+              title={t.processTitle}
+            />
             <div className="mt-12 grid gap-8 md:grid-cols-5">
               {processSteps.map((step) => (
                 <div
                   key={step.id}
-                  className="rounded-3xl bg-white p-6 shadow-sm border border-slate-100"
+                  className="rounded-[var(--bw-radius-card)] border border-slate-100 bg-white p-6 shadow-sm"
                 >
                   <div className="text-sm font-semibold text-slate-400">
                     0{step.id}

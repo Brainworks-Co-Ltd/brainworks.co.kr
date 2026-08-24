@@ -4,12 +4,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { StatePanel } from "@/components/ui/state-panel";
 
 export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
   const router = useRouter();
   const { language } = useLocale();
-  const areas = useMemo(() => providedAreas || getLocalizedBusinessAreas(language), [language, providedAreas]);
+  const areas = useMemo(
+    () => providedAreas || getLocalizedBusinessAreas(language),
+    [language, providedAreas],
+  );
   const queryArea =
     typeof router.query.area === "string" ? router.query.area : "";
   const [activeId, setActiveId] = useState(queryArea || areas[0]?.id || "");
@@ -108,15 +112,11 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
           />
         </div>
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
-            {activeArea.title}
-          </p>
-          <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-[-0.025em] text-[var(--bw-color-ink)]">
-            {activeArea.subtitle}
-          </h2>
-          <p className="mt-5 text-base leading-8 text-[var(--bw-color-muted)]">
-            {activeArea.description}
-          </p>
+          <SectionHeader
+            eyebrow={activeArea.title}
+            title={activeArea.subtitle}
+            description={activeArea.description}
+          />
           <Link
             href={`/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`}
             className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-ink)] px-6 py-3 text-sm font-semibold text-white hover:bg-black"

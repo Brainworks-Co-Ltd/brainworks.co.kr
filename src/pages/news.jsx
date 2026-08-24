@@ -45,7 +45,7 @@ function NewsCard({ item, language }) {
   return (
     <Link
       href={"/news/" + item.slug}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl"
+      className="group flex h-full flex-col overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-sky-200 hover:shadow-md"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
         {image ? (
@@ -177,17 +177,7 @@ export default function News({ newsItems }) {
           }
         />
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pt-16 md:pt-20">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-semibold md:text-4xl">
-                {language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
-              </h1>
-              <p className="text-sm text-slate-500">
-                {language === "ko"
-                  ? "회사 동향부터 파트너십, 수상 소식까지 한눈에 확인하세요."
-                  : "Track company updates, partnerships, and awards in one place."}
-              </p>
-            </div>
+          <div className="flex justify-end">
             <div className="relative w-full md:w-72">
               <svg
                 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
@@ -215,7 +205,7 @@ export default function News({ newsItems }) {
           </div>
 
           {filteredItems.length === 0 ? (
-            <div className="rounded-3xl border border-slate-200 bg-white p-12 text-center text-slate-500 shadow-sm">
+            <div className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-12 text-center text-slate-500 shadow-sm">
               {language === "ko"
                 ? "조건에 맞는 소식이 없습니다. 다른 키워드나 분류를 선택해 보세요."
                 : "No news matches your filters. Try a different keyword or category."}

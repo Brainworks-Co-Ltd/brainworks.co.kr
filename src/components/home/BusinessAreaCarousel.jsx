@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
+import { SectionHeader } from "@/components/public/SectionHeader";
 import { CarouselControls } from "@/components/ui/carousel-controls";
 import { MediaFrame } from "@/components/ui/media-frame";
 import { ProgressTrack } from "@/components/ui/progress-track";
@@ -10,7 +11,10 @@ const ROTATION_MS = 6000;
 
 export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
   const { language } = useLocale();
-  const areas = useMemo(() => providedAreas || getLocalizedBusinessAreas(language), [language, providedAreas]);
+  const areas = useMemo(
+    () => providedAreas || getLocalizedBusinessAreas(language),
+    [language, providedAreas],
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [elapsed, setElapsed] = useState(0);
@@ -56,21 +60,17 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
       onFocus={() => setIsPlaying(false)}
     >
       <div className="mx-auto max-w-6xl px-6">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
-            {language === "ko"
+        <SectionHeader
+          eyebrow={
+            language === "ko"
               ? "브레인웍스 사업 분야"
-              : "Brainworks business domains"}
-          </p>
-          <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.025em] text-[var(--bw-color-ink)] md:text-5xl">
-            {language === "ko"
-              ? "핵심 AI 사업 분야"
-              : "Core AI business domains"}
-          </h2>
-          <p className="mt-4 text-lg leading-8 text-[var(--bw-color-muted)]">
-            {activeArea.subtitle}
-          </p>
-        </div>
+              : "Brainworks business domains"
+          }
+          title={
+            language === "ko" ? "핵심 AI 사업 분야" : "Core AI business domains"
+          }
+          description={activeArea.subtitle}
+        />
 
         <div
           className="mt-10 overflow-hidden rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] shadow-[var(--bw-shadow-soft)]"
