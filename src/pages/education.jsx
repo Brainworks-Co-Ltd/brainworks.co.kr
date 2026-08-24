@@ -554,10 +554,10 @@ export default function Education() {
               return (
                 <article
                   key={step.id}
-                  className="border-y border-[var(--bw-color-line)] bg-white first:border-b-0"
+                  className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white"
                 >
                   <div
-                    className={`flex flex-col gap-8 py-8 md:gap-10 md:py-12 ${
+                    className={`flex flex-col gap-8 px-6 py-8 md:gap-10 md:px-10 md:py-12 ${
                       hasImage ? "md:flex-row md:items-stretch" : ""
                     } ${isReversed ? "md:flex-row-reverse" : ""}`}
                   >
@@ -588,7 +588,7 @@ export default function Education() {
                           {step.modules[language].map((module) => (
                             <span
                               key={module}
-                              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-[var(--bw-color-muted)]"
+                              className="rounded-full border border-[var(--bw-color-line)] bg-white px-3 py-1 text-xs font-medium text-[var(--bw-color-muted)]"
                             >
                               {module}
                             </span>
