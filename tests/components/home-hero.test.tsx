@@ -63,4 +63,32 @@ describe("HomeHero", () => {
     expect(screen.getByRole("heading", { name: "두 번째 장면" })).toBeVisible();
     vi.useRealTimers();
   });
+
+  it("일시정지 후 재생해도 현재 진행률을 유지한다", () => {
+    vi.useFakeTimers();
+
+    try {
+      render(<HomeHero scenes={scenes} />);
+      const progress = screen.getByRole("progressbar", {
+        name: /첫 장면 진행률/,
+      });
+
+      act(() => vi.advanceTimersByTime(1800));
+      const pausedValue = Number(progress.getAttribute("aria-valuenow"));
+
+      fireEvent.click(screen.getByRole("button", { name: "일시정지" }));
+      act(() => vi.advanceTimersByTime(1000));
+      expect(Number(progress.getAttribute("aria-valuenow"))).toBe(
+        pausedValue,
+      );
+
+      fireEvent.click(screen.getByRole("button", { name: "재생" }));
+      act(() => vi.advanceTimersByTime(100));
+      expect(Number(progress.getAttribute("aria-valuenow"))).toBeGreaterThanOrEqual(
+        pausedValue,
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

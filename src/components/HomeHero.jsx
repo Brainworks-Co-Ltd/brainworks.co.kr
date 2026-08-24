@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
 import { CarouselControls } from "@/components/ui/carousel-controls";
@@ -65,6 +65,12 @@ export default function HomeHero({ scenes = defaultScenes }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(!reducedMotion);
   const [elapsed, setElapsed] = useState(0);
+  const elapsedRef = useRef(0);
+
+  const updateElapsed = (value) => {
+    elapsedRef.current = value;
+    setElapsed(value);
+  };
 
   useEffect(() => {
     setIsPlaying(!reducedMotion);
@@ -81,13 +87,15 @@ export default function HomeHero({ scenes = defaultScenes }) {
       return undefined;
     }
 
-    const startedAt = Date.now();
+    const startedAt =
+      Date.now() - (elapsedRef.current / 100) * AUTO_ADVANCE_MS;
     const timer = window.setInterval(() => {
       const nextElapsed = Date.now() - startedAt;
-      setElapsed(Math.min(100, (nextElapsed / AUTO_ADVANCE_MS) * 100));
       if (nextElapsed >= AUTO_ADVANCE_MS) {
         setActiveIndex((index) => (index + 1) % resolvedScenes.length);
-        setElapsed(0);
+        updateElapsed(0);
+      } else {
+        updateElapsed((nextElapsed / AUTO_ADVANCE_MS) * 100);
       }
     }, 100);
 
@@ -111,7 +119,7 @@ export default function HomeHero({ scenes = defaultScenes }) {
 
   const selectScene = (index) => {
     setActiveIndex(index);
-    setElapsed(0);
+    updateElapsed(0);
   };
 
   return (

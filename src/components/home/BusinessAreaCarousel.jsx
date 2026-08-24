@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 import { SectionHeader } from "@/components/public/SectionHeader";
@@ -18,10 +18,16 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [elapsed, setElapsed] = useState(0);
+  const elapsedRef = useRef(0);
+
+  const updateElapsed = (value) => {
+    elapsedRef.current = value;
+    setElapsed(value);
+  };
 
   useEffect(() => {
     setActiveIndex(0);
-    setElapsed(0);
+    updateElapsed(0);
   }, [language]);
 
   useEffect(() => {
@@ -29,13 +35,14 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
       return undefined;
     }
 
-    const startedAt = Date.now();
+    const startedAt = Date.now() - (elapsedRef.current / 100) * ROTATION_MS;
     const timer = window.setInterval(() => {
       const nextElapsed = Date.now() - startedAt;
-      setElapsed(Math.min(100, (nextElapsed / ROTATION_MS) * 100));
       if (nextElapsed >= ROTATION_MS) {
         setActiveIndex((index) => (index + 1) % areas.length);
-        setElapsed(0);
+        updateElapsed(0);
+      } else {
+        updateElapsed((nextElapsed / ROTATION_MS) * 100);
       }
     }, 100);
 
@@ -49,7 +56,7 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
   const activeArea = areas[activeIndex % areas.length];
   const selectArea = (index) => {
     setActiveIndex(index);
-    setElapsed(0);
+    updateElapsed(0);
   };
 
   return (
