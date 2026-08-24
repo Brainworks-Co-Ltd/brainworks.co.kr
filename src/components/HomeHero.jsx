@@ -11,7 +11,7 @@ const defaultScenes = [
   {
     id: "brainworks-ai-ax",
     title: {
-      ko: "AI와 AX의 시작, 브레인웍스에서",
+      ko: "AI와 AX의 시작,\n브레인웍스에서",
       en: "AI & AX innovation starts here",
     },
     description: {
@@ -148,7 +148,7 @@ export default function HomeHero({ scenes = defaultScenes }) {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[var(--bw-color-brand)]">
             {language === "ko" ? "Brainworks AI & AX" : "Brainworks AI & AX"}
           </p>
-          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-7xl">
+          <h1 className="mt-5 whitespace-pre-line text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-7xl">
             {title}
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
