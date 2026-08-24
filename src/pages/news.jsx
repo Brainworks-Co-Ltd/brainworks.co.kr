@@ -107,19 +107,13 @@ function FeaturedNews({ item, language }) {
   );
 }
 
-function SupportingNews({ item, language, variant = "horizontal" }) {
-  const isHorizontal = variant === "horizontal";
-
+function SupportingNews({ item, language }) {
   return (
     <Link
       href={`/news/${item.slug}`}
-      className={`group grid gap-5 border-y border-[var(--bw-color-line)] py-6 ${isHorizontal ? "md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-center md:gap-8" : ""}`}
+      className="group flex flex-col gap-5 border-y border-[var(--bw-color-line)] py-6"
     >
-      <NewsImage
-        item={item}
-        language={language}
-        className={isHorizontal ? "aspect-[4/3]" : "aspect-[16/9]"}
-      />
+      <NewsImage item={item} language={language} className="aspect-[16/9]" />
       <div>
         <NewsMeta item={item} language={language} />
         <h3 className="mt-3 text-xl font-semibold leading-snug tracking-[-0.02em] text-[var(--bw-color-ink)] transition group-hover:text-[var(--bw-color-brand-strong)] md:text-2xl">
@@ -337,17 +331,15 @@ export default function News({ newsItems }) {
                       </h2>
                     </div>
                   </div>
-                  <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+                  <div className="grid gap-8 lg:grid-cols-2">
                     <SupportingNews
                       item={filteredItems[1]}
                       language={language}
-                      variant="horizontal"
                     />
                     {filteredItems[2] ? (
                       <SupportingNews
                         item={filteredItems[2]}
                         language={language}
-                        variant="stacked"
                       />
                     ) : null}
                   </div>
