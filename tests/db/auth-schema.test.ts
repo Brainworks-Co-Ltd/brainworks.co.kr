@@ -14,4 +14,8 @@ describe("Better Auth 저장 테이블 계약", () => {
     expect(getTableName(authAccounts)).toBe("auth_accounts");
     expect(getTableName(authVerifications)).toBe("auth_verifications");
   });
+
+  it("credential 계정의 issuer 필드를 저장한다", () => {
+    expect(authAccounts.issuer).toBeDefined();
+  });
 });

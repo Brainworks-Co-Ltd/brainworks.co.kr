@@ -9,10 +9,25 @@ import {
 } from "@/server/db/schema/auth";
 import { testMailPort } from "@/server/infrastructure/test-mail";
 
+const DEFAULT_APP_ORIGIN = "http://localhost:3000";
+
+export function getAppOrigin(appOrigin = process.env.APP_ORIGIN) {
+  return (appOrigin || DEFAULT_APP_ORIGIN).replace(/\/+$/, "");
+}
+
+export function getAuthBaseURL(appOrigin = process.env.APP_ORIGIN) {
+  return `${getAppOrigin(appOrigin)}/api/auth`;
+}
+
+export function getAuthAdvancedOptions() {
+  return { skipTrailingSlashes: true } as const;
+}
+
 function createAuth() {
   return betterAuth({
-    baseURL: process.env.APP_ORIGIN || "http://localhost:3000",
-    trustedOrigins: [process.env.APP_ORIGIN || "http://localhost:3000"],
+    baseURL: getAuthBaseURL(),
+    trustedOrigins: [getAppOrigin()],
+    advanced: getAuthAdvancedOptions(),
     database: drizzleAdapter(getDb(), {
       provider: "pg",
       schema: {

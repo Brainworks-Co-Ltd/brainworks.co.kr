@@ -1,6 +1,7 @@
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { provisionAdminAccount } from "@/server/auth/provision-admin";
+import { closeDb } from "@/server/db/client";
 
 async function readSecret(prompt: string) {
   if (!stdin.isTTY || !stdout.isTTY) {
@@ -82,6 +83,7 @@ async function main() {
     process.exitCode = 1;
   } finally {
     readline.close();
+    await closeDb();
   }
 }
 

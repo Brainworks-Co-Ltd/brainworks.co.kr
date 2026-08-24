@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { hashPassword } from "better-auth/crypto";
+import { createLocalAccountIssuer } from "@better-auth/core/db";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { adminAccounts, authAccounts } from "@/server/db/schema/auth";
@@ -67,6 +68,7 @@ export function createAdminAccountRows(input: {
       id: input.authAccountId,
       accountId: input.id,
       providerId: "credential",
+      issuer: createLocalAccountIssuer("credential"),
       userId: input.id,
       password: input.passwordHash,
     } satisfies typeof authAccounts.$inferInsert,

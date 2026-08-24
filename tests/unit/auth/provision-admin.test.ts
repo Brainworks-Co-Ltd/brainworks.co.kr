@@ -61,6 +61,7 @@ describe("로컬 통합 관리자 계정 프로비저닝", () => {
       id: "auth-account-id",
       accountId: "admin-id",
       providerId: "credential",
+      issuer: "local:credential",
       userId: "admin-id",
       password: "hashed-password",
     });
