@@ -39,4 +39,13 @@ describe("기반 도구 설정", () => {
     expect(packageJson.devDependencies["@tailwindcss/postcss"]).toBe("4.3.3");
     expect(read("src/styles/globals.css")).toContain('@import "tailwindcss";');
   });
+
+  it("DB 테스트 명령은 Node 환경에서 DB 테스트만 실행한다", () => {
+    const dbConfig = read("vitest.db.config.ts");
+
+    expect(dbConfig).toContain('environment: "node"');
+    expect(dbConfig).toContain('include: ["tests/db/**/*.test.ts"]');
+    expect(dbConfig).toContain("setupFiles: []");
+    expect(dbConfig).not.toContain("mergeConfig");
+  });
 });

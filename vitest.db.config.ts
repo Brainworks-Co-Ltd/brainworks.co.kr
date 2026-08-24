@@ -1,12 +1,15 @@
-import { mergeConfig, defineConfig } from "vitest/config";
-import baseConfig from "./vitest.config";
+import path from "node:path";
+import { defineConfig } from "vitest/config";
 
-export default mergeConfig(
-  baseConfig,
-  defineConfig({
-    test: {
-      environment: "node",
-      include: ["tests/db/**/*.test.ts"],
+export default defineConfig({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
     },
-  }),
-);
+  },
+  test: {
+    environment: "node",
+    setupFiles: [],
+    include: ["tests/db/**/*.test.ts"],
+  },
+});
