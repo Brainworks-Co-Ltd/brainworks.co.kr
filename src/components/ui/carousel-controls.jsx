@@ -15,7 +15,7 @@ export function CarouselControls({
   onTogglePlay,
   labels = { previous: "이전", next: "다음", pause: "일시정지", play: "재생" },
   tone = "dark",
-  className,
+  className = "",
 }) {
   const controlClassName =
     tone === "light"

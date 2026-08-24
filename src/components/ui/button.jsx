@@ -32,7 +32,7 @@ const buttonVariants = cva(
 );
 
 export function Button({
-  className,
+  className = "",
   variant = "default",
   size = "default",
   type = "button",
