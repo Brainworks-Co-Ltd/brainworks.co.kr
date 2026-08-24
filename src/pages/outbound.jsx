@@ -375,33 +375,39 @@ export default function Outbound() {
             title={t.sectionTitle}
             description={t.sectionSubtitle}
           />
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
             {programs.map((program, index) => (
               <article
                 key={program.id}
-                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
               >
-                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
-                  <span className="h-1.5 w-6 rounded-full bg-[var(--bw-color-brand)]" />
-                  <span>{program.badge[language]}</span>
+                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
+                  {String(index + 1).padStart(2, "0")}
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
-                  {program.title[language]}
-                </h3>
-                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
-                  {program.description[language]}
-                </p>
-                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
-                  {program.bullets[language].map((bullet) => (
-                    <li
-                      key={[program.id, bullet].join("-")}
-                      className="flex gap-2"
-                    >
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
+                    {program.badge[language]}
+                  </p>
+                  <h3 className="mt-3 text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
+                    {program.title[language]}
+                  </h3>
+                </div>
+                <div>
+                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                    {program.description[language]}
+                  </p>
+                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
+                    {program.bullets[language].map((bullet) => (
+                      <li
+                        key={[program.id, bullet].join("-")}
+                        className="flex gap-2"
+                      >
+                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </article>
             ))}
           </div>
@@ -414,29 +420,34 @@ export default function Outbound() {
             description={t.aiSectionSubtitle}
           />
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {aiPrograms.map((program) => (
+          <div className="mt-10 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+            {aiPrograms.map((program, index) => (
               <article
                 key={program.id}
-                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
               >
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+                <h3 className="text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
                   {program.title[language]}
                 </h3>
-                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
-                  {program.description[language]}
-                </p>
-                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
-                  {program.bullets[language].map((bullet) => (
-                    <li
-                      key={[program.id, bullet].join("-")}
-                      className="flex gap-2"
-                    >
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div>
+                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                    {program.description[language]}
+                  </p>
+                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
+                    {program.bullets[language].map((bullet) => (
+                      <li
+                        key={[program.id, bullet].join("-")}
+                        className="flex gap-2"
+                      >
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </article>
             ))}
           </div>

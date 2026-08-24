@@ -554,10 +554,10 @@ export default function Education() {
               return (
                 <article
                   key={step.id}
-                  className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm"
+                  className="border-y border-[var(--bw-color-line)] bg-white first:border-b-0"
                 >
                   <div
-                    className={`flex flex-col gap-8 p-6 md:gap-10 md:p-10 ${
+                    className={`flex flex-col gap-8 py-8 md:gap-10 md:py-12 ${
                       hasImage ? "md:flex-row md:items-stretch" : ""
                     } ${isReversed ? "md:flex-row-reverse" : ""}`}
                   >
@@ -656,11 +656,11 @@ export default function Education() {
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
             {generativeAITracks.map((track) => (
               <article
                 key={track.id}
-                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
+                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12"
               >
                 <div>
                   <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
@@ -670,7 +670,7 @@ export default function Education() {
                     {track.description[language]}
                   </p>
                 </div>
-                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
+                <ul className="grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
                   {track.points[language].map((point) => (
                     <li key={point} className="flex gap-2">
                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
@@ -695,11 +695,11 @@ export default function Education() {
               }
             />
           </div>
-          <div className="grid gap-6 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-8 shadow-sm sm:grid-cols-3">
+          <div className="grid gap-0 border-y border-[var(--bw-color-line)] bg-white sm:grid-cols-3">
             {educationClients.map((client) => (
               <div
                 key={client.id}
-                className="flex min-h-[120px] items-center justify-center rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)] p-6"
+                className="flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
               >
                 <img
                   src={client.logo}
@@ -726,11 +726,11 @@ export default function Education() {
             }
           />
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
             {supportPillars.map((pillar) => (
               <div
                 key={pillar.id}
-                className="flex h-full flex-col gap-4 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
+                className="grid gap-5 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {pillar.title[language]}
@@ -738,7 +738,7 @@ export default function Education() {
                 <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
                   {pillar.description[language]}
                 </p>
-                <ul className="mt-auto space-y-2 text-sm text-[var(--bw-color-ink)]">
+                <ul className="grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
                   {pillar.points[language].map((point) => (
                     <li key={point} className="flex gap-2">
                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
@@ -767,11 +767,11 @@ export default function Education() {
             label={language === "ko" ? "상담 신청" : "Request Consultation"}
           />
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
             {faqItems.map((item, index) => (
               <details
                 key={[item.question[language], index].join("-")}
-                className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-5 shadow-sm transition hover:border-[var(--bw-color-brand)]"
+                className="bg-white py-5"
               >
                 <summary className="cursor-pointer text-sm font-semibold text-[var(--bw-color-ink)]">
                   {item.question[language]}

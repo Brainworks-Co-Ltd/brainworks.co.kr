@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
-import { SectionHeader } from "@/components/public/SectionHeader";
+import { EditorialSection } from "@/components/public/EditorialSection";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
@@ -196,61 +196,62 @@ export default function Consulting() {
           }}
         />
 
-        <section className="bg-white">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <SectionHeader eyebrow="Consulting value" title={t.valueTitle} />
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              {offerings.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-[var(--bw-radius-card)] border border-slate-200 p-8 shadow-sm transition hover:shadow-md"
-                >
-                  <h3 className="text-2xl font-semibold text-[var(--bw-color-ink)]">
-                    {item.title[language]}
-                  </h3>
-                  <p className="mt-4 text-[var(--bw-color-muted)]">
+        <EditorialSection
+          eyebrow="Consulting value"
+          title={t.valueTitle}
+          surface="plain"
+        >
+          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+            {offerings.map((item) => (
+              <article
+                key={item.id}
+                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12 md:py-10"
+              >
+                <h3 className="text-2xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-3xl">
+                  {item.title[language]}
+                </h3>
+                <div>
+                  <p className="max-w-2xl text-base leading-8 text-[var(--bw-color-muted)]">
                     {item.description[language]}
                   </p>
-                  <ul className="mt-6 space-y-2 text-sm text-[var(--bw-color-muted)]">
+                  <ul className="mt-6 grid gap-x-8 gap-y-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
                     {item.bullets[language].map((bullet) => (
                       <li key={bullet} className="flex items-start gap-2">
-                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
                         <span>{bullet}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              ))}
-            </div>
+              </article>
+            ))}
           </div>
-        </section>
+        </EditorialSection>
 
-        <section className="bg-[var(--bw-color-surface-muted)]">
-          <div className="mx-auto max-w-6xl px-6 py-20">
-            <SectionHeader
-              eyebrow="Consulting process"
-              title={t.processTitle}
-            />
-            <div className="mt-12 grid gap-8 md:grid-cols-5">
-              {processSteps.map((step) => (
-                <div
-                  key={step.id}
-                  className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-6 shadow-sm"
-                >
-                  <div className="text-sm font-semibold text-[var(--bw-color-muted)]">
-                    0{step.id}
-                  </div>
-                  <h3 className="mt-3 text-xl font-semibold text-[var(--bw-color-ink)]">
-                    {step.title[language]}
-                  </h3>
-                  <p className="mt-4 text-sm text-[var(--bw-color-muted)]">
-                    {step.desc[language]}
-                  </p>
+        <EditorialSection
+          eyebrow="Consulting process"
+          title={t.processTitle}
+          surface="muted"
+        >
+          <ol className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+            {processSteps.map((step) => (
+              <li
+                key={step.id}
+                className="grid gap-4 py-6 md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
+              >
+                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
+                  0{step.id}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
+                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                  {step.title[language]}
+                </h3>
+                <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                  {step.desc[language]}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </EditorialSection>
 
         <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
           <ContactCtaBlock
