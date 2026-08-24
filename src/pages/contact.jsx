@@ -27,7 +27,7 @@ export default function Contact() {
   const resultRef = useRef(null);
   const [form, setForm] = useState({
     requestId: requestId(),
-    topic: "other",
+    topic: "",
     area: "",
     name: "",
     email: "",
@@ -45,7 +45,7 @@ export default function Contact() {
       typeof router.query.topic === "string" &&
       topics.some((item) => item.value === router.query.topic)
         ? router.query.topic
-        : "other";
+        : "";
     setForm((current) => ({
       ...current,
       topic,
@@ -70,6 +70,14 @@ export default function Contact() {
 
   async function submit(event) {
     event.preventDefault();
+    if (!form.topic) {
+      setError(
+        language === "ko"
+          ? "문의 목적을 선택해 주세요."
+          : "Please choose an inquiry type.",
+      );
+      return;
+    }
     if (!form.privacyAccepted) {
       setError(
         language === "ko"
@@ -155,8 +163,7 @@ export default function Contact() {
             >
               <div className="grid gap-1">
                 <h3 id="contact-topic-title" className="text-sm font-semibold">
-                  {language === "ko" ? "문의 목적" : "Inquiry type"}{" "}
-                  <span aria-hidden="true">*</span>
+                  {language === "ko" ? "문의 목적" : "Inquiry type"}
                 </h3>
                 <p className="text-sm text-[var(--bw-color-muted)]">
                   {language === "ko"
@@ -168,6 +175,7 @@ export default function Contact() {
                 className="grid gap-2 sm:grid-cols-2"
                 role="radiogroup"
                 aria-label={language === "ko" ? "문의 목적" : "Inquiry type"}
+                aria-required="true"
               >
                 {topics.map((topic) => (
                   <label
@@ -229,7 +237,6 @@ export default function Contact() {
                   htmlFor="name"
                 >
                   {language === "ko" ? "이름" : "Name"}
-                  <span aria-hidden="true">*</span>
                   <input
                     id="name"
                     name="name"
@@ -246,7 +253,6 @@ export default function Contact() {
                   htmlFor="email"
                 >
                   {language === "ko" ? "이메일" : "Email"}
-                  <span aria-hidden="true">*</span>
                   <input
                     id="email"
                     name="email"
@@ -289,8 +295,7 @@ export default function Contact() {
                   id="contact-message-title"
                   className="text-sm font-semibold"
                 >
-                  {language === "ko" ? "문의 내용" : "Project details"}{" "}
-                  <span aria-hidden="true">*</span>
+                  {language === "ko" ? "문의 내용" : "Project details"}
                 </h3>
                 <p className="text-sm text-[var(--bw-color-muted)]">
                   {language === "ko"
@@ -324,8 +329,7 @@ export default function Contact() {
                 <span>
                   {language === "ko"
                     ? "문의 처리를 위한 개인정보 수집·이용에 동의합니다. 수집 항목, 목적, 보유 기간은 실제 개인정보 처리방침을 따릅니다."
-                    : "I agree to the collection and use of personal information to process this inquiry."}{" "}
-                  <span aria-hidden="true">*</span>
+                    : "I agree to the collection and use of personal information to process this inquiry."}
                 </span>
               </label>
             </div>
