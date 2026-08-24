@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
 import { ensureNoticeAdminActor, createNotice } from "@/server/modules/notices/repository";
-import { getPublishedNoticeList } from "@/server/modules/notices/queries";
+import { getAdminNoticeList } from "@/server/modules/notices/queries";
 
 function isNoticeInput(value: unknown): value is Parameters<typeof createNotice>[0] {
   if (!value || typeof value !== "object") return false;
@@ -14,7 +14,7 @@ function isNoticeInput(value: unknown): value is Parameters<typeof createNotice>
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
   if (request.method === "GET") {
-    response.status(200).json(await getPublishedNoticeList("ko", { q: typeof request.query.q === "string" ? request.query.q : "" }));
+    response.status(200).json({ data: await getAdminNoticeList() });
     return;
   }
   if (request.method === "POST") {

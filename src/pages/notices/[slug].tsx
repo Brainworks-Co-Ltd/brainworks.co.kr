@@ -13,7 +13,7 @@ type NoticeDetailProps = {
   bodyMarkdown: string;
   contentHtml: string;
   backHref: string;
-  attachments: never[];
+  attachments: Array<{ id: string; displayName: string; downloadUrl: string }>;
 };
 
 export default function NoticeDetailPage({
@@ -70,7 +70,6 @@ export async function getServerSideProps({
         backHref: paramsForBack.toString()
           ? `/notices?${paramsForBack.toString()}`
           : "/notices",
-        attachments: [],
       },
     },
   };

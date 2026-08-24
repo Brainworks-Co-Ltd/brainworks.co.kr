@@ -54,7 +54,7 @@ export default function NewNotice() {
     <AdminShell activePath="/admin/notices">
       <AdminPageHeader
         title="새 공지사항"
-        description="국문·영문 원문을 함께 저장합니다. 게시 전에는 초안으로 남습니다."
+        description="국문 및 영문 원문을 함께 저장합니다. 게시 전에는 초안으로 남습니다."
       />
       <form onSubmit={submit} className="mt-8 grid gap-6">
         <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-3">

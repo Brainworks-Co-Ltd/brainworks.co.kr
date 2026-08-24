@@ -1,6 +1,7 @@
 import { and, asc, desc, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
-import { noticeCategories, noticeCategoryLocales, noticeLocales, noticeSlugs, notices } from "@/server/db/schema/notices";
+import { assets } from "@/server/db/schema/assets";
+import { noticeAttachments, noticeCategories, noticeCategoryLocales, noticeLocales, noticeSlugs, notices } from "@/server/db/schema/notices";
 import { effectiveNoticeVisibility } from "@/server/modules/notices/domain";
 import type { NoticeLocale } from "@/server/modules/notices/contracts";
 
@@ -17,7 +18,7 @@ export async function getPublishedNoticeList(locale: NoticeLocale, query: Public
     or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!,
   ];
   if (query.categoryId) filters.push(eq(notices.categoryId, query.categoryId));
-  if (query.q) filters.push(or(ilike(noticeLocales.title, `%${query.q}%`), ilike(noticeLocales.bodyMarkdown, `%${query.q}%`))!);
+  if (query.q) filters.push(ilike(noticeLocales.title, `%${query.q}%`));
   const rows = await getDb()
     .select({ id: notices.id, slug: noticeSlugs.slug, title: noticeLocales.title, displayDate: notices.displayDate, categoryId: notices.categoryId, isPinned: notices.isPinned, pinOrder: notices.pinOrder, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
     .from(notices)
@@ -33,14 +34,74 @@ export async function getPublishedNoticeList(locale: NoticeLocale, query: Public
 export async function getPublishedNoticeDetail(slug: string, locale: NoticeLocale) {
   if (!process.env.DATABASE_URL) return null;
   const row = await getDb()
-    .select({ id: notices.id, slug: noticeSlugs.slug, title: noticeLocales.title, bodyMarkdown: noticeLocales.bodyMarkdown, displayDate: notices.displayDate, categoryId: notices.categoryId, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
+    .select({ id: notices.id, localeId: noticeLocales.id, slug: noticeSlugs.slug, title: noticeLocales.title, bodyMarkdown: noticeLocales.bodyMarkdown, displayDate: notices.displayDate, categoryId: notices.categoryId, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
     .from(noticeSlugs)
     .innerJoin(notices, eq(notices.id, noticeSlugs.noticeId))
     .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
-    .where(and(eq(noticeSlugs.slug, slug), eq(notices.itemStatus, "ACTIVE"), eq(noticeLocales.locale, locale), or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!))
+    .where(and(eq(noticeSlugs.slug, slug), eq(noticeSlugs.isCurrent, true), eq(notices.itemStatus, "ACTIVE"), eq(noticeLocales.locale, locale), or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!))
     .limit(1);
   if (!row[0] || !effectiveNoticeVisibility({ status: row[0].status, startsAt: row[0].startsAt, endsAt: row[0].endsAt })) return null;
-  return { ...row[0], date: String(row[0].displayDate) };
+  const attachments = await getDb()
+    .select({ id: noticeAttachments.id, displayName: noticeAttachments.displayName })
+    .from(noticeAttachments)
+    .innerJoin(assets, eq(assets.id, noticeAttachments.assetId))
+    .where(and(eq(noticeAttachments.noticeLocaleId, row[0].localeId), eq(assets.status, "READY")))
+    .orderBy(asc(noticeAttachments.displayOrder));
+  return {
+    ...row[0],
+    date: String(row[0].displayDate),
+    attachments: attachments.map((attachment) => ({
+      ...attachment,
+      downloadUrl: `/api/notices/${encodeURIComponent(row[0].slug)}/attachments/${encodeURIComponent(attachment.id)}/download?locale=${locale}`,
+    })),
+  };
+}
+
+export async function getAdminNoticeList() {
+  if (!process.env.DATABASE_URL) return [];
+  const rows = await getDb()
+    .select({
+      id: notices.id,
+      itemStatus: notices.itemStatus,
+      version: notices.version,
+      displayDate: notices.displayDate,
+      isPinned: notices.isPinned,
+      pinOrder: notices.pinOrder,
+      slug: noticeSlugs.slug,
+      locale: noticeLocales.locale,
+      title: noticeLocales.title,
+      publicationStatus: noticeLocales.publicationStatus,
+      updatedAt: noticeLocales.updatedAt,
+    })
+    .from(notices)
+    .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
+    .innerJoin(noticeSlugs, and(eq(noticeSlugs.noticeId, notices.id), eq(noticeSlugs.isCurrent, true)))
+    .orderBy(desc(notices.updatedAt), asc(notices.pinOrder), desc(notices.displayDate));
+  const grouped = new Map<string, {
+    id: string;
+    itemStatus: typeof rows[number]["itemStatus"];
+    version: number;
+    displayDate: string;
+    isPinned: boolean;
+    pinOrder: number | null;
+    slug: string;
+    locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"] }>;
+  }>();
+  for (const row of rows) {
+    const item = grouped.get(row.id) ?? {
+      id: row.id,
+      itemStatus: row.itemStatus,
+      version: row.version,
+      displayDate: String(row.displayDate),
+      isPinned: row.isPinned,
+      pinOrder: row.pinOrder,
+      slug: row.slug,
+      locales: {},
+    };
+    item.locales[row.locale] = { title: row.title, publicationStatus: row.publicationStatus };
+    grouped.set(row.id, item);
+  }
+  return Array.from(grouped.values());
 }
 
 export async function getPublishedNoticeCategories(locale: NoticeLocale) {
