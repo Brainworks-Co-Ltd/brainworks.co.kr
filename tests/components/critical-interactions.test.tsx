@@ -101,9 +101,15 @@ describe("공유 UI 상호작용", () => {
     };
     render(<CarouselControls isPlaying {...callbacks} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "이전" }));
-    fireEvent.click(screen.getByRole("button", { name: "다음" }));
-    fireEvent.click(screen.getByRole("button", { name: "일시정지" }));
+    const previous = screen.getByRole("button", { name: "이전" });
+    const next = screen.getByRole("button", { name: "다음" });
+    const pause = screen.getByRole("button", { name: "일시정지" });
+    expect(previous.querySelector("svg")).not.toBeNull();
+    expect(next.querySelector("svg")).not.toBeNull();
+    expect(pause.querySelector("svg")).not.toBeNull();
+    fireEvent.click(previous);
+    fireEvent.click(next);
+    fireEvent.click(pause);
     expect(callbacks.onPrevious).toHaveBeenCalledOnce();
     expect(callbacks.onNext).toHaveBeenCalledOnce();
     expect(callbacks.onTogglePlay).toHaveBeenCalledOnce();

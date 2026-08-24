@@ -1,3 +1,13 @@
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  PauseIcon,
+  PlayIcon,
+} from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 export function CarouselControls({
   isPlaying,
   onPrevious,
@@ -5,7 +15,7 @@ export function CarouselControls({
   onTogglePlay,
   labels = { previous: "이전", next: "다음", pause: "일시정지", play: "재생" },
   tone = "dark",
-  className = "",
+  className,
 }) {
   const controlClassName =
     tone === "light"
@@ -13,31 +23,41 @@ export function CarouselControls({
       : "border-white/30 text-white hover:bg-white/10";
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <button
+    <div className={cn("flex items-center gap-2", className)}>
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         aria-label={labels.previous}
-        className={`flex h-10 w-10 items-center justify-center rounded-full border ${controlClassName}`}
+        className={cn("rounded-full border", controlClassName)}
         onClick={onPrevious}
       >
-        <span aria-hidden="true">←</span>
-      </button>
-      <button
+        <ArrowLeftIcon aria-hidden="true" />
+      </Button>
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         aria-label={isPlaying ? labels.pause : labels.play}
-        className={`flex h-10 w-10 items-center justify-center rounded-full border ${controlClassName}`}
+        className={cn("rounded-full border", controlClassName)}
         onClick={onTogglePlay}
       >
-        <span aria-hidden="true">{isPlaying ? "Ⅱ" : "▶"}</span>
-      </button>
-      <button
+        {isPlaying ? (
+          <PauseIcon aria-hidden="true" />
+        ) : (
+          <PlayIcon aria-hidden="true" />
+        )}
+      </Button>
+      <Button
         type="button"
+        variant="ghost"
+        size="icon"
         aria-label={labels.next}
-        className={`flex h-10 w-10 items-center justify-center rounded-full border ${controlClassName}`}
+        className={cn("rounded-full border", controlClassName)}
         onClick={onNext}
       >
-        <span aria-hidden="true">→</span>
-      </button>
+        <ArrowRightIcon aria-hidden="true" />
+      </Button>
     </div>
   );
 }
