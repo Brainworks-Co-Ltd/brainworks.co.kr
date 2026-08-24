@@ -111,10 +111,7 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>
-            © {new Date().getFullYear()} Brainworks.{" "}
-            {language === "ko" ? "모든 권리 보유." : "All rights reserved."}
-          </p>
+          <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
         </div>
       </div>
     </footer>
