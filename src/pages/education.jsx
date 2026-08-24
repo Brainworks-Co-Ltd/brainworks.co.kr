@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -768,16 +769,20 @@ export default function Education() {
             label={language === "ko" ? "상담 신청" : "Request Consultation"}
           />
 
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className="mt-6 overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white shadow-[var(--bw-shadow-soft)]">
             {faqItems.map((item, index) => (
               <details
                 key={[item.question[language], index].join("-")}
-                className="bg-white py-5"
+                className="group border-b border-[var(--bw-color-line)] px-6 py-5 last:border-b-0 md:px-8 md:py-6"
               >
-                <summary className="cursor-pointer text-sm font-semibold text-[var(--bw-color-ink)]">
-                  {item.question[language]}
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[var(--bw-color-ink)] outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)] focus-visible:ring-offset-4 [&::-webkit-details-marker]:hidden">
+                  <span>{item.question[language]}</span>
+                  <ChevronDown
+                    className="h-5 w-5 shrink-0 text-[var(--bw-color-muted)] transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--bw-color-muted)]">
+                <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--bw-color-muted)]">
                   {item.answer[language]}
                 </p>
               </details>
