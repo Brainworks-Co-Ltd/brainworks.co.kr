@@ -51,7 +51,7 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
         />
         <div className="mx-auto max-w-6xl px-6 py-12">
           <form
-            className="mb-8 flex flex-col gap-3 border-y border-[var(--bw-color-line)] bg-white py-5 md:flex-row"
+            className="mb-8 flex flex-col gap-3 rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white px-5 py-5 md:flex-row md:items-center md:px-6"
             method="get"
           >
             <label className="sr-only" htmlFor="notice-search">
@@ -62,7 +62,7 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
               name="q"
               defaultValue={query.q || ""}
               placeholder={language === "ko" ? "제목 검색" : "Search by title"}
-              className="min-h-11 flex-1 rounded-full border border-slate-200 px-4 text-sm outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
+              className="min-h-11 flex-1 rounded-full border border-[var(--bw-color-line)] px-4 text-sm outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
             />
             {categories.length ? (
               <>
@@ -73,7 +73,7 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
                   id="notice-category"
                   name="category"
                   defaultValue={query.categoryId || ""}
-                  className="min-h-11 rounded-full border border-slate-200 bg-white px-4 text-sm outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
+                  className="min-h-11 rounded-full border border-[var(--bw-color-line)] bg-white px-4 text-sm outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
                 >
                   <option value="">
                     {language === "ko" ? "전체 카테고리" : "All categories"}

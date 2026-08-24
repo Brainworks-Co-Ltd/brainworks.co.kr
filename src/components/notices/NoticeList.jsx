@@ -43,7 +43,7 @@ export default function NoticeList({
               <li key={item.slug}>
                 <Link
                   href={`/notices/${item.slug}`}
-                  className="group grid gap-3 px-2 py-6 transition hover:bg-[var(--bw-color-surface-muted)] md:grid-cols-[minmax(0,0.3fr)_minmax(0,1fr)_auto] md:items-center md:gap-8 md:px-0"
+                  className="group grid gap-3 px-5 py-6 transition hover:bg-[var(--bw-color-surface-muted)] md:grid-cols-[minmax(0,0.3fr)_minmax(0,1fr)_auto] md:items-center md:gap-8 md:px-8"
                 >
                   <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">
                     {item.isPinned ? (
