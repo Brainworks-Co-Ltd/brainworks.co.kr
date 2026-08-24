@@ -12,6 +12,31 @@ export function DesktopNavigation({
   const [openGroup, setOpenGroup] = useState(null);
   const navigationRef = useRef(null);
   const triggerRefs = useRef(new Map());
+  const closeTimerRef = useRef(null);
+
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  const openMenu = (id) => {
+    clearCloseTimer();
+    setOpenGroup(id);
+  };
+
+  const scheduleClose = () => {
+    clearCloseTimer();
+    closeTimerRef.current = window.setTimeout(() => {
+      setOpenGroup(null);
+      closeTimerRef.current = null;
+    }, 150);
+  };
+
+  useEffect(() => {
+    return () => clearCloseTimer();
+  }, []);
 
   useEffect(() => {
     const closeOnEscape = (event) => {
@@ -24,6 +49,7 @@ export function DesktopNavigation({
 
     const closeOnPointerDown = (event) => {
       if (!navigationRef.current?.contains(event.target)) {
+        clearCloseTimer();
         setOpenGroup(null);
       }
     };
@@ -58,7 +84,18 @@ export function DesktopNavigation({
           const isOpen = openGroup === item.id;
 
           return (
-            <li key={item.id} className="relative">
+            <li
+              key={item.id}
+              className="relative"
+              onMouseEnter={() => openMenu(item.id)}
+              onMouseLeave={scheduleClose}
+              onFocusCapture={() => openMenu(item.id)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  scheduleClose();
+                }
+              }}
+            >
               <button
                 ref={(element) => {
                   if (element) {
@@ -71,11 +108,7 @@ export function DesktopNavigation({
                 aria-expanded={isOpen}
                 aria-controls={`public-nav-panel-${item.id}`}
                 data-current={activeGroup === item.id ? "true" : undefined}
-                onClick={() =>
-                  setOpenGroup((current) =>
-                    current === item.id ? null : item.id,
-                  )
-                }
+                onClick={() => openMenu(item.id)}
                 className={`inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition ${activeGroup === item.id || isOpen ? "bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]" : "text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"}`}
               >
                 {item.label}
@@ -91,6 +124,8 @@ export function DesktopNavigation({
                     menu={item.megaMenu}
                     routeKey={routeKey}
                     onClose={() => setOpenGroup(null)}
+                    onMouseEnter={() => openMenu(item.id)}
+                    onMouseLeave={scheduleClose}
                     panelId={`public-nav-panel-${item.id}`}
                     panelLabel={`${item.label} 하위 메뉴`}
                   />
@@ -99,6 +134,8 @@ export function DesktopNavigation({
                     id={`public-nav-panel-${item.id}`}
                     role="region"
                     aria-label={`${item.label} 하위 메뉴`}
+                    onMouseEnter={() => openMenu(item.id)}
+                    onMouseLeave={scheduleClose}
                     className="absolute right-0 top-[calc(100%+0.75rem)] z-50 min-w-72 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-3 shadow-xl"
                   >
                     <ul className="grid gap-1">

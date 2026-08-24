@@ -6,6 +6,8 @@ export function BusinessMegaMenu({
   menu,
   routeKey,
   onClose,
+  onMouseEnter,
+  onMouseLeave,
   panelId,
   panelLabel,
 }) {
@@ -29,6 +31,8 @@ export function BusinessMegaMenu({
       id={panelId}
       role="region"
       aria-label={panelLabel}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className="fixed left-1/2 top-16 z-50 grid max-h-[calc(100vh-5rem)] w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-8 overflow-y-auto rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white p-6 shadow-xl"
     >
       <Link

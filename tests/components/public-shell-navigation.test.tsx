@@ -37,6 +37,21 @@ describe("공개 셸 내비게이션", () => {
     expect(trigger).toHaveFocus();
   });
 
+  it("데스크톱 그룹 메뉴는 트리거에 호버하면 열린다", async () => {
+    const user = userEvent.setup();
+
+    render(<Header />);
+
+    await user.hover(screen.getByRole("button", { name: "회사소개" }));
+    expect(screen.getByRole("region", { name: "회사소개 하위 메뉴" })).toBeVisible();
+
+    await user.hover(screen.getByRole("button", { name: "사업 영역" }));
+    expect(screen.getByRole("region", { name: "사업 영역 하위 메뉴" })).toBeVisible();
+
+    await user.hover(screen.getByRole("button", { name: "소식" }));
+    expect(screen.getByRole("region", { name: "소식 하위 메뉴" })).toBeVisible();
+  });
+
   it("사업 영역 메가메뉴가 대표 이미지와 두 메뉴 열을 제공한다", async () => {
     const user = userEvent.setup();
 
