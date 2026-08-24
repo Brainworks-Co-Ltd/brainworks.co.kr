@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
@@ -91,8 +92,8 @@ export default function Contact() {
       setStatus("error");
       setError(
         language === "ko"
-          ? "문의 전송에 실패했습니다. 입력 내용을 유지했으니 다시 시도하거나 대표 이메일로 연락해 주세요."
-          : "We could not send your inquiry. Your input is preserved; please retry or use the representative email.",
+          ? "문의 전송에 실패했습니다. 입력 내용을 유지했으니 잠시 후 다시 시도해 주세요."
+          : "We could not send your inquiry. Your input is preserved; please try again shortly.",
       );
     }
   }
@@ -158,128 +159,215 @@ export default function Contact() {
               </ul>
             </aside>
             <form
+              aria-labelledby="contact-form-title"
               onSubmit={submit}
-              className="relative grid gap-6 rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white p-6 shadow-[var(--bw-shadow-soft)] md:p-8"
+              className="relative grid gap-8 rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface)] p-6 shadow-[var(--bw-shadow-soft)] md:gap-10 md:p-10"
               noValidate
             >
-              <div className="grid gap-2">
-                <label htmlFor="topic" className="text-sm font-semibold">
-                  {language === "ko" ? "문의 목적" : "Inquiry type"}{" "}
-                  <span aria-hidden="true">*</span>
-                </label>
-                <select
-                  id="topic"
-                  value={form.topic}
-                  onChange={update("topic")}
-                  disabled={disabled}
-                  className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 bg-white px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+              <header className="grid gap-3 border-b border-[var(--bw-color-line)] pb-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
+                  Contact form
+                </p>
+                <h2
+                  id="contact-form-title"
+                  className="text-2xl font-semibold tracking-[-0.02em] md:text-3xl"
+                >
+                  {language === "ko"
+                    ? "문의 내용을 남겨주세요."
+                    : "Tell us what you are working on."}
+                </h2>
+                <p className="max-w-xl text-sm leading-7 text-[var(--bw-color-muted)]">
+                  {language === "ko"
+                    ? "문의 목적과 현재 상황을 알려주시면 적합한 담당자가 확인합니다."
+                    : "Share your goal and context so the right person can follow up."}
+                </p>
+              </header>
+
+              <section
+                aria-labelledby="contact-topic-title"
+                className="grid gap-4"
+              >
+                <div className="grid gap-1">
+                  <h3
+                    id="contact-topic-title"
+                    className="text-sm font-semibold"
+                  >
+                    {language === "ko" ? "문의 목적" : "Inquiry type"}{" "}
+                    <span aria-hidden="true">*</span>
+                  </h3>
+                  <p className="text-sm text-[var(--bw-color-muted)]">
+                    {language === "ko"
+                      ? "가장 가까운 문의 목적을 선택해 주세요."
+                      : "Choose the reason that best describes your inquiry."}
+                  </p>
+                </div>
+                <div
+                  className="grid gap-2 sm:grid-cols-2"
+                  role="radiogroup"
+                  aria-label={language === "ko" ? "문의 목적" : "Inquiry type"}
                 >
                   {topics.map((topic) => (
-                    <option key={topic.value} value={topic.value}>
-                      {topic[language]}
-                    </option>
+                    <label
+                      key={topic.value}
+                      className="group flex min-h-12 cursor-pointer items-center gap-3 rounded-[var(--bw-radius-control)] border border-[var(--bw-color-line)] px-4 text-sm font-medium text-[var(--bw-color-ink)] transition hover:border-[var(--bw-color-brand)] has-[:checked]:border-[var(--bw-color-brand)] has-[:checked]:bg-[var(--bw-color-surface-muted)] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[var(--bw-color-brand)]/40"
+                    >
+                      <input
+                        type="radio"
+                        name="topic"
+                        value={topic.value}
+                        checked={form.topic === topic.value}
+                        onChange={update("topic")}
+                        disabled={disabled}
+                        className="sr-only"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[var(--bw-color-line)] group-has-[:checked]:border-[var(--bw-color-brand)] group-has-[:checked]:bg-[var(--bw-color-brand)]"
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-white opacity-0 group-has-[:checked]:opacity-100" />
+                      </span>
+                      <span>{topic[language]}</span>
+                    </label>
                   ))}
-                </select>
-              </div>
-              {form.area ? (
-                <div className="rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)] p-4 text-sm text-[var(--bw-color-muted)]">
-                  {language === "ko"
-                    ? "선택한 사업 영역"
-                    : "Selected business area"}
-                  :{" "}
-                  <strong className="text-[var(--bw-color-ink)]">
-                    {form.area}
-                  </strong>
                 </div>
-              ) : null}
-              <div className="grid gap-6 md:grid-cols-2">
+                {form.area ? (
+                  <div className="rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)] px-4 py-3 text-sm text-[var(--bw-color-muted)]">
+                    {language === "ko"
+                      ? "선택한 사업 영역"
+                      : "Selected business area"}
+                    :{" "}
+                    <strong className="text-[var(--bw-color-ink)]">
+                      {form.area}
+                    </strong>
+                  </div>
+                ) : null}
+              </section>
+
+              <section
+                aria-labelledby="contact-details-title"
+                className="grid gap-4 border-t border-[var(--bw-color-line)] pt-8"
+              >
+                <div className="grid gap-1">
+                  <h3
+                    id="contact-details-title"
+                    className="text-sm font-semibold"
+                  >
+                    {language === "ko" ? "연락처 정보" : "Contact details"}
+                  </h3>
+                  <p className="text-sm text-[var(--bw-color-muted)]">
+                    {language === "ko"
+                      ? "답변을 받을 수 있는 연락처를 남겨주세요."
+                      : "Tell us how we can reach you."}
+                  </p>
+                </div>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label
+                    className="grid gap-2 text-sm font-semibold"
+                    htmlFor="name"
+                  >
+                    {language === "ko" ? "이름" : "Name"}
+                    <span aria-hidden="true">*</span>
+                    <input
+                      id="name"
+                      name="name"
+                      required
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={update("name")}
+                      disabled={disabled}
+                      className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+                    />
+                  </label>
+                  <label
+                    className="grid gap-2 text-sm font-semibold"
+                    htmlFor="email"
+                  >
+                    {language === "ko" ? "이메일" : "Email"}
+                    <span aria-hidden="true">*</span>
+                    <input
+                      id="email"
+                      name="email"
+                      required
+                      type="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={update("email")}
+                      disabled={disabled}
+                      className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+                    />
+                  </label>
+                </div>
                 <label
                   className="grid gap-2 text-sm font-semibold"
-                  htmlFor="name"
+                  htmlFor="company"
                 >
-                  {language === "ko" ? "이름" : "Name"}
-                  <span aria-hidden="true">*</span>
+                  {language === "ko" ? "회사명" : "Company"}
+                  <span className="font-normal text-[var(--bw-color-muted)]">
+                    ({language === "ko" ? "선택" : "optional"})
+                  </span>
                   <input
-                    id="name"
-                    name="name"
-                    required
-                    autoComplete="name"
-                    value={form.name}
-                    onChange={update("name")}
+                    id="company"
+                    name="company"
+                    autoComplete="organization"
+                    value={form.company}
+                    onChange={update("company")}
                     disabled={disabled}
                     className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
                   />
                 </label>
-                <label
-                  className="grid gap-2 text-sm font-semibold"
-                  htmlFor="email"
-                >
-                  {language === "ko" ? "이메일" : "Email"}
-                  <span aria-hidden="true">*</span>
-                  <input
-                    id="email"
-                    name="email"
-                    required
-                    type="email"
-                    autoComplete="email"
-                    value={form.email}
-                    onChange={update("email")}
-                    disabled={disabled}
-                    className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
-                  />
-                </label>
-              </div>
-              <label
-                className="grid gap-2 text-sm font-semibold"
-                htmlFor="company"
+              </section>
+
+              <section
+                aria-labelledby="contact-message-title"
+                className="grid gap-4 border-t border-[var(--bw-color-line)] pt-8"
               >
-                {language === "ko" ? "회사명" : "Company"}
-                <span className="font-normal text-[var(--bw-color-muted)]">
-                  ({language === "ko" ? "선택" : "optional"})
-                </span>
-                <input
-                  id="company"
-                  name="company"
-                  autoComplete="organization"
-                  value={form.company}
-                  onChange={update("company")}
-                  disabled={disabled}
-                  className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
-                />
-              </label>
-              <label
-                className="grid gap-2 text-sm font-semibold"
-                htmlFor="message"
-              >
-                {language === "ko" ? "문의내용" : "Message"}
-                <span aria-hidden="true">*</span>
+                <div className="grid gap-1">
+                  <h3
+                    id="contact-message-title"
+                    className="text-sm font-semibold"
+                  >
+                    {language === "ko" ? "문의 내용" : "Project details"}{" "}
+                    <span aria-hidden="true">*</span>
+                  </h3>
+                  <p className="text-sm text-[var(--bw-color-muted)]">
+                    {language === "ko"
+                      ? "해결하려는 문제와 필요한 협업을 자유롭게 적어주세요."
+                      : "Describe the challenge and collaboration you have in mind."}
+                  </p>
+                </div>
                 <textarea
                   id="message"
                   name="message"
                   required
                   minLength={10}
                   rows={8}
+                  aria-label={
+                    language === "ko" ? "문의 내용" : "Project details"
+                  }
                   value={form.message}
                   onChange={update("message")}
                   disabled={disabled}
-                  className="rounded-[var(--bw-radius-control)] border border-slate-300 px-3 py-2 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+                  className="rounded-[var(--bw-radius-control)] border border-slate-300 px-3 py-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
                 />
-              </label>
-              <label className="flex items-start gap-3 text-sm text-[var(--bw-color-muted)]">
-                <input
-                  type="checkbox"
-                  checked={form.privacyAccepted}
-                  onChange={update("privacyAccepted")}
-                  disabled={disabled}
-                  className="mt-1 h-4 w-4 accent-[var(--bw-color-brand)]"
-                />
-                <span>
-                  {language === "ko"
-                    ? "문의 처리를 위한 개인정보 수집·이용에 동의합니다. 수집 항목, 목적, 보유 기간은 실제 개인정보 처리방침을 따릅니다."
-                    : "I agree to the collection and use of personal information to process this inquiry."}{" "}
-                  <span aria-hidden="true">*</span>
-                </span>
-              </label>
+              </section>
+
+              <div className="grid gap-5 border-t border-[var(--bw-color-line)] pt-8">
+                <label className="flex items-start gap-3 text-sm text-[var(--bw-color-muted)]">
+                  <input
+                    type="checkbox"
+                    checked={form.privacyAccepted}
+                    onChange={update("privacyAccepted")}
+                    disabled={disabled}
+                    className="mt-1 h-4 w-4 accent-[var(--bw-color-brand)]"
+                  />
+                  <span>
+                    {language === "ko"
+                      ? "문의 처리를 위한 개인정보 수집·이용에 동의합니다. 수집 항목, 목적, 보유 기간은 실제 개인정보 처리방침을 따릅니다."
+                      : "I agree to the collection and use of personal information to process this inquiry."}{" "}
+                    <span aria-hidden="true">*</span>
+                  </span>
+                </label>
+              </div>
               <input
                 tabIndex={-1}
                 autoComplete="off"
@@ -297,10 +385,10 @@ export default function Contact() {
                   {error}
                 </p>
               ) : null}
-              <button
+              <Button
                 type="submit"
                 disabled={disabled}
-                className="min-h-12 rounded-full bg-[var(--bw-color-ink)] px-6 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-50"
+                className="min-h-12 w-full rounded-full bg-[var(--bw-color-ink)] px-6 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-50"
               >
                 {status === "submitting"
                   ? language === "ko"
@@ -309,7 +397,7 @@ export default function Contact() {
                   : language === "ko"
                     ? "문의 보내기"
                     : "Send inquiry"}
-              </button>
+              </Button>
               <div
                 ref={resultRef}
                 tabIndex={-1}
@@ -325,11 +413,6 @@ export default function Contact() {
                 ) : null}
               </div>
             </form>
-            <p className="mt-6 text-center text-sm text-[var(--bw-color-muted)]">
-              {language === "ko"
-                ? "대체 연락처: austin@brainworks.co.kr"
-                : "Alternative contact: austin@brainworks.co.kr"}
-            </p>
           </div>
         </div>
       </main>
