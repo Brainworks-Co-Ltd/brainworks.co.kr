@@ -90,7 +90,6 @@ function WorkItem({ item }: { item: AdminDashboardData["attention"][number] }) {
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">
           <span>{contentLabels[item.contentType]}</span>
-          <span aria-hidden="true">·</span>
           <span>{item.locale === "ko" ? "한국어" : "English"}</span>
           <span className="rounded-full bg-[var(--bw-color-surface-muted)] px-2 py-0.5 text-[var(--bw-color-ink)]">
             {statusLabels[item.publicationStatus] ?? item.publicationStatus}
@@ -131,7 +130,7 @@ export default function AdminHome({
               콘텐츠 상태
             </h2>
             <p className="mt-1 text-sm text-[var(--bw-color-muted)]">
-              활성·보관 항목과 언어별 게시 상태입니다.
+              활성 및 보관 항목과 언어별 게시 상태입니다.
             </p>
           </div>
         </div>
@@ -161,7 +160,7 @@ export default function AdminHome({
                     {contentLabels[item.contentType]}
                   </th>
                   <td className="px-5 py-4 text-[var(--bw-color-muted)]">
-                    활성 {item.activeCount} · 보관 {item.archivedCount}
+                    활성 {item.activeCount}, 보관 {item.archivedCount}
                   </td>
                   <td className="px-5 py-4">
                     <StatusCounts counts={item.locales.ko} />
