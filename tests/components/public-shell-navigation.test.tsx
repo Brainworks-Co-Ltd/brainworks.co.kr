@@ -3,6 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { MobileNavigation } from "@/components/public/MobileNavigation";
+import { buildPublicNavigation } from "@/shared/navigation/publicNavigation";
 
 const push = vi.fn();
 
@@ -80,5 +82,31 @@ describe("공개 셸 내비게이션", () => {
       "href",
       "/contact",
     );
+  });
+
+  it("모바일 메뉴는 같은 계층을 이미지 없이 제공한다", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MobileNavigation
+        items={buildPublicNavigation("ko")}
+        open
+        onOpenChange={vi.fn()}
+        activeGroup="business"
+        routeKey="consulting"
+        menuLabel="메뉴 열기"
+        navigationLabel="모바일 메뉴"
+        languageLabel="English"
+        onLanguageChange={vi.fn()}
+      />,
+    );
+
+    const businessToggle = screen.getByRole("button", { name: "사업 영역" });
+    expect(businessToggle).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(businessToggle);
+
+    expect(screen.getByRole("link", { name: "AI 컨설팅" })).toBeVisible();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 });
