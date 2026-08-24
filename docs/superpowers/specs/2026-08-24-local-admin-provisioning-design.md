@@ -1,3 +1,12 @@
+---
+wiki_type: design
+status: approved
+updated: 2026-08-25
+sources:
+  - planning/04-admin-and-data/04-01-admin-scope-and-user-flow.md
+  - planning/05-technical-design/05-04-development-sequence-and-deliverables.md
+---
+
 # 로컬 통합 관리자 계정 프로비저닝 설계
 
 ## 목적
@@ -35,4 +44,3 @@
 - 새 계정 생성 후 `/admin/auth/sign-in` 로그인으로 `/admin`에 접근할 수 있습니다.
 - 비로그인 상태에서는 관리자 경로가 로그인 화면으로 이동합니다.
 - 기존 인증·정책 테스트와 타입 검사에 영향이 없습니다.
-
