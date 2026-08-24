@@ -1,0 +1,40 @@
+import { describe, expect, it } from "vitest";
+import {
+  buildPublicNavigation,
+  getActiveNavigationGroup,
+} from "@/shared/navigation/publicNavigation";
+
+describe("공개 내비게이션 계약", () => {
+  it("홈을 제외하고 세 그룹과 문의 행동만 노출한다", () => {
+    const items = buildPublicNavigation("ko");
+
+    expect(items.map((item) => item.id)).toEqual([
+      "company",
+      "business",
+      "news",
+      "contact",
+    ]);
+    expect(
+      items.flatMap((item) => item.children ?? []).map((item) => item.href),
+    ).not.toContain("/");
+  });
+
+  it("사업 상세와 소식 상세를 올바른 1차 그룹으로 판정한다", () => {
+    expect(getActiveNavigationGroup("consulting")).toBe("business");
+    expect(getActiveNavigationGroup("news.detail")).toBe("news");
+    expect(getActiveNavigationGroup("notices.detail")).toBe("news");
+    expect(getActiveNavigationGroup(null)).toBeNull();
+  });
+
+  it("영문 메뉴가 영문 경로를 사용한다", () => {
+    const items = buildPublicNavigation("en");
+    const business = items.find((item) => item.id === "business");
+
+    expect(business?.children?.map((item) => item.href)).toEqual([
+      "/en/services",
+      "/en/consulting",
+      "/en/education",
+      "/en/global-programs",
+    ]);
+  });
+});
