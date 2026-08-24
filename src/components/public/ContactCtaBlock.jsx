@@ -5,9 +5,12 @@ export function ContactCtaBlock({
   description,
   href = "/contact",
   label,
+  className = "",
 }) {
   return (
-    <section className="rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] px-6 py-12 text-white md:px-10">
+    <section
+      className={`rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] px-6 py-12 text-white md:px-10 ${className}`}
+    >
       <h2 className="max-w-3xl text-2xl font-semibold leading-tight md:text-3xl">
         {title}
       </h2>

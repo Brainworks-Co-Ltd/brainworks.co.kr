@@ -7,10 +7,11 @@ export function SectionHeader({
   href,
   linkLabel,
   align = "left",
+  className = "",
 }) {
   return (
     <div
-      className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}
+      className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""} ${className}`}
     >
       {eyebrow ? (
         <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
