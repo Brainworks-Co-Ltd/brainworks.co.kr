@@ -10,6 +10,8 @@ export function EditorialSection({
   eyebrow,
   title,
   description,
+  href,
+  linkLabel,
   surface = "plain",
   children,
   className = "",
@@ -28,6 +30,8 @@ export function EditorialSection({
             eyebrow={eyebrow}
             title={title}
             description={description}
+            href={href}
+            linkLabel={linkLabel}
             className={headerClassName}
           />
         ) : null}

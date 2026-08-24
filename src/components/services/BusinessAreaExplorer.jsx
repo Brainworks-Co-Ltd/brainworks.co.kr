@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 import { SectionHeader } from "@/components/public/SectionHeader";
+import { MediaStory } from "@/components/public/MediaStory";
 import { StatePanel } from "@/components/ui/state-panel";
 
 export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
@@ -100,30 +101,28 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
         ))}
       </div>
 
-      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <div className="relative min-h-[360px] overflow-hidden rounded-[var(--bw-radius-feature)] bg-black">
-          <Image
-            src={activeArea.heroImage}
-            alt={activeArea.title}
-            fill
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover"
-            priority
-          />
-        </div>
-        <div>
-          <SectionHeader
-            eyebrow={activeArea.title}
-            title={activeArea.subtitle}
-            description={activeArea.description}
-          />
-          <Link
-            href={`/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`}
-            className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-ink)] px-6 py-3 text-sm font-semibold text-white hover:bg-black"
-          >
-            {language === "ko" ? "이 영역 문의하기" : "Discuss this area"}
-          </Link>
-        </div>
+      <div className="mt-10">
+        <MediaStory
+          eyebrow={activeArea.title}
+          title={activeArea.subtitle}
+          description={activeArea.description}
+          media={
+            <div className="relative aspect-[4/3] min-h-[320px] lg:min-h-[500px]">
+              <Image
+                src={activeArea.heroImage}
+                alt={activeArea.title}
+                fill
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+          }
+          action={{
+            href: `/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`,
+            label: language === "ko" ? "이 영역 문의하기" : "Discuss this area",
+          }}
+        />
       </div>
 
       <div className="mt-14">
@@ -155,30 +154,26 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             className="mt-6"
           />
         ) : (
-          <div className="mt-6 grid gap-5 md:grid-cols-2">
-            {activeArea.solutions.map((solution) => (
-              <article
+          <div className="mt-8 space-y-14 md:mt-12 md:space-y-20">
+            {activeArea.solutions.map((solution, index) => (
+              <MediaStory
                 key={solution.id}
-                className="overflow-hidden rounded-[var(--bw-radius-card)] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-              >
-                <div className="relative aspect-[16/9] bg-[var(--bw-color-surface-muted)]">
-                  <Image
-                    src={solution.image}
-                    alt={solution.title}
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h4 className="text-xl font-semibold text-[var(--bw-color-ink)]">
-                    {solution.title}
-                  </h4>
-                  <p className="mt-3 text-sm leading-7 text-[var(--bw-color-muted)]">
-                    {solution.description}
-                  </p>
-                </div>
-              </article>
+                eyebrow={`${String(index + 1).padStart(2, "0")} / ${String(activeArea.solutions.length).padStart(2, "0")}`}
+                title={solution.title}
+                description={solution.description}
+                reverse={index % 2 === 1}
+                media={
+                  <div className="relative aspect-[16/10] min-h-[220px]">
+                    <Image
+                      src={solution.image}
+                      alt={solution.title}
+                      fill
+                      sizes="(min-width: 1024px) 55vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                }
+              />
             ))}
           </div>
         )}

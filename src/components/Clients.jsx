@@ -27,7 +27,7 @@ export default function Clients() {
   return (
     <section
       id="clients"
-      className="bg-[var(--bw-color-surface-muted)] py-20 md:py-28 text-[var(--bw-color-ink)]"
+      className="border-y border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] py-20 text-[var(--bw-color-ink)] md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeader
@@ -35,25 +35,32 @@ export default function Clients() {
           title={
             language === "ko" ? "주요 고객 및 파트너" : "Clients & partners"
           }
-          align="center"
+          description={
+            language === "ko"
+              ? "브레인웍스와 함께한 기업과 기관을 소개합니다."
+              : "A selection of organizations that have worked with Brainworks."
+          }
         />
 
-        <div className="relative mt-12 overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-[var(--bw-shadow-soft)]">
+        <div className="relative mt-12 overflow-hidden border-y border-[var(--bw-color-line)]">
           <div
-            className="flex"
+            className="flex items-center"
             style={{
-              animation: "scroll 30s linear infinite",
+              animation: "scroll 36s linear infinite",
               width: "fit-content",
             }}
           >
             {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
-              <div key={`logo-${index}`} className="flex-shrink-0 px-12 py-10">
+              <div
+                key={`logo-${index}`}
+                className="flex h-32 w-40 flex-shrink-0 items-center justify-center border-r border-[var(--bw-color-line)] px-8 py-8 first:border-l"
+              >
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={120}
                   height={120}
-                  className="h-24 w-auto transition-all duration-300 grayscale hover:scale-110 hover:grayscale-0"
+                  className="h-20 w-auto grayscale transition-all duration-300 hover:scale-105 hover:grayscale-0"
                 />
               </div>
             ))}
@@ -62,6 +69,12 @@ export default function Clients() {
       </div>
 
       <style jsx>{`
+        @media (prefers-reduced-motion: reduce) {
+          div[style*="animation"] {
+            animation: none !important;
+          }
+        }
+
         @keyframes scroll {
           0% {
             transform: translateX(0);
