@@ -57,6 +57,7 @@ sources:
 - [콘텐츠 데이터 구조](planning/04-admin-and-data/04-04-content-data-structure.md): 홈페이지 콘텐츠의 데이터 구조와 관리 단위를 설계합니다.
 - [ERD와 데이터 관리](planning/04-admin-and-data/04-05-erd-and-data-management.md): 제안 데이터 모델과 관리 원칙을 정리합니다.
 - [공지사항 숫자형 공개 번호 설계](superpowers/specs/2026-08-27-notice-public-number-design.md): 관리자 슬러그 입력을 제거하고 DB가 발급하는 숫자형 공지 주소와 기존 주소 호환 정책을 정의합니다.
+- [공지사항 숫자형 공개 번호 구현 계획](superpowers/plans/2026-08-27-notice-public-number-implementation.md): DB identity, 관리자 입력 제거, 공개 조회와 과거 주소 호환을 테스트 우선으로 구현하는 순서입니다.
 - [로컬 통합 관리자 계정 프로비저닝 설계](superpowers/specs/2026-08-24-local-admin-provisioning-design.md): 로컬에서 통합 관리자 계정을 안전하게 준비하는 절차를 정의합니다.
 - [멘토 요구 기준 관리자 범위 정정 구현 계획](superpowers/plans/2026-08-25-admin-scope-correction.md): 사업 영역을 고정 공개 분류로 되돌리고 관리자 범위를 정정하는 작업 순서입니다.
 
