@@ -13,17 +13,15 @@ export async function getPublishedNoticeList(locale: NoticeLocale, query: Public
   const pageSize = Math.max(1, Math.min(query.pageSize ?? 12, 50));
   const filters = [
     eq(notices.itemStatus, "ACTIVE"),
-    eq(noticeSlugs.isCurrent, true),
     eq(noticeLocales.locale, locale),
     or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!,
   ];
   if (query.categoryId) filters.push(eq(notices.categoryId, query.categoryId));
   if (query.q) filters.push(ilike(noticeLocales.title, `%${query.q}%`));
   const rows = await getDb()
-    .select({ id: notices.id, slug: noticeSlugs.slug, title: noticeLocales.title, displayDate: notices.displayDate, categoryId: notices.categoryId, isPinned: notices.isPinned, pinOrder: notices.pinOrder, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
+    .select({ id: notices.id, publicNumber: notices.publicNumber, title: noticeLocales.title, displayDate: notices.displayDate, categoryId: notices.categoryId, isPinned: notices.isPinned, pinOrder: notices.pinOrder, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
     .from(notices)
     .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
-    .innerJoin(noticeSlugs, eq(noticeSlugs.noticeId, notices.id))
     .where(and(...filters))
     .orderBy(desc(notices.isPinned), asc(notices.pinOrder), desc(notices.displayDate));
   const visible = rows.filter((row) => effectiveNoticeVisibility({ status: row.status, startsAt: row.startsAt, endsAt: row.endsAt }));
@@ -31,14 +29,13 @@ export async function getPublishedNoticeList(locale: NoticeLocale, query: Public
   return { items: visible.slice(start, start + pageSize).map((row) => ({ ...row, date: String(row.displayDate) })), page, pageSize, total: visible.length, totalPages: Math.max(1, Math.ceil(visible.length / pageSize)) };
 }
 
-export async function getPublishedNoticeDetail(slug: string, locale: NoticeLocale) {
+export async function getPublishedNoticeDetail(publicNumber: number, locale: NoticeLocale) {
   if (!process.env.DATABASE_URL) return null;
   const row = await getDb()
-    .select({ id: notices.id, localeId: noticeLocales.id, slug: noticeSlugs.slug, title: noticeLocales.title, bodyMarkdown: noticeLocales.bodyMarkdown, displayDate: notices.displayDate, categoryId: notices.categoryId, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
-    .from(noticeSlugs)
-    .innerJoin(notices, eq(notices.id, noticeSlugs.noticeId))
+    .select({ id: notices.id, localeId: noticeLocales.id, publicNumber: notices.publicNumber, title: noticeLocales.title, bodyMarkdown: noticeLocales.bodyMarkdown, displayDate: notices.displayDate, categoryId: notices.categoryId, status: noticeLocales.publicationStatus, startsAt: noticeLocales.publishStartsAt, endsAt: noticeLocales.publishEndsAt })
+    .from(notices)
     .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
-    .where(and(eq(noticeSlugs.slug, slug), eq(noticeSlugs.isCurrent, true), eq(notices.itemStatus, "ACTIVE"), eq(noticeLocales.locale, locale), or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!))
+    .where(and(eq(notices.publicNumber, publicNumber), eq(notices.itemStatus, "ACTIVE"), eq(noticeLocales.locale, locale), or(eq(noticeLocales.publicationStatus, "PUBLISHED"), eq(noticeLocales.publicationStatus, "SCHEDULED"))!))
     .limit(1);
   if (!row[0] || !effectiveNoticeVisibility({ status: row[0].status, startsAt: row[0].startsAt, endsAt: row[0].endsAt })) return null;
   const attachments = await getDb()
@@ -52,9 +49,49 @@ export async function getPublishedNoticeDetail(slug: string, locale: NoticeLocal
     date: String(row[0].displayDate),
     attachments: attachments.map((attachment) => ({
       ...attachment,
-      downloadUrl: `/api/notices/${encodeURIComponent(row[0].slug)}/attachments/${encodeURIComponent(attachment.id)}/download?locale=${locale}`,
+      downloadUrl: `/api/notices/${row[0].publicNumber}/attachments/${encodeURIComponent(attachment.id)}/download?locale=${locale}`,
     })),
   };
+}
+
+export async function getPublishedNoticePublicNumberByLegacySlug(
+  slug: string,
+  locale: NoticeLocale,
+) {
+  if (!process.env.DATABASE_URL) return null;
+  const row = await getDb()
+    .select({
+      publicNumber: notices.publicNumber,
+      status: noticeLocales.publicationStatus,
+      startsAt: noticeLocales.publishStartsAt,
+      endsAt: noticeLocales.publishEndsAt,
+    })
+    .from(noticeSlugs)
+    .innerJoin(notices, eq(notices.id, noticeSlugs.noticeId))
+    .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
+    .where(
+      and(
+        eq(noticeSlugs.slug, slug),
+        eq(notices.itemStatus, "ACTIVE"),
+        eq(noticeLocales.locale, locale),
+        or(
+          eq(noticeLocales.publicationStatus, "PUBLISHED"),
+          eq(noticeLocales.publicationStatus, "SCHEDULED"),
+        )!,
+      ),
+    )
+    .limit(1);
+  if (
+    !row[0] ||
+    !effectiveNoticeVisibility({
+      status: row[0].status,
+      startsAt: row[0].startsAt,
+      endsAt: row[0].endsAt,
+    })
+  ) {
+    return null;
+  }
+  return row[0].publicNumber;
 }
 
 export async function getAdminNoticeList() {
@@ -64,10 +101,10 @@ export async function getAdminNoticeList() {
       id: notices.id,
       itemStatus: notices.itemStatus,
       version: notices.version,
+      publicNumber: notices.publicNumber,
       displayDate: notices.displayDate,
       isPinned: notices.isPinned,
       pinOrder: notices.pinOrder,
-      slug: noticeSlugs.slug,
       locale: noticeLocales.locale,
       title: noticeLocales.title,
       publicationStatus: noticeLocales.publicationStatus,
@@ -75,16 +112,15 @@ export async function getAdminNoticeList() {
     })
     .from(notices)
     .innerJoin(noticeLocales, eq(noticeLocales.noticeId, notices.id))
-    .innerJoin(noticeSlugs, and(eq(noticeSlugs.noticeId, notices.id), eq(noticeSlugs.isCurrent, true)))
     .orderBy(desc(notices.updatedAt), asc(notices.pinOrder), desc(notices.displayDate));
   const grouped = new Map<string, {
     id: string;
     itemStatus: typeof rows[number]["itemStatus"];
     version: number;
+    publicNumber: number;
     displayDate: string;
     isPinned: boolean;
     pinOrder: number | null;
-    slug: string;
     locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"] }>;
   }>();
   for (const row of rows) {
@@ -92,10 +128,10 @@ export async function getAdminNoticeList() {
       id: row.id,
       itemStatus: row.itemStatus,
       version: row.version,
+      publicNumber: row.publicNumber,
       displayDate: String(row.displayDate),
       isPinned: row.isPinned,
       pinOrder: row.pinOrder,
-      slug: row.slug,
       locales: {},
     };
     item.locales[row.locale] = { title: row.title, publicationStatus: row.publicationStatus };

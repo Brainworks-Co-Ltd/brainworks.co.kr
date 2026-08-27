@@ -5,7 +5,6 @@ import {
   noticeCategories,
   noticeCategoryLocales,
   noticeLocales,
-  noticeSlugs,
   notices,
 } from "@/server/db/schema/notices";
 import { assertCompleteLocales, assertExpectedVersion } from "@/server/db/integrity";
@@ -50,7 +49,11 @@ export async function createNotice(input: NoticeCommandInput, actorId: string) {
         createdByActorId: actorId,
         updatedByActorId: actorId,
       })
-      .returning({ id: notices.id, version: notices.version });
+      .returning({
+        id: notices.id,
+        version: notices.version,
+        publicNumber: notices.publicNumber,
+      });
     await tx.insert(noticeLocales).values(
       (Object.keys(input.locales) as NoticeLocale[]).map((locale) => ({
         noticeId: created.id,
@@ -60,7 +63,6 @@ export async function createNotice(input: NoticeCommandInput, actorId: string) {
         updatedByActorId: actorId,
       })),
     );
-    await tx.insert(noticeSlugs).values({ noticeId: created.id, slug: input.slug, createdByActorId: actorId });
     return created;
   });
 }
@@ -70,12 +72,7 @@ export async function getAdminNotice(id: string) {
   const parent = await db.select().from(notices).where(eq(notices.id, id)).limit(1);
   if (!parent[0]) throw new HttpError("NOT_FOUND");
   const locales = await db.select().from(noticeLocales).where(eq(noticeLocales.noticeId, id));
-  const slug = await db
-    .select({ slug: noticeSlugs.slug })
-    .from(noticeSlugs)
-    .where(and(eq(noticeSlugs.noticeId, id), eq(noticeSlugs.isCurrent, true)))
-    .limit(1);
-  return { ...parent[0], slug: slug[0]?.slug ?? "", locales };
+  return { ...parent[0], locales };
 }
 
 export async function saveNotice(id: string, input: NoticeCommandInput, expectedVersion: number, actorId: string) {
@@ -171,17 +168,6 @@ export async function restoreNotice(id: string, expectedVersion: number, actorId
     await bumpNoticeVersion(tx, id, expectedVersion, actorId);
     await tx.update(notices).set({ itemStatus: "ACTIVE", archivedAt: null, archivedByActorId: null }).where(eq(notices.id, id));
     return { id, version: expectedVersion + 1 };
-  });
-}
-
-export async function changeNoticeSlug(id: string, slug: string, expectedVersion: number, actorId: string) {
-  return getDb().transaction(async (tx) => {
-    const current = await tx.query.noticeSlugs.findFirst({ where: and(eq(noticeSlugs.noticeId, id), eq(noticeSlugs.isCurrent, true)) });
-    if (!current) throw new HttpError("NOT_FOUND");
-    await bumpNoticeVersion(tx, id, expectedVersion, actorId);
-    await tx.update(noticeSlugs).set({ isCurrent: false }).where(eq(noticeSlugs.id, current.id));
-    await tx.insert(noticeSlugs).values({ noticeId: id, slug, createdByActorId: actorId });
-    return { id, slug, version: expectedVersion + 1 };
   });
 }
 

@@ -3,13 +3,7 @@ import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
 import { ensureNoticeAdminActor, createNotice } from "@/server/modules/notices/repository";
 import { getAdminNoticeList } from "@/server/modules/notices/queries";
-
-function isNoticeInput(value: unknown): value is Parameters<typeof createNotice>[0] {
-  if (!value || typeof value !== "object") return false;
-  const input = value as Record<string, unknown>;
-  const locales = input.locales as Record<string, unknown> | undefined;
-  return typeof input.slug === "string" && typeof input.displayDate === "string" && Boolean(locales?.ko && locales.en);
-}
+import { isNoticeCommandInput } from "@/server/modules/notices/contracts";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
@@ -18,7 +12,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return;
   }
   if (request.method === "POST") {
-    if (!isNoticeInput(request.body)) { response.status(400).json({ error: { code: "BAD_REQUEST", message: "공지 입력값이 올바르지 않습니다." } }); return; }
+    if (!isNoticeCommandInput(request.body)) { response.status(400).json({ error: { code: "BAD_REQUEST", message: "공지 입력값이 올바르지 않습니다." } }); return; }
     const created = await createNotice(request.body, await ensureNoticeAdminActor(session.user.id));
     response.status(201).json({ data: created });
     return;

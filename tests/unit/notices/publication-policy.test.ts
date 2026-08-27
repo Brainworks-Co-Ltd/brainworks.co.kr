@@ -16,9 +16,9 @@ describe("공지·팝업 공개 정책", () => {
   });
 
   it("연결된 공지가 현재 로케일에서 공개되지 않으면 버튼을 만들지 않는다", () => {
-    expect(resolvePopupDetailUrl({ noticeSlug: "hello" }, { isPublished: true })).toBe("/notices/hello");
-    expect(resolvePopupDetailUrl({ noticeSlug: "hello" }, { isPublished: false })).toBeNull();
-    expect(resolvePopupDetailUrl({ noticeSlug: null }, null)).toBeNull();
+    expect(resolvePopupDetailUrl({ noticePublicNumber: 123 }, { isPublished: true })).toBe("/notices/123");
+    expect(resolvePopupDetailUrl({ noticePublicNumber: 123 }, { isPublished: false })).toBeNull();
+    expect(resolvePopupDetailUrl({ noticePublicNumber: null }, null)).toBeNull();
   });
 
   it("이미지 전용 팝업도 식별 제목과 이미지 대체 설명을 요구한다", () => {

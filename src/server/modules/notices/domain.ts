@@ -9,11 +9,11 @@ export function effectiveNoticeVisibility(
 }
 
 export function resolvePopupDetailUrl(
-  popup: { noticeSlug?: string | null },
+  popup: { noticePublicNumber?: number | null },
   notice: { isPublished: boolean } | null,
 ) {
-  if (!popup.noticeSlug || !notice?.isPublished) return null;
-  return `/notices/${popup.noticeSlug}`;
+  if (!popup.noticePublicNumber || !notice?.isPublished) return null;
+  return `/notices/${popup.noticePublicNumber}`;
 }
 
 export function validatePopupLocale(input: { title?: string; imageAssetId?: string | null; imageAlt?: string | null }) {

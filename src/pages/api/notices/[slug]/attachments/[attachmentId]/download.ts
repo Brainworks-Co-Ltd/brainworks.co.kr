@@ -2,12 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { and, eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
-import { noticeAttachments, noticeLocales, noticeSlugs, notices } from "@/server/db/schema/notices";
+import { noticeAttachments, noticeLocales, notices } from "@/server/db/schema/notices";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
 import { HttpError } from "@/server/http/errors";
 import { effectiveNoticeVisibility } from "@/server/modules/notices/domain";
 import { canIssueDownloadUrl } from "@/server/modules/assets/document-policy";
 import { S3ObjectStorage } from "@/server/infrastructure/s3-storage";
+import { parseNoticePublicNumber } from "@/server/modules/notices/contracts";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   if (request.method !== "GET") {
@@ -15,7 +16,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     response.status(405).json({ error: { code: "BAD_REQUEST", message: "GET만 허용됩니다." } });
     return;
   }
-  const slug = typeof request.query.slug === "string" ? request.query.slug : "";
+  const identifier = typeof request.query.slug === "string" ? request.query.slug : "";
+  const publicNumber = parseNoticePublicNumber(identifier);
+  if (!publicNumber) throw new HttpError("NOT_FOUND");
   const attachmentId = typeof request.query.attachmentId === "string" ? request.query.attachmentId : "";
   const locale = request.query.locale === "en" ? "en" : "ko";
   const row = await getDb()
@@ -24,8 +27,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     .innerJoin(assets, eq(assets.id, noticeAttachments.assetId))
     .innerJoin(noticeLocales, eq(noticeLocales.id, noticeAttachments.noticeLocaleId))
     .innerJoin(notices, eq(notices.id, noticeLocales.noticeId))
-    .innerJoin(noticeSlugs, eq(noticeSlugs.noticeId, notices.id))
-    .where(and(eq(noticeAttachments.id, attachmentId), eq(noticeSlugs.slug, slug), eq(noticeLocales.locale, locale), eq(noticeSlugs.isCurrent, true)))
+    .where(and(eq(noticeAttachments.id, attachmentId), eq(notices.publicNumber, publicNumber), eq(noticeLocales.locale, locale)))
     .limit(1);
   const current = row[0];
   const visible = current && current.itemStatus === "ACTIVE" && effectiveNoticeVisibility({ status: current.publicationStatus, startsAt: current.startsAt, endsAt: current.endsAt });

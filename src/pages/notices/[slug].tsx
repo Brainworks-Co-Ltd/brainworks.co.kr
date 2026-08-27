@@ -5,7 +5,11 @@ import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import NoticeDetail from "@/components/notices/NoticeDetail";
 import { markdownToHtml } from "@/lib/markdown";
-import { getPublishedNoticeDetail } from "@/server/modules/notices/queries";
+import {
+  getPublishedNoticeDetail,
+  getPublishedNoticePublicNumberByLegacySlug,
+} from "@/server/modules/notices/queries";
+import { resolvePublishedNoticeRoute } from "@/server/modules/notices/public-route";
 
 type NoticeDetailProps = {
   title: string;
@@ -52,11 +56,22 @@ export async function getServerSideProps({
   locale?: string;
   query: Record<string, string | string[] | undefined>;
 }) {
-  const notice = await getPublishedNoticeDetail(
-    params.slug,
-    locale === "en" ? "en" : "ko",
-  );
-  if (!notice) return { notFound: true };
+  const currentLocale = locale === "en" ? "en" : "ko";
+  const route = await resolvePublishedNoticeRoute(params.slug, currentLocale, {
+    getByPublicNumber: getPublishedNoticeDetail,
+    getPublicNumberByLegacySlug:
+      getPublishedNoticePublicNumberByLegacySlug,
+  });
+  if (route.kind === "notFound") return { notFound: true };
+  if (route.kind === "redirect") {
+    return {
+      redirect: {
+        destination: route.destination,
+        permanent: true,
+      },
+    };
+  }
+  const notice = route.notice;
   const paramsForBack = new URLSearchParams();
   if (typeof query.q === "string") paramsForBack.set("q", query.q);
   if (typeof query.category === "string")

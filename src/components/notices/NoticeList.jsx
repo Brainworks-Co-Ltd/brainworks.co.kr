@@ -11,7 +11,7 @@ function formatDate(value, language) {
 }
 
 /**
- * @param {{ items?: Array<{slug: string, title: string, date: string, isPinned: boolean}>, page?: number, totalPages?: number, query?: {q?: string, categoryId?: string} }} props
+ * @param {{ items?: Array<{publicNumber: number, title: string, date: string, isPinned: boolean}>, page?: number, totalPages?: number, query?: {q?: string, categoryId?: string} }} props
  */
 export default function NoticeList({
   items = [],
@@ -40,9 +40,9 @@ export default function NoticeList({
         <div className="border-y border-[var(--bw-color-line)] bg-white">
           <ul className="divide-y divide-[var(--bw-color-line)]">
             {items.map((item) => (
-              <li key={item.slug}>
+              <li key={item.publicNumber}>
                 <Link
-                  href={`/notices/${item.slug}`}
+                  href={`/notices/${item.publicNumber}`}
                   className="group grid gap-3 px-5 py-6 transition hover:bg-[var(--bw-color-surface-muted)] md:grid-cols-[minmax(0,0.3fr)_minmax(0,1fr)_auto] md:items-center md:gap-8 md:px-8"
                 >
                   <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">

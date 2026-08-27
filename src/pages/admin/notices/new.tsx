@@ -6,7 +6,6 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminPage } from "@/server/auth/require-admin";
 
 const initial = {
-  slug: "",
   categoryId: "",
   displayDate: new Date().toISOString().slice(0, 10),
   koTitle: "",
@@ -33,7 +32,6 @@ export default function NewNotice() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          slug: form.slug,
           categoryId: form.categoryId || null,
           displayDate: form.displayDate,
           locales: {
@@ -57,16 +55,7 @@ export default function NewNotice() {
         description="국문 및 영문 원문을 함께 저장합니다. 게시 전에는 초안으로 남습니다."
       />
       <form onSubmit={submit} className="mt-8 grid gap-6">
-        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-3">
-          <label className="grid gap-2 text-sm font-medium">
-            슬러그
-            <input
-              required
-              value={form.slug}
-              onChange={update("slug")}
-              className="min-h-11 rounded-xl border border-slate-300 px-3"
-            />
-          </label>
+        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-2">
           <label className="grid gap-2 text-sm font-medium">
             카테고리 ID
             <input

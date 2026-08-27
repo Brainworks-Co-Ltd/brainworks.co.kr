@@ -52,12 +52,16 @@ export const notices = pgTable(
   "notices",
   {
     ...managedContentColumns(),
+    publicNumber: integer("public_number")
+      .notNull()
+      .generatedAlwaysAsIdentity(),
     categoryId: uuid("category_id").references(() => noticeCategories.id, { onDelete: "restrict" }),
     displayDate: date("display_date").notNull(),
     isPinned: boolean("is_pinned").notNull().default(false),
     pinOrder: integer("pin_order"),
   },
   (table) => [
+    uniqueIndex("notices_public_number_uk").on(table.publicNumber),
     index("notices_publication_idx").on(table.itemStatus, table.isPinned, table.displayDate),
     index("notices_category_idx").on(table.categoryId),
     check(

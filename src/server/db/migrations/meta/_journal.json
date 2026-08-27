@@ -22,6 +22,13 @@
       "when": 1787581135436,
       "tag": "0002_jazzy_silk_fever",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787828887703,
+      "tag": "0003_notice_public_number",
+      "breakpoints": true
     }
   ]
 }

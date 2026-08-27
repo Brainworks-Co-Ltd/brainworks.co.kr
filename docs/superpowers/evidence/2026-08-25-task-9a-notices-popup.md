@@ -1,10 +1,12 @@
 ---
 wiki_type: evidence
 status: review
-updated: 2026-08-25
+updated: 2026-08-27
 sources:
   - ../specs/2026-08-23-notices-and-popup-notices-design.md
   - ../plans/2026-08-23-notices-and-popup-notices-implementation.md
+  - ../specs/2026-08-27-notice-public-number-design.md
+  - ../plans/2026-08-27-notice-public-number-implementation.md
   - ../../planning/05-technical-design/05-04-development-sequence-and-deliverables.md
 ---
 
@@ -39,3 +41,30 @@ sources:
 - 팝업 이미지 업로드와 연결된 공지사항 상세 이동의 운영 데이터 검증
 
 따라서 이 문서는 공지사항 및 팝업 공지 전체 완료가 아니라, 현재 구현된 운영 경계와 남은 검증을 구분한 검토 증빙입니다.
+
+## 2026-08-27 숫자형 공개 번호 전환
+
+### 확인된 변경
+
+- 공지사항 생성 요청과 관리자 작성 화면에서 슬러그 입력을 제거했습니다.
+- `notices.public_number`는 PostgreSQL `GENERATED ALWAYS AS IDENTITY`와 고유 인덱스로 DB가 발급합니다.
+- 내부 UUID는 관리자 명령과 관계에 계속 사용하고 공개 목록·상세·팝업 연결·첨부 다운로드는 숫자형 공개 번호를 사용합니다.
+- 기존 `notice_slugs`는 새 공지 생성에서 사용하지 않고 과거 공개 주소를 같은 로케일의 숫자 주소로 영구 이동시키는 호환 조회에만 남겼습니다.
+- 공지 슬러그 변경 API와 서비스 명령을 제거했습니다. 뉴스 슬러그와 공지 카테고리 정책은 변경하지 않았습니다.
+
+### 검증
+
+- 기준선 전체 26개 파일, 85개 테스트 통과
+- 변경 후 전체 29개 파일, 92개 테스트 통과
+- 공지 스키마 DB 계약 2개 테스트 통과
+- 타입 검사와 프로덕션 빌드 통과
+- 테스트 DB와 개발 DB migration 적용 성공
+- 개발 DB에서 `public_number`가 `NOT NULL`, `IDENTITY ALWAYS`임을 확인
+- 실제 repository 생성에서 슬러그 없이 `publicNumber: 1` 반환 확인 후 검증 데이터를 삭제하고 빈 개발 DB identity를 1로 복원
+- 공개 공지 목록 `http://127.0.0.1:3001/notices/`가 HTTP 200을 반환하고 슬러그 문구를 포함하지 않음을 확인
+- 비로그인 브라우저에서 새 공지 작성 URL이 로그인 화면으로 정상 이동하고 콘솔 오류가 없음을 확인
+
+### 남은 수동 확인
+
+- 관리자 로그인 뒤 새 공지 작성 화면에서 슬러그 입력란이 사라진 최종 화면 확인
+- 실제 운영 공지를 저장·게시한 뒤 `/notices/{publicNumber}` 상세와 첨부 다운로드 확인

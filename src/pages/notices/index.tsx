@@ -10,7 +10,7 @@ import {
 } from "@/server/modules/notices/queries";
 
 type NoticeItem = {
-  slug: string;
+  publicNumber: number;
   title: string;
   date: string;
   isPinned: boolean;
