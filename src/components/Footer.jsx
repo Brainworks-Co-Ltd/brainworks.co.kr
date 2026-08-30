@@ -2,6 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { buildPublicNavigation } from "@/shared/navigation/publicNavigation";
 import { useLocale } from "@/shared/routing/useLocale";
+import certificationsData from "@/utils/certificationsData";
+
+const certLabel = {
+  ko: "인증 및 공급기업 자격",
+  en: "Certifications & Provider Status",
+};
 
 const offices = [
   {
@@ -121,6 +127,32 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
+        {certificationsData.length > 0 && (
+          <section
+            aria-label={certLabel[language]}
+            className="border-t border-slate-800 pt-8"
+          >
+            <h2 className="text-sm font-semibold text-white">
+              {certLabel[language]}
+            </h2>
+            <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {certificationsData.map((cert) => (
+                <li
+                  key={cert.slug}
+                  className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 px-4 py-3"
+                >
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    {cert.org[language]}
+                  </p>
+                  <p className="mt-1.5 text-sm font-semibold leading-snug text-white">
+                    {cert.title[language]}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <div className="flex flex-col gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
