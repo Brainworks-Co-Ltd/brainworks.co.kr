@@ -18,8 +18,8 @@ export default function Home({ newsItems, popupNotices, areas }) {
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
         <HomeHero />
-        <BusinessAreaCarousel areas={areas} />
         <Clients />
+        <BusinessAreaCarousel areas={areas} />
         <LatestNews items={newsItems} />
         <CTA />
       </main>
