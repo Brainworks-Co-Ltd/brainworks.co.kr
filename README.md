@@ -1,5 +1,70 @@
 # brainworks.co.kr
 
+## 실행 방법
+
+### 공개 사이트만 볼 때 — 도커 필요 없음
+
+```bash
+npm install
+npm run dev            # http://localhost:3000
+npm run dev -- -p 3300 # 포트를 바꾸려면
+```
+
+`.env`의 `DATABASE_URL`이 주석 처리되어 있으면 공개 페이지 전체가 승인된 정적
+콘텐츠로 렌더링된다. PostgreSQL도 도커도 띄우지 않아도 된다. 디자인 확인이나
+시연은 이 상태로 한다.
+
+`DATABASE_URL`을 다시 켜면 DB가 떠 있어야 하고, 없으면 콘텐츠를 읽는 페이지가
+`DEPENDENCY_UNAVAILABLE`로 실패한다 (`src/server/env.ts`).
+
+### 관리자 화면까지 쓸 때 — 도커 필요
+
+관리자 로그인은 세션을 `admin_sessions` 테이블에 저장하므로 DB 없이는 안 된다.
+
+```bash
+docker compose -f compose.dev.yml up -d postgres-dev   # 5433 포트
+cp .env.example .env                                   # DATABASE_URL 포함본
+npm run db:migrate                                     # 마이그레이션 적용
+npm run admin:provision                                # 관리자 계정 생성
+npm run dev
+```
+
+`admin:provision`은 비밀번호를 직접 입력받으므로 **대화형 터미널에서** 실행한다.
+계정을 만든 뒤 `/auth/signin`으로 로그인하고 `/admin`으로 들어간다.
+
+DB를 끄고 다시 공개 사이트만 보려면 `.env`의 `DATABASE_URL`을 주석 처리한다.
+
+### 컨테이너 둘의 용도가 다르다
+
+| 서비스 | 포트 | 용도 |
+|---|---|---|
+| `postgres-dev` | 5433 | 개발용. `npm run dev`가 쓴다 |
+| `postgres-test` | 5434 | DB 테스트 전용. `npm run test:db`가 쓴다 |
+
+`npm test`(vitest)는 DB를 쓰지 않으므로 컨테이너 없이 돈다. DB를 실제로
+건드리는 테스트만 `npm run test:db`로 따로 있고, 그때만 `postgres-test`가 필요하다.
+
+### 백엔드 서버는 따로 없다
+
+Next.js 한 프로세스가 화면과 API를 모두 처리한다. `npm run dev` 말고 띄울
+서버가 없다. `src/pages/api/` 아래가 백엔드다.
+
+## 자주 쓰는 명령
+
+| 명령 | 하는 일 |
+|---|---|
+| `npm run dev` | 개발 서버 |
+| `npm run build` | 프로덕션 빌드. **개발 서버가 떠 있을 때 실행하면 `.next`를 덮어써서 개발 서버가 깨진다** |
+| `npm start` | 빌드 결과 실행 |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | vitest. DB 불필요 |
+| `npm run test:db` | DB 테스트. `postgres-test` 필요 |
+| `npm run test:e2e` | Playwright |
+| `npm run db:generate` | 스키마 변경 후 마이그레이션 파일 생성 |
+| `npm run db:migrate` | 마이그레이션 적용 |
+| `npm run admin:provision` | 관리자 계정 생성 (대화형) |
+
 ## 파일 구조
 
 ```text
@@ -32,7 +97,5 @@ brainworks.co.kr/
 ├── tests/                    # Node.js 테스트
 ├── jsconfig.json             # 경로 별칭 설정
 ├── next.config.js            # Next.js 설정
-├── package.json              # 의존성 및 실행 스크립트
-├── postcss.config.js         # PostCSS 설정
-└── tailwind.config.js        # Tailwind CSS 설정
+└── package.json              # 의존성 및 실행 스크립트
 ```
