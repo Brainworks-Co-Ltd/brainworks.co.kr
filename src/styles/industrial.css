@@ -493,8 +493,19 @@
  * --------------------------------------------------------------- */
 
 .bw-audience {
+  position: relative;
   border-bottom: 1px solid var(--bw-line);
   background: var(--bw-surface-muted);
+}
+
+/* 강조 바. 이 구간이 안내가 아니라 분기라는 신호다 */
+.bw-audience::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 4px;
+  background: var(--bw-accent);
 }
 
 .bw-audience__inner {
@@ -516,10 +527,10 @@
 .bw-audience__label {
   margin: 0;
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bw-dim);
+  color: var(--bw-accent-text);
 }
 
 .bw-audience__audience {
@@ -628,4 +639,129 @@
   --bw-radius-control: 9px;
   --bw-radius-card: 16px;
   --bw-radius-feature: 45px;
+}
+
+/* ---------------------------------------------------------------
+ * 강조색 (docs/planning/08-design-system.md 2.2.2)
+ *
+ * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 원인은 골드를
+ * 흰 배경에서 글자로 못 쓴다는 것(2.49)이었고, 그래서 색을 아예
+ * 안 쓰게 됐다.
+ *
+ * DeepLearning.AI가 딥레드 #620001을 큰 면으로 깔고 그 위에 글자를
+ * 얹는 방식을 2026-09-01에 실측했다. 같은 방식을 쓰면 골드를 면으로
+ * 깔고 잉크를 얹어 7.14를 확보할 수 있다. 남의 색을 빌리지 않는다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] {
+  --bw-accent: #d29b15;        /* 강조 면. 잉크 글자와 7.14 */
+  --bw-accent-strong: #f0be4e; /* 밝은 골드. 잉크와 10.3 */
+  --bw-accent-soft: #fdf6e3;   /* 칩 배경 */
+  --bw-accent-text: #8a6408;   /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
+}
+
+/* 카테고리 칩 */
+.bw-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-accent-soft);
+  color: var(--bw-accent-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* 번호 마커. 트랙·단계처럼 순서가 있는 항목에 쓴다 */
+.bw-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-accent);
+  color: var(--bw-ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 섹션 눈썹을 강조색으로. 지금은 회색이라 섹션 경계가 안 읽힌다 */
+:root[data-design="industrial"] .bw-section-eyebrow,
+:root[data-design="industrial"] [class*="tracking-[0.18em]"],
+:root[data-design="industrial"] [class*="uppercase"][class*="tracking"] {
+  color: var(--bw-accent-text);
+}
+
+/* 주요 행동과 목록 점을 강조색으로.
+ *
+ * 08 §2.2.1은 골드를 상호작용에 쓰지 말라고 했다. 근거는 골드 위 흰 글자가
+ * 2.49로 미달한다는 것이었다. 그 계산은 글자가 흰색일 때만 맞는다.
+ * 잍크를 얹으면 7.14로 통과한다. DeepLearning.AI가 딥레드 면 위에
+ * 흰 글자를 쓰는 것과 같은 구조다. 면과 글자를 한 쌍으로 묶어 지정한다.
+ */
+:root[data-design="industrial"] main .rounded-full.bg-\[var\(--bw-color-brand\)\] {
+  background-color: var(--bw-accent) !important;
+  color: var(--bw-ink) !important;
+}
+
+/* ---------------------------------------------------------------
+ * 스크롤 진입 시 드러남
+ *
+ * 2026-09-01 실측: DeepLearning.AI와 업스테이지 모두 섹션이 스크롤에
+ * 맞춰 올라오며 나타난다. 정지 화면에서 카드가 한꺼번에 놓여 있는 것과
+ * 인상이 크게 다르다.
+ *
+ * 라이브러리를 쓰지 않는다. CSS 스크롤 타임라인(animation-timeline: view())이
+ * 그대로 한다. 미지원 브라우저(파이어폭스)는 @supports 밖이라 처음부터
+ * 최종 상태로 보인다. 자바스크립트도, 번들 증가도 없다.
+ *
+ * 08 §2.7: 자리 이동은 --bw-motion-move(1s)를 따르고
+ * prefers-reduced-motion에서는 전환을 끄고 최종 상태를 바로 보여준다.
+ *
+ * 히어로([data-variant])는 제외한다. 자체 타이핑·자동 재생을 이미 갖고 있고
+ * 첫 화면이라 드러날 스크롤 구간이 없다.
+ * --------------------------------------------------------------- */
+
+@keyframes bw-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root[data-design="industrial"] main > section:not([data-variant]),
+    :root[data-design="industrial"] main > div > section:not([data-variant]),
+    :root[data-design="industrial"] .bw-reveal {
+      animation: bw-reveal linear both;
+      animation-timeline: view();
+      /* 구간을 백분율로 주면 안 된다. entry 백분율은 요소 높이에
+       * 비례하므로 뉴포트보다 긴 섹션은 구간이 끝나지 않아 opacity 0에
+       * 머무른다. /services의 사업 영역 구간이 통째로 안 보였다.
+       * 고정 길이로 주면 높이와 무관하게 240px 안에 끝난다. */
+      animation-range: entry 0% entry 240px;
+    }
+  }
+}
+
+/* 인쇄와 스크롤 없는 캡처에서는 드러남을 끈다.
+ * 스크롤 타임라인은 스크롤 위치에 매여 있어서, 스크롤이 없는 맥락에서는
+ * 화면 아래 구간이 통째로 투명하게 남는다. */
+@media print {
+  :root[data-design="industrial"] main > section,
+  :root[data-design="industrial"] main > div > section,
+  :root[data-design="industrial"] .bw-reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

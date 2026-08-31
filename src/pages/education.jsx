@@ -532,7 +532,7 @@ export default function Education() {
             {chips.map((item) => (
               <span
                 key={item}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-[var(--bw-color-ink)]"
+                className="bw-chip"
               >
                 {item}
               </span>
@@ -576,12 +576,9 @@ export default function Education() {
                     } ${isReversed ? "md:flex-row-reverse" : ""}`}
                   >
                     <div className="flex-1 space-y-5">
-                      <div className="inline-flex items-center gap-3 rounded-full bg-[var(--bw-color-surface-muted)] px-4 py-1.5 text-xs font-semibold text-[var(--bw-color-muted)]">
-                        <span
-                          className="flex h-2 w-2 rounded-full bg-[var(--bw-color-brand)]"
-                          aria-hidden="true"
-                        />
-                        {step.stage[language]}
+                      <div className="flex items-center gap-3">
+                        <span className="bw-marker">{String(index + 1).padStart(2, "0")}</span>
+                        <span className="bw-chip">{step.stage[language]}</span>
                       </div>
                       <div className="space-y-2">
                         <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
@@ -671,13 +668,17 @@ export default function Education() {
           </div>
 
           <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {generativeAITracks.map((track) => (
+            {generativeAITracks.map((track, trackIndex) => (
               <article
                 key={track.id}
-                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12"
+                className="grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12 md:px-8"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                  {/* 번호 마커 — 레퍼런스 실측(DeepLearning.AI)의 카테고리 칩 자리 */}
+                  <span className="bw-marker">
+                    {String(trackIndex + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-4 text-xl font-semibold text-[var(--bw-color-ink)]">
                     {track.title[language]}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[var(--bw-color-muted)]">

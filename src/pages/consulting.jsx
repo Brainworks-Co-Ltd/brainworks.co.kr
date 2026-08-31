@@ -250,10 +250,10 @@ export default function Consulting() {
             {processSteps.map((step) => (
               <li
                 key={step.id}
-                className="grid gap-4 py-6 md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
+                className="grid gap-4 px-6 py-6 md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8 md:px-8"
               >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  0{step.id}
+                <div>
+                  <span className="bw-marker">0{step.id}</span>
                 </div>
                 <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {step.title[language]}

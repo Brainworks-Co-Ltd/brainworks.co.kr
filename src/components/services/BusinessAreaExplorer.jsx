@@ -66,7 +66,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
       <div
         role="tablist"
         aria-label={language === "ko" ? "사업 영역" : "Business areas"}
-        className="flex gap-3 overflow-x-auto border-b border-slate-200 pb-3"
+        className="flex gap-3 overflow-x-auto border-b border-[var(--bw-color-line)] pb-3"
       >
         {areas.map((area) => (
           <button
@@ -75,7 +75,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             role="tab"
             aria-selected={area.id === activeArea.id}
             tabIndex={area.id === activeArea.id ? 0 : -1}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${area.id === activeArea.id ? "bg-[var(--bw-color-ink)] text-white" : "text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"}`}
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${area.id === activeArea.id ? "bg-[var(--bw-accent)] text-[var(--bw-ink)]" : "text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"}`}
             onClick={() => selectArea(area.id)}
             onKeyDown={(event) => {
               if (event.key === "ArrowRight" || event.key === "ArrowDown") {
