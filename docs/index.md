@@ -18,6 +18,8 @@ sources:
 
 ## 개발 계획 진입점
 
+- [기획서 (plan.md)](plan.md): 문제 정의부터 5 Whys, 타겟 사용자, 경쟁사 분석, MVP 범위까지 흩어진 기획 문서를 하나의 이야기로 잇는 진입점입니다.
+
 - [개발 문서 인덱스](planning/00-development-document-index.md): 홈페이지 재구축 계획 문서의 단계와 검토 순서를 안내합니다.
 - [멘토님 미팅 기준 홈페이지 개편 범위](planning/00-mentor-meeting-scope.md): Clova Note 원문에서 확인한 관리자 대상과 제외 대상을 정리합니다.
 - [홈페이지 개편 제품 기획](planning/07-homepage-product-strategy-as-is-to-be.md): 개편의 AS-IS와 TO-BE, 제품 가설, 성공 정의, 에픽과 사용자 스토리를 연결합니다.
