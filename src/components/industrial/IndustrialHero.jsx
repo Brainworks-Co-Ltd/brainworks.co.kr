@@ -183,8 +183,6 @@ export default function IndustrialHero() {
       className="ind-hero ind-dark"
       role="region"
       aria-label={language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"}
-      onPointerEnter={() => setPause("pointer", true)}
-      onPointerLeave={() => setPause("pointer", false)}
       onFocusCapture={() => setPause("focus", true)}
       onBlurCapture={() => setPause("focus", false)}
     >
@@ -229,8 +227,18 @@ export default function IndustrialHero() {
         </div>
       </div>
 
-      {/* 7.3 직접 선택. 자동 재생만으로는 원하는 현장을 볼 수 없다 */}
-      <div className="ind-hero__rail">
+      {/*
+        7.3 직접 선택. 자동 재생만으로는 원하는 현장을 볼 수 없다.
+
+        7.2의 "포인터가 Hero 위에 있음"은 레일에만 적용한다. 히어로가 첫 화면
+        전체를 차지해 마우스가 거의 항상 그 위에 있고, 그대로 걸면 자동 재생이
+        사실상 동작하지 않는다. 고르는 중일 때만 멈추는 것이 의도에 맞다.
+      */}
+      <div
+        className="ind-hero__rail"
+        onPointerEnter={() => setPause("pointer", true)}
+        onPointerLeave={() => setPause("pointer", false)}
+      >
         {SLOTS.map((s, i) => (
           <button
             key={s.id}
