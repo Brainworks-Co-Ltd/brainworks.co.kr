@@ -185,3 +185,11 @@
 :root[data-ui="a"] .bw-header__logo {
   filter: brightness(0) invert(1);
 }
+
+/* 코드베이스는 ink를 '짙은 강조 배경'으로 쓰고 그 위에 text-white를 박아 두었다
+   (29개 파일). A안은 ink를 밝게 뒤집으므로 그 조합이 전부 흰 글자 위 흰 배경이 된다.
+   파일마다 고치는 대신 조합 하나를 되돌린다. */
+:root[data-ui="a"] .bg-\[var\(--bw-color-ink\)\].text-white,
+:root[data-ui="a"] .bg-\[var\(--bw-color-ink\)\] .text-white {
+  color: var(--bw-color-surface);
+}
