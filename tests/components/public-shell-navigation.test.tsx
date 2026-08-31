@@ -52,7 +52,7 @@ describe("공개 셸 내비게이션", () => {
     expect(screen.getByRole("region", { name: "소식 하위 메뉴" })).toBeVisible();
   });
 
-  it("사업 영역 메가메뉴가 활성 영역 이름과 두 메뉴 열을 제공한다", async () => {
+  it("사업 영역 메뉴가 네 서비스를 같은 높이로 제공한다", async () => {
     const user = userEvent.setup();
 
     render(<Header />);
@@ -62,27 +62,36 @@ describe("공개 셸 내비게이션", () => {
     expect(
       screen.getByRole("region", { name: "사업 영역 하위 메뉴" }),
     ).toBeVisible();
-    expect(screen.getAllByText("Manufacturing AI").length).toBeGreaterThan(0);
-    expect(screen.getByRole("heading", { name: "AI 사업 분야" })).toBeVisible();
-    expect(screen.getByRole("heading", { name: "서비스" })).toBeVisible();
+    /* 네 서비스가 모두 최상위 링크로 존재한다 */
+    expect(screen.getByRole("link", { name: "AI 솔루션" })).toHaveAttribute(
+      "href",
+      "/services",
+    );
     expect(screen.getByRole("link", { name: "AI 컨설팅" })).toHaveAttribute(
       "href",
       "/consulting",
     );
+    expect(screen.getByRole("link", { name: "AI 전문교육" })).toHaveAttribute(
+      "href",
+      "/education",
+    );
+    expect(
+      screen.getByRole("link", { name: "글로벌 프로그램" }),
+    ).toHaveAttribute("href", "/global-programs");
   });
 
-  it("사업 분야에 포커스하면 패널의 영역 이름이 바뀐다", async () => {
+  it("사업 영역 넷은 AI 솔루션 아래에만 붙는다", async () => {
     const user = userEvent.setup();
 
     render(<Header />);
     await user.click(screen.getByRole("button", { name: "사업 영역" }));
-    await user.hover(
-      screen.getByRole("link", { name: "sLLM base AI Agent" }),
-    );
 
     expect(
-      screen.getAllByText("sLLM base AI Agent").length,
-    ).toBeGreaterThan(1);
+      screen.getByRole("link", { name: "sLLM base AI Agent" }),
+    ).toHaveAttribute("href", "/services?area=agent");
+    expect(
+      screen.getByRole("link", { name: "Manufacturing AI" }),
+    ).toHaveAttribute("href", "/services?area=manufacturing");
   });
 
   it("Footer가 Header와 같은 세 그룹을 제공한다", () => {
