@@ -15,12 +15,16 @@
  */
 
 :root[data-design="industrial"] {
-  /* 표면. 단색 세 단으로만 쌓는다. 그라디언트로 깊이를 만들지 않는다 */
-  --ind-bg: #0a0c10;
-  --ind-panel: #12151b;
-  --ind-panel-raised: #181c24;
-  --ind-line: #232936;
-  --ind-line-strong: #323a4b;
+  /* 표면. 단색 세 단으로만 쌓는다. 그라디언트로 깊이를 만들지 않는다.
+     2026-08-31 실측: Nota AI body #252a39, Upstage footer #191722,
+     Linear #08090a. 한국 AI 두 곳은 청색 기운이 있고 순검정에서 멀다.
+     Linear는 개발자 도구라 동종업계가 아니므로 하한으로만 참고한다.
+     이전 값 #0a0c10은 근거 없이 가장 어두운 끝을 잡은 것이라 버린다. */
+  --ind-bg: #12161f;
+  --ind-panel: #1a1f2b;
+  --ind-panel-raised: #222836;
+  --ind-line: #2c3444;
+  --ind-line-strong: #3b4557;
 
   /* 글자 */
   --ind-fg: #eef1f6;
