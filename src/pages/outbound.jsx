@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
@@ -233,6 +234,16 @@ export default function Outbound() {
             label: t.ctaPrimary,
           }}
         />
+        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        <PageAudience
+          audience="해외 진출과 국제 협력이 목적인 기업·기관"
+          scope="해외 진출·국제 협력 프로그램을 설명하고 상담으로 연결합니다."
+          redirects={[
+              { href: "/education", label: "국내 교육 과정이라면 AI 전문교육" },
+              { href: "/services", label: "AI 제품 도입이라면 AI 솔루션" },
+          ]}
+        />
+
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">

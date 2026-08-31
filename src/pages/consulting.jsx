@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { EditorialSection } from "@/components/public/EditorialSection";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
@@ -197,6 +198,16 @@ export default function Consulting() {
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
         />
+        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        <PageAudience
+          audience="무엇을 어떻게 도입할지부터 정해야 하는 담당자"
+          scope="대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다."
+          redirects={[
+              { href: "/services", label: "도입할 제품이 정해졌다면 AI 솔루션" },
+              { href: "/education", label: "인력 양성이 목적이라면 AI 전문교육" },
+          ]}
+        />
+
 
         <EditorialSection
           eyebrow="Consulting value"

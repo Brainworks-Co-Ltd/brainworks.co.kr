@@ -486,3 +486,114 @@
 :root[data-design="industrial"] .bg-\[var\(--bw-color-ink\)\] {
   background-color: var(--bw-surface-dark) !important;
 }
+
+/* ---------------------------------------------------------------
+ * 진입 분기 (docs/designs/detail-page-roles.md)
+ * 상세 페이지 맨 위에서 대상과 비대상을 밝힌다.
+ * --------------------------------------------------------------- */
+
+.bw-audience {
+  border-bottom: 1px solid var(--bw-line);
+  background: var(--bw-surface-muted);
+}
+
+.bw-audience__inner {
+  display: grid;
+  gap: var(--bw-space-6);
+  max-width: 1152px;
+  margin-inline: auto;
+  padding: var(--bw-space-7) var(--bw-space-5);
+}
+
+@media (min-width: 900px) {
+  .bw-audience__inner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--bw-space-8);
+    align-items: start;
+  }
+}
+
+.bw-audience__label {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bw-dim);
+}
+
+.bw-audience__audience {
+  margin: var(--bw-space-3) 0 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  color: var(--bw-ink);
+}
+
+.bw-audience__scope {
+  margin: var(--bw-space-3) 0 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--bw-muted);
+}
+
+.bw-audience__links {
+  display: grid;
+  gap: var(--bw-space-2);
+  margin: var(--bw-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bw-audience__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bw-space-4);
+  padding: var(--bw-space-3) var(--bw-space-4);
+  border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-surface);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--bw-ink);
+  text-decoration: none;
+  transition:
+    border-color var(--bw-motion-press),
+    background var(--bw-motion-press);
+}
+
+.bw-audience__link:hover,
+.bw-audience__link:focus-visible {
+  border-color: var(--bw-line-strong);
+  background: var(--bw-surface-muted);
+}
+
+/* ---------------------------------------------------------------
+ * 상세 페이지 공통 규칙 (docs/designs/detail-page-roles.md)
+ *
+ * 섹션 간격이 py-20 md:py-28, mt-16, mt-20으로 흩어져 있어 페이지마다
+ * 리듬이 달랐다. 하나로 모은다. 카드도 모서리·테두리·여백을 통일한다.
+ * --------------------------------------------------------------- */
+
+/* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
+   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다. */
+:root[data-design="industrial"] main > section:not([data-variant]):not(.bw-audience),
+:root[data-design="industrial"] main > div > section:not([data-variant]) {
+  padding-block: var(--bw-space-9);
+}
+
+/* mt-16 / mt-20으로 띄우던 섹션은 padding으로 옮겼으므로 margin을 없앤다 */
+:root[data-design="industrial"] main > section.mt-16,
+:root[data-design="industrial"] main > section.mt-20 {
+  margin-top: 0;
+}
+
+/* 본문 카드 */
+:root[data-design="industrial"] main .rounded-2xl,
+:root[data-design="industrial"] main .rounded-3xl,
+:root[data-design="industrial"] main .rounded-\[var\(--bw-radius-feature\)\] {
+  border-radius: var(--bw-radius-card);
+}

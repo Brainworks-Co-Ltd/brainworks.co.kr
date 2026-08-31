@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -39,6 +40,16 @@ export default function Services({ areas }) {
             label: language === "ko" ? "솔루션 문의" : "Discuss a solution",
           }}
         />
+        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        <PageAudience
+          audience="특정 산업 현장의 문제를 풀 AI 제품을 찾는 담당자"
+          scope="제조, 에이전트, 헬스케어·바이오, 스마트시티·안전 네 영역의 솔루션을 다룹니다."
+          redirects={[
+              { href: "/consulting", label: "무엇을 도입할지부터 정해야 한다면 AI 컨설팅" },
+              { href: "/education", label: "조직 역량부터 키워야 한다면 AI 전문교육" },
+          ]}
+        />
+
         <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
           <BusinessAreaExplorer areas={areas} />
         </div>

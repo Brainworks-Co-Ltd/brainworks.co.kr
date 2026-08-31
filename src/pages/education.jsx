@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
@@ -538,6 +539,16 @@ export default function Education() {
             ))}
           </div>
         </PageHero>
+        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        <PageAudience
+          audience="조직의 AI 역량을 키워야 하는 담당자"
+          scope="교육 대상과 과정, 결과물과 문의 방법을 다룹니다."
+          redirects={[
+              { href: "/global-programs", label: "해외 인턴십·국제 프로그램이라면 글로벌 프로그램" },
+              { href: "/consulting", label: "도입 전략부터 필요하다면 AI 컨설팅" },
+          ]}
+        />
+
 
         <section className="mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
           <SectionHeader
