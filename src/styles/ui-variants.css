@@ -42,7 +42,7 @@
   --bw-color-surface: #ffffff;
   --bw-color-surface-muted: #f7f5f0;
   --bw-color-ink: #1c1a16;
-  --bw-color-muted: #7a736a;
+  --bw-color-muted: #746d63;
   --bw-color-line: #e8e3da;
   --bw-color-brand: #c8901a;
   --bw-color-brand-strong: #7d5a06;
@@ -259,7 +259,8 @@
 /* 히어로는 A안에서도 스스로 어두운 배경을 유지한다.
    위의 ink+white 되돌림이 여기까지 잡아 제목과 보조 버튼이 검게 죽었다. */
 :root[data-ui="a"] .bw-home-hero.text-white,
-:root[data-ui="a"] .bw-home-hero .text-white {
+:root[data-ui="a"] .bw-home-hero .text-white,
+:root[data-ui="a"] .bw-footer .text-white {
   color: #fff;
 }
 
@@ -294,4 +295,18 @@
   :root[data-ui="b"] .bw-home-hero::after {
     animation: none;
   }
+}
+
+/* 브랜드 골드 위에 --bw-color-ink 글자를 얹은 버튼이 네 군데 있다.
+   A안은 ink가 밝아지므로 밝은 금색 위 흰 글자가 되어 읽히지 않는다. */
+:root[data-ui="a"] .bg-\[var\(--bw-color-brand\)\],
+:root[data-ui="a"] .bg-\[var\(--bw-color-brand-strong\)\] {
+  color: var(--bw-color-surface);
+}
+
+/* 히어로 eyebrow는 브랜드 골드다. 사진을 걷어낸 B안에서는 밝은 배경 위
+   밝은 금색이 되어 2.38:1 까지 떨어진다. 글자에는 진한 쪽을 쓴다.
+   C안은 어두운 사진 위라 그대로 둔다. */
+:root[data-ui="b"] .bw-home-hero .text-\[var\(--bw-color-brand\)\] {
+  color: var(--bw-color-brand-strong);
 }
