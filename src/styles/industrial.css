@@ -108,38 +108,6 @@
   opacity: 0.55;
 }
 
-/* 가로로 훑고 지나가는 스캔선 하나. 공정 계측 장비의 은유다 */
-.ind-scan {
-  position: absolute;
-  inset-block: 0;
-  width: 1px;
-  z-index: -1;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--ind-manufacturing),
-    transparent
-  );
-  opacity: 0.4;
-  animation: ind-scan 9s linear infinite;
-}
-
-@keyframes ind-scan {
-  from {
-    left: 8%;
-  }
-  to {
-    left: 92%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ind-scan {
-    animation: none;
-    left: 30%;
-  }
-}
-
 /* ---------------------------------------------------------------
  * 히어로. MakinaRocks의 좌우 분할을 진짜 2단으로 만든다.
  * --------------------------------------------------------------- */

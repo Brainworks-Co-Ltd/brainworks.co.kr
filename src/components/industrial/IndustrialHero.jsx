@@ -151,7 +151,6 @@ export default function IndustrialHero() {
       aria-label={language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"}
     >
       <div className="ind-grid-bg" aria-hidden="true" />
-      <div className="ind-scan" aria-hidden="true" />
 
       <div className="ind-hero__inner">
         <div className="ind-hero__copy">
