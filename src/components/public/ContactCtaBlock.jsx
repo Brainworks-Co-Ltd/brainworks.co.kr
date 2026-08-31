@@ -21,7 +21,7 @@ export function ContactCtaBlock({
       ) : null}
       <Link
         href={href}
-        className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-ink)] transition hover:brightness-95"
+        className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
       >
         {label}
       </Link>

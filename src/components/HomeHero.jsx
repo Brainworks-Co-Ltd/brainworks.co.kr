@@ -235,7 +235,7 @@ export default function HomeHero({ scenes = defaultScenes }) {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/services"
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-ink)] hover:brightness-95"
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] hover:brightness-95"
             >
               {language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions"}
             </Link>

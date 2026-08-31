@@ -597,3 +597,35 @@
 :root[data-design="industrial"] main .rounded-\[var\(--bw-radius-feature\)\] {
   border-radius: var(--bw-radius-card);
 }
+
+/* ---------------------------------------------------------------
+ * 옛 토큰을 새 팔레트로 연결한다.
+ *
+ * 상세 페이지 8개는 globals.css의 --bw-color-* 를 쓰고, 새 팔레트는
+ * --bw-* 다. 그래서 확정한 색이 새로 쓴 컴포넌트에만 붙어 있었다.
+ * 여기서 한 번 이어주면 기존 페이지가 전부 새 팔레트로 넘어간다.
+ *
+ * 값은 docs/planning/08-design-system.md 2.2가 기준이다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] {
+  --bw-color-surface: var(--bw-surface);
+  --bw-color-surface-muted: var(--bw-surface-muted);
+  --bw-color-ink: var(--bw-ink);
+  --bw-color-muted: var(--bw-muted);
+  --bw-color-line: var(--bw-line);
+
+  /* 2.2.1 상호작용 색은 골드가 아니라 잉크가 맡는다.
+     골드는 흰 배경에서 2.49라 버튼이나 작은 UI 요소로 쓸 수 없다 */
+  --bw-color-brand: var(--bw-ink);
+  --bw-color-black: var(--bw-ink);
+  --bw-color-focus: var(--bw-ink);
+
+  /* 태그·눈썹 문구처럼 글자로 쓰는 골드만 남긴다.
+     기존 #9b700d는 흰 배경에서 4.45로 모자라 한 단 어둡게 잡았다 (5.37) */
+  --bw-color-brand-strong: #8a6408;
+
+  --bw-radius-control: 9px;
+  --bw-radius-card: 16px;
+  --bw-radius-feature: 45px;
+}
