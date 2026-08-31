@@ -1,5 +1,27 @@
 export const historyItems = [
   {
+    year: '2026',
+    title: { ko: '국가 과제 주관과 산학 협력 확산', en: 'Leading National Programs and Scaling Industry-Academia Work' },
+    summary: {
+      ko: 'AI 반도체 해외 실증 사업의 주관사로 선정되고, 대학 및 지자체와의 협력을 전국으로 확대',
+      en: 'Selected to lead the national AI semiconductor overseas demonstration program and widened university and municipal partnerships nationwide.',
+    },
+    bullets: {
+      ko: [
+        '26.05. 과학기술정보통신부·NIPA AI 반도체 해외 실증 지원 사업 주관사 선정',
+        '26.06. 2026 대한민국리딩기업대상 AI 솔루션 부문 스타트업대상 2년 연속 수상(머니투데이)',
+        '26.06. 국립순천대 SW중심대학사업단 AI·SW 산학협력 MOU 체결',
+        '26.07. 순천향대 AI중심대학사업단 산업 AI 전문가 양성 과정 공동 운영',
+      ],
+      en: [
+        'May 2026: Selected as the lead company for the MSIT and NIPA AI semiconductor overseas demonstration program.',
+        'Jun 2026: Won the Korea Leading Company Startup Award in AI Solutions for the second consecutive year (MoneyToday).',
+        'Jun 2026: Signed an AI and software industry-academia MOU with Sunchon National University.',
+        'Jul 2026: Co-ran an industrial AI specialist programme with Soonchunhyang University.',
+      ],
+    },
+  },
+  {
     year: '2025',
     title: { ko: '글로벌 확장과 비즈니스 고도화', en: 'Global Expansion and Business Scale-up' },
     summary: {
@@ -15,6 +37,7 @@ export const historyItems = [
         '25.05. 한국과학기술정보연구원(KISTI) 패밀리기업 선정',
         '25.05. 2025 창업진흥원 초기창업패키지 선정 - 초경량 LLM 기반 실시간 음성 번역 솔루션',
         '25.05. 대구디지털혁신진흥원 SW인재확산사업 선정',
+        '25.05. 인제대학교 컴퓨터·AI대학, SW중심대학사업단 AI·SW 융합 교육 MOU 체결',
         '25.06. NIPA 지역 디지털 글로벌 브릿지 1차 대구대표기업 선정',
         '25.06. 인도네시아·베트남 현지 파트너사 다자 MOU 체결',
         '25.06. 대구디지털혁신진흥원 데이터 가공사업 선정 - 3D Dental 이미지 데이터셋 구축',
@@ -22,6 +45,9 @@ export const historyItems = [
         '25.06. 2025 대한민국리딩기업대상 스타트업 부문 대상(머니투데이)',
         '25.07. NIPA 지역 디지털 글로벌 브릿지 2차 대구대표기업 선정',
         '25.08. NIPA 지역 디지털 글로벌 브릿지 3차 대구대표기업 선정',
+        '25.09. 아산스마트팩토리마이스터고 스마트팩토리 인재 양성 업무협약',
+        '25.10. 이레산업과 피지컬 AI 기반 항공 모빌리티 기술 협력 MOU 체결',
+        '25.10. 광주광역시와 AI 혁신도시 광주 업무협약 체결(AICON 광주 2025)',
       ],
       en: [
         'Jan 2025: Registered as an authorized supplier for Korea Aerospace Industries (KAI).',
@@ -31,6 +57,7 @@ export const historyItems = [
         'May 2025: Selected as a family company by the Korea Institute of Science and Technology Information (KISTI).',
         'May 2025: Won the 2025 K-Startup Initial Startup Package for a lightweight LLM real-time speech translation solution.',
         "May 2025: Chosen for DGDI's software talent cultivation program.",
+      'May 2025: Signed an AI and software education MOU with Inje University.',
         "Jun 2025: Represented Daegu firms in phase 1 of NIPA's Regional Digital Global Bridge initiative.",
         'Jun 2025: Signed multiple MOUs with partner companies in Indonesia and Vietnam.',
         "Jun 2025: Awarded DGDI's data processing project for 3D dental image datasets.",
@@ -38,6 +65,9 @@ export const historyItems = [
         'Jun 2025: Received the 2025 Korea Leading Company Startup Award (MoneyToday).',
         "Jul 2025: Represented Daegu firms in phase 2 of NIPA's Regional Digital Global Bridge initiative.",
         "Aug 2025: Represented Daegu firms in phase 3 of NIPA's Regional Digital Global Bridge initiative.",
+      'Sep 2025: Signed a smart factory talent MOU with Asan Smart Factory Meister High School.',
+      'Oct 2025: Signed a Physical AI mobility technology MOU with Ire Industry.',
+      "Oct 2025: Signed an 'AI Innovation City Gwangju' MOU with Gwangju Metropolitan City.",
       ],
     },
   },

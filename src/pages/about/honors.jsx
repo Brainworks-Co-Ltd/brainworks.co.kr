@@ -82,13 +82,20 @@ export default function HonorsPage({
                         className="grid gap-6 bg-white py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                       >
                         <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
-                          <Image
-                            src={award.image}
-                            alt={`${award.title[language]} ${t.awardAltSuffix}`}
-                            fill
-                            sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-                            className="object-contain"
-                          />
+                          {award.image ? (
+                            <Image
+                              src={award.image}
+                              alt={`${award.title[language]} ${t.awardAltSuffix}`}
+                              fill
+                              sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+                              className="object-contain"
+                            />
+                          ) : (
+                            // 상장 사진을 아직 받지 못한 수상. 다른 해 이미지를 돌려쓰지 않는다.
+                            <span className="text-sm font-semibold text-[var(--bw-color-muted)]">
+                              {formatAwardPeriod(award.year, award.date)}
+                            </span>
+                          )}
                         </div>
                         <div className="flex flex-1 flex-col gap-2">
                           <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
