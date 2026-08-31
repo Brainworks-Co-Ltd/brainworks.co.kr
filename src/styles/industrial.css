@@ -1,66 +1,71 @@
 /*
- * 산업 도메인 디자인 시스템
+ * 브레인웍스 디자인 시스템 구현
  *
- * 근거는 2026-08-31 실측이다. 지금 화면을 기준으로 삼지 않고
- * 레퍼런스가 실제로 쓰는 값에서 되짚어 만든다.
+ * 값을 여기서 정하지 않는다. 전부 docs/planning/08-design-system.md 2절에서
+ * 온다. 값을 바꾸려면 문서를 먼저 고친다.
  *
- *   MakinaRocks  h1 64px / 700 / 자간 -1.60px / 행간 1.30 / radius 9·45
- *   Linear       h1 64px / 510 / 행간 1.00 / radius 9
- *   Vercel       배경을 canvas로 그림. 무거운 자산 없이 움직임을 만든다
- *   토스플레이스  transform 1s ease-in-out이 7곳. 느림이 고급으로 읽힌다
- *
- * 자간은 실측을 그대로 쓰지 않는다. -1.60px는 라틴 기준이고 한글은
- * 받침이 있어 같은 값에서 글자가 붙어 보인다. -0.02em으로 완화한다.
- * 행간도 해외 1.00~1.15가 아니라 국내 두 곳의 1.30을 따른다.
+ * 기준 레퍼런스는 Upstage(2026-08-31 실측). 밝은 본문에 어두운 구간 하나를
+ * 얹는 구조이며, 브랜드색만 브레인웍스 기존 값을 쓴다.
  */
 
 :root[data-design="industrial"] {
-  /* 표면. 단색 세 단으로만 쌓는다. 그라디언트로 깊이를 만들지 않는다.
-     2026-08-31 실측: Nota AI body #252a39, Upstage footer #191722,
-     Linear #08090a. 한국 AI 두 곳은 청색 기운이 있고 순검정에서 멀다.
-     Linear는 개발자 도구라 동종업계가 아니므로 하한으로만 참고한다.
-     이전 값 #0a0c10은 근거 없이 가장 어두운 끝을 잡은 것이라 버린다. */
-  --ind-bg: #12161f;
-  --ind-panel: #1a1f2b;
-  --ind-panel-raised: #222836;
-  --ind-line: #2c3444;
-  --ind-line-strong: #3b4557;
+  /* 2.2 색 — Upstage 실측 */
+  --bw-surface: #ffffff;
+  --bw-surface-muted: #f9fafb;
+  --bw-surface-dark: #191722;
+  --bw-surface-dark-deep: #151727;
 
-  /* 글자 */
-  --ind-fg: #eef1f6;
-  --ind-fg-muted: #9aa3b2;
-  --ind-fg-dim: #6b7484;
+  --bw-ink: #0a0d14;
+  --bw-muted: #52525b;
+  --bw-dim: #70757f;
+  --bw-on-dark: #ffffff;
 
-  /* 영역색. 네 도메인이 서로 구별되도록 색상환에서 떨어뜨린다.
-     기존 데이터의 emerald 두 개는 구분이 안 돼 스마트시티를 앰버로 옮겼다 */
-  --ind-manufacturing: #4a9eff;
-  --ind-agent: #b06cff;
-  --ind-healthcare: #21c58a;
-  --ind-smartcity: #f5a524;
+  --bw-line: #e2e4e9;
+  --bw-line-subtle: #eff0f6;
+  --bw-line-strong: #cdd0d5;
 
-  /* 모서리 두 단. 작은 것은 각지게, 큰 면은 둥글게 (MakinaRocks 9 / 45) */
-  --ind-radius-control: 9px;
-  --ind-radius-card: 16px;
-  --ind-radius-feature: 45px;
+  /* 브랜드는 브레인웍스 기존 값 */
+  --bw-brand: #d29b15;
+  --bw-brand-strong: #9b700d;
 
-  /* 움직임. 토스플레이스 실측대로 느리게 */
-  --ind-motion: 1s cubic-bezier(0.4, 0, 0.2, 1);
-  --ind-motion-fast: 0.2s ease;
+  /* 2.3 영역색 */
+  --bw-manufacturing: #2b7fd4;
+  --bw-agent: #8b5cf6;
+  --bw-healthcare: #0f9d6e;
+  --bw-smartcity: #c77800;
 
-  color-scheme: dark;
+  /* 2.5 모서리 */
+  --bw-radius-control: 9px;
+  --bw-radius-card: 16px;
+  --bw-radius-feature: 45px;
+
+  /* 2.6 간격 */
+  --bw-space-1: 4px;
+  --bw-space-2: 8px;
+  --bw-space-3: 12px;
+  --bw-space-4: 16px;
+  --bw-space-5: 24px;
+  --bw-space-6: 32px;
+  --bw-space-7: 48px;
+  --bw-space-8: 64px;
+  --bw-space-9: 96px;
+
+  /* 2.7 움직임 */
+  --bw-motion-press: 0.2s ease;
+  --bw-motion-move: 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :root[data-design="industrial"] body {
-  background: var(--ind-bg);
-  color: var(--ind-fg);
+  background: var(--bw-surface);
+  color: var(--bw-ink);
 }
 
 /* ---------------------------------------------------------------
- * 타이포. 크기와 굵기는 실측에서, 행간과 자간은 한글 기준으로.
+ * 2.4 타이포
  * --------------------------------------------------------------- */
 
 .ind-display {
-  font-size: clamp(2.5rem, 5.2vw, 4rem); /* 40 → 64px */
+  font-size: clamp(2.5rem, 5.2vw, 4rem);
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.02em;
@@ -68,7 +73,7 @@
 }
 
 .ind-section-title {
-  font-size: clamp(1.75rem, 3vw, 2.5rem); /* 28 → 40px */
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 700;
   line-height: 1.35;
   letter-spacing: -0.015em;
@@ -78,101 +83,105 @@
 .ind-eyebrow {
   font-size: 0.8125rem;
   font-weight: 600;
+  line-height: 1.3;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ind-fg-dim);
+  color: var(--bw-dim);
   margin: 0;
 }
 
 .ind-lead {
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--ind-fg-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--bw-muted);
   margin: 0;
 }
 
 /* ---------------------------------------------------------------
- * 데이터 그리드 배경. Vercel과 Stripe가 canvas로 하는 일을
- * CSS로 한다. 이미지 자산이 0바이트다.
+ * 2.1 어두운 구간. 히어로와 푸터만 어둡다.
  * --------------------------------------------------------------- */
 
+.ind-dark {
+  background: var(--bw-surface-dark);
+  color: var(--bw-on-dark);
+}
+
+.ind-dark .ind-eyebrow {
+  color: rgb(255 255 255 / 55%);
+}
+
+.ind-dark .ind-lead {
+  color: rgb(255 255 255 / 72%);
+}
+
+/* 어두운 구간의 배경 격자. 이미지 자산이 들어가지 않는다 */
 .ind-grid-bg {
   position: absolute;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(var(--ind-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--ind-line) 1px, transparent 1px);
+    linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px);
   background-size: 72px 72px;
   mask-image: radial-gradient(
     ellipse 80% 60% at 20% 40%,
     #000 0%,
     transparent 75%
   );
-  opacity: 0.55;
 }
 
 /* ---------------------------------------------------------------
- * 히어로. MakinaRocks의 좌우 분할을 진짜 2단으로 만든다.
+ * 히어로
  * --------------------------------------------------------------- */
 
 .ind-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: var(--ind-bg);
-  padding-block: 9rem 0;
-  border-bottom: 1px solid var(--ind-line);
+  padding-block: var(--bw-space-9) 0;
 }
 
 .ind-hero__inner {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3.5rem;
+  gap: var(--bw-space-7);
   align-items: center;
   max-width: 1440px;
   margin-inline: auto;
-  padding: 0 1.5rem 5rem;
+  padding: 0 var(--bw-space-5) var(--bw-space-8);
 }
 
 @media (min-width: 1024px) {
   .ind-hero__inner {
     grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
-    gap: 5rem;
+    gap: var(--bw-space-8);
   }
 }
 
-.ind-hero__copy {
-  animation: ind-rise var(--ind-motion) both;
-}
-
 .ind-hero__title {
-  margin-top: 1.25rem;
+  margin-top: var(--bw-space-4);
 }
 
-.ind-hero__lead {
-  margin-top: 1.5rem;
+.ind-hero__answer {
+  margin-top: var(--bw-space-5);
   max-width: 34rem;
+  animation: ind-rise 0.5s ease both;
 }
 
 .ind-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
-}
-
-.ind-hero__shot {
-  animation: ind-rise var(--ind-motion) both;
+  gap: var(--bw-space-3);
+  margin-top: var(--bw-space-6);
 }
 
 .ind-hero__shot img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: var(--ind-radius-feature);
-  border: 1px solid var(--ind-line-strong);
-  box-shadow: 0 40px 90px rgb(0 0 0 / 55%);
+  border-radius: var(--bw-radius-feature);
+  border: 1px solid rgb(255 255 255 / 12%);
+  box-shadow: 0 40px 90px rgb(0 0 0 / 45%);
 }
 
 @keyframes ind-rise {
@@ -187,47 +196,36 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ind-hero__copy,
-  .ind-hero__shot {
+  .ind-hero__answer {
     animation: none;
   }
 }
 
-/* 하단 레일. 진행 점 대신 이름을 그대로 보여준다 */
+/* 하단 레일 */
 .ind-hero__rail {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   max-width: 1440px;
   margin-inline: auto;
-  border-top: 1px solid var(--ind-line);
+  border-top: 1px solid rgb(255 255 255 / 10%);
 }
 
 .ind-hero__tab {
   display: flex;
   align-items: baseline;
-  gap: 0.75rem;
-  padding: 1.5rem;
-  background: none;
-  border: 0;
-  border-right: 1px solid var(--ind-line);
-  color: var(--ind-fg-dim);
-  cursor: pointer;
-  text-align: left;
-  transition: color var(--ind-motion-fast), background var(--ind-motion-fast);
+  gap: var(--bw-space-3);
+  padding: var(--bw-space-5);
+  border-right: 1px solid rgb(255 255 255 / 10%);
+  color: rgb(255 255 255 / 50%);
+  transition: color var(--bw-motion-press);
 }
 
 .ind-hero__tab:last-child {
   border-right: 0;
 }
 
-.ind-hero__tab:hover,
-.ind-hero__tab:focus-visible {
-  color: var(--ind-fg);
-  background: var(--ind-panel);
-}
-
 .ind-hero__tab[data-active="true"] {
-  color: var(--ind-fg);
+  color: var(--bw-on-dark);
   box-shadow: inset 0 2px 0 var(--tab-accent);
 }
 
@@ -238,228 +236,11 @@
 }
 
 .ind-hero__tab-label {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
-/* ---------------------------------------------------------------
- * 버튼. 컨트롤 모서리 9px.
- * --------------------------------------------------------------- */
-
-.ind-btn {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.875rem;
-  padding-inline: 1.5rem;
-  border-radius: var(--ind-radius-control);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background var(--ind-motion-fast), border-color var(--ind-motion-fast);
-}
-
-.ind-btn--solid {
-  background: var(--ind-fg);
-  color: var(--ind-bg);
-}
-
-.ind-btn--solid:hover {
-  background: #fff;
-}
-
-.ind-btn--ghost {
-  border: 1px solid var(--ind-line-strong);
-  color: var(--ind-fg);
-}
-
-.ind-btn--ghost:hover {
-  border-color: var(--ind-fg-muted);
-  background: var(--ind-panel);
-}
-
-/* ---------------------------------------------------------------
- * 도메인 그리드.
- * --------------------------------------------------------------- */
-
-.ind-domains {
-  max-width: 1440px;
-  margin-inline: auto;
-  padding: 6rem 1.5rem;
-}
-
-.ind-domains__head {
-  margin-bottom: 3rem;
-}
-
-.ind-domains__head .ind-section-title {
-  margin-top: 0.75rem;
-}
-
-.ind-domains__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
-}
-
-.ind-domain {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 1.75rem;
-  background: var(--ind-panel);
-  border: 1px solid var(--ind-line);
-  border-radius: var(--ind-radius-card);
-  color: inherit;
-  text-decoration: none;
-  overflow: hidden;
-  transition: background var(--ind-motion-fast), border-color var(--ind-motion-fast), transform var(--ind-motion-fast);
-}
-
-.ind-domain:hover,
-.ind-domain:focus-visible {
-  background: var(--ind-panel-raised);
-  border-color: var(--domain-accent);
-  transform: translateY(-2px);
-}
-
-.ind-domain__bar {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 3px;
-  background: var(--domain-accent);
-}
-
-.ind-domain__count {
-  font-size: 2.75rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--domain-accent);
-}
-
-.ind-domain__count-unit {
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--ind-fg-dim);
-  margin-left: 0.375rem;
-}
-
-.ind-domain__name {
-  margin-top: 1.5rem;
-  font-size: 1.125rem;
-  font-weight: 700;
-}
-
-.ind-domain__subtitle {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--ind-fg-muted);
-}
-
-.ind-domain__list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1.75rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--ind-line);
-}
-
-.ind-domain__item {
-  font-size: 0.8125rem;
-  color: var(--ind-fg-dim);
-}
-
-/* ---------------------------------------------------------------
- * 기존 섹션을 산업 체계로 끌어온다.
- *
- * Header, Clients, 소식, CTA, Footer는 밝은 배경을 전제로 만들어져
- * 있다. 컴포넌트를 하나씩 다시 쓰는 대신 이 스코프 안에서 표면만
- * 바꾼다. ui-variants.css가 안별로 하는 것과 같은 방식이다.
- * --------------------------------------------------------------- */
-
-:root[data-design="industrial"] .bg-white,
-:root[data-design="industrial"] .bg-slate-50,
-:root[data-design="industrial"] .bg-slate-100,
-:root[data-design="industrial"] .bg-\[var\(--bw-color-surface\)\],
-:root[data-design="industrial"] .bg-\[var\(--bw-color-surface-muted\)\] {
-  background-color: var(--ind-panel) !important;
-}
-
-/* 헤더는 반투명을 유지하되 어두운 쪽으로 */
-:root[data-design="industrial"] .bw-header {
-  background: rgb(10 12 16 / 88%) !important;
-  border-bottom-color: var(--ind-line);
-}
-
-:root[data-design="industrial"] .bw-header__logo {
-  filter: brightness(0) invert(1);
-}
-
-/* 큰 면은 페이지 배경과 같게 두고 경계선으로만 구분한다 */
-:root[data-design="industrial"] section {
-  border-color: var(--ind-line);
-}
-
-:root[data-design="industrial"] .text-slate-900,
-:root[data-design="industrial"] .text-slate-800,
-:root[data-design="industrial"] .text-slate-700,
-:root[data-design="industrial"] .text-\[var\(--bw-color-ink\)\] {
-  color: var(--ind-fg) !important;
-}
-
-:root[data-design="industrial"] .text-slate-600,
-:root[data-design="industrial"] .text-slate-500,
-:root[data-design="industrial"] .text-slate-400,
-:root[data-design="industrial"] .text-\[var\(--bw-color-muted\)\] {
-  color: var(--ind-fg-muted) !important;
-}
-
-:root[data-design="industrial"] .border-slate-100,
-:root[data-design="industrial"] .border-slate-200,
-:root[data-design="industrial"] .border-slate-300,
-:root[data-design="industrial"] .border-\[var\(--bw-color-line\)\],
-:root[data-design="industrial"] .divide-slate-200 > * + * {
-  border-color: var(--ind-line) !important;
-}
-
-/* ink 배경 + 흰 글자 조합은 이 체계에서 반대로 뒤집힌다.
-   ink가 밝은 색이 아니므로 흰 글자를 그대로 두면 된다 */
-:root[data-design="industrial"] .bg-\[var\(--bw-color-ink\)\] {
-  background-color: var(--ind-panel-raised) !important;
-}
-
-/* 고객사 로고는 흰 바탕에 인쇄된 것이라 어두운 면에서 뜬다.
-   흰 패널을 유지하되 살짝 눌러 카드처럼 보이게 한다 */
-:root[data-design="industrial"] .bw-clients img,
-:root[data-design="industrial"] [class*="client"] img {
-  background: #fff;
-  border-radius: var(--ind-radius-control);
-}
-
-/* 브랜드 강조색은 제조 영역색으로 통일한다 */
-:root[data-design="industrial"] .text-\[var\(--bw-color-brand\)\] {
-  color: var(--ind-manufacturing) !important;
-}
-
-/* 고객사 로고는 파일마다 배경이 다르다. JPG는 흰 배경이 박혀 있고
-   투명 PNG는 어두운 면에서 사라진다. 셀마다 흰 판을 깔아 통일한다. */
-:root[data-design="industrial"] .bw-clients img {
-  background: #fff;
-  border-radius: var(--ind-radius-control);
-  padding: 0.75rem 1rem;
-  filter: none;
-}
-
-/* ---------------------------------------------------------------
- * 질문의 슬롯. 한 자리에서 치고 지운다.
- * 폭은 가장 긴 단어로 미리 잡아 문장이 튀지 않게 한다.
- * (Upstage가 네 단어를 전부 DOM에 넣어둔 것과 같은 이유)
- * --------------------------------------------------------------- */
-
+/* 타이핑 슬롯 */
 .ind-slot {
   color: var(--slot-accent);
   white-space: nowrap;
@@ -486,21 +267,192 @@
   }
 }
 
-.ind-hero__answer {
-  margin-top: 1.5rem;
-  max-width: 34rem;
-  animation: ind-rise 0.5s ease both;
+/* ---------------------------------------------------------------
+ * 버튼
+ * --------------------------------------------------------------- */
+
+.ind-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.875rem;
+  padding-inline: var(--bw-space-5);
+  border-radius: var(--bw-radius-control);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  transition:
+    background var(--bw-motion-press),
+    border-color var(--bw-motion-press);
 }
 
-/* 화면에서는 감추고 스크린리더에만 읽히는 완성 문장 */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+.ind-dark .ind-btn--solid {
+  background: var(--bw-on-dark);
+  color: var(--bw-surface-dark);
+}
+
+.ind-dark .ind-btn--ghost {
+  border: 1px solid rgb(255 255 255 / 28%);
+  color: var(--bw-on-dark);
+}
+
+.ind-dark .ind-btn--ghost:hover {
+  border-color: rgb(255 255 255 / 55%);
+  background: rgb(255 255 255 / 8%);
+}
+
+/* ---------------------------------------------------------------
+ * 도메인 그리드. 밝은 본문 위에 놓인다.
+ * --------------------------------------------------------------- */
+
+.ind-domains {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: var(--bw-space-9) var(--bw-space-5);
+}
+
+.ind-domains__head {
+  margin-bottom: var(--bw-space-7);
+}
+
+.ind-domains__head .ind-section-title {
+  margin-top: var(--bw-space-3);
+}
+
+.ind-domains__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--bw-space-4);
+}
+
+.ind-domain {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--bw-space-6) var(--bw-space-5);
+  background: var(--bw-surface);
+  border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius-card);
+  color: inherit;
+  text-decoration: none;
   overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
+  transition:
+    border-color var(--bw-motion-press),
+    box-shadow var(--bw-motion-press);
+}
+
+.ind-domain:hover,
+.ind-domain:focus-visible {
+  border-color: var(--domain-accent);
+  box-shadow: 0 8px 24px rgb(10 13 20 / 8%);
+}
+
+.ind-domain__bar {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: var(--domain-accent);
+}
+
+.ind-domain__count {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--domain-accent);
+}
+
+.ind-domain__count-unit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--bw-dim);
+  margin-left: var(--bw-space-1);
+}
+
+.ind-domain__name {
+  margin-top: var(--bw-space-5);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+.ind-domain__subtitle {
+  margin-top: var(--bw-space-2);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--bw-muted);
+}
+
+.ind-domain__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bw-space-2);
+  margin-top: var(--bw-space-5);
+  padding-top: var(--bw-space-4);
+  border-top: 1px solid var(--bw-line-subtle);
+}
+
+.ind-domain__item {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--bw-dim);
+}
+
+/* ---------------------------------------------------------------
+ * 기존 섹션. 본문은 밝게 두므로 표면을 뒤집지 않는다.
+ * 선과 보조 글자만 새 토큰에 맞춘다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-header {
+  background: rgb(255 255 255 / 90%);
+  border-bottom-color: var(--bw-line);
+}
+
+:root[data-design="industrial"] .border-slate-100,
+:root[data-design="industrial"] .border-slate-200,
+:root[data-design="industrial"] .border-slate-300 {
+  border-color: var(--bw-line) !important;
+}
+
+:root[data-design="industrial"] .text-slate-400,
+:root[data-design="industrial"] .text-slate-500,
+:root[data-design="industrial"] .text-slate-600 {
+  color: var(--bw-muted) !important;
+}
+
+/* 푸터는 어두운 구간이다. 원래 ink 배경을 쓰고 있어 표면만 맞춘다 */
+:root[data-design="industrial"] .bw-footer {
+  background: var(--bw-surface-dark) !important;
+}
+
+/* 고객사 구간은 보조 표면으로 본문과 구분한다 */
+:root[data-design="industrial"] .bw-clients {
+  background: var(--bw-surface-muted) !important;
+}
+
+/* 어두운 구간 안에서는 보조 글자를 밝은 쪽으로 뒤집는다.
+   위의 --bw-muted(#52525b)를 그대로 두면 #191722 배경에서 대비가 2:1도
+   안 된다. 밝은 본문 기준으로 만든 규칙이 어두운 구간까지 덮은 탓이다. */
+:root[data-design="industrial"] .bw-footer .text-slate-200,
+:root[data-design="industrial"] .bw-footer .text-slate-300,
+:root[data-design="industrial"] .bw-footer .text-slate-400,
+:root[data-design="industrial"] .bw-footer .text-slate-500,
+:root[data-design="industrial"] .ind-dark .text-slate-400,
+:root[data-design="industrial"] .ind-dark .text-slate-500,
+:root[data-design="industrial"] .ind-dark .text-slate-600 {
+  color: rgb(255 255 255 / 68%) !important;
+}
+
+:root[data-design="industrial"] .bw-footer .border-slate-800,
+:root[data-design="industrial"] .bw-footer .border-white\/10 {
+  border-color: rgb(255 255 255 / 14%) !important;
+}
+
+/* 어두운 면은 한 값으로 통일한다. CTA 블록이 기존 ink를 쓰고 있어
+   히어로·푸터와 미묘하게 달랐다 */
+:root[data-design="industrial"] .bg-\[var\(--bw-color-ink\)\] {
+  background-color: var(--bw-surface-dark) !important;
 }

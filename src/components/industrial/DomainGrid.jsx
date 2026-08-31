@@ -14,10 +14,10 @@ import { useLocale } from "@/shared/routing/useLocale";
  */
 
 const ACCENT = {
-  manufacturing: "var(--ind-manufacturing)",
-  agent: "var(--ind-agent)",
-  healthcare: "var(--ind-healthcare)",
-  smartcity: "var(--ind-smartcity)",
+  manufacturing: "var(--bw-manufacturing)",
+  agent: "var(--bw-agent)",
+  healthcare: "var(--bw-healthcare)",
+  smartcity: "var(--bw-smartcity)",
 };
 
 export default function DomainGrid() {

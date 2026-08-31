@@ -21,7 +21,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 const SLOTS = [
   {
     id: "manufacturing",
-    accent: "var(--ind-manufacturing)",
+    accent: "var(--bw-manufacturing)",
     site: { ko: "제조 현장", en: "the factory floor" },
     answer: {
       ko: "진동, 불량, 수율, 환경 네 가지로 풀었습니다.",
@@ -31,7 +31,7 @@ const SLOTS = [
   },
   {
     id: "healthcare",
-    accent: "var(--ind-healthcare)",
+    accent: "var(--bw-healthcare)",
     site: { ko: "진료 현장", en: "the clinic" },
     answer: {
       ko: "심전도와 치과 영상 판독을 자동화했습니다.",
@@ -41,7 +41,7 @@ const SLOTS = [
   },
   {
     id: "smartcity",
-    accent: "var(--ind-smartcity)",
+    accent: "var(--bw-smartcity)",
     site: { ko: "도시 관제", en: "city operations" },
     answer: {
       ko: "위치, 이륜차, 드론 기록을 한 화면에 모았습니다.",
@@ -51,7 +51,7 @@ const SLOTS = [
   },
   {
     id: "agent",
-    accent: "var(--ind-agent)",
+    accent: "var(--bw-agent)",
     site: { ko: "고객 응대", en: "customer support" },
     answer: {
       ko: "상담과 교육 문의를 sLLM 에이전트가 받습니다.",
@@ -146,7 +146,7 @@ export default function IndustrialHero() {
 
   return (
     <section
-      className="ind-hero"
+      className="ind-hero ind-dark"
       role="region"
       aria-label={language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"}
     >

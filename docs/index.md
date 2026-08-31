@@ -21,6 +21,7 @@ sources:
 - [개발 문서 인덱스](planning/00-development-document-index.md): 홈페이지 재구축 계획 문서의 단계와 검토 순서를 안내합니다.
 - [멘토님 미팅 기준 홈페이지 개편 범위](planning/00-mentor-meeting-scope.md): Clova Note 원문에서 확인한 관리자 대상과 제외 대상을 정리합니다.
 - [홈페이지 개편 제품 기획](planning/07-homepage-product-strategy-as-is-to-be.md): 개편의 AS-IS와 TO-BE, 제품 가설, 성공 정의, 에픽과 사용자 스토리를 연결합니다.
+- [브레인웍스 디자인 시스템](planning/08-design-system.md): 브랜드 포지셔닝과 Voice를 먼저 정의하고 그 위에 색·타이포·간격 토큰을 얹는 design.md입니다.
 - [콘텐츠·자산 준비도 감사](planning/06-content-and-asset-readiness-audit.md): 실제 배포 콘텐츠, 이미지, 관계, 라이선스와 회사 승인 결손을 판정합니다.
 - [멘토님 자료 요청 메시지](planning/06-01-mentor-content-request.md): 감사에서 확인된 결손을 회사 담당자에게 요청하는 전달문과 회신 양식입니다.
 
