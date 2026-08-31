@@ -383,6 +383,8 @@
 }
 
 .ind-domain__count {
+  /* 썸네일과 붙어 보여 한 단 띄운다 */
+  margin-top: var(--bw-space-6);
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1;
