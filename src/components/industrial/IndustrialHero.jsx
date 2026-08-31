@@ -65,16 +65,42 @@ const TYPE_MS = 80;
 const ERASE_MS = 40;
 const HOLD_MS = 2400;
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
+/*
+ * 승인 명세 7.2: 일시 정지를 단일 불리언으로 관리하지 않는다.
+ * 원인을 구분해 하나가 풀려도 다른 원인이 남아 있으면 재생하지 않는다.
+ * 여기서 다루는 원인은 포인터, 키보드 초점, 문서 숨김, 동작 줄이기다.
+ */
+function usePauseCauses() {
+  const [causes, setCauses] = useState({
+    pointer: false,
+    focus: false,
+    hidden: false,
+    reduced: false,
+  });
+
+  const set = (key, value) =>
+    setCauses((prev) => (prev[key] === value ? prev : { ...prev, [key]: value }));
+
   useEffect(() => {
-    const q = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(q.matches);
-    const on = (e) => setReduced(e.matches);
-    q.addEventListener("change", on);
-    return () => q.removeEventListener("change", on);
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotion = (e) => set("reduced", e.matches);
+    const onVisibility = () => set("hidden", document.hidden);
+
+    set("reduced", motion.matches);
+    set("hidden", document.hidden);
+    motion.addEventListener("change", onMotion);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      motion.removeEventListener("change", onMotion);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
-  return reduced;
+
+  return {
+    paused: Object.values(causes).some(Boolean),
+    reduced: causes.reduced,
+    set,
+  };
 }
 
 /*
@@ -84,14 +110,14 @@ function usePrefersReducedMotion() {
  * 아무 상태도 바꾸지 않아 효과가 다시 돌지 않고 그대로 멈춘다.
  * 모든 단계가 반드시 상태를 하나 바꾸도록 만든다.
  */
-function useTypedSlot(words, reduced) {
+function useTypedSlot(words, paused) {
   const [index, setIndex] = useState(0);
   const [typed, setTyped] = useState(words[0]);
   const [phase, setPhase] = useState("hold");
   const key = words.join("|");
 
   useEffect(() => {
-    if (reduced) return undefined;
+    if (paused) return undefined;
 
     const word = words[index];
     let delay;
@@ -121,16 +147,24 @@ function useTypedSlot(words, reduced) {
 
     const timer = setTimeout(step, delay);
     return () => clearTimeout(timer);
-  }, [phase, typed, index, reduced, key, words]);
+  }, [phase, typed, index, paused, key, words]);
 
-  return { index, typed };
+  /* 7.3 직접 선택. 다시 타이핑하지 않고 완성된 상태로 바로 보여준다.
+     수동 일시 정지 상태를 해제하지 않는다. */
+  const goTo = (next) => {
+    setIndex(next);
+    setTyped(words[next]);
+    setPhase("hold");
+  };
+
+  return { index, typed, goTo };
 }
 
 export default function IndustrialHero() {
   const { language } = useLocale();
-  const reduced = usePrefersReducedMotion();
+  const { paused, reduced, set: setPause } = usePauseCauses();
   const words = useMemo(() => SLOTS.map((s) => s.site[language]), [language]);
-  const { index, typed } = useTypedSlot(words, reduced);
+  const { index, typed, goTo } = useTypedSlot(words, paused);
   const slot = SLOTS[index];
 
   const question =
@@ -149,6 +183,10 @@ export default function IndustrialHero() {
       className="ind-hero ind-dark"
       role="region"
       aria-label={language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"}
+      onPointerEnter={() => setPause("pointer", true)}
+      onPointerLeave={() => setPause("pointer", false)}
+      onFocusCapture={() => setPause("focus", true)}
+      onBlurCapture={() => setPause("focus", false)}
     >
       <div className="ind-grid-bg" aria-hidden="true" />
 
@@ -191,22 +229,26 @@ export default function IndustrialHero() {
         </div>
       </div>
 
+      {/* 7.3 직접 선택. 자동 재생만으로는 원하는 현장을 볼 수 없다 */}
       <div className="ind-hero__rail">
         {SLOTS.map((s, i) => (
-          <span
+          <button
             key={s.id}
+            type="button"
             className="ind-hero__tab"
             data-active={i === index}
             style={{ "--tab-accent": s.accent }}
-            aria-hidden="true"
+            aria-current={i === index ? "true" : undefined}
+            onClick={() => goTo(i)}
           >
-            <span className="ind-hero__tab-index">
+            <span className="ind-hero__tab-index" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="ind-hero__tab-label">{s.site[language]}</span>
-          </span>
+          </button>
         ))}
       </div>
+
     </section>
   );
 }

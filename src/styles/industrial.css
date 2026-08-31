@@ -217,9 +217,26 @@
   align-items: baseline;
   gap: var(--bw-space-3);
   padding: var(--bw-space-5);
+  background: none;
+  border: 0;
   border-right: 1px solid rgb(255 255 255 / 10%);
   color: rgb(255 255 255 / 50%);
-  transition: color var(--bw-motion-press);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--bw-motion-press),
+    background var(--bw-motion-press);
+}
+
+.ind-hero__tab:hover {
+  color: var(--bw-on-dark);
+  background: rgb(255 255 255 / 5%);
+}
+
+.ind-hero__tab:focus-visible {
+  outline: 2px solid var(--tab-accent);
+  outline-offset: -2px;
+  color: var(--bw-on-dark);
 }
 
 .ind-hero__tab:last-child {
