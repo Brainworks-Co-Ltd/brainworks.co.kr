@@ -7,19 +7,73 @@ import { ProgressTrack } from "@/components/ui/progress-track";
 
 const AUTO_ADVANCE_MS = 6000;
 
+// 히어로는 회사 소개가 아니라 실제로 만든 것을 보여준다.
+// shot은 우리가 이미 가진 솔루션 화면이고, src는 기존 배경 미디어다.
+const HERO_MEDIA = "/images/hero-animation.gif";
+const HERO_POSTER = "/images/대표사진.png";
+
 const defaultScenes = [
   {
-    id: "brainworks-ai-ax",
+    id: "manufacturing-yield",
     title: {
-      ko: "AI와 AX의 시작,\n브레인웍스에서",
-      en: "AI & AX innovation starts here",
+      ko: "불량을 만들기 전에\n예측합니다",
+      en: "Predict defects\nbefore they happen",
     },
     description: {
-      ko: "당신의 비즈니스를 다음 단계로 이끄는 AI 딥테크 솔루션",
-      en: "AI deep-tech solutions that move your business forward.",
+      ko: "제조 공정 데이터로 수율을 실시간 예측하는 AI",
+      en: "AI that predicts yield in real time from process data.",
     },
-    src: "/images/hero-animation.gif",
-    poster: "/images/대표사진.png",
+    shot: "/images/hero/yield.webp",
+    shotAlt: {
+      ko: "AI 수율 예측 솔루션 화면",
+      en: "AI yield prediction solution screen",
+    },
+    src: HERO_MEDIA,
+    poster: HERO_POSTER,
+    alt: {
+      ko: "브레인웍스 AI 기술 소개 애니메이션",
+      en: "Brainworks AI technology animation",
+    },
+  },
+  {
+    id: "healthcare-ecg",
+    title: {
+      ko: "심전도 판독을\n자동화합니다",
+      en: "Automate\nECG reading",
+    },
+    description: {
+      ko: "웨어러블 심전도 데이터를 분석하는 헬스케어 AI",
+      en: "Healthcare AI that analyses wearable ECG data.",
+    },
+    shot: "/images/hero/ecg.webp",
+    shotAlt: {
+      ko: "AI 심전도 분석 기기와 판독 리포트",
+      en: "AI ECG analysis device and report",
+    },
+    src: HERO_MEDIA,
+    poster: HERO_POSTER,
+    alt: {
+      ko: "브레인웍스 AI 기술 소개 애니메이션",
+      en: "Brainworks AI technology animation",
+    },
+  },
+  {
+    id: "agent-translate",
+    title: {
+      ko: "말하는 즉시\n번역됩니다",
+      en: "Translated\nas you speak",
+    },
+    description: {
+      ko: "강의와 회의를 실시간 통역하는 sLLM 기반 AI 에이전트",
+      en: "An sLLM-based AI agent that interprets lectures in real time.",
+    },
+    shot: "/images/hero/translate.webp",
+    shotAlt: {
+      ko: "실시간 강의 번역 솔루션 화면",
+      en: "Real-time lecture translation solution screen",
+    },
+    src: HERO_MEDIA,
+    poster: HERO_POSTER,
     alt: {
       ko: "브레인웍스 AI 기술 소개 애니메이션",
       en: "Brainworks AI technology animation",
@@ -37,6 +91,8 @@ const defaultScenes = [
  * @property {string} src
  * @property {string} [poster]
  * @property {LocalizedText} [alt]
+ * @property {string} [shot]
+ * @property {LocalizedText} [shotAlt]
  */
 
 function useReducedMotionPreference() {
@@ -115,6 +171,10 @@ export default function HomeHero({ scenes = defaultScenes }) {
       : scene.description[language];
   const alt =
     typeof scene.alt === "string" ? scene.alt : scene.alt?.[language] || title;
+  const shotAlt =
+    typeof scene.shotAlt === "string"
+      ? scene.shotAlt
+      : scene.shotAlt?.[language] || "";
   const multipleScenes = resolvedScenes.length > 1;
 
   const selectScene = (index) => {
@@ -143,17 +203,35 @@ export default function HomeHero({ scenes = defaultScenes }) {
         />
       </div>
 
-      <div className="mx-auto flex min-h-[680px] max-w-[1440px] items-end px-6 pb-14 pt-32 md:pb-20">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[var(--bw-color-brand)]">
-            {language === "ko" ? "Brainworks AI & AX" : "Brainworks AI & AX"}
-          </p>
-          <h1 className="mt-5 whitespace-pre-line text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-7xl">
-            {title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
-            {description}
-          </p>
+      {/* 솔루션 화면. 기본과 C안에서는 숨기고 A안에서만 우측에 세운다. */}
+      {scene.shot ? (
+        <div
+          className="bw-home-hero__shot absolute right-[4%] top-1/2 hidden w-[44%] max-w-[660px] -translate-y-1/2"
+          aria-hidden="true"
+        >
+          <img
+            key={scene.id}
+            src={scene.shot}
+            alt={shotAlt}
+            className="bw-hero-fade w-full rounded-[var(--bw-radius-feature)] shadow-[0_30px_80px_rgb(0_0_0/35%)]"
+          />
+        </div>
+      ) : null}
+
+      <div className="bw-home-hero__inner mx-auto flex min-h-[680px] max-w-[1440px] items-end px-6 pb-14 pt-32 md:pb-20">
+        <div className="bw-home-hero__copy max-w-3xl">
+          {/* 장면이 바뀔 때만 다시 붙어 서서히 나타난다 */}
+          <div key={scene.id} className="bw-hero-fade">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[var(--bw-color-brand)]">
+              {language === "ko" ? "Brainworks AI & AX" : "Brainworks AI & AX"}
+            </p>
+            <h1 className="mt-5 whitespace-pre-line text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-7xl">
+              {title}
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
+              {description}
+            </p>
+          </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/services"
