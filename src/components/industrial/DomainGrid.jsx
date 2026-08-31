@@ -5,19 +5,19 @@ import { useLocale } from "@/shared/routing/useLocale";
 /*
  * 사업 영역을 캐러셀에서 4단 그리드로 바꾼다.
  *
- * 캐러셀은 한 번에 하나만 보여준다. 방문자가 자기 분야를 찾으려면
- * 돌려봐야 한다. 실측한 다섯 곳 모두 분야별 진입 경로를 한 화면에
- * 펼쳐 두었다. 네 영역이 동시에 보이는 편이 목적에 맞다.
+ * 캐러셀은 한 번에 하나만 보여준다. 방문자가 자기 분야를 찾으려면 돌려봐야
+ * 한다. 실측한 다섯 곳 모두 분야별 진입 경로를 한 화면에 펼쳐 두었다.
  *
- * 영역색은 카드마다 하나씩만 쓴다. 고채도 색을 하나로 제한하는 것이
- * 여섯 곳의 공통 문법이었다.
+ * 영역마다 고유색을 주지 않는다 (design.md 2.3). 색으로 넷을 구분하면
+ * 브랜드 색이 사라지고 화면이 무지개가 된다. 대신 각 영역의 제품 화면으로
+ * 구분한다. 영역의 정체성은 스크린샷 그 자체다.
  */
 
-const ACCENT = {
-  manufacturing: "var(--bw-manufacturing)",
-  agent: "var(--bw-agent)",
-  healthcare: "var(--bw-healthcare)",
-  smartcity: "var(--bw-smartcity)",
+const SHOT = {
+  manufacturing: "/images/services/hero/manufacturing.webp",
+  agent: "/images/services/hero/agent.webp",
+  healthcare: "/images/services/hero/healthcare.webp",
+  smartcity: "/images/services/hero/smartcity.webp",
 };
 
 export default function DomainGrid() {
@@ -40,9 +40,10 @@ export default function DomainGrid() {
             key={area.id}
             href={`/services?area=${area.id}`}
             className="ind-domain"
-            style={{ "--domain-accent": ACCENT[area.id] }}
           >
-            <span className="ind-domain__bar" aria-hidden="true" />
+            {SHOT[area.id] ? (
+              <img className="ind-domain__shot" src={SHOT[area.id]} alt="" />
+            ) : null}
 
             <span className="ind-domain__count">
               {area.solutions.length}

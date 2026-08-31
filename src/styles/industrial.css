@@ -9,30 +9,23 @@
  */
 
 :root[data-design="industrial"] {
-  /* 2.2 색 — Upstage 실측 */
+  /* 2.2 색 — 크롬은 거의 무채색. 채도는 제품 화면이 담당한다 */
   --bw-surface: #ffffff;
-  --bw-surface-muted: #f9fafb;
-  --bw-surface-dark: #191722;
-  --bw-surface-dark-deep: #151727;
+  --bw-surface-muted: #f7f8f9;
+  --bw-surface-dark: #0e1013;
+  --bw-surface-dark-deep: #181b21;
 
-  --bw-ink: #0a0d14;
-  --bw-muted: #52525b;
-  --bw-dim: #70757f;
+  --bw-ink: #16181d;
+  --bw-muted: #5b6068;
+  --bw-dim: #7e838b;
   --bw-on-dark: #ffffff;
 
-  --bw-line: #e2e4e9;
-  --bw-line-subtle: #eff0f6;
-  --bw-line-strong: #cdd0d5;
+  --bw-line: #e4e6e9;
+  --bw-line-strong: #cfd2d7;
 
-  /* 브랜드는 브레인웍스 기존 값 */
+  /* 2.2.1 골드는 로고 색이다. 밝은 면에서 UI 요소로 쓰지 않는다.
+     상호작용 색은 골드가 아니라 잉크가 맡는다 */
   --bw-brand: #d29b15;
-  --bw-brand-strong: #9b700d;
-
-  /* 2.3 영역색 */
-  --bw-manufacturing: #2b7fd4;
-  --bw-agent: #8b5cf6;
-  --bw-healthcare: #0f9d6e;
-  --bw-smartcity: #c77800;
 
   /* 2.5 모서리 */
   --bw-radius-control: 9px;
@@ -226,13 +219,13 @@
 
 .ind-hero__tab[data-active="true"] {
   color: var(--bw-on-dark);
-  box-shadow: inset 0 2px 0 var(--tab-accent);
+  box-shadow: inset 0 2px 0 var(--bw-brand);
 }
 
 .ind-hero__tab-index {
   font-size: 0.75rem;
   letter-spacing: 0.1em;
-  color: var(--tab-accent);
+  color: var(--bw-brand);
 }
 
 .ind-hero__tab-label {
@@ -242,7 +235,7 @@
 
 /* 타이핑 슬롯 */
 .ind-slot {
-  color: var(--slot-accent);
+  color: var(--bw-brand);
   white-space: nowrap;
 }
 
@@ -343,16 +336,19 @@
 
 .ind-domain:hover,
 .ind-domain:focus-visible {
-  border-color: var(--domain-accent);
-  box-shadow: 0 8px 24px rgb(10 13 20 / 8%);
+  border-color: var(--bw-line-strong);
+  box-shadow: 0 8px 24px rgb(22 24 29 / 8%);
 }
 
-.ind-domain__bar {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 3px;
-  background: var(--domain-accent);
+/* 영역 구분은 색이 아니라 제품 화면이 한다 (2.3) */
+.ind-domain__shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--bw-radius-control);
+  border: 1px solid var(--bw-line);
+  background: var(--bw-surface-muted);
 }
 
 .ind-domain__count {
@@ -360,7 +356,7 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--domain-accent);
+  color: var(--bw-ink);
 }
 
 .ind-domain__count-unit {
@@ -392,13 +388,14 @@
   gap: var(--bw-space-2);
   margin-top: var(--bw-space-5);
   padding-top: var(--bw-space-4);
-  border-top: 1px solid var(--bw-line-subtle);
+  border-top: 1px solid var(--bw-line);
 }
 
 .ind-domain__item {
   font-size: 0.8125rem;
   line-height: 1.6;
-  color: var(--bw-dim);
+  /* dim은 3.81이라 본문 크기에 못 쓴다 (2.2). 솔루션명은 읽는 글자다 */
+  color: var(--bw-muted);
 }
 
 /* ---------------------------------------------------------------
