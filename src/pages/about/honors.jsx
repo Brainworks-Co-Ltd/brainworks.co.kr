@@ -79,7 +79,7 @@ export default function HonorsPage({
                         key={[award.slug || award.title.ko, award.year].join(
                           "-",
                         )}
-                        className="grid gap-6 bg-white py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
+                        className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
                       >
                         <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
                           {award.image ? (
@@ -127,7 +127,7 @@ export default function HonorsPage({
                         key={[cert.slug || cert.title.ko, cert.org.ko].join(
                           "-",
                         )}
-                        className="grid gap-6 bg-white py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
+                        className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
                       >
                         <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
                           <Image
