@@ -64,7 +64,7 @@ describe("공개 셸 내비게이션", () => {
     ).toBeVisible();
     expect(
       screen.getByRole("img", { name: "Manufacturing AI" }),
-    ).toHaveAttribute("src", "/images/services/제조AI.jpg");
+    ).toHaveAttribute("src", "/images/services/hero/manufacturing.webp");
     expect(screen.getByRole("heading", { name: "AI 사업 분야" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "서비스" })).toBeVisible();
     expect(screen.getByRole("link", { name: "AI 컨설팅" })).toHaveAttribute(
@@ -84,7 +84,7 @@ describe("공개 셸 내비게이션", () => {
 
     expect(
       screen.getByRole("img", { name: "sLLM base AI Agent" }),
-    ).toHaveAttribute("src", "/images/services/AIagent.jpg");
+    ).toHaveAttribute("src", "/images/services/hero/agent.webp");
   });
 
   it("Footer가 Header와 같은 세 그룹을 제공한다", () => {

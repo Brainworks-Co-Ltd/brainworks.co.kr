@@ -64,7 +64,7 @@ describe("공개 내비게이션 계약", () => {
     ]);
     expect(business.megaMenu?.areas[0]).toMatchObject({
       href: "/services?area=manufacturing",
-      image: "/images/services/제조AI.jpg",
+      image: "/images/services/hero/manufacturing.webp",
     });
     expect(business.megaMenu?.services.map((service) => service.href)).toEqual([
       "/consulting",
