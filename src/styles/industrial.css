@@ -481,3 +481,54 @@
   padding: 0.75rem 1rem;
   filter: none;
 }
+
+/* ---------------------------------------------------------------
+ * 질문의 슬롯. 한 자리에서 치고 지운다.
+ * 폭은 가장 긴 단어로 미리 잡아 문장이 튀지 않게 한다.
+ * (Upstage가 네 단어를 전부 DOM에 넣어둔 것과 같은 이유)
+ * --------------------------------------------------------------- */
+
+.ind-slot {
+  color: var(--slot-accent);
+  white-space: nowrap;
+}
+
+.ind-slot__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.95em;
+  margin-left: 0.06em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  animation: ind-caret 1s steps(1) infinite;
+}
+
+@keyframes ind-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.ind-hero__answer {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  animation: ind-rise 0.5s ease both;
+}
+
+/* 화면에서는 감추고 스크린리더에만 읽히는 완성 문장 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
