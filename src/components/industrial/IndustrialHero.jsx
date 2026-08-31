@@ -21,6 +21,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 const SLOTS = [
   {
     id: "manufacturing",
+    accent: "var(--bw-slot-manufacturing)",
     site: { ko: "제조 현장", en: "the factory floor" },
     answer: {
       ko: "진동, 불량, 수율, 환경 네 가지로 풀었습니다.",
@@ -30,6 +31,7 @@ const SLOTS = [
   },
   {
     id: "healthcare",
+    accent: "var(--bw-slot-healthcare)",
     site: { ko: "진료 현장", en: "the clinic" },
     answer: {
       ko: "심전도와 치과 영상 판독을 자동화했습니다.",
@@ -39,6 +41,7 @@ const SLOTS = [
   },
   {
     id: "smartcity",
+    accent: "var(--bw-slot-smartcity)",
     site: { ko: "도시 관제", en: "city operations" },
     answer: {
       ko: "위치, 이륜차, 드론 기록을 한 화면에 모았습니다.",
@@ -48,6 +51,7 @@ const SLOTS = [
   },
   {
     id: "agent",
+    accent: "var(--bw-slot-agent)",
     site: { ko: "고객 응대", en: "customer support" },
     answer: {
       ko: "실시간 음성 통역과 교육 Q&A를 에이전트로 만들었습니다.",
@@ -160,7 +164,7 @@ export default function IndustrialHero() {
                 단어가 바뀔 때 문장이 튀지 않고, 고정하면 타이핑 중에
                 빈 공간만 벌어진다. 뒤 문장이 커서를 따라오게 둔다.
               */}
-              <span className="ind-slot">
+              <span className="ind-slot" style={{ "--slot-accent": slot.accent }}>
                 {typed}
                 {reduced ? null : <i className="ind-slot__caret" />}
               </span>
@@ -193,6 +197,7 @@ export default function IndustrialHero() {
             key={s.id}
             className="ind-hero__tab"
             data-active={i === index}
+            style={{ "--tab-accent": s.accent }}
             aria-hidden="true"
           >
             <span className="ind-hero__tab-index">
