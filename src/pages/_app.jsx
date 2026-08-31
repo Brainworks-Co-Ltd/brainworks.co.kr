@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import "@/styles/globals.css";
 import "@/styles/ui-variants.css";
+import "@/styles/industrial.css";
 import { SkipLink } from "@/components/public/SkipLink";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 

@@ -17,8 +17,10 @@ export default class BrainworksDocument extends Document {
         ? "en"
         : "ko";
 
+    // data-design은 서버에서 붙인다. 어두운 배경이라 클라이언트에서
+    // 붙이면 첫 프레임에 흰 화면이 번쩍인다.
     return (
-      <Html lang={locale}>
+      <Html lang={locale} data-design="industrial">
         <Head />
         <body>
           <Main />

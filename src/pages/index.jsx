@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
-import HomeHero from "@/components/HomeHero";
-import BusinessAreaCarousel from "@/components/home/BusinessAreaCarousel";
+import IndustrialHero from "@/components/industrial/IndustrialHero";
+import DomainGrid from "@/components/industrial/DomainGrid";
 import LatestNews from "@/components/home/LatestNews";
 import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
@@ -17,9 +17,9 @@ export default function Home({ newsItems, popupNotices, areas }) {
       <Header />
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
-        <HomeHero />
+        <IndustrialHero />
         <Clients />
-        <BusinessAreaCarousel areas={areas} />
+        <DomainGrid />
         <LatestNews items={newsItems} />
         <CTA />
       </main>

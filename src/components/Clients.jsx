@@ -27,7 +27,7 @@ export default function Clients() {
   return (
     <section
       id="clients"
-      className="border-y border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] py-20 text-[var(--bw-color-ink)] md:py-28"
+      className="bw-clients border-y border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] py-20 text-[var(--bw-color-ink)] md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeader
