@@ -50,8 +50,8 @@ const SLOTS = [
     id: "agent",
     site: { ko: "고객 응대", en: "customer support" },
     answer: {
-      ko: "상담과 교육 문의를 sLLM 에이전트가 받습니다.",
-      en: "An sLLM agent handles support and course enquiries.",
+      ko: "실시간 음성 통역과 교육 Q&A를 에이전트로 만들었습니다.",
+      en: "We built agents for live interpretation and course Q&A.",
     },
     shot: "/images/services/hero/agent.webp",
   },

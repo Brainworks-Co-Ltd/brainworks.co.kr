@@ -25,12 +25,17 @@ export default function DomainGrid() {
 
   return (
     <section className="ind-domains" aria-labelledby="ind-domains-title">
+      {/*
+        문구를 새로 짓지 않는다. 기존 BusinessAreaCarousel이 쓰던 것을
+        그대로 쓴다. 앞서 쓴 "네 영역에서 실제로 돌고 있습니다"는 도입
+        실적 주장이라 06 감사의 회사 승인 대기 상태와도 어긋났다.
+      */}
       <header className="ind-domains__head">
-        <p className="ind-eyebrow">Business Domains</p>
+        <p className="ind-eyebrow">
+          {language === "ko" ? "브레인웍스 사업 분야" : "Brainworks domains"}
+        </p>
         <h2 id="ind-domains-title" className="ind-section-title">
-          {language === "ko"
-            ? "네 영역에서 실제로 돌고 있습니다"
-            : "Running in four domains"}
+          {language === "ko" ? "핵심 AI 사업 분야" : "Core AI business domains"}
         </h2>
       </header>
 

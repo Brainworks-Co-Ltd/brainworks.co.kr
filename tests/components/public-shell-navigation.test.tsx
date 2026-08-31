@@ -52,7 +52,7 @@ describe("공개 셸 내비게이션", () => {
     expect(screen.getByRole("region", { name: "소식 하위 메뉴" })).toBeVisible();
   });
 
-  it("사업 영역 메가메뉴가 대표 이미지와 두 메뉴 열을 제공한다", async () => {
+  it("사업 영역 메가메뉴가 활성 영역 이름과 두 메뉴 열을 제공한다", async () => {
     const user = userEvent.setup();
 
     render(<Header />);
@@ -62,9 +62,7 @@ describe("공개 셸 내비게이션", () => {
     expect(
       screen.getByRole("region", { name: "사업 영역 하위 메뉴" }),
     ).toBeVisible();
-    expect(
-      screen.getByRole("img", { name: "Manufacturing AI" }),
-    ).toHaveAttribute("src", "/images/services/hero/manufacturing.webp");
+    expect(screen.getAllByText("Manufacturing AI").length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { name: "AI 사업 분야" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "서비스" })).toBeVisible();
     expect(screen.getByRole("link", { name: "AI 컨설팅" })).toHaveAttribute(
@@ -73,7 +71,7 @@ describe("공개 셸 내비게이션", () => {
     );
   });
 
-  it("사업 분야에 포커스하면 대표 이미지가 해당 자산으로 바뀐다", async () => {
+  it("사업 분야에 포커스하면 패널의 영역 이름이 바뀐다", async () => {
     const user = userEvent.setup();
 
     render(<Header />);
@@ -83,8 +81,8 @@ describe("공개 셸 내비게이션", () => {
     );
 
     expect(
-      screen.getByRole("img", { name: "sLLM base AI Agent" }),
-    ).toHaveAttribute("src", "/images/services/hero/agent.webp");
+      screen.getAllByText("sLLM base AI Agent").length,
+    ).toBeGreaterThan(1);
   });
 
   it("Footer가 Header와 같은 세 그룹을 제공한다", () => {

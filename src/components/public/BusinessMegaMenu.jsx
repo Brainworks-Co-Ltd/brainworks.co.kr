@@ -12,18 +12,15 @@ export function BusinessMegaMenu({
   panelLabel,
 }) {
   const [activeAreaId, setActiveAreaId] = useState(menu.areas[0]?.id || "");
-  const [failedImage, setFailedImage] = useState("");
   const activeArea =
     menu.areas.find((area) => area.id === activeAreaId) || menu.areas[0];
 
   useEffect(() => {
     setActiveAreaId(menu.areas[0]?.id || "");
-    setFailedImage("");
   }, [menu]);
 
   const selectArea = (area) => {
     setActiveAreaId(area.id);
-    setFailedImage("");
   };
 
   return (
@@ -40,29 +37,20 @@ export function BusinessMegaMenu({
         onClick={onClose}
         className="group overflow-hidden rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] transition hover:border-[var(--bw-color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
       >
-        <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bw-color-surface)]">
-          {activeArea && failedImage !== activeArea.image ? (
-            <img
-              src={activeArea.image}
-              alt={activeArea.alt}
-              loading="eager"
-              onError={() => setFailedImage(activeArea.image)}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
-            />
-          ) : (
-            <div
-              role="img"
-              aria-label={
-                activeArea?.alt ||
-                (menu.featured.label === "AI 솔루션"
-                  ? "AI 솔루션"
-                  : menu.featured.label)
-              }
-              className="flex h-full items-center justify-center px-6 text-center text-sm font-semibold text-[var(--bw-color-muted)]"
-            >
-              {menu.featured.label}
-            </div>
-          )}
+        {/*
+          썸네일을 두지 않는다. 사업 영역 이미지가 서로 다른 자산을 이어붙인
+          콜라주라 이 크기로 줄이면 조각이 100px가 되어 아무것도 읽히지 않고,
+          남는 인상이 낡은 소프트웨어와 스톡 목업이다.
+          design.md 1.1의 "근거가 없는 구간은 채우지 않고 비운다"를 따른다.
+          Linear와 Vercel의 내비게이션 메뉴도 텍스트만 쓴다.
+        */}
+        <div className="flex aspect-[4/3] flex-col justify-end p-6">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--bw-color-muted)]">
+            {menu.featured.label}
+          </span>
+          <span className="mt-2 text-2xl font-semibold leading-snug text-[var(--bw-color-ink)]">
+            {activeArea ? activeArea.label : menu.featured.label}
+          </span>
         </div>
         <div className="flex items-center justify-between gap-4 p-5">
           <span className="text-lg font-semibold text-[var(--bw-color-ink)]">

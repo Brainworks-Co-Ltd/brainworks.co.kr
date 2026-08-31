@@ -5,8 +5,6 @@ export type BusinessMegaMenuArea = {
   id: string;
   label: string;
   href: string;
-  image: string;
-  alt: string;
 };
 
 export type BusinessMegaMenuService = {
@@ -46,8 +44,6 @@ export function buildBusinessMegaMenu(
       id: area.id,
       label: area.title,
       href: `${getLocalizedPath("solutions.list", locale)}?area=${encodeURIComponent(area.id)}`,
-      image: area.heroImage,
-      alt: area.title,
     })),
     services,
   };
