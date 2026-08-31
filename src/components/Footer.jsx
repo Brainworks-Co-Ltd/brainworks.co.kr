@@ -54,7 +54,7 @@ export default function Footer() {
   const contact = navigation.find((item) => item.id === "contact");
 
   return (
-    <footer className="bg-[var(--bw-color-ink)] text-slate-200">
+    <footer className="bw-footer bg-[var(--bw-color-ink)] text-slate-200">
       <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-14">
         <div className="grid gap-10 md:grid-cols-[minmax(0,_1fr)_minmax(0,_0.6fr)]">
           <div className="space-y-6">

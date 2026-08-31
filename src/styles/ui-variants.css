@@ -1,0 +1,187 @@
+/*
+ * 홈페이지 UI 방향 후보 3안.
+ * 발표용 비교를 위해 `?ui=a|b|c` 로 전환한다. 파라미터가 없으면 현재 디자인을 유지한다.
+ * 각 안은 외부 레퍼런스 실측값(2026-08-31)을 근거로 한다.
+ */
+
+/* A안 · 딥테크 다크 — 근거: Linear #08090A / Nota AI #0E1821 / Upstage #151726 */
+:root[data-ui="a"] {
+  --bw-color-surface: #0b0c0e;
+  --bw-color-surface-muted: #141619;
+  --bw-color-ink: #f2f3f5;
+  --bw-color-black: #ffffff;
+  --bw-color-muted: #8a8f98;
+  --bw-color-line: #24272c;
+  --bw-color-brand: #e0a82e;
+  --bw-color-brand-strong: #f0be4e;
+  --bw-color-focus: #6d84c4;
+  --bw-radius-control: 6px;
+  --bw-radius-card: 8px;
+  --bw-radius-feature: 10px;
+  --bw-shadow-soft: 0 12px 32px rgb(0 0 0 / 45%);
+  color-scheme: dark;
+}
+
+/* B안 · 라이트 미니멀 — 근거: Vercel #FAFAFA radius 6 / 당근 #2A3038 radius 4 */
+:root[data-ui="b"] {
+  --bw-color-surface: #ffffff;
+  --bw-color-surface-muted: #fafafa;
+  --bw-color-ink: #0a0a0a;
+  --bw-color-muted: #6b7076;
+  --bw-color-line: #e6e6e6;
+  --bw-color-brand: #d29b15;
+  --bw-color-brand-strong: #8a6408;
+  --bw-radius-control: 4px;
+  --bw-radius-card: 6px;
+  --bw-radius-feature: 8px;
+  --bw-shadow-soft: 0 1px 2px rgb(10 10 10 / 6%);
+}
+
+/* C안 · 소프트 라운드 — 근거: 토스 radius 12 / Stripe H1 300 weight */
+:root[data-ui="c"] {
+  --bw-color-surface: #ffffff;
+  --bw-color-surface-muted: #f7f5f0;
+  --bw-color-ink: #1c1a16;
+  --bw-color-muted: #7a736a;
+  --bw-color-line: #e8e3da;
+  --bw-color-brand: #c8901a;
+  --bw-color-brand-strong: #7d5a06;
+  --bw-radius-control: 12px;
+  --bw-radius-card: 20px;
+  --bw-radius-feature: 28px;
+  --bw-shadow-soft: 0 16px 40px rgb(28 26 22 / 8%);
+}
+
+/* 공통: 레퍼런스가 보여준 '깨끗함'의 두 축 — 얇은 대형 제목과 넓은 섹션 여백 */
+:root[data-ui] h1 {
+  letter-spacing: -0.035em;
+}
+
+:root[data-ui="a"] h1,
+:root[data-ui="b"] h1 {
+  font-weight: 500;
+}
+
+:root[data-ui="c"] h1 {
+  font-weight: 400;
+}
+
+/* A안에서 밝은 배경을 전제로 고정된 색을 토큰으로 되돌린다 */
+:root[data-ui="a"] body {
+  background: var(--bw-color-surface);
+  color: var(--bw-color-ink);
+}
+
+:root[data-ui="a"] .bg-white,
+:root[data-ui="a"] .bg-slate-50,
+:root[data-ui="a"] .bg-slate-100 {
+  background-color: var(--bw-color-surface-muted) !important;
+}
+
+:root[data-ui="a"] .text-slate-900,
+:root[data-ui="a"] .text-slate-800,
+:root[data-ui="a"] .text-slate-700 {
+  color: var(--bw-color-ink) !important;
+}
+
+:root[data-ui="a"] .text-slate-600,
+:root[data-ui="a"] .text-slate-500 {
+  color: var(--bw-color-muted) !important;
+}
+
+:root[data-ui="a"] .border-slate-200,
+:root[data-ui="a"] .border-slate-100 {
+  border-color: var(--bw-color-line) !important;
+}
+
+/* ---------------------------------------------------------------
+ * 히어로 처리는 안마다 다르다. 레퍼런스가 갈리는 지점이 여기다.
+ * Linear와 Vercel은 사진을 쓰지 않고 단색 위에 큰 제목만 둔다.
+ * --------------------------------------------------------------- */
+
+/* A안 · 사진 제거, 딥네이비 단색 위 대형 타이포 */
+:root[data-ui="a"] .bw-home-hero__media {
+  display: none;
+}
+
+:root[data-ui="a"] .bw-home-hero {
+  background:
+    radial-gradient(120% 90% at 12% 0%, #16181d 0%, #0b0c0e 60%),
+    #0b0c0e;
+  border-bottom: 1px solid var(--bw-color-line);
+}
+
+/* B안 · 사진 제거, 밝은 배경에 검정 타이포 (Vercel형) */
+:root[data-ui="b"] .bw-home-hero__media {
+  display: none;
+}
+
+:root[data-ui="b"] .bw-home-hero {
+  background: var(--bw-color-surface-muted);
+  color: var(--bw-color-ink);
+  border-bottom: 1px solid var(--bw-color-line);
+}
+
+:root[data-ui="b"] .bw-home-hero .text-white,
+:root[data-ui="b"] .bw-home-hero h1 {
+  color: var(--bw-color-ink);
+}
+
+:root[data-ui="b"] .bw-home-hero .text-white\/80,
+:root[data-ui="b"] .bw-home-hero .text-white\/70 {
+  color: var(--bw-color-muted);
+}
+
+:root[data-ui="b"] .bw-home-hero .border-white\/35 {
+  border-color: var(--bw-color-line);
+}
+
+:root[data-ui="b"] .bw-home-hero .bg-white\/35 {
+  background-color: var(--bw-color-line);
+}
+
+/* C안 · 사진 유지, 웜 그라디언트로 톤을 낮춰 부드럽게 */
+:root[data-ui="c"] .bw-home-hero__media img,
+:root[data-ui="c"] .bw-home-hero__media video {
+  opacity: 0.42;
+}
+
+:root[data-ui="c"] .bw-home-hero {
+  background: linear-gradient(140deg, #2a2318 0%, #1c1a16 55%, #14120f 100%);
+}
+
+:root[data-ui="c"] .bw-home-hero .bg-gradient-to-r {
+  background-image: linear-gradient(
+    100deg,
+    rgb(28 26 22 / 82%),
+    rgb(28 26 22 / 45%) 55%,
+    rgb(28 26 22 / 15%)
+  );
+}
+
+/* ---------------------------------------------------------------
+ * 헤더와 푸터는 밝은 배경을 전제로 색이 박혀 있다.
+ * A안(다크)에서는 헤더가 흰색으로 남고, 푸터는 ink가 밝아져 글자가 사라진다.
+ * --------------------------------------------------------------- */
+
+:root[data-ui="a"] .bw-header {
+  background: rgb(11 12 14 / 90%);
+  border-bottom-color: var(--bw-color-line);
+}
+
+:root[data-ui="a"] .bw-footer {
+  background: var(--bw-color-surface-muted);
+  border-top: 1px solid var(--bw-color-line);
+}
+
+/* B·C안은 헤더 테두리만 토큰에 맞춘다 */
+:root[data-ui="b"] .bw-header,
+:root[data-ui="c"] .bw-header {
+  border-bottom-color: var(--bw-color-line);
+}
+
+/* 로고 PNG는 검은 워드마크 한 벌뿐이라 다크 헤더에서 묻힌다.
+   Linear·Vercel도 다크에서는 단색 흰 로고를 쓴다. */
+:root[data-ui="a"] .bw-header__logo {
+  filter: brightness(0) invert(1);
+}

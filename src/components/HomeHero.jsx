@@ -127,10 +127,10 @@ export default function HomeHero({ scenes = defaultScenes }) {
       aria-label={
         language === "ko" ? "브레인웍스 대표 메시지" : "Brainworks hero message"
       }
-      className="relative isolate min-h-[680px] overflow-hidden bg-[var(--bw-color-ink)] text-white"
+      className="bw-home-hero relative isolate min-h-[680px] overflow-hidden bg-[var(--bw-color-ink)] text-white"
       onFocus={() => setIsPlaying(false)}
     >
-      <div className="absolute inset-0 -z-10" aria-live="off">
+      <div className="bw-home-hero__media absolute inset-0 -z-10" aria-live="off">
         <MediaFrame
           src={scene.src}
           poster={scene.poster}

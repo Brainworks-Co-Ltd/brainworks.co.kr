@@ -34,14 +34,14 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <header className="bw-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5">
         <Link
           href={getLocalizedPath("home", language)}
           className="flex items-center gap-3"
           aria-label={language === "ko" ? "브레인웍스 홈" : "Brainworks home"}
         >
-          <img src="/images/회사로고.png" alt="" className="h-9 w-auto" />
+          <img src="/images/회사로고.png" alt="" className="bw-header__logo h-9 w-auto" />
           <span className="sr-only">Brainworks</span>
         </Link>
 
