@@ -20,6 +20,7 @@ sources:
 
 - [기획서 (plan.md)](plan.md): 문제 정의부터 5 Whys, 타겟 사용자, 경쟁사 분석, MVP 범위까지 흩어진 기획 문서를 하나의 이야기로 잇는 진입점입니다.
 - [ERD와 데이터베이스 구조](erd.md): 실제 구현된 테이블 27개와 enum 9개, 콘텐츠 3층 구조와 로케일 규칙을 한 장으로 요약합니다.
+- [상세 페이지의 역할과 설계 기준](designs/detail-page-roles.md): 홈과 상세 페이지가 왜 다른 규칙을 쓰는지, 각 서비스 페이지 상단이 무엇을 밝혀야 하는지를 정의합니다.
 
 - [개발 문서 인덱스](planning/00-development-document-index.md): 홈페이지 재구축 계획 문서의 단계와 검토 순서를 안내합니다.
 - [멘토님 미팅 기준 홈페이지 개편 범위](planning/00-mentor-meeting-scope.md): Clova Note 원문에서 확인한 관리자 대상과 제외 대상을 정리합니다.
