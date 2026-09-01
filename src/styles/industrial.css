@@ -492,20 +492,14 @@
  * 상세 페이지 맨 위에서 대상과 비대상을 밝힌다.
  * --------------------------------------------------------------- */
 
+/* 진입 분기는 이 페이지가 누구를 위한 것인지 말하는 구간이다.
+ * 작은 회색 각주 띠로 처리하니 각주처럼 읽혔다. 08 §2.2.1이 승인한
+ * 골드 면 + 잉크 글자(7.14)로 전면을 칠해 선언 구간으로 세운다.
+ * DeepLearning.AI가 딥레드 면 위에 글자를 얹는 것과 같은 구조다. */
 .bw-audience {
   position: relative;
-  border-bottom: 1px solid var(--bw-line);
-  background: var(--bw-surface-muted);
-}
-
-/* 강조 바. 이 구간이 안내가 아니라 분기라는 신호다 */
-.bw-audience::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 4px;
   background: var(--bw-accent);
+  color: var(--bw-ink);
 }
 
 .bw-audience__inner {
@@ -513,7 +507,7 @@
   gap: var(--bw-space-6);
   max-width: 1152px;
   margin-inline: auto;
-  padding: var(--bw-space-7) var(--bw-space-5);
+  padding: var(--bw-space-8) var(--bw-space-5);
 }
 
 @media (min-width: 900px) {
@@ -530,23 +524,25 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--bw-accent-text);
+  color: var(--bw-ink);
+  opacity: 0.7;
 }
 
 .bw-audience__audience {
   margin: var(--bw-space-3) 0 0;
-  font-size: 24px;
+  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
   font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
   color: var(--bw-ink);
 }
 
 .bw-audience__scope {
-  margin: var(--bw-space-3) 0 0;
-  font-size: 1rem;
+  margin: var(--bw-space-4) 0 0;
+  font-size: 16px;
   line-height: 1.7;
-  color: var(--bw-muted);
+  color: var(--bw-ink);
+  opacity: 0.8;
 }
 
 .bw-audience__links {
@@ -563,7 +559,7 @@
   justify-content: space-between;
   gap: var(--bw-space-4);
   padding: var(--bw-space-3) var(--bw-space-4);
-  border: 1px solid var(--bw-line);
+  border: 1px solid transparent;
   border-radius: var(--bw-radius-control);
   background: var(--bw-surface);
   font-size: 16px;
@@ -578,7 +574,7 @@
 
 .bw-audience__link:hover,
 .bw-audience__link:focus-visible {
-  border-color: var(--bw-line-strong);
+  border-color: var(--bw-ink);
   background: var(--bw-surface-muted);
 }
 

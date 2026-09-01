@@ -6,6 +6,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { MediaStory } from "@/components/public/MediaStory";
+import { SolutionCard } from "@/components/public/SolutionCard";
 import { StatePanel } from "@/components/ui/state-panel";
 
 export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
@@ -156,26 +157,15 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             className="mt-6"
           />
         ) : (
-          <div className="mt-8 space-y-6 md:mt-12">
+          <div className="mt-8 grid gap-6 md:mt-12 lg:grid-cols-2">
             {activeArea.solutions.map((solution, index) => (
-              <MediaStory
+              <SolutionCard
                 key={solution.id}
-                card
-                eyebrow={`${String(index + 1).padStart(2, "0")} / ${String(activeArea.solutions.length).padStart(2, "0")}`}
+                index={index + 1}
+                total={activeArea.solutions.length}
                 title={solution.title}
                 description={solution.description}
-                reverse={index % 2 === 1}
-                media={
-                  <div className="relative aspect-[16/10] min-h-[220px]">
-                    <Image
-                      src={solution.image}
-                      alt={solution.title}
-                      fill
-                      sizes="(min-width: 1024px) 55vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                }
+                image={solution.image}
               />
             ))}
           </div>
