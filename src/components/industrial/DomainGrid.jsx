@@ -43,7 +43,7 @@ export default function DomainGrid() {
         {businessAreas.map((area) => (
           <Link
             key={area.id}
-            href={`/services?area=${area.id}`}
+            href={`/services?area=${area.id}#business-areas`}
             className="ind-domain"
           >
             {SHOT[area.id] ? (

@@ -88,10 +88,10 @@ describe("공개 셸 내비게이션", () => {
 
     expect(
       screen.getByRole("link", { name: "sLLM base AI Agent" }),
-    ).toHaveAttribute("href", "/services?area=agent");
+    ).toHaveAttribute("href", "/services?area=agent#business-areas");
     expect(
       screen.getByRole("link", { name: "Manufacturing AI" }),
-    ).toHaveAttribute("href", "/services?area=manufacturing");
+    ).toHaveAttribute("href", "/services?area=manufacturing#business-areas");
   });
 
   it("Footer가 Header와 같은 세 그룹을 제공한다", () => {

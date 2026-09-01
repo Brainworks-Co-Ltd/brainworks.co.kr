@@ -60,9 +60,12 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
 
   return (
     <section
+      id="business-areas"
       aria-label={
         language === "ko" ? "사업 영역 탐색" : "Business area explorer"
       }
+      /* 고정 헤더가 목적지를 덮지 않도록 여백을 둔다 */
+      className="scroll-mt-24"
     >
       <div
         role="tablist"
