@@ -9,6 +9,7 @@ export function ContactCtaBlock({
 }) {
   return (
     <section
+      data-variant="cta"
       className={`rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] px-6 py-12 text-white md:px-10 ${className}`}
     >
       <h2 className="bw-h1 max-w-3xl">
