@@ -388,14 +388,16 @@ export default function Outbound() {
             title={t.sectionTitle}
             description={t.sectionSubtitle}
           />
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className="grid gap-6">
             {programs.map((program, index) => (
               <article
                 key={program.id}
-                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
+                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
               >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  {String(index + 1).padStart(2, "0")}
+                <div>
+                  <span className="bw-marker">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
@@ -433,14 +435,16 @@ export default function Outbound() {
             description={t.aiSectionSubtitle}
           />
 
-          <div className="mt-10 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className="mt-10 grid gap-6">
             {aiPrograms.map((program, index) => (
               <article
                 key={program.id}
-                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
+                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
               >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  {String(index + 1).padStart(2, "0")}
+                <div>
+                  <span className="bw-marker">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
                 <h3 className="text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
                   {program.title[language]}
