@@ -825,3 +825,14 @@
   line-height: 1.25;
   letter-spacing: 0;
 }
+
+/* ---------------------------------------------------------------
+ * 어두운 히어로의 강조 글자
+ *
+ * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#8a6408)로 잡는데,
+ * 그 값은 어두운 면에서 2.2라 읽히지 않는다. 08 §2.2.1이 정한
+ * 어두운 구간용 밝은 골드로 바꾼다 (#0e1013 위에서 10.3).
+ * --------------------------------------------------------------- */
+:root[data-design="industrial"] section[data-variant="plain"].bg-\[var\(--bw-color-ink\)\] [class*="uppercase"][class*="tracking"] {
+  color: var(--bw-accent-strong);
+}
