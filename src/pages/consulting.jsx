@@ -214,11 +214,11 @@ export default function Consulting() {
           title={t.valueTitle}
           surface="plain"
         >
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className="grid gap-6">
             {offerings.map((item) => (
               <article
                 key={item.id}
-                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12 md:py-10"
+                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="text-2xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-3xl">
                   {item.title[language]}
@@ -246,11 +246,11 @@ export default function Consulting() {
           title={t.processTitle}
           surface="muted"
         >
-          <ol className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <ol className="grid gap-4">
             {processSteps.map((step) => (
               <li
                 key={step.id}
-                className="grid gap-4 px-6 py-6 md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8 md:px-8"
+                className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
               >
                 <div>
                   <span className="bw-marker">0{step.id}</span>
