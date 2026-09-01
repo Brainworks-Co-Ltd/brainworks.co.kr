@@ -144,7 +144,7 @@ export function PageHero({
           {content}
         </div>
         <div className="mx-auto max-w-6xl px-6 pb-20 pt-16 md:pb-28 md:pt-20">
-          <div className="overflow-hidden rounded-[var(--bw-radius-card)] border border-white/10 bg-[var(--bw-color-surface)] shadow-[0_32px_80px_rgb(0_0_0/45%)]">
+          <div className="bw-hero-showcase overflow-hidden rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface)] shadow-[0_32px_80px_rgb(0_0_0/45%)]">
             <img
               src={showcase.src}
               alt={showcase.alt}
@@ -163,7 +163,9 @@ export function PageHero({
       data-variant="plain"
       className={`pt-28 ${surface}`}
     >
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">{content}</div>
+      <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-28">
+        {content}
+      </div>
     </section>
   );
 }

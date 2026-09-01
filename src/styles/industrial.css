@@ -888,27 +888,16 @@
 }
 
 /* ---------------------------------------------------------------
- * 히어로 색 워시
+ * 히어로 강조
  *
- * faculty.ai와 classting 실측(2026-09-01): 두 곳 모두 페이지별 색이
- * CSS가 아니라 히어로 아트워크에 들어 있다. faculty는 초록 계열을
- * 유지하면서 페이지마다 색을 바꾼다(computational-twin 올리브 #d7d58d,
- * industries/energy 복숭아 #f1c9a2).
+ * 라디얼 그라데이션 워시를 넣었다가 걷어냈다. 어두운 면에 색 안개를
+ * 깔아두는 것은 장식용 블롭이고, 승인 명세가 금지 목록에 둔 패턴이다.
+ * faculty와 classting은 합성 아트워크를 쓰지 색 안개를 쓰지 않는다.
  *
- * 아트워크가 없으므로 그라데이션으로 같은 자리를 만든다. 색은 서비스별
- * --bw-svc다. 흰 글자 대비는 어두운 바탕이 지배하므로 유지된다.
+ * 아트워크가 없으면 면을 흐리는 대신 선을 세운다. 서비스 색은 눈썹과
+ * 제품 화면 카드의 윗변이 맡는다. 둘 다 실체가 있는 요소다.
  * --------------------------------------------------------------- */
 
-:root[data-design="industrial"] main[data-accent] > section[data-variant="plain"].bg-\[var\(--bw-color-ink\)\] {
-  background-image:
-    radial-gradient(
-      120% 90% at 78% 8%,
-      color-mix(in oklab, var(--bw-svc) 42%, transparent) 0%,
-      transparent 62%
-    ),
-    radial-gradient(
-      90% 70% at 12% 96%,
-      color-mix(in oklab, var(--bw-svc) 22%, transparent) 0%,
-      transparent 58%
-    );
+:root[data-design="industrial"] .bw-hero-showcase {
+  border-top: 3px solid var(--bw-svc, var(--bw-accent));
 }
