@@ -63,14 +63,24 @@ export default function Clients() {
                  * 타일을 흰 면으로 두면 포맷과 무관하게 흰 바탕이 보이지
                  * 않는다. 회색 띠 위의 흰 카드가 되어 의도한 모양이 된다.
                  */
-                className="flex h-32 w-40 flex-shrink-0 items-center justify-center border-r border-[var(--bw-color-line)] bg-white px-8 py-8 first:border-l"
+                className="flex h-32 w-auto min-w-44 max-w-72 flex-shrink-0 items-center justify-center border-r border-[var(--bw-color-line)] bg-white px-8 py-8 first:border-l"
               >
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={120}
                   height={120}
-                  className="h-20 w-auto grayscale transition-all duration-300 hover:scale-105 hover:grayscale-0"
+                  /*
+                   * 로고마다 가로세로 비율이 다르다 (정사각 1:1부터
+                   * 한국비즈니스IT협회 5.65:1까지). 높이만 고정하고
+                   * object-contain 없이 두면 좁은 상자에서 가로가 눌린다.
+                   * 실측: 원본 5.65:1이 1.19:1로 렌더돼 글자가 안 읽혔다.
+                   *
+                   * 높이 상한만 두고 폭은 비율대로 가게 한다. 타일도 폭을
+                   * 내용에 맞춰 늘리되 상한을 둬서 한 칸이 화면을 먹지
+                   * 않게 한다.
+                   */
+                  className="max-h-14 w-auto max-w-full object-contain grayscale transition-all duration-300 hover:scale-105 hover:grayscale-0"
                 />
               </div>
             ))}
