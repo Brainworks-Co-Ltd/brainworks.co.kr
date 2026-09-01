@@ -35,7 +35,7 @@ export function MediaStory({
         {action ? (
           <Link
             href={action.href}
-            className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-ink)] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[var(--bw-color-brand)] hover:text-[var(--bw-color-ink)]"
+            className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
           >
             {action.label}
           </Link>
