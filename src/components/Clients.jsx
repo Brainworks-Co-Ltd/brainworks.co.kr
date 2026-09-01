@@ -9,7 +9,8 @@ import client4 from "../assets/clients/client4.png";
 import client5 from "../assets/clients/client5.jpg";
 import client6 from "../assets/clients/client6.jpg";
 import client7 from "../assets/clients/client7.png";
-import client8 from "../assets/clients/client8.jpg";
+// client8은 투명 PNG가 이미 있는데 불투명 jpg를 가리키고 있었다
+import client8 from "../assets/clients/client8.png";
 
 export default function Clients() {
   const { language } = useLocale();
@@ -53,7 +54,16 @@ export default function Clients() {
             {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
               <div
                 key={`logo-${index}`}
-                className="flex h-32 w-40 flex-shrink-0 items-center justify-center border-r border-[var(--bw-color-line)] px-8 py-8 first:border-l"
+                /*
+                 * 로고 여덟 개 중 다섯이 흰 바탕을 물고 있다. jpg 넷은
+                 * 포맷상 투명이 불가능하고 client4.png는 알파가 없다.
+                 * mix-blend-multiply를 걸어봤으나 자산마다 결과가 달랐다
+                 * (실측: 투명 PNG 247,248,249 / KATECH 235 / KOSME 255).
+                 *
+                 * 타일을 흰 면으로 두면 포맷과 무관하게 흰 바탕이 보이지
+                 * 않는다. 회색 띠 위의 흰 카드가 되어 의도한 모양이 된다.
+                 */
+                className="flex h-32 w-40 flex-shrink-0 items-center justify-center border-r border-[var(--bw-color-line)] bg-white px-8 py-8 first:border-l"
               >
                 <Image
                   src={logo.src}
