@@ -154,10 +154,11 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             className="mt-6"
           />
         ) : (
-          <div className="mt-8 space-y-14 md:mt-12 md:space-y-20">
+          <div className="mt-8 space-y-6 md:mt-12">
             {activeArea.solutions.map((solution, index) => (
               <MediaStory
                 key={solution.id}
+                card
                 eyebrow={`${String(index + 1).padStart(2, "0")} / ${String(activeArea.solutions.length).padStart(2, "0")}`}
                 title={solution.title}
                 description={solution.description}
