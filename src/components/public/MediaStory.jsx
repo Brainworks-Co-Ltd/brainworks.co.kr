@@ -12,7 +12,7 @@ export function MediaStory({
 }) {
   // 본문 카드 규칙 — docs/designs/detail-page-roles.md
   const cardShell = card
-    ? "rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)]"
+    ? "rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)]"
     : "";
 
   return (

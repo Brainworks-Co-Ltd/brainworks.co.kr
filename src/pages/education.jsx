@@ -745,7 +745,7 @@ export default function Education() {
             {supportPillars.map((pillar) => (
               <div
                 key={pillar.id}
-                className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {pillar.title[language]}

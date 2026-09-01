@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
 import { PageAudience } from "@/components/public/PageAudience";
+import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -54,6 +55,23 @@ export default function Services({ areas }) {
         <div className="mx-auto max-w-6xl px-6">
           <BusinessAreaExplorer areas={areas} />
         </div>
+
+        <section className="mx-auto max-w-5xl px-6">
+          <ContactCtaBlock
+            title={
+              language === "ko"
+                ? "어느 영역의 문제인지 정해졌나요?"
+                : "Know which domain your problem sits in?"
+            }
+            description={
+              language === "ko"
+                ? "현장의 문제를 알려주시면 어느 솔루션이 맞는지, 없으면 무엇을 만들어야 하는지 먼저 판단해 드립니다."
+                : "Tell us the problem on your floor and we will identify the right solution, or what needs building."
+            }
+            href="/contact?topic=solution"
+            label={language === "ko" ? "솔루션 문의" : "Discuss a solution"}
+          />
+        </section>
       </main>
       <Footer />
     </div>
