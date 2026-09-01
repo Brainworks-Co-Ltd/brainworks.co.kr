@@ -741,11 +741,11 @@ export default function Education() {
             }
           />
 
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className="grid gap-6">
             {supportPillars.map((pillar) => (
               <div
                 key={pillar.id}
-                className="grid gap-5 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
                   {pillar.title[language]}
