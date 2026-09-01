@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string, tone?: "consulting" | "education" | "global" | null }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 function HeroContent({
@@ -72,7 +72,6 @@ export function PageHero({
   variant = "plain",
   media = null,
   overlayClassName = "",
-  tone = null,
 }) {
   const effectiveVariant = variant === "plain" || !media ? "plain" : variant;
   const content = (
@@ -124,11 +123,9 @@ export function PageHero({
     );
   }
 
-  const toneClass = tone ? `bw-page-hero bw-page-hero--${tone}` : "";
   const surface = dark
     ? "bg-[var(--bw-color-ink)] text-white"
-    : toneClass ||
-      "border-b border-slate-200 bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]";
+    : "bw-page-hero";
 
   return (
     <section

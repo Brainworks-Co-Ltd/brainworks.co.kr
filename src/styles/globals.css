@@ -96,39 +96,14 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* 08 §2.2 크롬은 거의 무채색으로 죽이고, 채도는 제품 화면이 담당한다.
+ * 페이지마다 다른 파스텔 톤(파랑·초록·크림)을 쓰던 것을 걷어냈다.
+ * 크림 계열은 08 §2.2가 이미 기각한 값이었고, 톤의 accent 변수는
+ * industrial.css의 눈썹 규칙에 덮여 화면에 나온 적이 없었다. */
 .bw-page-hero {
-  border-bottom: 1px solid var(--bw-page-hero-line);
-  background: var(--bw-page-hero-surface);
+  border-bottom: 1px solid var(--bw-color-line);
+  background: var(--bw-color-surface-muted);
   color: var(--bw-color-ink);
-}
-
-.bw-page-hero .bw-page-hero__eyebrow {
-  color: var(--bw-page-hero-accent);
-}
-
-.bw-page-hero .bw-page-hero__description {
-  color: var(--bw-page-hero-muted);
-}
-
-.bw-page-hero--consulting {
-  --bw-page-hero-surface: #edf4f8;
-  --bw-page-hero-line: #d3e0e8;
-  --bw-page-hero-accent: #345c79;
-  --bw-page-hero-muted: #5a7081;
-}
-
-.bw-page-hero--education {
-  --bw-page-hero-surface: #eef7f4;
-  --bw-page-hero-line: #d0e3dc;
-  --bw-page-hero-accent: #2f6a5a;
-  --bw-page-hero-muted: #55766a;
-}
-
-.bw-page-hero--global {
-  --bw-page-hero-surface: #fbf1eb;
-  --bw-page-hero-line: #ead8cc;
-  --bw-page-hero-accent: #8b5436;
-  --bw-page-hero-muted: #7c695d;
 }
 
 .bw-prose {
