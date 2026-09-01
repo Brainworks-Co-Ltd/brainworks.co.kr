@@ -580,7 +580,7 @@ export default function Education() {
                         <span className="bw-chip">{step.stage[language]}</span>
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                        <h3 className="bw-title text-[var(--bw-color-ink)]">
                           {step.focus[language]}
                         </h3>
                         <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
@@ -677,7 +677,7 @@ export default function Education() {
                   <span className="bw-marker">
                     {String(trackIndex + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-4 text-xl font-semibold text-[var(--bw-color-ink)]">
+                  <h3 className="bw-title mt-4 text-[var(--bw-color-ink)]">
                     {track.title[language]}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[var(--bw-color-muted)]">
@@ -746,7 +746,7 @@ export default function Education() {
                 key={pillar.id}
                 className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {pillar.title[language]}
                 </h3>
                 <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">

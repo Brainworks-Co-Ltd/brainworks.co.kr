@@ -219,11 +219,11 @@ export default function Consulting() {
                 key={item.id}
                 className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
-                <h3 className="text-2xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-3xl">
+                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {item.title[language]}
                 </h3>
                 <div>
-                  <p className="max-w-2xl text-base leading-8 text-[var(--bw-color-muted)]">
+                  <p className="bw-body max-w-2xl text-[var(--bw-color-muted)]">
                     {item.description[language]}
                   </p>
                   <ul className="mt-6 grid gap-x-8 gap-y-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
@@ -254,10 +254,10 @@ export default function Consulting() {
                 <div>
                   <span className="bw-marker">0{step.id}</span>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {step.title[language]}
                 </h3>
-                <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                <p className="bw-body text-[var(--bw-color-muted)]">
                   {step.desc[language]}
                 </p>
               </li>

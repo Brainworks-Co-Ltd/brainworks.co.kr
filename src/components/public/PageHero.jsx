@@ -25,12 +25,12 @@ function HeroContent({
           {eyebrow}
         </p>
       ) : null}
-      <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-6xl">
+      <h1 className="bw-display mt-4 max-w-4xl">
         {title}
       </h1>
       {description ? (
         <p
-          className={`bw-page-hero__description mt-6 max-w-3xl text-lg leading-8 md:text-xl ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__description bw-title mt-6 max-w-3xl ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
         >
           {description}
         </p>

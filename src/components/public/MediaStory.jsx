@@ -30,11 +30,11 @@ export function MediaStory({
             {eyebrow}
           </p>
         ) : null}
-        <h3 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.025em] text-[var(--bw-color-ink)] md:text-4xl">
+        <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
           {title}
         </h3>
         {description ? (
-          <p className="mt-5 max-w-xl text-base leading-8 text-[var(--bw-color-muted)] md:text-lg">
+          <p className="bw-body mt-5 max-w-xl text-[var(--bw-color-muted)]">
             {description}
           </p>
         ) : null}

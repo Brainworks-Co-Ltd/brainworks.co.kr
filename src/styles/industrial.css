@@ -526,7 +526,7 @@
 
 .bw-audience__label {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -535,10 +535,10 @@
 
 .bw-audience__audience {
   margin: var(--bw-space-3) 0 0;
-  font-size: 1.375rem;
+  font-size: 24px;
   font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: -0.015em;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
   color: var(--bw-ink);
 }
 
@@ -566,7 +566,7 @@
   border: 1px solid var(--bw-line);
   border-radius: var(--bw-radius-control);
   background: var(--bw-surface);
-  font-size: 0.9375rem;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.5;
   color: var(--bw-ink);
@@ -668,7 +668,7 @@
   border-radius: var(--bw-radius-control);
   background: var(--bw-accent-soft);
   color: var(--bw-accent-text);
-  font-size: 0.8125rem;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -684,7 +684,7 @@
   border-radius: var(--bw-radius-control);
   background: var(--bw-accent);
   color: var(--bw-ink);
-  font-size: 0.9375rem;
+  font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -764,4 +764,64 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ---------------------------------------------------------------
+ * 2.4 타이포 스케일 (docs/planning/08-design-system.md)
+ *
+ * 상세 페이지 실측이 60/36/30/22/20px였다. 문서 스케일은
+ * 64/40/28/24/18이다. Tailwind의 text-3xl(30)·text-4xl(36)을 그대로
+ * 쓰던 자리를 문서 값으로 맞춘다.
+ *
+ * clamp의 기울기는 375px에서 하한, 1440px에서 상한이 되도록 잡았다.
+ * :root[data-design] 선택자라 Tailwind의 text-* 유틸리티를 이긴다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-display {
+  font-size: clamp(40px, 2.25vw + 31.6px, 64px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+:root[data-design="industrial"] .bw-h1 {
+  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+:root[data-design="industrial"] .bw-h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+:root[data-design="industrial"] .bw-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+:root[data-design="industrial"] .bw-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+:root[data-design="industrial"] .bw-body-sm {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+:root[data-design="industrial"] .bw-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
 }

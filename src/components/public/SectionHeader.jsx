@@ -19,7 +19,7 @@ export function SectionHeader({
         </p>
       ) : null}
       <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-        <h2 className="text-3xl font-semibold leading-tight tracking-[-0.025em] text-[var(--bw-color-ink)] md:text-4xl">
+        <h2 className="bw-h1 text-[var(--bw-color-ink)]">
           {title}
         </h2>
         {href && linkLabel ? (
@@ -32,7 +32,7 @@ export function SectionHeader({
         ) : null}
       </div>
       {description ? (
-        <p className="mt-3 text-base leading-7 text-[var(--bw-color-muted)]">
+        <p className="bw-body mt-3 text-[var(--bw-color-muted)]">
           {description}
         </p>
       ) : null}

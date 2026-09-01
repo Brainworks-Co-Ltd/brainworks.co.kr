@@ -131,7 +131,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
               {language === "ko" ? "솔루션" : "Solutions"}
             </p>
-            <h3 className="mt-3 text-2xl font-semibold text-[var(--bw-color-ink)]">
+            <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
               {activeArea.title}
             </h3>
           </div>

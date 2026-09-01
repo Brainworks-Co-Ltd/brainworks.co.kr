@@ -403,12 +403,12 @@ export default function Outbound() {
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
                     {program.badge[language]}
                   </p>
-                  <h3 className="mt-3 text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
+                  <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
                     {program.title[language]}
                   </h3>
                 </div>
                 <div>
-                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                  <p className="bw-body text-[var(--bw-color-muted)]">
                     {program.description[language]}
                   </p>
                   <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
@@ -447,11 +447,11 @@ export default function Outbound() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
+                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {program.title[language]}
                 </h3>
                 <div>
-                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                  <p className="bw-body text-[var(--bw-color-muted)]">
                     {program.description[language]}
                   </p>
                   <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
