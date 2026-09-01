@@ -938,3 +938,89 @@
 :root[data-design="industrial"] .bw-hero-showcase {
   border-top: 3px solid var(--bw-svc, var(--bw-accent));
 }
+
+/* ---------------------------------------------------------------
+ * 한글 줄바꿈
+ *
+ * word-break가 normal이라 한국어가 어절 안에서 끊긴다. 라틴은 단어
+ * 사이에만 끊기지만 한글은 normal에서 음절 블록 사이 아무 데나 끊긴다.
+ * "담당자"가 "담당 / 자"로 갈라질 수 있다는 뜻이다.
+ *
+ * keep-all이면 공백에서만 끊는다. 08 §2.4가 "행간과 자간은 한글 기준으로
+ * 조정한다"고 한 것과 같은 이유다.
+ *
+ * balance는 제목의 줄 길이를 고르게 맞춘다. 마지막 줄에 단어 하나만
+ * 남는 것(고아 줄)을 막는다. 하드 <br>과 달리 폭에 따라 다시 계산되므로
+ * 반응형이 깨지지 않는다. 미지원 브라우저는 그냥 지금처럼 흐른다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] h1,
+:root[data-design="industrial"] h2,
+:root[data-design="industrial"] h3,
+:root[data-design="industrial"] h4,
+:root[data-design="industrial"] .bw-display,
+:root[data-design="industrial"] .bw-h1,
+:root[data-design="industrial"] .bw-h2,
+:root[data-design="industrial"] .bw-title,
+:root[data-design="industrial"] .bw-audience__audience {
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+/* 본문은 balance를 쓰지 않는다. 여섯 줄이 넘으면 브라우저가 무시하고,
+   긴 문단에서는 pretty가 맞다 (고아 단어만 막는다) */
+:root[data-design="industrial"] .bw-body,
+:root[data-design="industrial"] .bw-body-sm,
+:root[data-design="industrial"] .bw-audience__scope {
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------
+ * 어절 단위 스크롤 드러남 (faculty.ai statement 구간)
+ *
+ * 스크롤이 이 구간에 닿으면 문장이 어절 하나씩 밝아진다.
+ * 라이브러리도 자바스크립트도 쓰지 않는다. 이 레포가 섹션 드러남에
+ * 이미 쓰는 CSS 스크롤 타임라인(view())을 그대로 쓴다.
+ *
+ * 어절마다 view()를 따로 걸면 안 된다. 같은 줄의 어절은 뷰 진행도가
+ * 거의 같아서 한꺼번에 밝아진다. 구간에 view-timeline-name을 붙여
+ * 하나의 타임라인을 공유하고, animation-range를 --i만큼 밀어 차례를
+ * 만든다.
+ *
+ * 미지원 브라우저(파이어폭스)는 @supports 밖이라 처음부터 최종
+ * 상태다. prefers-reduced-motion에서도 같다. 승인 명세 §11.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-audience__word {
+  display: inline-block;
+}
+
+/* 어절 사이 공백을 span으로 감싸며 잃었으므로 되돌린다 */
+:root[data-design="industrial"] .bw-audience__word + .bw-audience__word {
+  margin-left: 0.25em;
+}
+
+@keyframes bw-word-reveal {
+  from {
+    opacity: 0.22;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root[data-design="industrial"] .bw-audience {
+      view-timeline-name: --bw-statement;
+    }
+
+    :root[data-design="industrial"] .bw-audience__word {
+      animation: bw-word-reveal linear both;
+      animation-timeline: --bw-statement;
+      animation-range: entry calc(18% + var(--i) * 3%) entry
+        calc(42% + var(--i) * 3%);
+    }
+  }
+}

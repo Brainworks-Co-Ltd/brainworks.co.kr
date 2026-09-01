@@ -475,23 +475,6 @@ const faqItems = [
 
 export default function Education() {
   const { language } = useLocale();
-  const chips =
-    language === "ko"
-      ? [
-          "AI 전문교육",
-          "생성형 AI 심화",
-          "해커톤 & 멘토링",
-          "국내·글로벌 인턴십",
-          "커리어 포트폴리오·면접",
-        ]
-      : [
-          "AI Specialised Training",
-          "Generative AI Intensive",
-          "Hackathon & Mentoring",
-          "Domestic & Global Internships",
-          "Career Portfolio & Interviews",
-        ];
-
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
@@ -528,18 +511,7 @@ export default function Education() {
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
-        >
-          <div className="flex flex-wrap gap-3">
-            {chips.map((item) => (
-              <span
-                key={item}
-                className="bw-chip"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </PageHero>
+        />
         {/* 진입 분기 — docs/designs/detail-page-roles.md */}
         <PageAudience
           audience="조직의 AI 역량을 키워야 하는 담당자"

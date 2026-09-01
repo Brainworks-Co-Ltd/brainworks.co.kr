@@ -18,7 +18,21 @@ export function PageAudience({ audience, scope, redirects = [] }) {
       <div className="bw-audience__inner">
         <div className="bw-audience__main">
           <p className="bw-audience__label">이런 분을 위한 페이지입니다</p>
-          <p className="bw-audience__audience">{audience}</p>
+          <p className="bw-audience__audience">
+            {/* 스크롤에 맞춰 어절이 하나씩 밝아진다.
+                faculty.ai의 statement 구간과 같은 방식이다. 어절 단위라
+                한글에서 읽기가 끊기지 않는다. 스크린리더는 <p> 전체를
+                한 문장으로 읽으므로 낭독에는 영향이 없다. */}
+            {audience.split(" ").map((word, i) => (
+              <span
+                key={`${word}-${i}`}
+                className="bw-audience__word"
+                style={{ "--i": i }}
+              >
+                {word}
+              </span>
+            ))}
+          </p>
           {scope ? <p className="bw-audience__scope">{scope}</p> : null}
         </div>
 
