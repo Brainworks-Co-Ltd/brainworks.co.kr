@@ -181,7 +181,7 @@ export default function Consulting() {
         title={`${t.heroTitle} | Brainworks`}
         description={t.heroSubtitle}
       />
-      <main id="main-content">
+      <main id="main-content" data-accent="consulting">
         <PageHero
           variant="plain"
           dark

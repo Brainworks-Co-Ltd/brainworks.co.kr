@@ -222,10 +222,11 @@ export default function Outbound() {
         description={t.heroSubtitle}
       />
 
-      <main id="main-content" className="pb-16">
+      <main id="main-content" data-accent="global" className="pb-16">
         <PageHero
           variant="plain"
           dark
+          showcase={{ src: "/images/outbound/맵.png", alt: "글로벌 AI 네트워크 파트너 현황" }}
           eyebrow={t.heroBadge}
           title={t.heroTitle}
           description={t.heroSubtitle}

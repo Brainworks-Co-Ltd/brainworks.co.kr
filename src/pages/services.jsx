@@ -26,10 +26,14 @@ export default function Services({ areas }) {
             : "Explore Brainworks AI domains and solutions."
         }
       />
-      <main id="main-content">
+      <main id="main-content" data-accent="solution">
         <PageHero
           variant="plain"
           dark
+          showcase={{
+            src: "/images/services/AI수율분석솔루션.png",
+            alt: "AI 수율 예측 솔루션 화면",
+          }}
           eyebrow={language === "ko" ? "Brainworks AI" : "Brainworks AI"}
           title={language === "ko" ? "AI 솔루션" : "AI Solutions"}
           description={

@@ -26,7 +26,13 @@ export async function getPublishedPopupNotices(locale: PopupLocale, now = new Da
     .filter((row) => effectiveNoticeVisibility({ status: row.status, startsAt: row.startsAt, endsAt: row.endsAt }, now))
     .slice(0, 3)
     .map((row) => ({
-      ...row,
+      id: row.id,
+      title: row.title,
+      bodyMarkdown: row.bodyMarkdown,
+      imageAssetId: row.imageAssetId,
+      imageAlt: row.imageAlt,
+      dismissalRevision: row.dismissalRevision,
+      displayOrder: row.displayOrder,
       detailUrl: resolvePopupDetailUrl(
         { noticePublicNumber: row.noticePublicNumber },
         row.linkedItemStatus === "ACTIVE" && row.linkedNoticeStatus && effectiveNoticeVisibility({ status: row.linkedNoticeStatus, startsAt: row.linkedNoticeStartsAt, endsAt: row.linkedNoticeEndsAt }, now)
