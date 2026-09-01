@@ -50,7 +50,7 @@ export default function Services({ areas }) {
           ]}
         />
 
-        <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-6">
           <BusinessAreaExplorer areas={areas} />
         </div>
       </main>

@@ -265,7 +265,7 @@ export default function Consulting() {
           </ol>
         </EditorialSection>
 
-        <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactDesc}
