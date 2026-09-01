@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
 import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
+import { StatementBand } from "@/components/public/StatementBand";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -59,6 +60,17 @@ export default function Services({ areas }) {
         <div className="mx-auto max-w-6xl px-6">
           <BusinessAreaExplorer areas={areas} />
         </div>
+
+        {/* 문구는 새로 짓지 않는다. 08 §1.1이 대표 메시지 원문[src:1]으로
+            인용한 문장을 §1.4의 합니다체로 옮긴 것이다. */}
+        <StatementBand
+          eyebrow={language === "ko" ? "브레인웍스가 믿는 것" : "What we believe"}
+          text={
+            language === "ko"
+              ? "AI가 모든 산업과 조직에 보편적으로 적용될 수 있다고 믿지 않습니다. 산업마다 다른 해결책을 설계합니다."
+              : "We do not believe one AI fits every industry. We design a different answer for each."
+          }
+        />
 
         <section className="mx-auto max-w-5xl px-6">
           <ContactCtaBlock

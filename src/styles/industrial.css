@@ -975,3 +975,72 @@
   word-break: keep-all;
   text-wrap: pretty;
 }
+
+/* ---------------------------------------------------------------
+ * 선언 구간 (faculty.ai statement 실측 2026-09-01)
+ *
+ * 히어로와 같은 표면을 쓴다. 결과 그레인이 페이지 안에서 두 번
+ * 나타나며 어두운 구간의 재질이 된다.
+ *
+ * 어절 opacity는 자바스크립트가 잡는다. 여기서는 전환만 정의한다.
+ * transition 대상을 opacity로 한정한다. faculty는 all인데 스크롤마다
+ * 전 속성을 확인하게 되어 필요 없는 비용이 든다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-statement {
+  padding-block: var(--bw-space-9);
+  color: #fff;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      rgb(255 255 255 / 2.2%) 0 1px,
+      transparent 1px 6px
+    ),
+    linear-gradient(
+      180deg,
+      var(--bw-surface-dark) 0%,
+      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 16%, var(--bw-surface-dark)) 50%,
+      var(--bw-surface-dark) 100%
+    );
+}
+
+:root[data-design="industrial"] .bw-statement__inner {
+  max-width: 1152px;
+  margin-inline: auto;
+  padding-inline: var(--bw-space-5);
+}
+
+:root[data-design="industrial"] .bw-statement__eyebrow {
+  margin: 0 0 var(--bw-space-5);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bw-accent-strong);
+  text-align: center;
+}
+
+:root[data-design="industrial"] .bw-statement__text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.12em 0.28em;
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 64px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+:root[data-design="industrial"] .bw-statement__word {
+  transition: opacity 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design="industrial"] .bw-statement__word {
+    opacity: 1 !important;
+    transition: none;
+  }
+}
