@@ -382,7 +382,8 @@ export default function Outbound() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
+        <section className="bg-[var(--bw-color-surface-muted)]">
+          <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
           <SectionHeader
             eyebrow="Global programs"
             title={t.sectionTitle}
@@ -392,7 +393,7 @@ export default function Outbound() {
             {programs.map((program, index) => (
               <article
                 key={program.id}
-                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
+                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
               >
                 <div>
                   <span className="bw-marker">
@@ -425,6 +426,7 @@ export default function Outbound() {
                 </div>
               </article>
             ))}
+          </div>
           </div>
         </section>
 
