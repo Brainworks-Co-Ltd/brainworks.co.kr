@@ -125,7 +125,7 @@ export function PageHero({
   }
 
   const surface = dark
-    ? "bg-[var(--bw-color-ink)] text-white"
+    ? "bw-hero-texture bg-[var(--bw-color-ink)] text-white"
     : "bw-page-hero";
 
   /* 제품 화면을 히어로 아래에 띄워 다음 구간으로 걸치게 한다.

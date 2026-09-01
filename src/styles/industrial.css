@@ -888,15 +888,52 @@
 }
 
 /* ---------------------------------------------------------------
- * 히어로 강조
+ * 히어로 표면 (faculty.ai 실측 2026-09-01)
  *
- * 라디얼 그라데이션 워시를 넣었다가 걷어냈다. 어두운 면에 색 안개를
- * 깔아두는 것은 장식용 블롭이고, 승인 명세가 금지 목록에 둔 패턴이다.
- * faculty와 classting은 합성 아트워크를 쓰지 색 안개를 쓰지 않는다.
+ * faculty의 히어로는 canvas 1280x720 위에 도는 WebGL이다. 눈으로 보면
+ * 세 겹이다. (1) 위가 짙고 아래가 밝은 세로 그라데이션, (2) 가로로
+ * 흐르는 5px 안팎의 미세한 결, (3) 그 위의 그레인.
  *
- * 아트워크가 없으면 면을 흐리는 대신 선을 세운다. 서비스 색은 눈썹과
- * 제품 화면 카드의 윗변이 맡는다. 둘 다 실체가 있는 요소다.
+ * 셰이더 없이 세 겹을 그대로 쌓는다. 라디얼 색 안개와 다른 점은
+ * 방향과 결이 있다는 것이다. 안개는 형태가 없어서 슬롭으로 읽히고
+ * 결은 재질로 읽힌다.
+ *
+ * 글자는 위쪽 짙은 구간에 있고, 밝아지는 아래쪽은 제품 화면 카드가
+ * 앉는 자리다. 히어로가 본문으로 넘어가는 전환이 된다.
  * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-hero-texture {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    /* 3. 결 */
+    repeating-linear-gradient(
+      180deg,
+      rgb(255 255 255 / 2.2%) 0 1px,
+      transparent 1px 6px
+    ),
+    /* 2. 서비스 색을 위쪽에 물린다 */
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 26%, var(--bw-surface-dark)) 0%,
+      var(--bw-surface-dark) 38%,
+      var(--bw-surface-dark) 62%,
+      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 12%, var(--bw-surface-dark)) 78%,
+      var(--bw-surface-muted) 100%
+    );
+}
+
+/* 1. 그레인. feTurbulence 한 장을 겹친다 */
+:root[data-design="industrial"] .bw-hero-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.085;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
 
 :root[data-design="industrial"] .bw-hero-showcase {
   border-top: 3px solid var(--bw-svc, var(--bw-accent));
