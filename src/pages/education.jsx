@@ -493,9 +493,8 @@ export default function Education() {
 
       <main id="main-content" data-accent="education" className="pb-16">
         <PageHero
-          variant="plain"
-          dark
-          showcase={{ src: "/images/education/AI전문교육.jpg", alt: "AI 전문교육 강의 현장" }}
+          variant="media"
+          media={{ kind: "image", src: "/images/services/hero/healthcare.webp", alt: "" }}
           eyebrow="AI Professional Education"
           title={
             language === "ko"

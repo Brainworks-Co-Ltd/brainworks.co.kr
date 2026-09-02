@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string, showcase?: { src: string, alt: string } | null }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 function HeroContent({
@@ -72,7 +72,6 @@ export function PageHero({
   variant = "plain",
   media = null,
   overlayClassName = "",
-  showcase = null,
 }) {
   const effectiveVariant = variant === "plain" || !media ? "plain" : variant;
   const content = (
@@ -95,7 +94,8 @@ export function PageHero({
         data-variant="media"
         className="relative isolate min-h-[34rem] overflow-hidden pt-28 text-white"
       >
-        <div className="absolute inset-0 -z-20">
+        {/* 전면 그래픽. 스크림과 모션은 industrial.css의 .bw-hero-media가 맡는다. */}
+        <div className="bw-hero-media absolute inset-0 -z-20">
           <PageHeroMedia media={media} />
         </div>
         {overlayClassName ? (
@@ -127,34 +127,6 @@ export function PageHero({
   const surface = dark
     ? "bw-hero-texture bg-[var(--bw-color-ink)] text-white"
     : "bw-page-hero";
-
-  /* 제품 화면을 히어로 아래에 띄워 다음 구간으로 걸치게 한다.
-   * classting.com/features/personalized-learning 실측(2026-09-01):
-   * 히어로가 문구만으로 끝나지 않고 제품 화면이 바로 따라붙는다.
-   * 그쪽은 목업을 이미지에 구워 내보냈고, 여기서는 CSS로 같은 자리에 놓는다. */
-  if (showcase) {
-    return (
-      <section
-        role="region"
-        aria-label={title}
-        data-variant="plain"
-        className={`pt-28 ${surface}`}
-      >
-        <div className="mx-auto max-w-4xl px-6 pt-20 text-center md:pt-28">
-          {content}
-        </div>
-        <div className="mx-auto max-w-6xl px-6 pb-20 pt-16 md:pb-28 md:pt-20">
-          <div className="bw-hero-showcase overflow-hidden rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface)] shadow-[0_32px_80px_rgb(0_0_0/45%)]">
-            <img
-              src={showcase.src}
-              alt={showcase.alt}
-              className="block h-auto w-full"
-            />
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section

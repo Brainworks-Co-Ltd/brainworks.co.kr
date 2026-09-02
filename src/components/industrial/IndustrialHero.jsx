@@ -88,7 +88,9 @@ function usePauseCauses() {
   });
 
   const set = (key, value) =>
-    setCauses((prev) => (prev[key] === value ? prev : { ...prev, [key]: value }));
+    setCauses((prev) =>
+      prev[key] === value ? prev : { ...prev, [key]: value },
+    );
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -190,11 +192,41 @@ export default function IndustrialHero() {
   return (
     <section
       className="ind-hero ind-dark"
+      /*
+       * 상세 페이지 공통 규칙이 main > section에 위아래 96px을 넣는데,
+       * 자체 여백을 쓰는 히어로는 data-variant로 빠지게 되어 있다.
+       * 이 히어로만 그 표시가 없어서 레일 밑에 96px이 붙어 있었다.
+       * 단색일 때는 안 보이다가 전면 배경이 들어오자 그림으로 드러났다.
+       * 같은 표시가 첫 화면에는 필요 없는 스크롤 등장 애니메이션도 함께 끈다.
+       */
+      data-variant="bleed"
       role="region"
-      aria-label={language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"}
+      aria-label={
+        language === "ko" ? "브레인웍스 사업 영역" : "Brainworks domains"
+      }
       onFocusCapture={() => setPause("focus", true)}
       onBlurCapture={() => setPause("focus", false)}
     >
+      {/*
+        배경은 넷을 모두 깔아두고 투명도로 바꾼다. 한 장만 갈아끼우면 슬롯이
+        돌 때마다 그 자리에서 새로 받아야 해서 배경이 잠깐 비고, 전면 배경은
+        썸네일과 달리 그 빈 화면이 그대로 보인다. 미리 받아두면 교차 전환도
+        공짜로 따라온다. 넷 합쳐 1MB라 미리 받는 편이 싸다.
+      */}
+      <div className="ind-hero__bg" aria-hidden="true">
+        {SLOTS.map((s, i) => (
+          <img
+            key={s.id}
+            src={s.shot}
+            alt=""
+            data-active={i === index}
+            fetchPriority={i === 0 ? "high" : "low"}
+            decoding="async"
+          />
+        ))}
+        <div className="ind-hero__scrim" />
+      </div>
+
       <div className="ind-grid-bg" aria-hidden="true" />
 
       <div className="ind-hero__inner">
@@ -209,7 +241,10 @@ export default function IndustrialHero() {
                 단어가 바뀔 때 문장이 튀지 않고, 고정하면 타이핑 중에
                 빈 공간만 벌어진다. 뒤 문장이 커서를 따라오게 둔다.
               */}
-              <span className="ind-slot" style={{ "--slot-accent": slot.accent }}>
+              <span
+                className="ind-slot"
+                style={{ "--slot-accent": slot.accent }}
+              >
                 {typed}
                 {reduced ? null : <i className="ind-slot__caret" />}
               </span>
@@ -217,7 +252,11 @@ export default function IndustrialHero() {
             </span>
           </h1>
 
-          <p className="ind-lead ind-hero__answer" aria-hidden="true" key={slot.id}>
+          <p
+            className="ind-lead ind-hero__answer"
+            aria-hidden="true"
+            key={slot.id}
+          >
             {slot.answer[language]}
           </p>
 
@@ -229,10 +268,6 @@ export default function IndustrialHero() {
               {language === "ko" ? "상담 신청" : "Talk to us"}
             </Link>
           </div>
-        </div>
-
-        <div className="ind-hero__shot" aria-hidden="true">
-          <img key={slot.id} src={slot.shot} alt="" />
         </div>
       </div>
 
@@ -265,7 +300,6 @@ export default function IndustrialHero() {
           </button>
         ))}
       </div>
-
     </section>
   );
 }

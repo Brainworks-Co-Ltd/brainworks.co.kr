@@ -183,8 +183,8 @@ export default function Consulting() {
       />
       <main id="main-content" data-accent="consulting">
         <PageHero
-          variant="plain"
-          dark
+          variant="media"
+          media={{ kind: "image", src: "/images/services/hero/agent.webp", alt: "" }}
           eyebrow="Brainworks Consulting"
           title={t.heroTitle}
           description={t.heroSubtitle}

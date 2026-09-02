@@ -29,12 +29,8 @@ export default function Services({ areas }) {
       />
       <main id="main-content" data-accent="solution">
         <PageHero
-          variant="plain"
-          dark
-          showcase={{
-            src: "/images/services/AI수율분석솔루션.png",
-            alt: "AI 수율 예측 솔루션 화면",
-          }}
+          variant="media"
+          media={{ kind: "image", src: "/images/services/hero/manufacturing.webp", alt: "" }}
           eyebrow={language === "ko" ? "Brainworks AI" : "Brainworks AI"}
           title={language === "ko" ? "AI 솔루션" : "AI Solutions"}
           description={

@@ -116,7 +116,7 @@
   color: rgb(255 255 255 / 72%);
 }
 
-/* 어두운 구간의 배경 격자. 이미지 자산이 들어가지 않는다 */
+/* 어두운 구간의 배경 격자. 히어로에서는 이미지 위에 얹힌다 */
 .ind-grid-bg {
   position: absolute;
   inset: 0;
@@ -140,14 +140,162 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  /* 레일이 히어로의 바닥이다. 아래 여백을 두지 않는다.
+     이 값이 살아 있으려면 섹션에 data-variant가 있어야 한다. 없으면 상세
+     페이지 공통 규칙이 위아래 96px을 덮어쓴다 */
   padding-block: var(--bw-space-9) 0;
+}
+
+/*
+ * 전면 배경. 이미지가 늘어나지 않도록 cover만 쓴다.
+ * 원본은 1920x1080이고 히어로는 화면 폭에 따라 대략 1.8:1에서 3.2:1까지
+ * 변하므로, cover가 잘라내는 쪽은 위아래다. 넷 다 주제가 가운데 몰리지 않은
+ * 추상 화면이라 위아래가 잘려도 그림이 깨지지 않는다.
+ */
+.ind-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.ind-hero__bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.ind-hero__bg img[data-active="true"] {
+  opacity: 1;
+}
+
+/*
+ * 히어로 그래픽 모션 (08 §1.6, 대표 지시 2026-09-01).
+ * 솔트룩스 홈은 13MB mp4 루프를 깐다. 우리는 아직 영상 에셋이 없으므로
+ * 정지 렌더 위에 느린 줌·드리프트와 빛줄기 하나를 CSS로 얹어 같은 인상을 낸다.
+ * transform과 opacity만 움직여 합성 단계에서 끝난다.
+ * 상세 페이지의 .bw-hero-media도 같은 규칙을 쓴다. 전면 배경은 대비를 스스로
+ * 지키지 못하므로(08 §1.6) 스크림을 ::before로 함께 깐다.
+ * ponytail: 영상 에셋이 오면 PageHeroMedia에 kind:"video"로 꽂고 이 드리프트는 빼도 된다.
+ */
+.ind-hero__bg img[data-active="true"],
+.bw-hero-media img,
+.bw-hero-media video {
+  animation: bw-hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.ind-hero__bg::after,
+.bw-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    rgb(255 255 255 / 6%) 50%,
+    transparent 58%
+  );
+  animation: bw-hero-sweep 11s ease-in-out infinite;
+}
+
+.bw-hero-media {
+  overflow: hidden;
+}
+
+.bw-hero-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(14 16 19 / 94%) 0%,
+      rgb(14 16 19 / 82%) 36%,
+      rgb(14 16 19 / 36%) 66%,
+      rgb(14 16 19 / 0%) 88%
+    ),
+    linear-gradient(180deg, rgb(14 16 19 / 55%) 0%, transparent 30%);
+}
+
+@media (max-width: 1023px) {
+  .bw-hero-media::before {
+    background: linear-gradient(
+      180deg,
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
+    );
+  }
+}
+
+@keyframes bw-hero-drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes bw-hero-sweep {
+  from {
+    transform: translate3d(-55%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(55%, 0, 0);
+  }
+}
+
+/*
+ * 스크림. 문구가 놓이는 왼쪽을 덮어 흰 글자를 읽히게 만든다.
+ * 배경이 원래 어두운 그림이라 두 겹으로 덮으면 그림이 통째로 죽는다.
+ * 왼쪽만 확실히 눌러주고 오른쪽은 그대로 둔다.
+ */
+.ind-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(14 16 19 / 96%) 0%,
+      rgb(14 16 19 / 88%) 32%,
+      rgb(14 16 19 / 38%) 62%,
+      rgb(14 16 19 / 0%) 84%
+    ),
+    linear-gradient(180deg, transparent 60%, rgb(14 16 19 / 70%) 100%);
+}
+
+/*
+ * 좁은 화면에서는 문구가 그림 한가운데를 가로지른다. 가로 방향 스크림으로는
+ * 오른쪽 끝 글자를 못 지키므로 세로 방향으로 바꿔 화면 전체를 눌러준다.
+ * 그림이 어두워지는 대신 글자가 확실히 읽힌다.
+ */
+@media (max-width: 1023px) {
+  .ind-hero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
+    );
+  }
 }
 
 .ind-hero__inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--bw-space-7);
-  align-items: center;
+  align-content: center;
+  min-height: min(72vh, 640px);
   max-width: 1440px;
   margin-inline: auto;
   padding: 0 var(--bw-space-5) var(--bw-space-8);
@@ -155,7 +303,8 @@
 
 @media (min-width: 1024px) {
   .ind-hero__inner {
-    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+    /* 문구가 그림의 밝은 쪽까지 넘어가지 않도록 왼쪽 절반에 묶는다 */
+    grid-template-columns: minmax(0, 48%);
     gap: var(--bw-space-8);
   }
 }
@@ -177,15 +326,6 @@
   margin-top: var(--bw-space-6);
 }
 
-.ind-hero__shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: var(--bw-radius-feature);
-  border: 1px solid rgb(255 255 255 / 12%);
-  box-shadow: 0 40px 90px rgb(0 0 0 / 45%);
-}
-
 @keyframes ind-rise {
   from {
     opacity: 0;
@@ -201,15 +341,34 @@
   .ind-hero__answer {
     animation: none;
   }
+
+  .ind-hero__bg img {
+    transition: none;
+  }
+
+  .ind-hero__bg img[data-active="true"],
+  .bw-hero-media img,
+  .bw-hero-media video,
+  .ind-hero__bg::after,
+  .bw-hero-media::after {
+    animation: none;
+  }
 }
 
 /* 하단 레일 */
 .ind-hero__rail {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   max-width: 1440px;
   margin-inline: auto;
   border-top: 1px solid rgb(255 255 255 / 10%);
+  /*
+   * 레일은 원래 단색 위에 있었다. 전면 배경이 들어오면서 밝은 그림 위에
+   * 얹히자 탭 글자 대비가 2.97:1(활성), 1.81:1(비활성)까지 떨어졌다.
+   * 14px 글자 기준 4.5:1을 못 지키므로 레일에 자기 배경을 돌려준다.
+   */
+  background: rgb(14 16 19 / 95%);
 }
 
 .ind-hero__tab {
@@ -594,7 +753,9 @@
 
 /* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
    히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다. */
-:root[data-design="industrial"] main > section:not([data-variant]):not(.bw-audience),
+:root[data-design="industrial"]
+  main
+  > section:not([data-variant]):not(.bw-audience),
 :root[data-design="industrial"] main > div > section:not([data-variant]) {
   padding-block: var(--bw-space-9);
 }
@@ -657,10 +818,10 @@
  * --------------------------------------------------------------- */
 
 :root[data-design="industrial"] {
-  --bw-accent: #d29b15;        /* 강조 면. 잉크 글자와 7.14 */
+  --bw-accent: #d29b15; /* 강조 면. 잉크 글자와 7.14 */
   --bw-accent-strong: #f0be4e; /* 밝은 골드. 잉크와 10.3 */
-  --bw-accent-soft: #fdf6e3;   /* 칩 배경 */
-  --bw-accent-text: #8a6408;   /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
+  --bw-accent-soft: #fdf6e3; /* 칩 배경 */
+  --bw-accent-text: #8a6408; /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
 }
 
 /* 카테고리 칩 */
@@ -706,7 +867,9 @@
  * 잍크를 얹으면 7.14로 통과한다. DeepLearning.AI가 딥레드 면 위에
  * 흰 글자를 쓰는 것과 같은 구조다. 면과 글자를 한 쌍으로 묶어 지정한다.
  */
-:root[data-design="industrial"] main .rounded-full.bg-\[var\(--bw-color-brand\)\] {
+:root[data-design="industrial"]
+  main
+  .rounded-full.bg-\[var\(--bw-color-brand\)\] {
   background-color: var(--bw-accent) !important;
   color: var(--bw-ink) !important;
 }
@@ -836,8 +999,12 @@
  * 그 값은 어두운 면에서 2.2라 읽히지 않는다. 08 §2.2.1이 정한
  * 어두운 구간용 밝은 골드로 바꾼다 (#0e1013 위에서 10.3).
  * --------------------------------------------------------------- */
-:root[data-design="industrial"] .bg-\[var\(--bw-color-ink\)\] [class*="uppercase"][class*="tracking"],
-:root[data-design="industrial"] .bg-\[var\(--bw-color-surface-dark\)\] [class*="uppercase"][class*="tracking"] {
+:root[data-design="industrial"]
+  .bg-\[var\(--bw-color-ink\)\]
+  [class*="uppercase"][class*="tracking"],
+:root[data-design="industrial"]
+  .bg-\[var\(--bw-color-surface-dark\)\]
+  [class*="uppercase"][class*="tracking"] {
   color: var(--bw-accent-strong);
 }
 
@@ -860,28 +1027,28 @@
 }
 
 :root[data-design="industrial"] [data-accent="solution"] {
-  --bw-svc: #00bdde;        /* cyan-600 */
+  --bw-svc: #00bdde; /* cyan-600 */
   --bw-svc-bright: #4dd9f2; /* 어두운 면 위 강조 */
-  --bw-svc-ink: #00606f;    /* 밝은 면 위 글자 */
+  --bw-svc-ink: #00606f; /* 밝은 면 위 글자 */
   --bw-svc-soft: #e6f8fc;
 }
 
 :root[data-design="industrial"] [data-accent="consulting"] {
-  --bw-svc: #fb8502;        /* orange-600 */
+  --bw-svc: #fb8502; /* orange-600 */
   --bw-svc-bright: #ffab4d;
   --bw-svc-ink: #8a4700;
   --bw-svc-soft: #fff2e3;
 }
 
 :root[data-design="industrial"] [data-accent="education"] {
-  --bw-svc: #57cf07;        /* lime-600 */
+  --bw-svc: #57cf07; /* lime-600 */
   --bw-svc-bright: #8ae64b;
   --bw-svc-ink: #2f6b04;
   --bw-svc-soft: #eefae1;
 }
 
 :root[data-design="industrial"] [data-accent="global"] {
-  --bw-svc: #ca59ff;        /* purple-600 */
+  --bw-svc: #ca59ff; /* purple-600 */
   --bw-svc-bright: #dd91ff;
   --bw-svc-ink: #7a1aa3;
   --bw-svc-soft: #f9ecff;
@@ -915,13 +1082,23 @@
     ),
     /* 2. 서비스 색을 위쪽에 물린다 */
     linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 26%, var(--bw-surface-dark)) 0%,
-      var(--bw-surface-dark) 38%,
-      var(--bw-surface-dark) 62%,
-      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 12%, var(--bw-surface-dark)) 78%,
-      var(--bw-surface-muted) 100%
-    );
+        180deg,
+        color-mix(
+            in oklab,
+            var(--bw-svc, var(--bw-accent)) 26%,
+            var(--bw-surface-dark)
+          )
+          0%,
+        var(--bw-surface-dark) 38%,
+        var(--bw-surface-dark) 62%,
+        color-mix(
+            in oklab,
+            var(--bw-svc, var(--bw-accent)) 12%,
+            var(--bw-surface-dark)
+          )
+          78%,
+        var(--bw-surface-muted) 100%
+      );
 }
 
 /* 1. 그레인. feTurbulence 한 장을 겹친다 */
@@ -933,10 +1110,6 @@
   pointer-events: none;
   opacity: 0.085;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-}
-
-:root[data-design="industrial"] .bw-hero-showcase {
-  border-top: 3px solid var(--bw-svc, var(--bw-accent));
 }
 
 /* ---------------------------------------------------------------
@@ -1000,7 +1173,12 @@
     linear-gradient(
       180deg,
       var(--bw-surface-dark) 0%,
-      color-mix(in oklab, var(--bw-svc, var(--bw-accent)) 16%, var(--bw-surface-dark)) 50%,
+      color-mix(
+          in oklab,
+          var(--bw-svc, var(--bw-accent)) 16%,
+          var(--bw-surface-dark)
+        )
+        50%,
       var(--bw-surface-dark) 100%
     );
 }

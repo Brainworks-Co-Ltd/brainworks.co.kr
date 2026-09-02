@@ -224,9 +224,8 @@ export default function Outbound() {
 
       <main id="main-content" data-accent="global" className="pb-16">
         <PageHero
-          variant="plain"
-          dark
-          showcase={{ src: "/images/outbound/맵.png", alt: "글로벌 AI 네트워크 파트너 현황" }}
+          variant="media"
+          media={{ kind: "image", src: "/images/services/hero/smartcity.webp", alt: "" }}
           eyebrow={t.heroBadge}
           title={t.heroTitle}
           description={t.heroSubtitle}
