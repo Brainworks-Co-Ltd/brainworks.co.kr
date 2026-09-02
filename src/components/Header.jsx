@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { DesktopNavigation } from "@/components/public/DesktopNavigation";
@@ -18,6 +18,24 @@ export default function Header() {
   const router = useRouter();
   const { language } = useLocale();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerRef = useRef(null);
+  const [isHidden, setIsHidden] = useState(false);
+
+  // 아래로 스크롤하면 헤더를 숨기고 위로 올리면 보인다. 메뉴가 열려 있거나 헤더 안에 초점이 있으면 숨기지 않는다.
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const el = headerRef.current;
+      const busy =
+        el?.contains(document.activeElement) ||
+        el?.querySelector('[aria-expanded="true"]');
+      setIsHidden(!busy && y > 100 && y > last);
+      last = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const targetLocale = language === "ko" ? "en" : "ko";
   const routeKey = getRouteKey(router.asPath);
   const items = buildPublicNavigation(language);
@@ -34,7 +52,12 @@ export default function Header() {
   };
 
   return (
-    <header className="bw-header fixed inset-x-0 top-0 z-50 bg-white">
+    <header
+      ref={headerRef}
+      data-hidden={isHidden || undefined}
+      onFocus={() => setIsHidden(false)}
+      className="bw-header fixed inset-x-0 top-0 z-50 bg-white"
+    >
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5">
         <Link
           href={getLocalizedPath("home", language)}

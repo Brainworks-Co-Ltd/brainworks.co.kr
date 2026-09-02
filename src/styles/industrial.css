@@ -600,6 +600,20 @@
   border-bottom: 0;
 }
 
+:root[data-design="industrial"] .bw-header {
+  transition: transform var(--bw-motion-press);
+}
+
+:root[data-design="industrial"] .bw-header[data-hidden] {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design="industrial"] .bw-header {
+    transition: none;
+  }
+}
+
 :root[data-design="industrial"] .border-slate-100,
 :root[data-design="industrial"] .border-slate-200,
 :root[data-design="industrial"] .border-slate-300 {
