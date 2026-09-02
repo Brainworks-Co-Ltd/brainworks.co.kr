@@ -51,12 +51,10 @@ export default function HonorsPage({
   const t = copy[language];
 
   return (
-    <div
-      id="main-content"
-      className="min-h-screen bg-[var(--bw-color-surface-muted)]"
-    >
+    <div className="min-h-screen bg-[var(--bw-color-surface-muted)]">
       <Header />
       <SeoMetadata title={`${t.title} | Brainworks`} description={t.subtitle} />
+      <main id="main-content">
       <PageHero
         variant="plain"
         eyebrow="About Brainworks"
@@ -159,6 +157,7 @@ export default function HonorsPage({
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>
