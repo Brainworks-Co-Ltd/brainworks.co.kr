@@ -278,6 +278,7 @@ export default function News({ newsItems }) {
                 type="search"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
+                aria-label={language === "ko" ? "소식 검색" : "Search news"}
                 placeholder={
                   language === "ko" ? "검색어를 입력하세요" : "Search news"
                 }
