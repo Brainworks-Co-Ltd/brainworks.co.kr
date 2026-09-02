@@ -34,7 +34,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bw-header fixed inset-x-0 top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+    <header className="bw-header fixed inset-x-0 top-0 z-50 bg-white">
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5">
         <Link
           href={getLocalizedPath("home", language)}
