@@ -77,12 +77,12 @@ export default function Footer() {
                   <p className="text-sm font-semibold text-white">
                     {group.label}
                   </p>
-                  <ul className="mt-3 space-y-2">
+                  <ul className="mt-1">
                     {group.children.map((child) => (
                       <li key={child.id}>
                         <Link
                           href={child.href}
-                          className="text-sm text-slate-400 transition hover:text-white"
+                          className="inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
                         >
                           {child.label}
                         </Link>
@@ -98,7 +98,7 @@ export default function Footer() {
                   </p>
                   <Link
                     href={contact.href}
-                    className="mt-3 inline-flex text-sm text-slate-400 transition hover:text-white"
+                    className="mt-1 inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
                   >
                     {contact.label}
                   </Link>

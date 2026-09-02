@@ -60,7 +60,7 @@ export default function Header() {
           <button
             type="button"
             onClick={toggleLanguage}
-            className="hidden rounded-full border border-slate-300 px-3 py-1.5 text-xs font-semibold text-[var(--bw-color-ink)] transition hover:border-[var(--bw-color-ink)] lg:inline-flex"
+            className="hidden rounded-full border border-slate-300 px-3 py-3.5 text-xs font-semibold text-[var(--bw-color-ink)] transition hover:border-[var(--bw-color-ink)] lg:inline-flex"
           >
             {language === "ko" ? "EN" : "KO"}
           </button>
