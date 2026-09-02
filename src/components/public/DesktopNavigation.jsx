@@ -73,7 +73,7 @@ export function DesktopNavigation({
                 <Link
                   href={item.href}
                   aria-current={activeGroup === item.id ? "page" : undefined}
-                  className="rounded-full px-3 py-3 text-sm font-medium text-[var(--bw-color-muted)] transition hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"
+                  className="inline-flex items-center rounded-full px-3 py-3 text-sm font-medium text-[var(--bw-color-muted)] transition hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"
                 >
                   {item.label}
                 </Link>
