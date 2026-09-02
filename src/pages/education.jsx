@@ -495,12 +495,8 @@ export default function Education() {
         <PageHero
           variant="media"
           media={{ kind: "image", src: "/images/services/hero/healthcare.webp", alt: "" }}
-          eyebrow="AI Professional Education"
-          title={
-            language === "ko"
-              ? "체계적인 AI 전문 인재 양성"
-              : "Structured development of AI specialists"
-          }
+          eyebrow="Brainworks Education"
+          title={language === "ko" ? "AI 전문교육" : "AI Professional Education"}
           description={
             language === "ko"
               ? "AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성"
