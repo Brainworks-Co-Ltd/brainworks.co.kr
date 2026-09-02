@@ -21,7 +21,14 @@ export default class BrainworksDocument extends Document {
     // 붙이면 첫 프레임에 흰 화면이 번쩍인다.
     return (
       <Html lang={locale} data-design="industrial">
-        <Head />
+        <Head>
+          {/* 드러남 숨김 상태를 첫 페인트 전에 켠다. 훅(_app useReveal)이 붙이면 한 프레임 보였다가 사라진다. */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: 'document.documentElement.dataset.reveal="";',
+            }}
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />

@@ -920,9 +920,7 @@
  * 맞춰 올라오며 나타난다. 정지 화면에서 카드가 한꺼번에 놓여 있는 것과
  * 인상이 크게 다르다.
  *
- * 라이브러리를 쓰지 않는다. CSS 스크롤 타임라인(animation-timeline: view())이
- * 그대로 한다. 미지원 브라우저(파이어폭스)는 @supports 밖이라 처음부터
- * 최종 상태로 보인다. 자바스크립트도, 번들 증가도 없다.
+ * 라이브러리를 쓰지 않는다. IntersectionObserver 12줄과 CSS transition으로 한다.
  *
  * 08 §2.7: 자리 이동은 --bw-motion-move(1s)를 따르고
  * prefers-reduced-motion에서는 전환을 끄고 최종 상태를 바로 보여준다.
@@ -931,71 +929,58 @@
  * 첫 화면이라 드러날 스크롤 구간이 없다.
  * --------------------------------------------------------------- */
 
-@keyframes bw-colorize {
-  from {
-    filter: grayscale(1);
+/* 요소가 화면에 들어오는 순간 IntersectionObserver(_app.jsx useReveal)가
+ * data-in을 한 번 붙이고, 여기서는 그 전후 상태만 transition으로 잇는다.
+ * 스크롤 위치에 진행도를 묶는 방식(animation-timeline)은 빨리 내리면 순간에
+ * 끝나고 큰 화면에서는 시작도 못 해 효과가 안 읽혔다(2026-09-02).
+ * 숨김 상태는 훅이 :root에 data-reveal을 붙인 뒤에만 적용되므로
+ * 자바스크립트가 없으면 처음부터 최종 상태로 보인다. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-design="industrial"][data-reveal="ready"] main > section:not([data-variant]),
+  :root[data-design="industrial"][data-reveal="ready"] main > div > section:not([data-variant]),
+  :root[data-design="industrial"][data-reveal="ready"] .bw-reveal {
+    transition:
+      opacity var(--bw-motion-move),
+      transform var(--bw-motion-move);
   }
-  to {
-    filter: grayscale(0);
-  }
-}
-
-@keyframes bw-reveal {
-  from {
+  :root[data-design="industrial"][data-reveal]
+    main
+    > section:not([data-variant]):not([data-in]),
+  :root[data-design="industrial"][data-reveal]
+    main
+    > div
+    > section:not([data-variant]):not([data-in]),
+  :root[data-design="industrial"][data-reveal] .bw-reveal:not([data-in]) {
     opacity: 0;
     transform: translateY(24px);
   }
-  to {
-    opacity: 1;
-    transform: none;
+
+  /* 사업 분야 렌더는 흑백으로 들어와 원색이 된다. 글자에는 걸지 않는다. */
+  :root[data-design="industrial"][data-reveal="ready"] .ind-domain__shot {
+    transition: filter var(--bw-motion-move);
+  }
+  :root[data-design="industrial"][data-reveal]
+    .ind-domain:not([data-in])
+    .ind-domain__shot {
+    filter: grayscale(1);
   }
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    :root[data-design="industrial"] main > section:not([data-variant]),
-    :root[data-design="industrial"] main > div > section:not([data-variant]),
-    :root[data-design="industrial"] .bw-reveal {
-      animation: bw-reveal linear both;
-      animation-timeline: view();
-      /* 구간을 백분율로 주면 안 된다. entry 백분율은 요소 높이에
-       * 비례하므로 뉴포트보다 긴 섹션은 구간이 끝나지 않아 opacity 0에
-       * 머무른다. /services의 사업 영역 구간이 통째로 안 보였다.
-       * 고정 길이로 주면 높이와 무관하게 240px 안에 끝난다. */
-      animation-range: entry 0% entry 240px;
-    }
-
-    /* 사업 분야 렌더는 흑백으로 들어와 스크롤과 함께 원색이 된다. 타일 이동보다
-     * 조금 긴 구간을 줘서 타일이 자리 잡은 뒤 색이 켜진다. 글자에는 걸지 않는다. */
-    /* 타일이 overflow: hidden이라 이미지 자신의 view()는 타일을 스크롤러로 잡아
-     * 항상 100%가 된다. 타일에 이름 있는 뷰 타임라인을 두고 이미지가 그것을 쓴다. */
-    :root[data-design="industrial"] .ind-domain {
-      view-timeline: --bw-shot;
-    }
-    :root[data-design="industrial"] .ind-domain__shot {
-      animation: bw-colorize linear both;
-      animation-timeline: --bw-shot;
-      animation-range: entry 0% entry 360px;
-    }
-  }
-}
-
-/* 인쇄와 스크롤 없는 캡처에서는 드러남을 끈다.
- * 스크롤 타임라인은 스크롤 위치에 매여 있어서, 스크롤이 없는 맥락에서는
- * 화면 아래 구간이 통째로 투명하게 남는다. */
+/* 인쇄에서는 드러남을 끈다 */
 @media print {
   :root[data-design="industrial"] main > section,
   :root[data-design="industrial"] main > div > section,
   :root[data-design="industrial"] .bw-reveal {
-    animation: none !important;
+    transition: none !important;
     opacity: 1 !important;
     transform: none !important;
   }
   :root[data-design="industrial"] .ind-domain__shot {
-    animation: none !important;
+    transition: none !important;
     filter: none !important;
   }
 }
+
 
 /* ---------------------------------------------------------------
  * 2.4 타이포 스케일 (docs/planning/08-design-system.md)
