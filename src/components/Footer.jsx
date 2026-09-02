@@ -74,9 +74,9 @@ export default function Footer() {
             >
               {groups.map((group) => (
                 <div key={group.id}>
-                  <h2 className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-white">
                     {group.label}
-                  </h2>
+                  </p>
                   <ul className="mt-3 space-y-2">
                     {group.children.map((child) => (
                       <li key={child.id}>
@@ -93,9 +93,9 @@ export default function Footer() {
               ))}
               {contact ? (
                 <div>
-                  <h2 className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-white">
                     {contact.label}
-                  </h2>
+                  </p>
                   <Link
                     href={contact.href}
                     className="mt-3 inline-flex text-sm text-slate-400 transition hover:text-white"
@@ -133,9 +133,9 @@ export default function Footer() {
             aria-label={certLabel[language]}
             className="border-t border-slate-800 pt-8"
           >
-            <h2 className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-white">
               {certLabel[language]}
-            </h2>
+            </p>
             <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {certificationsData.map((cert) => (
                 <li
