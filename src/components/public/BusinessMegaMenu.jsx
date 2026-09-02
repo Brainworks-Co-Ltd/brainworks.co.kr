@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 /*
  * 사업 영역 메뉴.
@@ -60,7 +60,7 @@ export function BusinessMegaMenu({
               className="group flex items-center justify-between gap-4 rounded-[var(--bw-radius-control)] px-4 py-3 text-base font-semibold text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
             >
               {entry.label}
-              <ArrowUpRight
+              <ArrowRight
                 aria-hidden="true"
                 className="size-4 shrink-0 text-[var(--bw-color-muted)] transition group-hover:text-[var(--bw-color-ink)]"
               />
