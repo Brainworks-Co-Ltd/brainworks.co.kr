@@ -508,6 +508,31 @@
   gap: var(--bw-space-4);
 }
 
+/* 1024px 이상에서는 솔루션 수(4/2/2/3)만큼 타일 크기를 달리 준다.
+ * 제조가 왼쪽 두 행, 스마트시티가 오른쪽 위 가로, 나머지 둘이 오른쪽 아래.
+ * ponytail: 순서를 데이터가 아니라 nth-child로 잡는다. 영역이 4개가 아니게 되면
+ * grid-template-areas를 다시 짜야 한다. */
+@media (min-width: 1024px) {
+  .ind-domains__grid {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-areas:
+      "mfg city city"
+      "mfg agent health";
+  }
+  .ind-domain:nth-child(1) { grid-area: mfg; }
+  .ind-domain:nth-child(2) { grid-area: agent; }
+  .ind-domain:nth-child(3) { grid-area: health; }
+  .ind-domain:nth-child(4) { grid-area: city; }
+  .ind-domain:nth-child(1) .ind-domain__shot {
+    flex: 1 1 0;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+  .ind-domain:nth-child(4) .ind-domain__shot {
+    aspect-ratio: 32 / 10;
+  }
+}
+
 .ind-domain {
   position: relative;
   display: flex;
@@ -906,6 +931,15 @@
  * 첫 화면이라 드러날 스크롤 구간이 없다.
  * --------------------------------------------------------------- */
 
+@keyframes bw-colorize {
+  from {
+    filter: grayscale(1);
+  }
+  to {
+    filter: grayscale(0);
+  }
+}
+
 @keyframes bw-reveal {
   from {
     opacity: 0;
@@ -930,6 +964,19 @@
        * 고정 길이로 주면 높이와 무관하게 240px 안에 끝난다. */
       animation-range: entry 0% entry 240px;
     }
+
+    /* 사업 분야 렌더는 흑백으로 들어와 스크롤과 함께 원색이 된다. 타일 이동보다
+     * 조금 긴 구간을 줘서 타일이 자리 잡은 뒤 색이 켜진다. 글자에는 걸지 않는다. */
+    /* 타일이 overflow: hidden이라 이미지 자신의 view()는 타일을 스크롤러로 잡아
+     * 항상 100%가 된다. 타일에 이름 있는 뷰 타임라인을 두고 이미지가 그것을 쓴다. */
+    :root[data-design="industrial"] .ind-domain {
+      view-timeline: --bw-shot;
+    }
+    :root[data-design="industrial"] .ind-domain__shot {
+      animation: bw-colorize linear both;
+      animation-timeline: --bw-shot;
+      animation-range: entry 0% entry 360px;
+    }
   }
 }
 
@@ -943,6 +990,10 @@
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+  :root[data-design="industrial"] .ind-domain__shot {
+    animation: none !important;
+    filter: none !important;
   }
 }
 
