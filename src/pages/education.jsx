@@ -536,7 +536,9 @@ export default function Education() {
               return (
                 <article
                   key={step.id}
-                  className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white"
+                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white"
                 >
                   <div
                     className={`flex flex-col gap-8 px-6 py-8 md:gap-10 md:px-10 md:py-12 ${
@@ -639,7 +641,9 @@ export default function Education() {
             {generativeAITracks.map((track, trackIndex) => (
               <article
                 key={track.id}
-                className="grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12 md:px-8"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(trackIndex, 6) * 80}ms` }}
+                className="bw-reveal grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12 md:px-8"
               >
                 <div>
                   {/* 번호 마커 — 레퍼런스 실측(DeepLearning.AI)의 카테고리 칩 자리 */}
@@ -679,10 +683,12 @@ export default function Education() {
             />
           </div>
           <div className="grid gap-0 border-y border-[var(--bw-color-line)] bg-white sm:grid-cols-3">
-            {educationClients.map((client) => (
+            {educationClients.map((client, index) => (
               <div
                 key={client.id}
-                className="flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
+                /* 로고가 한 줄씩 채워지듯 들어오게 한다. 지연만 주고 나머지는 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
               >
                 <img
                   src={client.logo}
@@ -710,10 +716,12 @@ export default function Education() {
           />
 
           <div className="grid gap-6">
-            {supportPillars.map((pillar) => (
+            {supportPillars.map((pillar, index) => (
               <div
                 key={pillar.id}
-                className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {pillar.title[language]}

@@ -214,11 +214,15 @@ export default function Consulting() {
           title={t.valueTitle}
           surface="plain"
         >
+          {/* 카드가 한꺼번에 올라오지 않도록 순서대로 지연을 준다. 숨김·전환·저동작·
+              인쇄 처리는 industrial.css의 .bw-reveal 규칙(--bw-motion-move)이 그대로 맡고,
+              여기서는 시작 시점만 어긋나게 한다. */}
           <div className="grid gap-6">
-            {offerings.map((item) => (
+            {offerings.map((item, index) => (
               <article
                 key={item.id}
-                className="grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
                 <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {item.title[language]}
@@ -246,11 +250,14 @@ export default function Consulting() {
           title={t.processTitle}
           surface="muted"
         >
+          {/* 단계 목록도 같은 규칙으로 순차 등장시킨다. 스크롤 위치에 진행도를 묶지 않고
+              뷰포트 진입 한 번으로 끝내므로 자동 재생이 아니다(명세 §23.3). */}
           <ol className="grid gap-4">
-            {processSteps.map((step) => (
+            {processSteps.map((step, index) => (
               <li
                 key={step.id}
-                className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
               >
                 <div>
                   <span className="bw-marker">0{step.id}</span>
