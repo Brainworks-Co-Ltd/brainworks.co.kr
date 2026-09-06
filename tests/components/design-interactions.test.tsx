@@ -47,38 +47,28 @@ describe("디자인 개선의 탐색과 제목", () => {
     expect(tabs[0]).toHaveFocus();
   });
 
-  it("첫 화면은 시간이 지나도 완성된 질문을 유지하고 직접 선택한 현장의 답을 읽을 수 있다", () => {
+  it("현장 이름을 지우고 다음 현장을 타이핑하며 재생 버튼은 표시하지 않는다", () => {
     vi.useFakeTimers();
-    render(<IndustrialHero />);
-    const title = screen.getByRole("heading", { level: 1 });
-    expect(title).toHaveAccessibleName(
-      "제조 현장의 문제를 AI로 풀 수 있을까요?",
-    );
-    act(() => vi.advanceTimersByTime(2500));
-    expect(title).toHaveAccessibleName(
-      "제조 현장의 문제를 AI로 풀 수 있을까요?",
-    );
-    fireEvent.click(screen.getByRole("button", { name: /진료 현장/ }));
-    expect(title).toHaveTextContent("진료 현장의 문제를 AI로 풀 수 있을까요?");
+    const { container } = render(<IndustrialHero />);
+    const slot = container.querySelector(".ind-slot");
+    expect(slot).toHaveTextContent("제조 현장");
+    act(() => vi.advanceTimersByTime(2400));
+    act(() => vi.advanceTimersByTime(40));
+    expect(slot).toHaveTextContent("제조 현");
+    expect(slot).not.toHaveTextContent("제조 현장");
+    for (let i = 0; i < 20; i += 1) act(() => vi.advanceTimersByTime(80));
+    expect(slot).toHaveTextContent("진료 현장");
     expect(
-      screen.getByText("심전도와 치과 영상 판독을 자동화했습니다."),
-    ).toBeVisible();
-    act(() => vi.advanceTimersByTime(10000));
-    expect(title).toHaveTextContent("진료 현장의 문제를 AI로 풀 수 있을까요?");
-  });
-
-  it("그래픽을 정지한 뒤 다른 현장을 선택해도 멈춤을 유지하고 직접 다시 재생한다", () => {
-    render(<IndustrialHero />);
-    const hero = screen.getByRole("region", { name: "브레인웍스 사업 영역" });
-    fireEvent.click(screen.getByRole("button", { name: "움직임 정지" }));
-    expect(hero).toHaveAttribute("data-motion-paused", "true");
+      screen.queryByRole("button", { name: /움직임/ }),
+    ).not.toBeInTheDocument();
+    fireEvent.focus(screen.getByRole("button", { name: /도시 관제/ }));
     fireEvent.click(screen.getByRole("button", { name: /도시 관제/ }));
-    expect(hero).toHaveAttribute("data-motion-paused", "true");
-    fireEvent.click(screen.getByRole("button", { name: "움직임 다시 보기" }));
-    expect(hero).toHaveAttribute("data-motion-paused", "false");
+    act(() => vi.advanceTimersByTime(10000));
+    expect(slot).toHaveTextContent("도시 관제");
   });
 
-  it("동작 줄이기 설정은 그래픽 재생보다 우선한다", () => {
+  it("동작 줄이기를 사용하면 완성된 현장 이름을 유지한다", () => {
+    vi.useFakeTimers();
     vi.stubGlobal(
       "matchMedia",
       vi.fn(() => ({
@@ -87,12 +77,12 @@ describe("디자인 개선의 탐색과 제목", () => {
         removeEventListener: vi.fn(),
       })),
     );
-    render(<IndustrialHero />);
+    const { container } = render(<IndustrialHero />);
+    act(() => vi.advanceTimersByTime(10000));
+    expect(container.querySelector(".ind-slot")).toHaveTextContent("제조 현장");
+    expect(container.querySelector(".ind-slot__caret")).toBeNull();
     expect(
-      screen.getByRole("region", { name: "브레인웍스 사업 영역" }),
-    ).toHaveAttribute("data-motion-paused", "true");
-    expect(
-      screen.getByRole("button", { name: "동작 줄이기 적용 중" }),
-    ).toBeDisabled();
+      screen.queryByRole("button", { name: /움직임/ }),
+    ).not.toBeInTheDocument();
   });
 });

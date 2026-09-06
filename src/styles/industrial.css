@@ -30,7 +30,7 @@
   --bw-brand: #d29b15;
 
   /* 이전 산업별 색 토큰은 참조 호환을 위해 남긴다.
-     현장 선택은 공통 청록을 쓰며 서비스 분류색은 아래 data-accent가 맡는다. */
+     히어로는 골드로 통일하고 본문의 서비스 분류색은 아래 data-accent가 맡는다. */
   --bw-slot-manufacturing: #00bdde;
   --bw-slot-healthcare: #57cf07;
   --bw-slot-smartcity: #fb8502;
@@ -55,7 +55,6 @@
   /* 2.7 움직임 */
   --bw-motion-press: 0.2s ease;
   --bw-motion-move: 1s cubic-bezier(0.4, 0, 0.2, 1);
-  --bw-motion-scene: 4s ease-out;
 }
 
 :root[data-design="industrial"] body {
@@ -137,20 +136,35 @@
  * 히어로
  * --------------------------------------------------------------- */
 
+/* 히어로는 본문의 청록 팔레트와 분리해 원래 중립색과 골드만 사용한다. */
+:root[data-design="industrial"] .ind-hero,
+:root[data-design="industrial"] section[data-variant="media"] {
+  --bw-surface-dark: #0e1013;
+  --bw-surface-dark-deep: #181b21;
+  --bw-ink: #16181d;
+  --bw-accent: var(--bw-brand);
+  --bw-accent-text: var(--bw-brand);
+}
 .ind-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-top: 64px;
+  /* 레일이 히어로의 바닥이다. 아래 여백을 두지 않는다.
+     이 값이 살아 있으려면 섹션에 data-variant가 있어야 한다. 없으면 상세
+     페이지 공통 규칙이 위아래 96px을 덮어쓴다 */
+  padding-block: var(--bw-space-9) 0;
 }
 
-/* 문구는 짙은 면에서 읽고, 빛과 형상은 오른쪽에서 드러난다. */
+/*
+ * 전면 배경. 이미지가 늘어나지 않도록 cover만 쓴다.
+ * 원본은 1920x1080이고 히어로는 화면 폭에 따라 대략 1.8:1에서 3.2:1까지
+ * 변하므로, cover가 잘라내는 쪽은 위아래다. 넷 다 주제가 가운데 몰리지 않은
+ * 추상 화면이라 위아래가 잘려도 그림이 깨지지 않는다.
+ */
 .ind-hero__bg {
   position: absolute;
-  inset: 0 0 0 38%;
+  inset: 0;
   z-index: -2;
-  overflow: hidden;
-  background: var(--bw-surface-dark);
 }
 
 .ind-hero__bg img {
@@ -159,34 +173,30 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 52% center;
   opacity: 0;
-  filter: saturate(0.5) brightness(0.85);
-  transition: opacity var(--bw-motion-press);
+  transition: opacity 0.6s ease;
 }
 
 .ind-hero__bg img[data-active="true"] {
   opacity: 1;
 }
-.ind-hero__tint,
-.bw-hero-media__tint {
-  position: absolute;
-  inset: 0;
-  background: var(--bw-graphic);
-  mix-blend-mode: color;
-  opacity: 0.7;
-  pointer-events: none;
+
+/*
+ * 히어로 그래픽 모션 (08 §1.6, 대표 지시 2026-09-01).
+ * 솔트룩스 홈은 13MB mp4 루프를 깐다. 우리는 아직 영상 에셋이 없으므로
+ * 정지 렌더 위에 느린 줌·드리프트와 빛줄기 하나를 CSS로 얹어 같은 인상을 낸다.
+ * transform과 opacity만 움직여 합성 단계에서 끝난다.
+ * 상세 페이지의 .bw-hero-media도 같은 규칙을 쓴다. 전면 배경은 대비를 스스로
+ * 지키지 못하므로(08 §1.6) 스크림을 ::before로 함께 깐다.
+ * ponytail: 영상 에셋이 오면 PageHeroMedia에 kind:"video"로 꽂고 이 드리프트는 빼도 된다.
+ */
+.ind-hero__bg img[data-active="true"],
+.bw-hero-media img,
+.bw-hero-media video {
+  animation: bw-hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
-.ind-hero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, var(--bw-surface-dark), transparent 68%),
-    linear-gradient(0deg, var(--bw-surface-dark), transparent 42%);
-}
-
-/* 빛 한 번으로 장면을 강조한다. 반복·줌·본문 이동을 겹치지 않는다. */
 .ind-hero__bg::after,
 .bw-hero-media::after {
   content: "";
@@ -195,105 +205,18 @@
   z-index: 2;
   pointer-events: none;
   background: linear-gradient(
-    110deg,
-    transparent 38%,
-    rgb(113 214 199 / 20%) 50%,
-    transparent 62%
+    115deg,
+    transparent 42%,
+    rgb(255 255 255 / 6%) 50%,
+    transparent 58%
   );
-  animation: bw-hero-sweep var(--bw-motion-scene) both;
+  animation: bw-hero-sweep 11s ease-in-out infinite;
 }
 
-@keyframes bw-hero-sweep {
-  0% {
-    transform: translate3d(-55%, 0, 0);
-    opacity: 0;
-  }
-  35%,
-  65% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate3d(55%, 0, 0);
-    opacity: 0;
-  }
-}
-
-[data-motion-paused="true"] .ind-hero__bg::after,
-[data-motion-paused="true"] .bw-hero-media::after {
-  animation-play-state: paused;
-}
-
-.ind-hero__inner {
-  display: grid;
-  align-content: center;
-  min-height: 600px;
-  max-width: 1280px;
-  margin-inline: auto;
-  padding: 64px 24px 96px;
-}
-.ind-hero__copy {
-  max-width: 680px;
-}
-.ind-dark .ind-eyebrow {
-  color: var(--bw-graphic);
-}
-.ind-hero__title {
-  margin-top: var(--bw-space-5);
-}
-.ind-hero__question {
-  display: block;
-}
-.ind-hero__answer {
-  margin-top: var(--bw-space-5);
-  max-width: 32rem;
-}
-.ind-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 32px;
-}
-.ind-hero .ind-slot {
-  color: var(--bw-graphic);
-}
-
-.bw-motion-control {
-  position: absolute;
-  z-index: 3;
-  right: 24px;
-  bottom: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid rgb(255 255 255 / 24%);
-  border-radius: var(--bw-radius-control);
-  background: var(--bw-surface-dark);
-  color: #d4e8e1;
-  font-size: 12px;
-  cursor: pointer;
-}
-.bw-motion-control:hover:not(:disabled) {
-  border-color: var(--bw-graphic);
-}
-.bw-motion-control:disabled {
-  cursor: default;
-}
-.bw-motion-control:focus-visible {
-  outline: 2px solid var(--bw-graphic);
-  outline-offset: 4px;
-}
-.ind-hero .bw-motion-control {
-  bottom: 92px;
-}
-
-.bw-service-hero {
-  background: var(--bw-surface-dark);
-}
 .bw-hero-media {
   overflow: hidden;
 }
+
 .bw-hero-media::before {
   content: "";
   position: absolute;
@@ -302,88 +225,142 @@
   background:
     linear-gradient(
       90deg,
-      var(--bw-surface-dark) 10%,
-      rgb(16 25 27 / 93%) 36%,
-      rgb(16 25 27 / 20%) 88%
+      rgb(14 16 19 / 94%) 0%,
+      rgb(14 16 19 / 82%) 36%,
+      rgb(14 16 19 / 36%) 66%,
+      rgb(14 16 19 / 0%) 88%
     ),
-    linear-gradient(0deg, var(--bw-surface-dark), transparent 40%);
-}
-.bw-hero-media img {
-  object-position: 74% center;
-}
-.bw-service-hero__content {
-  position: relative;
-}
-.bw-service-hero__content h1 {
-  max-width: 740px;
-}
-.bw-service-hero__content .bw-page-hero__description {
-  max-width: 620px;
-}
-.bw-hero-secondary {
-  border-radius: var(--bw-radius-control);
+    linear-gradient(180deg, rgb(14 16 19 / 55%) 0%, transparent 30%);
 }
 
-@media (max-width: 767px) {
-  .ind-hero__inner {
-    min-height: 0;
-    padding: 48px 24px 290px;
-  }
-  .ind-hero__copy {
-    max-width: none;
-  }
-  .ind-hero__title {
-    font-size: clamp(30px, 7.8vw, 52px);
-  }
-  .ind-hero__bg {
-    inset: auto 0 142px;
-    height: 300px;
-  }
-  .ind-hero__scrim {
-    background: linear-gradient(
-      180deg,
-      var(--bw-surface-dark),
-      transparent 40%,
-      transparent 75%,
-      var(--bw-surface-dark)
-    );
-  }
-  .ind-hero .bw-motion-control {
-    bottom: 156px;
-    right: 16px;
-  }
-  .bw-service-hero {
-    padding-bottom: 190px;
-  }
-  .bw-service-hero__content {
-    padding-top: 36px;
-    padding-bottom: 36px;
-  }
-  .bw-hero-media {
-    top: auto;
-    height: 280px;
-  }
+@media (max-width: 1023px) {
   .bw-hero-media::before {
     background: linear-gradient(
       180deg,
-      var(--bw-surface-dark),
-      rgb(16 25 27 / 18%) 60%,
-      var(--bw-surface-dark)
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
     );
   }
-  .bw-hero-media img {
-    object-position: center;
+}
+
+@keyframes bw-hero-drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes bw-hero-sweep {
+  from {
+    transform: translate3d(-55%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(55%, 0, 0);
+  }
+}
+
+/*
+ * 스크림. 문구가 놓이는 왼쪽을 덮어 흰 글자를 읽히게 만든다.
+ * 배경이 원래 어두운 그림이라 두 겹으로 덮으면 그림이 통째로 죽는다.
+ * 왼쪽만 확실히 눌러주고 오른쪽은 그대로 둔다.
+ */
+.ind-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(14 16 19 / 96%) 0%,
+      rgb(14 16 19 / 88%) 32%,
+      rgb(14 16 19 / 38%) 62%,
+      rgb(14 16 19 / 0%) 84%
+    ),
+    linear-gradient(180deg, transparent 60%, rgb(14 16 19 / 70%) 100%);
+}
+
+/*
+ * 좁은 화면에서는 문구가 그림 한가운데를 가로지른다. 가로 방향 스크림으로는
+ * 오른쪽 끝 글자를 못 지키므로 세로 방향으로 바꿔 화면 전체를 눌러준다.
+ * 그림이 어두워지는 대신 글자가 확실히 읽힌다.
+ */
+@media (max-width: 1023px) {
+  .ind-hero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
+    );
+  }
+}
+
+.ind-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--bw-space-7);
+  align-content: center;
+  min-height: min(72vh, 640px);
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 0 var(--bw-space-5) var(--bw-space-8);
+}
+
+@media (min-width: 1024px) {
+  .ind-hero__inner {
+    /* 문구가 그림의 밝은 쪽까지 넘어가지 않도록 왼쪽 절반에 묶는다 */
+    grid-template-columns: minmax(0, 48%);
+    gap: var(--bw-space-8);
+  }
+}
+
+.ind-hero__title {
+  margin-top: var(--bw-space-4);
+}
+
+.ind-hero__answer {
+  margin-top: var(--bw-space-5);
+  max-width: 34rem;
+  animation: ind-rise 0.5s ease both;
+}
+
+.ind-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bw-space-3);
+  margin-top: var(--bw-space-6);
+}
+
+@keyframes ind-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ind-hero__answer {
+    animation: none;
+  }
+
+  .ind-hero__bg img {
+    transition: none;
+  }
+
+  .ind-hero__bg img[data-active="true"],
+  .bw-hero-media img,
+  .bw-hero-media video,
   .ind-hero__bg::after,
   .bw-hero-media::after {
     animation: none;
-    opacity: 0;
-  }
-  .ind-hero__bg img {
-    transition: none;
   }
 }
 
@@ -391,7 +368,7 @@
 .ind-hero__rail {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   max-width: 1440px;
   margin-inline: auto;
   border-top: 1px solid rgb(255 255 255 / 10%);
@@ -400,7 +377,7 @@
    * 얹히자 탭 글자 대비가 2.97:1(활성), 1.81:1(비활성)까지 떨어졌다.
    * 14px 글자 기준 4.5:1을 못 지키므로 레일에 자기 배경을 돌려준다.
    */
-  background: var(--bw-surface-dark);
+  background: rgb(14 16 19 / 95%);
 }
 
 .ind-hero__tab {
@@ -411,7 +388,7 @@
   background: none;
   border: 0;
   border-right: 1px solid rgb(255 255 255 / 10%);
-  color: #b7cbc4;
+  color: rgb(255 255 255 / 50%);
   text-align: left;
   cursor: pointer;
   transition:
@@ -455,20 +432,31 @@
   font-weight: 600;
 }
 
-@media (max-width: 767px) {
-  .ind-hero__rail {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .ind-hero__tab {
-    min-height: 71px;
-    padding: 20px 16px;
-    border-bottom: 1px solid rgb(255 255 255 / 10%);
-  }
+/* 타이핑 슬롯 */
+.ind-slot {
+  color: var(--slot-accent, var(--bw-brand));
+  white-space: nowrap;
 }
 
-/* 현장 이름은 항상 완성된 상태로 읽힌다. */
-.ind-slot {
-  white-space: nowrap;
+.ind-slot__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.95em;
+  margin-left: 0.06em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  animation: ind-caret 1s steps(1) infinite;
+}
+
+@keyframes ind-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -982,7 +970,7 @@
  * prefers-reduced-motion에서는 전환을 끄고 최종 상태를 바로 보여준다.
  *
  * 부모 섹션은 움직이지 않고 .bw-reveal 항목만 진입한다.
- * 첫 화면 문장은 고정하고 배경의 빛은 별도 한 번 재생으로 제어한다.
+ * 히어로는 별도의 타이핑과 배경 모션을 사용하므로 등장 효과를 중첩하지 않는다.
  * --------------------------------------------------------------- */
 
 /* 요소가 화면에 들어오는 순간 IntersectionObserver(_app.jsx useReveal)가
@@ -1320,13 +1308,6 @@
 }
 
 /* 승인된 색면과 내용별 구성. 의미가 다른 구간을 같은 카드로 반복하지 않는다. */
-.bw-hero-media__tint {
-  background: color-mix(
-    in srgb,
-    var(--bw-graphic) 65%,
-    var(--bw-svc, var(--bw-graphic))
-  );
-}
 .bw-area-intro {
   display: grid;
   gap: 32px;
@@ -1459,15 +1440,14 @@
   padding: 28px;
   background: #fff;
 }
-.ind-btn:focus-visible,
-.bw-hero-primary:focus-visible,
-.bw-hero-secondary:focus-visible {
+.ind-btn:focus-visible {
   outline: 2px solid var(--bw-graphic-ink);
   outline-offset: 4px;
 }
-.ind-dark .ind-btn:focus-visible,
-.bw-service-hero a:focus-visible {
-  outline-color: var(--bw-graphic);
+.ind-hero a:focus-visible,
+section[data-variant="media"] a:focus-visible {
+  outline: 2px solid var(--bw-brand);
+  outline-offset: 4px;
 }
 
 @media (min-width: 768px) {
