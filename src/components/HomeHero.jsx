@@ -23,11 +23,6 @@ const defaultScenes = [
       ko: "제조 공정 데이터로 수율을 실시간 예측하는 AI",
       en: "AI that predicts yield in real time from process data.",
     },
-    shot: "/images/hero/yield.webp",
-    shotAlt: {
-      ko: "AI 수율 예측 솔루션 화면",
-      en: "AI yield prediction solution screen",
-    },
     src: HERO_MEDIA,
     poster: HERO_POSTER,
     alt: {
@@ -45,11 +40,6 @@ const defaultScenes = [
       ko: "웨어러블 심전도 데이터를 분석하는 헬스케어 AI",
       en: "Healthcare AI that analyses wearable ECG data.",
     },
-    shot: "/images/hero/ecg.webp",
-    shotAlt: {
-      ko: "AI 심전도 분석 기기와 판독 리포트",
-      en: "AI ECG analysis device and report",
-    },
     src: HERO_MEDIA,
     poster: HERO_POSTER,
     alt: {
@@ -66,11 +56,6 @@ const defaultScenes = [
     description: {
       ko: "강의와 회의를 실시간 통역하는 sLLM 기반 AI 에이전트",
       en: "An sLLM-based AI agent that interprets lectures in real time.",
-    },
-    shot: "/images/hero/translate.webp",
-    shotAlt: {
-      ko: "실시간 강의 번역 솔루션 화면",
-      en: "Real-time lecture translation solution screen",
     },
     src: HERO_MEDIA,
     poster: HERO_POSTER,

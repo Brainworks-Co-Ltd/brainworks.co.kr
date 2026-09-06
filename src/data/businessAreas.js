@@ -26,7 +26,7 @@ export const businessAreas = [
           ko: '설비 진동 데이터를 실시간 분석해 이상 징후를 선제 대응합니다.',
           en: 'Monitors equipment vibration in real time and flags anomalies before downtime occurs.',
         },
-        image: '/images/services/진동이상감지.png',
+        image: '/images/services/solutions/vibration.webp',
       },
       {
         id: 'vision',
@@ -38,7 +38,7 @@ export const businessAreas = [
           ko: '고품질 영상 분석으로 불량품을 자동 식별하고 재작업 비용을 절감합니다.',
           en: 'High-fidelity image analytics identify defective goods and cut rework costs.',
         },
-        image: '/images/services/AI불량판별솔루션.png',
+        image: '/images/services/solutions/vision.webp',
       },
       {
         id: 'yield',
@@ -50,7 +50,7 @@ export const businessAreas = [
           ko: '과거 생산 이력과 공정 데이터를 학습해 수율을 미리 예측합니다.',
           en: 'Learns from production history to forecast yield with precision.',
         },
-        image: '/images/services/AI수율분석솔루션.png',
+        image: '/images/services/solutions/yield.webp',
       },
       {
         id: 'environment',
@@ -62,7 +62,7 @@ export const businessAreas = [
           ko: '설비 주변 환경 데이터를 분석해 품질 저하 요인을 사전에 파악합니다.',
           en: 'Analyses surrounding environmental data to surface quality risk factors early.',
         },
-        image: '/images/services/AI환경분석솔루션.jpg',
+        image: '/images/services/solutions/environment.webp',
       },
     ],
   },
@@ -93,7 +93,7 @@ export const businessAreas = [
           ko: '다국어 회의와 글로벌 협업을 위한 초저지연 통역을 제공합니다.',
           en: 'Delivers low-latency translation for multilingual meetings and global collaboration.',
         },
-        image: '/images/services/AI강의번역솔루션.png',
+        image: '/images/services/solutions/voice.webp',
       },
       {
         id: 'edutech',
@@ -105,7 +105,7 @@ export const businessAreas = [
           ko: '교육 콘텐츠를 이해하고 학습자 질문에 맞춤형 답변을 제공합니다.',
           en: 'Understands course material and responds to learner questions with tailored guidance.',
         },
-        image: '/images/services/educhat.png',
+        image: '/images/services/solutions/edutech.webp',
       },
 
     ],
@@ -137,7 +137,7 @@ export const businessAreas = [
           ko: '심전도 신호를 정밀 분석해 이상 징후를 조기에 예측합니다.',
           en: 'Interprets ECG signals to flag cardiac risks early.',
         },
-        image: '/images/services/AI심전도분석 기기.png',
+        image: '/images/services/solutions/ecg.webp',
       },
       {
         id: 'dental',
@@ -149,7 +149,7 @@ export const businessAreas = [
           ko: '환자 데이터를 바탕으로 보철물과 교정 모델을 자동 설계합니다.',
           en: 'Automatically drafts dental prosthetics and orthodontic models from patient data.',
         },
-        image: '/images/services/덴탈3D시각화솔루션.png',
+        image: '/images/services/solutions/dental.webp',
       },
     ],
   },
@@ -180,7 +180,7 @@ export const businessAreas = [
           ko: '실시간 위치 데이터를 활용해 위험 구역과 근로자를 선제 관리합니다.',
           en: 'Uses live location feeds to safeguard workers and high-risk zones.',
         },
-        image: '/images/services/AI위치정보분석 IoT솔루션.png',
+        image: '/images/services/solutions/location.webp',
       },
       {
         id: 'micromobility',
@@ -192,7 +192,7 @@ export const businessAreas = [
           ko: '이륜차·모빌리티 데이터를 분석해 사고 위험을 예측합니다.',
           en: 'Analyses micromobility data to predict and prevent incidents.',
         },
-        image: '/images/services/AI이륜차.png',
+        image: '/images/services/solutions/micromobility.webp',
       },
       {
         id: 'drone',
@@ -204,7 +204,7 @@ export const businessAreas = [
           ko: '드론 영상과 센서 정보를 통합해 재난 대응 속도를 높입니다.',
           en: 'Fuses drone imagery and sensors to accelerate disaster response.',
         },
-        image: '/images/services/ai-drone.webp',
+        image: '/images/services/solutions/drone.webp',
       },
     ],
   },
