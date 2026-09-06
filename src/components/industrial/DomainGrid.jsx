@@ -50,13 +50,9 @@ export default function DomainGrid() {
               <img className="ind-domain__shot" src={SHOT[area.id]} alt="" />
             ) : null}
 
-            <span className="ind-domain__count">
-              {area.solutions.length}
-              <span className="ind-domain__count-unit">
-                {language === "ko" ? "개 솔루션" : " solutions"}
-              </span>
-            </span>
-
+            {/* 솔루션 개수를 크게 쓰지 않는다. 아래 목록이 이미 이름을 다 보여주므로
+                볼 수 있는 것을 세어 붙이는 셈이고, 4/3/2/2가 나란히 놓이면 영역 사이에
+                없는 서열이 생긴다. 카드에서 가장 큰 글자는 분야 이름이다. */}
             <span className="ind-domain__name">{area.name[language]}</span>
             <span className="ind-domain__subtitle">
               {area.subtitle[language]}

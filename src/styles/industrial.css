@@ -502,34 +502,30 @@
   margin-top: var(--bw-space-3);
 }
 
+/* 네 타일은 같은 크기다.
+ *
+ * 이전에는 1024px 이상에서 솔루션 수(4/2/2/3)만큼 타일 면적을 달리 줬다. 그러면
+ * 재고 수량이 영역 사이의 서열로 읽힌다. 03-03이 비교 우선형을 기각한 이유가
+ * "비교표가 서비스 간 우열을 암시"였는데, 면적은 정보량이 더 적으면서 같은 일을 한다.
+ * nth-child로 자리를 고정하던 방식이라 영역이 4개가 아니게 되면 깨지는 문제도 있었다.
+ *
+ * 열 수는 명시한다. auto-fit은 1100px 부근에서 3열이 되어 넷째 타일만 아래로
+ * 떨어지는데, 그 배치가 다시 서열처럼 보인다. */
 .ind-domains__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--bw-space-4);
 }
 
-/* 1024px 이상에서는 솔루션 수(4/2/2/3)만큼 타일 크기를 달리 준다.
- * 제조가 왼쪽 두 행, 스마트시티가 오른쪽 위 가로, 나머지 둘이 오른쪽 아래.
- * ponytail: 순서를 데이터가 아니라 nth-child로 잡는다. 영역이 4개가 아니게 되면
- * grid-template-areas를 다시 짜야 한다. */
+@media (min-width: 640px) {
+  .ind-domains__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 1024px) {
   .ind-domains__grid {
-    grid-template-columns: 1.2fr 1fr 1fr;
-    grid-template-areas:
-      "mfg city city"
-      "mfg agent health";
-  }
-  .ind-domain:nth-child(1) { grid-area: mfg; }
-  .ind-domain:nth-child(2) { grid-area: agent; }
-  .ind-domain:nth-child(3) { grid-area: health; }
-  .ind-domain:nth-child(4) { grid-area: city; }
-  .ind-domain:nth-child(1) .ind-domain__shot {
-    flex: 1 1 0;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-  .ind-domain:nth-child(4) .ind-domain__shot {
-    aspect-ratio: 32 / 10;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -566,30 +562,16 @@
   background: var(--bw-surface-muted);
 }
 
-.ind-domain__count {
-  /* 썸네일과 붙어 보여 한 단 띄운다 */
-  margin-top: var(--bw-space-6);
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--bw-ink);
-}
-
-.ind-domain__count-unit {
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--bw-dim);
-  margin-left: var(--bw-space-1);
-}
-
+/* 카드 안에서 가장 큰 글자. 방문자가 찾는 것은 "내 문제가 어느 분야인가"이고
+ * 거기에 답하는 것이 이름이다. 이전에는 개수(2.5rem)에 눌려 세 번째로 컸다.
+ * 섹션 제목(.ind-section-title, 최대 2.5rem)보다는 작게 두어 위계를 지킨다. */
 .ind-domain__name {
   margin-top: var(--bw-space-5);
-  font-size: 1.125rem;
-  font-weight: 600;
-  line-height: 1.45;
-  letter-spacing: -0.01em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--bw-ink);
 }
 
 .ind-domain__subtitle {

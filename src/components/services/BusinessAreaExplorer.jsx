@@ -130,20 +130,15 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
       </div>
 
       <div className="mt-14">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
-              {language === "ko" ? "솔루션" : "Solutions"}
-            </p>
-            <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
-              {activeArea.title}
-            </h3>
-          </div>
-          <span className="text-sm text-[var(--bw-color-muted)]">
-            {language === "ko"
-              ? `솔루션 ${activeArea.solutions.length}개`
-              : `${activeArea.solutions.length} solutions`}
-          </span>
+        {/* 개수 표기를 두지 않는다. 카드마다 01 / 04 진행 표기가 이미 있어 중복이고,
+            목록 옆에 총계를 붙이면 세어 준 만큼의 정보가 늘지 않는다. */}
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
+            {language === "ko" ? "솔루션" : "Solutions"}
+          </p>
+          <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
+            {activeArea.title}
+          </h3>
         </div>
         {activeArea.solutions.length === 0 ? (
           <StatePanel
