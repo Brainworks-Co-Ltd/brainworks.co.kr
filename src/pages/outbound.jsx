@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -7,6 +7,8 @@ import { PageAudience } from "@/components/public/PageAudience";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import { GlobalNetwork } from "@/components/public/GlobalNetwork";
+import styles from "@/components/public/GlobalNetwork.module.css";
 
 const copy = {
   ko: {
@@ -217,9 +219,6 @@ export default function Outbound() {
   const { language } = useLocale();
   const t = copy[language];
 
-  const networkMapSrc =
-    language === "ko" ? "/images/outbound/맵.png" : "/images/outbound/map.png";
-
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
@@ -231,7 +230,11 @@ export default function Outbound() {
       <main id="main-content" data-accent="global" className="pb-16">
         <PageHero
           variant="media"
-          media={{ kind: "image", src: "/images/services/hero/smartcity.webp", alt: "" }}
+          media={{
+            kind: "image",
+            src: "/images/services/hero/smartcity.webp",
+            alt: "",
+          }}
           eyebrow={t.heroTitle}
           title={t.heroAudience}
           description={t.heroScope}
@@ -260,7 +263,6 @@ export default function Outbound() {
           ]}
         />
 
-
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
           <div className="max-w-3xl">
             <SectionHeader
@@ -278,45 +280,7 @@ export default function Outbound() {
             />
           </div>
 
-          <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
-            <div className="relative h-90 w-full bg-[var(--bw-color-surface-muted)] md:h-[28rem]">
-              <img
-                src={networkMapSrc}
-                alt={
-                  language === "ko"
-                    ? "글로벌 파트너 네트워크 지도"
-                    : "Global partner network map"
-                }
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="grid gap-4 p-6 md:grid-cols-4">
-              {[
-                { key: "usa", label: "U.S.A.", count: 1 },
-                { key: "qatar", label: "Qatar", count: 1 },
-                { key: "vietnam", label: "Vietnam", count: 4 },
-                { key: "poland", label: "Poland", count: 1 },
-                { key: "indonesia", label: "Indonesia", count: 3 },
-                { key: "australia", label: "Australia", count: 1 },
-                { key: "uzbekistan", label: "Uzbekistan", count: 8 },
-                { key: "singapore", label: "Singapore", count: 1 },
-              ].map((country, index) => (
-                <div
-                  key={country.key}
-                  /* 국가 타일이 순서대로 채워지게 한다. 전환과 저동작 대응은 .bw-reveal이 맡는다. */
-                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal flex flex-col items-start gap-1 rounded-[var(--bw-radius-card)] bg-[var(--bw-color-ink)] px-4 py-3 text-white"
-                >
-                  <span className="text-2xl font-semibold">
-                    {country.count}
-                  </span>
-                  <span className="text-sm uppercase tracking-[0.2em]">
-                    {country.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <GlobalNetwork language={language} />
 
           <div className="grid gap-4 md:grid-cols-5">
             {[
@@ -404,51 +368,51 @@ export default function Outbound() {
 
         <section className="bg-[var(--bw-color-surface-muted)]">
           <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
-          <SectionHeader
-            eyebrow="Global programs"
-            title={t.sectionTitle}
-            description={t.sectionSubtitle}
-          />
-          <div className="grid gap-6">
-            {programs.map((program, index) => (
-              <article
-                key={program.id}
-                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
-              >
-                <div>
-                  <span className="bw-marker">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
-                    {program.badge[language]}
-                  </p>
-                  <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
-                    {program.title[language]}
-                  </h3>
-                </div>
-                <div>
-                  <p className="bw-body text-[var(--bw-color-muted)]">
-                    {program.description[language]}
-                  </p>
-                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
-                    {program.bullets[language].map((bullet) => (
-                      <li
-                        key={[program.id, bullet].join("-")}
-                        className="flex gap-2"
-                      >
-                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
-          </div>
+            <SectionHeader
+              eyebrow="Global programs"
+              title={t.sectionTitle}
+              description={t.sectionSubtitle}
+            />
+            <div className={styles.programList}>
+              {programs.map((program, index) => (
+                <article
+                  key={program.id}
+                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className={`bw-reveal ${styles.program}`}
+                >
+                  <div>
+                    <span className="bw-marker">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
+                      {program.badge[language]}
+                    </p>
+                    <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
+                      {program.title[language]}
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="bw-body text-[var(--bw-color-muted)]">
+                      {program.description[language]}
+                    </p>
+                    <ul className={styles.programBullets}>
+                      {program.bullets[language].map((bullet) => (
+                        <li
+                          key={[program.id, bullet].join("-")}
+                          className="flex gap-2"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -459,13 +423,13 @@ export default function Outbound() {
             description={t.aiSectionSubtitle}
           />
 
-          <div className="mt-10 grid gap-6">
+          <div className={styles.educationGrid}>
             {aiPrograms.map((program, index) => (
               <article
                 key={program.id}
                 /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
                 style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
+                className={`bw-reveal ${styles.education}`}
               >
                 <div>
                   <span className="bw-marker">
@@ -479,7 +443,7 @@ export default function Outbound() {
                   <p className="bw-body text-[var(--bw-color-muted)]">
                     {program.description[language]}
                   </p>
-                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
+                  <ul className={styles.programBullets}>
                     {program.bullets[language].map((bullet) => (
                       <li
                         key={[program.id, bullet].join("-")}
