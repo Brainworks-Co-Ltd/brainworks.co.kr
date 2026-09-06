@@ -7,6 +7,21 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
  * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
+/*
+ * 눈썹 자간은 글자 체계에 따라 다르게 준다. 0.22em은 라틴 대문자 기준이고
+ * 한글에 그대로 걸면 낱자가 흩어져 읽힌다. 상세 페이지가 눈썹에 서비스명을
+ * 한글로 넣으면서 두 경우가 같이 생겼다.
+ *
+ * 어두운 히어로의 눈썹 색은 --bw-accent다. --bw-color-brand는 industrial
+ * 스코프에서 잉크(#16181d)로 덮여 있어 어두운 면에서 읽히지 않는다. 그동안은
+ * industrial.css의 [class*="uppercase"][class*="tracking"] 규칙이 색을 덮어써서
+ * 가려져 있었다. 클래스 문자열에 기대는 그 경로 대신 토큰을 직접 지정한다.
+ * 08 §2.3이 영역색의 적용처로 히어로 글자를 지목했고 대비도 5.79~9.38로 실측돼 있다.
+ */
+function hasHangul(value) {
+  return /[ㄱ-ㆎ가-힣]/.test(String(value));
+}
+
 function HeroContent({
   eyebrow,
   title,
@@ -20,7 +35,7 @@ function HeroContent({
     <>
       {eyebrow ? (
         <p
-          className={`bw-page-hero__eyebrow text-sm font-semibold uppercase tracking-[0.22em] ${dark ? "text-[var(--bw-color-brand)]" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__eyebrow text-sm font-semibold ${hasHangul(eyebrow) ? "tracking-[0.02em]" : "uppercase tracking-[0.22em]"} ${dark ? "text-[var(--bw-accent)]" : "text-[var(--bw-color-muted)]"}`}
         >
           {eyebrow}
         </p>

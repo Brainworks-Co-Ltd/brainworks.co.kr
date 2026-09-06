@@ -10,10 +10,13 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const copy = {
   ko: {
-    heroBadge: "Global Program",
     heroTitle: "글로벌 프로그램",
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
+    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
+    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
+    heroAudience: "해외 진출과 국제 협력이 목적인 기업·기관",
+    heroScope: "해외 진출·국제 협력 프로그램을 설명하고 상담으로 연결합니다.",
     ctaPrimary: "상담 요청",
     sectionTitle: "주요 프로그램",
     sectionSubtitle:
@@ -27,10 +30,13 @@ const copy = {
     contactCta: "상담 요청",
   },
   en: {
-    heroBadge: "Global Program",
     heroTitle: "Global Program",
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
+    heroAudience:
+      "Companies and institutions pursuing overseas expansion or international partnerships",
+    heroScope:
+      "Covers our overseas expansion and international partnership programmes.",
     ctaPrimary: "Request a Consultation",
     sectionTitle: "Programme Components",
     sectionSubtitle:
@@ -226,21 +232,31 @@ export default function Outbound() {
         <PageHero
           variant="media"
           media={{ kind: "image", src: "/images/services/hero/smartcity.webp", alt: "" }}
-          eyebrow={t.heroBadge}
-          title={t.heroTitle}
-          description={t.heroSubtitle}
+          eyebrow={t.heroTitle}
+          title={t.heroAudience}
+          description={t.heroScope}
           action={{
             href: "/contact?topic=global",
             label: t.ctaPrimary,
           }}
         />
-        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
         <PageAudience
-          audience="해외 진출과 국제 협력이 목적인 기업·기관"
-          scope="해외 진출·국제 협력 프로그램을 설명하고 상담으로 연결합니다."
           redirects={[
-              { href: "/education", label: "국내 교육 과정이라면 AI 전문교육" },
-              { href: "/services", label: "AI 제품 도입이라면 AI 솔루션" },
+            {
+              href: "/education",
+              label:
+                language === "ko"
+                  ? "국내 교육 과정이라면 AI 전문교육"
+                  : "Looking for domestic training? See AI Professional Education",
+            },
+            {
+              href: "/services",
+              label:
+                language === "ko"
+                  ? "AI 제품 도입이라면 AI 솔루션"
+                  : "Adopting an AI product? See AI Solutions",
+            },
           ]}
         />
 

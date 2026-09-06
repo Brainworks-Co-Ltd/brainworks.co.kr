@@ -783,6 +783,54 @@
   background: var(--bw-surface-muted);
 }
 
+/* 분기 레일. 대상과 범위가 히어로로 올라간 상세 페이지에서는 분기만 남으므로
+ * 2단 그리드 대신 접힘선 아래 얇은 가로 띠로 깐다. 라벨을 왼쪽에 붙이고
+ * 링크를 가로로 펴 첫 화면 끝자락에서 "다른 데로 갈 수 있다"가 바로 읽히게 한다. */
+.bw-audience--rail .bw-audience__inner {
+  padding-block: var(--bw-space-6);
+}
+
+/* 칩은 글자 길이만큼만 차지하고 서로 붙어 있는다.
+ * 앞서 1fr 두 칸으로 나눴더니 칸은 463px인데 링크는 345px이라 사이가 126px
+ * 벌어졌다. 강제로 채우면 이번엔 칩 안에서 글자와 화살표가 갈라진다.
+ * 라우팅 안내는 문장에 가깝지 표 칸이 아니므로 내용 크기로 둔다. */
+.bw-audience--rail .bw-audience__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bw-space-3);
+  margin-top: 0;
+}
+
+/* 문구 길이가 달라 한쪽만 두 줄이 되면 칩 높이가 어긋난다.
+   li를 flex로 열어 링크가 행 높이까지 늘어나게 한다. */
+.bw-audience--rail .bw-audience__links > li {
+  display: flex;
+}
+
+/* 라벨은 링크를 소개하는 자리다. 링크가 16px/600 잉크인데 라벨이 14px/700
+ * 강조색이면 소개가 본문보다 세진다. 굵기와 색을 한 단 내린다.
+ * 강조색은 왼쪽 4px 띠가 이미 갖고 있다. */
+.bw-audience--rail .bw-audience__label {
+  font-weight: 600;
+  color: var(--bw-muted);
+  white-space: nowrap;
+}
+
+/* 0.14em 자간과 대문자 변환은 라틴 라벨 기준이다. 한글에 그대로 걸면
+   낱자가 흩어진다. 히어로 눈썹에서 고친 것과 같은 결함이다. */
+.bw-audience__label--ko {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (min-width: 900px) {
+  .bw-audience--rail .bw-audience__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--bw-space-6);
+  }
+}
+
 /* ---------------------------------------------------------------
  * 상세 페이지 공통 규칙 (docs/designs/detail-page-roles.md)
  *

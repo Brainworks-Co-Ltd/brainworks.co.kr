@@ -12,6 +12,10 @@ const copy = {
   ko: {
     heroTitle: "AI 컨설팅",
     heroSubtitle: "전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공",
+    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
+    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
+    heroAudience: "무엇을 어떻게 도입할지부터 정해야 하는 담당자",
+    heroScope: "대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다.",
     heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
@@ -24,6 +28,9 @@ const copy = {
     heroTitle: "AI Consulting",
     heroSubtitle:
       "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
+    heroAudience: "Teams that still need to decide what to adopt and how",
+    heroScope:
+      "Covers the problems we take on, the value we deliver, and how an engagement runs.",
     heroCta: "Request a Consultation",
     valueTitle: "How We Create Value",
     processTitle: "Consulting Methodology",
@@ -185,9 +192,9 @@ export default function Consulting() {
         <PageHero
           variant="media"
           media={{ kind: "image", src: "/images/services/hero/agent.webp", alt: "" }}
-          eyebrow="Brainworks Consulting"
-          title={t.heroTitle}
-          description={t.heroSubtitle}
+          eyebrow={t.heroTitle}
+          title={t.heroAudience}
+          description={t.heroScope}
           action={{
             href: "/contact?topic=consulting",
             label: t.heroCta,
@@ -198,13 +205,23 @@ export default function Consulting() {
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
         />
-        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
         <PageAudience
-          audience="무엇을 어떻게 도입할지부터 정해야 하는 담당자"
-          scope="대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다."
           redirects={[
-              { href: "/services", label: "도입할 제품이 정해졌다면 AI 솔루션" },
-              { href: "/education", label: "인력 양성이 목적이라면 AI 전문교육" },
+            {
+              href: "/services",
+              label:
+                language === "ko"
+                  ? "도입할 제품이 정해졌다면 AI 솔루션"
+                  : "Already know which product you need? See AI Solutions",
+            },
+            {
+              href: "/education",
+              label:
+                language === "ko"
+                  ? "인력 양성이 목적이라면 AI 전문교육"
+                  : "Looking to train your people? See AI Professional Education",
+            },
           ]}
         />
 

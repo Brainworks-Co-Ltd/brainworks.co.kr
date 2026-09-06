@@ -492,28 +492,44 @@ export default function Education() {
       />
 
       <main id="main-content" data-accent="education" className="pb-16">
+        {/* 상단 계약 — docs/designs/detail-page-roles.md
+            눈썹이 페이지 이름, h1이 대상, 설명이 범위다. */}
         <PageHero
           variant="media"
           media={{ kind: "image", src: "/images/services/hero/healthcare.webp", alt: "" }}
-          eyebrow="Brainworks Education"
-          title={language === "ko" ? "AI 전문교육" : "AI Professional Education"}
+          eyebrow={language === "ko" ? "AI 전문교육" : "AI Professional Education"}
+          title={
+            language === "ko"
+              ? "조직의 AI 역량을 키워야 하는 담당자"
+              : "Teams that need to build AI capability inside the organisation"
+          }
           description={
             language === "ko"
-              ? "AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성"
-              : "We deliver a practical journey that spans specialist education, generative AI training, hackathons, internships, and job-ready portfolios."
+              ? "교육 대상과 과정, 결과물과 문의 방법을 다룹니다."
+              : "Covers who the training is for, the curriculum, the outcomes, and how to get in touch."
           }
           action={{
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
         />
-        {/* 진입 분기 — docs/designs/detail-page-roles.md */}
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
         <PageAudience
-          audience="조직의 AI 역량을 키워야 하는 담당자"
-          scope="교육 대상과 과정, 결과물과 문의 방법을 다룹니다."
           redirects={[
-              { href: "/global-programs", label: "해외 인턴십·국제 프로그램이라면 글로벌 프로그램" },
-              { href: "/consulting", label: "도입 전략부터 필요하다면 AI 컨설팅" },
+            {
+              href: "/global-programs",
+              label:
+                language === "ko"
+                  ? "해외 인턴십·국제 프로그램이라면 글로벌 프로그램"
+                  : "Looking for overseas internships or international programmes? See Global Program",
+            },
+            {
+              href: "/consulting",
+              label:
+                language === "ko"
+                  ? "도입 전략부터 필요하다면 AI 컨설팅"
+                  : "Need an adoption strategy first? See AI Consulting",
+            },
           ]}
         />
 
