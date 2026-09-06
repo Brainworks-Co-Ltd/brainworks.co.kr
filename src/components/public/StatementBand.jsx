@@ -19,7 +19,8 @@ import { useEffect, useRef } from "react";
  * prefers-reduced-motion이면 그 상태 그대로 읽힌다.
  */
 
-const DIM = 0.28;
+// 강조 밖의 문장도 충분한 대비로 읽히게 유지한다.
+const DIM = 0.65;
 // 한 번에 밝게 둘 어절 수. 좁으면 깜빡이고 넓으면 전부 밝아 보인다.
 const WINDOW = 2.6;
 

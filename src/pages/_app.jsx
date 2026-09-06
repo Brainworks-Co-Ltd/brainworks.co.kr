@@ -28,7 +28,7 @@ function useUiVariant() {
 }
 
 /**
- * 스크롤 진입 드러남. 섹션과 사업 분야 타일이 화면에 들어오면 data-in을 한 번
+ * 스크롤 진입 드러남. 지정한 항목이 화면에 들어오면 data-in을 한 번
  * 붙인다. 전후 상태와 전환은 industrial.css "스크롤 진입 시 드러남" 절이 맡는다.
  */
 function useReveal() {
@@ -58,9 +58,7 @@ function useReveal() {
       );
       requestAnimationFrame(() => {
         document
-          .querySelectorAll(
-            "main > section:not([data-variant]), main > div > section:not([data-variant]), .bw-reveal, .ind-domain",
-          )
+          .querySelectorAll(".bw-reveal")
           .forEach((el) => observer.observe(el));
       });
     };

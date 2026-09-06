@@ -1,11 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
-import { SectionHeader } from "@/components/public/SectionHeader";
-import { MediaStory } from "@/components/public/MediaStory";
 import { SolutionCard } from "@/components/public/SolutionCard";
 import { StatePanel } from "@/components/ui/state-panel";
 
@@ -19,6 +16,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
   const queryArea =
     typeof router.query.area === "string" ? router.query.area : "";
   const [activeId, setActiveId] = useState(queryArea || areas[0]?.id || "");
+  const tabs = useRef(new Map());
 
   useEffect(() => {
     const nextId = areas.some((area) => area.id === queryArea)
@@ -75,6 +73,12 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
         {areas.map((area) => (
           <button
             key={area.id}
+            id={`area-tab-${area.id}`}
+            aria-controls="area-panel"
+            ref={(element) => {
+              if (element) tabs.current.set(area.id, element);
+              else tabs.current.delete(area.id);
+            }}
             type="button"
             role="tab"
             aria-selected={area.id === activeArea.id}
@@ -88,6 +92,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
                   (areas.findIndex((item) => item.id === area.id) + 1) %
                   areas.length;
                 selectArea(areas[index].id);
+                tabs.current.get(areas[index].id)?.focus();
               }
               if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
                 event.preventDefault();
@@ -97,6 +102,14 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
                     areas.length) %
                   areas.length;
                 selectArea(areas[index].id);
+                tabs.current.get(areas[index].id)?.focus();
+              }
+              if (event.key === "Home" || event.key === "End") {
+                event.preventDefault();
+                const target =
+                  event.key === "Home" ? areas[0] : areas[areas.length - 1];
+                selectArea(target.id);
+                tabs.current.get(target.id)?.focus();
               }
             }}
           >
@@ -105,69 +118,75 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
         ))}
       </div>
 
-      <div className="mt-10">
-        <MediaStory
-          eyebrow={activeArea.title}
-          title={activeArea.subtitle}
-          description={activeArea.description}
-          media={
-            <div className="relative aspect-[4/3] min-h-[320px] lg:min-h-[500px]">
-              <Image
-                src={activeArea.heroImage}
-                alt={activeArea.title}
-                fill
-                sizes="(min-width: 1024px) 55vw, 100vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          }
-          action={{
-            href: `/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`,
-            label: language === "ko" ? "이 영역 문의하기" : "Discuss this area",
-          }}
-        />
-      </div>
-
-      <div className="mt-14">
-        {/* 개수 표기를 두지 않는다. 카드마다 01 / 04 진행 표기가 이미 있어 중복이고,
-            목록 옆에 총계를 붙이면 세어 준 만큼의 정보가 늘지 않는다. */}
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
-            {language === "ko" ? "솔루션" : "Solutions"}
-          </p>
-          <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
-            {activeArea.title}
-          </h3>
-        </div>
-        {activeArea.solutions.length === 0 ? (
-          <StatePanel
-            status="empty"
-            title={
-              language === "ko"
-                ? "준비 중인 솔루션입니다."
-                : "Solutions are being prepared."
-            }
-            actionLabel={language === "ko" ? "문의하기" : "Contact us"}
-            onAction={() =>
-              void router.push(`/contact?topic=solution&area=${activeArea.id}`)
-            }
-            className="mt-6"
-          />
-        ) : (
-          <div className="mt-8 grid gap-6 md:mt-12 lg:grid-cols-2">
-            {activeArea.solutions.map((solution, index) => (
-              <SolutionCard
-                key={solution.id}
-                index={index + 1}
-                total={activeArea.solutions.length}
-                title={solution.title}
-                description={solution.description}
-                image={solution.image}
-              />
-            ))}
+      <div
+        id="area-panel"
+        role="tabpanel"
+        aria-labelledby={`area-tab-${activeArea.id}`}
+        tabIndex={0}
+      >
+        {/* 선택한 산업의 설명을 읽고 바로 솔루션을 비교한다. 첫 화면 이미지는 반복하지 않는다. */}
+        <div className="bw-area-intro" key={activeArea.id}>
+          <div>
+            <p className="bw-label text-[var(--bw-accent-text)]">
+              {activeArea.title}
+            </p>
+            <h2 className="bw-h1 mt-4">{activeArea.subtitle}</h2>
           </div>
-        )}
+          <div>
+            <p className="bw-body text-[var(--bw-muted)]">
+              {activeArea.description}
+            </p>
+            <Link
+              className="ind-btn bw-area-intro__link"
+              href={`/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`}
+            >
+              {language === "ko" ? "이 영역 문의하기" : "Discuss this area"}
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-14">
+          {/* 개수 표기를 두지 않는다. 카드마다 01 / 04 진행 표기가 이미 있어 중복이고,
+            목록 옆에 총계를 붙이면 세어 준 만큼의 정보가 늘지 않는다. */}
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
+              {language === "ko" ? "솔루션" : "Solutions"}
+            </p>
+            <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
+              {activeArea.title}
+            </h3>
+          </div>
+          {activeArea.solutions.length === 0 ? (
+            <StatePanel
+              status="empty"
+              title={
+                language === "ko"
+                  ? "준비 중인 솔루션입니다."
+                  : "Solutions are being prepared."
+              }
+              actionLabel={language === "ko" ? "문의하기" : "Contact us"}
+              onAction={() =>
+                void router.push(
+                  `/contact?topic=solution&area=${activeArea.id}`,
+                )
+              }
+              className="mt-6"
+            />
+          ) : (
+            <div className="mt-8 grid gap-6 md:mt-12 lg:grid-cols-2">
+              {activeArea.solutions.map((solution, index) => (
+                <SolutionCard
+                  key={solution.id}
+                  index={index + 1}
+                  total={activeArea.solutions.length}
+                  title={solution.title}
+                  description={solution.description}
+                  image={solution.image}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

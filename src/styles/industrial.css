@@ -9,28 +9,28 @@
  */
 
 :root[data-design="industrial"] {
-  /* 2.2 색 — 크롬은 거의 무채색. 채도는 제품 화면이 담당한다 */
+  /* 2026-09-07 승인: 청록 면과 그래픽, 골드 주요 행동을 결합한다. */
   --bw-surface: #ffffff;
-  --bw-surface-muted: #f7f8f9;
-  --bw-surface-dark: #0e1013;
-  --bw-surface-dark-deep: #181b21;
+  --bw-surface-muted: #f4f7f5;
+  --bw-surface-tinted: #e7f0ec;
+  --bw-surface-dark: #10191b;
+  --bw-surface-dark-deep: #18302f;
+  --bw-graphic: #71d6c7;
+  --bw-graphic-ink: #286c61;
 
-  --bw-ink: #16181d;
-  --bw-muted: #5b6068;
-  --bw-dim: #7e838b;
+  --bw-ink: #10191b;
+  --bw-muted: #53615d;
+  --bw-dim: #61736b;
   --bw-on-dark: #ffffff;
 
-  --bw-line: #e4e6e9;
-  --bw-line-strong: #cfd2d7;
+  --bw-line: #d7e1dc;
+  --bw-line-strong: #b5c9c2;
 
-  /* 2.2.1 골드는 로고 색이다. 밝은 면에서 UI 요소로 쓰지 않는다.
-     상호작용 색은 골드가 아니라 잉크가 맡는다 */
+  /* 골드 면에는 잉크 글자를 짝지어 주요 행동의 대비를 확보한다. */
   --bw-brand: #d29b15;
 
-  /* 2.3 슬롯 색. 원티드 몽타주 hue ramp -600 단계에서 뽑았다.
-     한 시스템에서 나온 값이라 넷이 서로 어울린다.
-     히어로 슬롯과 활성 레일 탭에만 쓴다. 그리드와 버튼에는 쓰지 않는다.
-     violet-600은 어두운 히어로에서 3.24로 떨어져 purple-600으로 대체했다 */
+  /* 이전 산업별 색 토큰은 참조 호환을 위해 남긴다.
+     현장 선택은 공통 청록을 쓰며 서비스 분류색은 아래 data-accent가 맡는다. */
   --bw-slot-manufacturing: #00bdde;
   --bw-slot-healthcare: #57cf07;
   --bw-slot-smartcity: #fb8502;
@@ -55,6 +55,7 @@
   /* 2.7 움직임 */
   --bw-motion-press: 0.2s ease;
   --bw-motion-move: 1s cubic-bezier(0.4, 0, 0.2, 1);
+  --bw-motion-scene: 4s ease-out;
 }
 
 :root[data-design="industrial"] body {
@@ -140,22 +141,16 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* 레일이 히어로의 바닥이다. 아래 여백을 두지 않는다.
-     이 값이 살아 있으려면 섹션에 data-variant가 있어야 한다. 없으면 상세
-     페이지 공통 규칙이 위아래 96px을 덮어쓴다 */
-  padding-block: var(--bw-space-9) 0;
+  padding-top: 64px;
 }
 
-/*
- * 전면 배경. 이미지가 늘어나지 않도록 cover만 쓴다.
- * 원본은 1920x1080이고 히어로는 화면 폭에 따라 대략 1.8:1에서 3.2:1까지
- * 변하므로, cover가 잘라내는 쪽은 위아래다. 넷 다 주제가 가운데 몰리지 않은
- * 추상 화면이라 위아래가 잘려도 그림이 깨지지 않는다.
- */
+/* 문구는 짙은 면에서 읽고, 빛과 형상은 오른쪽에서 드러난다. */
 .ind-hero__bg {
   position: absolute;
-  inset: 0;
+  inset: 0 0 0 38%;
   z-index: -2;
+  overflow: hidden;
+  background: var(--bw-surface-dark);
 }
 
 .ind-hero__bg img {
@@ -164,30 +159,34 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 52% center;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  filter: saturate(0.5) brightness(0.85);
+  transition: opacity var(--bw-motion-press);
 }
 
 .ind-hero__bg img[data-active="true"] {
   opacity: 1;
 }
-
-/*
- * 히어로 그래픽 모션 (08 §1.6, 대표 지시 2026-09-01).
- * 솔트룩스 홈은 13MB mp4 루프를 깐다. 우리는 아직 영상 에셋이 없으므로
- * 정지 렌더 위에 느린 줌·드리프트와 빛줄기 하나를 CSS로 얹어 같은 인상을 낸다.
- * transform과 opacity만 움직여 합성 단계에서 끝난다.
- * 상세 페이지의 .bw-hero-media도 같은 규칙을 쓴다. 전면 배경은 대비를 스스로
- * 지키지 못하므로(08 §1.6) 스크림을 ::before로 함께 깐다.
- * ponytail: 영상 에셋이 오면 PageHeroMedia에 kind:"video"로 꽂고 이 드리프트는 빼도 된다.
- */
-.ind-hero__bg img[data-active="true"],
-.bw-hero-media img,
-.bw-hero-media video {
-  animation: bw-hero-drift 28s ease-in-out infinite alternate;
-  will-change: transform;
+.ind-hero__tint,
+.bw-hero-media__tint {
+  position: absolute;
+  inset: 0;
+  background: var(--bw-graphic);
+  mix-blend-mode: color;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
+.ind-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--bw-surface-dark), transparent 68%),
+    linear-gradient(0deg, var(--bw-surface-dark), transparent 42%);
+}
+
+/* 빛 한 번으로 장면을 강조한다. 반복·줌·본문 이동을 겹치지 않는다. */
 .ind-hero__bg::after,
 .bw-hero-media::after {
   content: "";
@@ -196,18 +195,105 @@
   z-index: 2;
   pointer-events: none;
   background: linear-gradient(
-    115deg,
-    transparent 42%,
-    rgb(255 255 255 / 6%) 50%,
-    transparent 58%
+    110deg,
+    transparent 38%,
+    rgb(113 214 199 / 20%) 50%,
+    transparent 62%
   );
-  animation: bw-hero-sweep 11s ease-in-out infinite;
+  animation: bw-hero-sweep var(--bw-motion-scene) both;
 }
 
+@keyframes bw-hero-sweep {
+  0% {
+    transform: translate3d(-55%, 0, 0);
+    opacity: 0;
+  }
+  35%,
+  65% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(55%, 0, 0);
+    opacity: 0;
+  }
+}
+
+[data-motion-paused="true"] .ind-hero__bg::after,
+[data-motion-paused="true"] .bw-hero-media::after {
+  animation-play-state: paused;
+}
+
+.ind-hero__inner {
+  display: grid;
+  align-content: center;
+  min-height: 600px;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: 64px 24px 96px;
+}
+.ind-hero__copy {
+  max-width: 680px;
+}
+.ind-dark .ind-eyebrow {
+  color: var(--bw-graphic);
+}
+.ind-hero__title {
+  margin-top: var(--bw-space-5);
+}
+.ind-hero__question {
+  display: block;
+}
+.ind-hero__answer {
+  margin-top: var(--bw-space-5);
+  max-width: 32rem;
+}
+.ind-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+.ind-hero .ind-slot {
+  color: var(--bw-graphic);
+}
+
+.bw-motion-control {
+  position: absolute;
+  z-index: 3;
+  right: 24px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-surface-dark);
+  color: #d4e8e1;
+  font-size: 12px;
+  cursor: pointer;
+}
+.bw-motion-control:hover:not(:disabled) {
+  border-color: var(--bw-graphic);
+}
+.bw-motion-control:disabled {
+  cursor: default;
+}
+.bw-motion-control:focus-visible {
+  outline: 2px solid var(--bw-graphic);
+  outline-offset: 4px;
+}
+.ind-hero .bw-motion-control {
+  bottom: 92px;
+}
+
+.bw-service-hero {
+  background: var(--bw-surface-dark);
+}
 .bw-hero-media {
   overflow: hidden;
 }
-
 .bw-hero-media::before {
   content: "";
   position: absolute;
@@ -216,142 +302,88 @@
   background:
     linear-gradient(
       90deg,
-      rgb(14 16 19 / 94%) 0%,
-      rgb(14 16 19 / 82%) 36%,
-      rgb(14 16 19 / 36%) 66%,
-      rgb(14 16 19 / 0%) 88%
+      var(--bw-surface-dark) 10%,
+      rgb(16 25 27 / 93%) 36%,
+      rgb(16 25 27 / 20%) 88%
     ),
-    linear-gradient(180deg, rgb(14 16 19 / 55%) 0%, transparent 30%);
+    linear-gradient(0deg, var(--bw-surface-dark), transparent 40%);
+}
+.bw-hero-media img {
+  object-position: 74% center;
+}
+.bw-service-hero__content {
+  position: relative;
+}
+.bw-service-hero__content h1 {
+  max-width: 740px;
+}
+.bw-service-hero__content .bw-page-hero__description {
+  max-width: 620px;
+}
+.bw-hero-secondary {
+  border-radius: var(--bw-radius-control);
 }
 
-@media (max-width: 1023px) {
-  .bw-hero-media::before {
-    background: linear-gradient(
-      180deg,
-      rgb(14 16 19 / 92%) 0%,
-      rgb(14 16 19 / 78%) 55%,
-      rgb(14 16 19 / 88%) 100%
-    );
+@media (max-width: 767px) {
+  .ind-hero__inner {
+    min-height: 0;
+    padding: 48px 24px 290px;
   }
-}
-
-@keyframes bw-hero-drift {
-  from {
-    transform: scale(1.04) translate3d(0, 0, 0);
+  .ind-hero__copy {
+    max-width: none;
   }
-
-  to {
-    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  .ind-hero__title {
+    font-size: clamp(30px, 7.8vw, 52px);
   }
-}
-
-@keyframes bw-hero-sweep {
-  from {
-    transform: translate3d(-55%, 0, 0);
+  .ind-hero__bg {
+    inset: auto 0 142px;
+    height: 300px;
   }
-
-  to {
-    transform: translate3d(55%, 0, 0);
-  }
-}
-
-/*
- * 스크림. 문구가 놓이는 왼쪽을 덮어 흰 글자를 읽히게 만든다.
- * 배경이 원래 어두운 그림이라 두 겹으로 덮으면 그림이 통째로 죽는다.
- * 왼쪽만 확실히 눌러주고 오른쪽은 그대로 둔다.
- */
-.ind-hero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      90deg,
-      rgb(14 16 19 / 96%) 0%,
-      rgb(14 16 19 / 88%) 32%,
-      rgb(14 16 19 / 38%) 62%,
-      rgb(14 16 19 / 0%) 84%
-    ),
-    linear-gradient(180deg, transparent 60%, rgb(14 16 19 / 70%) 100%);
-}
-
-/*
- * 좁은 화면에서는 문구가 그림 한가운데를 가로지른다. 가로 방향 스크림으로는
- * 오른쪽 끝 글자를 못 지키므로 세로 방향으로 바꿔 화면 전체를 눌러준다.
- * 그림이 어두워지는 대신 글자가 확실히 읽힌다.
- */
-@media (max-width: 1023px) {
   .ind-hero__scrim {
     background: linear-gradient(
       180deg,
-      rgb(14 16 19 / 92%) 0%,
-      rgb(14 16 19 / 78%) 55%,
-      rgb(14 16 19 / 88%) 100%
+      var(--bw-surface-dark),
+      transparent 40%,
+      transparent 75%,
+      var(--bw-surface-dark)
     );
   }
-}
-
-.ind-hero__inner {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--bw-space-7);
-  align-content: center;
-  min-height: min(72vh, 640px);
-  max-width: 1440px;
-  margin-inline: auto;
-  padding: 0 var(--bw-space-5) var(--bw-space-8);
-}
-
-@media (min-width: 1024px) {
-  .ind-hero__inner {
-    /* 문구가 그림의 밝은 쪽까지 넘어가지 않도록 왼쪽 절반에 묶는다 */
-    grid-template-columns: minmax(0, 48%);
-    gap: var(--bw-space-8);
+  .ind-hero .bw-motion-control {
+    bottom: 156px;
+    right: 16px;
   }
-}
-
-.ind-hero__title {
-  margin-top: var(--bw-space-4);
-}
-
-.ind-hero__answer {
-  margin-top: var(--bw-space-5);
-  max-width: 34rem;
-  animation: ind-rise 0.5s ease both;
-}
-
-.ind-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--bw-space-3);
-  margin-top: var(--bw-space-6);
-}
-
-@keyframes ind-rise {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 14px, 0);
+  .bw-service-hero {
+    padding-bottom: 190px;
   }
-  to {
-    opacity: 1;
-    transform: none;
+  .bw-service-hero__content {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+  .bw-hero-media {
+    top: auto;
+    height: 280px;
+  }
+  .bw-hero-media::before {
+    background: linear-gradient(
+      180deg,
+      var(--bw-surface-dark),
+      rgb(16 25 27 / 18%) 60%,
+      var(--bw-surface-dark)
+    );
+  }
+  .bw-hero-media img {
+    object-position: center;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ind-hero__answer {
-    animation: none;
-  }
-
-  .ind-hero__bg img {
-    transition: none;
-  }
-
-  .ind-hero__bg img[data-active="true"],
-  .bw-hero-media img,
-  .bw-hero-media video,
   .ind-hero__bg::after,
   .bw-hero-media::after {
     animation: none;
+    opacity: 0;
+  }
+  .ind-hero__bg img {
+    transition: none;
   }
 }
 
@@ -359,7 +391,7 @@
 .ind-hero__rail {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   max-width: 1440px;
   margin-inline: auto;
   border-top: 1px solid rgb(255 255 255 / 10%);
@@ -368,7 +400,7 @@
    * 얹히자 탭 글자 대비가 2.97:1(활성), 1.81:1(비활성)까지 떨어졌다.
    * 14px 글자 기준 4.5:1을 못 지키므로 레일에 자기 배경을 돌려준다.
    */
-  background: rgb(14 16 19 / 95%);
+  background: var(--bw-surface-dark);
 }
 
 .ind-hero__tab {
@@ -379,7 +411,7 @@
   background: none;
   border: 0;
   border-right: 1px solid rgb(255 255 255 / 10%);
-  color: rgb(255 255 255 / 50%);
+  color: #b7cbc4;
   text-align: left;
   cursor: pointer;
   transition:
@@ -423,31 +455,20 @@
   font-weight: 600;
 }
 
-/* 타이핑 슬롯 */
+@media (max-width: 767px) {
+  .ind-hero__rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ind-hero__tab {
+    min-height: 71px;
+    padding: 20px 16px;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+  }
+}
+
+/* 현장 이름은 항상 완성된 상태로 읽힌다. */
 .ind-slot {
-  color: var(--slot-accent, var(--bw-brand));
   white-space: nowrap;
-}
-
-.ind-slot__caret {
-  display: inline-block;
-  width: 0.06em;
-  height: 0.95em;
-  margin-left: 0.06em;
-  vertical-align: -0.1em;
-  background: currentColor;
-  animation: ind-caret 1s steps(1) infinite;
-}
-
-@keyframes ind-caret {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  51%,
-  100% {
-    opacity: 0;
-  }
 }
 
 /* ---------------------------------------------------------------
@@ -470,7 +491,7 @@
 }
 
 .ind-dark .ind-btn--solid {
-  background: var(--bw-on-dark);
+  background: var(--bw-brand);
   color: var(--bw-surface-dark);
 }
 
@@ -489,9 +510,12 @@
  * --------------------------------------------------------------- */
 
 .ind-domains {
-  max-width: 1440px;
+  max-width: 1280px;
   margin-inline: auto;
   padding: var(--bw-space-9) var(--bw-space-5);
+  background: var(--bw-surface-muted);
+  box-shadow: 0 0 0 100vmax var(--bw-surface-muted);
+  clip-path: inset(0 -100vmax);
 }
 
 .ind-domains__head {
@@ -551,7 +575,7 @@
   box-shadow: 0 8px 24px rgb(22 24 29 / 8%);
 }
 
-/* 영역 구분은 색이 아니라 제품 화면이 한다 (2.3) */
+/* 영역명과 기존 추상 그래픽이 함께 분야를 구분한다. */
 .ind-domain__shot {
   display: block;
   width: 100%;
@@ -754,6 +778,8 @@
   line-height: 1.5;
   color: var(--bw-ink);
   text-decoration: none;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
   transition:
     border-color var(--bw-motion-press),
     background var(--bw-motion-press);
@@ -859,8 +885,7 @@
   --bw-color-muted: var(--bw-muted);
   --bw-color-line: var(--bw-line);
 
-  /* 2.2.1 상호작용 색은 골드가 아니라 잉크가 맡는다.
-     골드는 흰 배경에서 2.49라 버튼이나 작은 UI 요소로 쓸 수 없다 */
+  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 골드 면과 잉크 글자로 지정한다. */
   --bw-color-brand: var(--bw-ink);
   --bw-color-black: var(--bw-ink);
   --bw-color-focus: var(--bw-ink);
@@ -933,14 +958,15 @@
  *
  * 08 §2.2.1은 골드를 상호작용에 쓰지 말라고 했다. 근거는 골드 위 흰 글자가
  * 2.49로 미달한다는 것이었다. 그 계산은 글자가 흰색일 때만 맞는다.
- * 잍크를 얹으면 7.14로 통과한다. DeepLearning.AI가 딥레드 면 위에
+ * 잉크를 얹으면 7.14로 통과한다. DeepLearning.AI가 딥레드 면 위에
  * 흰 글자를 쓰는 것과 같은 구조다. 면과 글자를 한 쌍으로 묶어 지정한다.
  */
 :root[data-design="industrial"]
   main
   .rounded-full.bg-\[var\(--bw-color-brand\)\] {
-  background-color: var(--bw-accent) !important;
+  background-color: var(--bw-brand) !important;
   color: var(--bw-ink) !important;
+  border-radius: var(--bw-radius-control);
 }
 
 /* ---------------------------------------------------------------
@@ -955,8 +981,8 @@
  * 08 §2.7: 자리 이동은 --bw-motion-move(1s)를 따르고
  * prefers-reduced-motion에서는 전환을 끄고 최종 상태를 바로 보여준다.
  *
- * 히어로([data-variant])는 제외한다. 자체 타이핑·자동 재생을 이미 갖고 있고
- * 첫 화면이라 드러날 스크롤 구간이 없다.
+ * 부모 섹션은 움직이지 않고 .bw-reveal 항목만 진입한다.
+ * 첫 화면 문장은 고정하고 배경의 빛은 별도 한 번 재생으로 제어한다.
  * --------------------------------------------------------------- */
 
 /* 요소가 화면에 들어오는 순간 IntersectionObserver(_app.jsx useReveal)가
@@ -966,20 +992,11 @@
  * 숨김 상태는 훅이 :root에 data-reveal을 붙인 뒤에만 적용되므로
  * 자바스크립트가 없으면 처음부터 최종 상태로 보인다. */
 @media (prefers-reduced-motion: no-preference) {
-  :root[data-design="industrial"][data-reveal="ready"] main > section:not([data-variant]),
-  :root[data-design="industrial"][data-reveal="ready"] main > div > section:not([data-variant]),
   :root[data-design="industrial"][data-reveal="ready"] .bw-reveal {
     transition:
       opacity var(--bw-motion-move),
       transform var(--bw-motion-move);
   }
-  :root[data-design="industrial"][data-reveal]
-    main
-    > section:not([data-variant]):not([data-in]),
-  :root[data-design="industrial"][data-reveal]
-    main
-    > div
-    > section:not([data-variant]):not([data-in]),
   :root[data-design="industrial"][data-reveal] .bw-reveal:not([data-in]) {
     opacity: 0;
     transform: translateY(24px);
@@ -1010,7 +1027,6 @@
     filter: none !important;
   }
 }
-
 
 /* ---------------------------------------------------------------
  * 2.4 타이포 스케일 (docs/planning/08-design-system.md)
@@ -1300,5 +1316,215 @@
   :root[data-design="industrial"] .bw-statement__word {
     opacity: 1 !important;
     transition: none;
+  }
+}
+
+/* 승인된 색면과 내용별 구성. 의미가 다른 구간을 같은 카드로 반복하지 않는다. */
+.bw-hero-media__tint {
+  background: color-mix(
+    in srgb,
+    var(--bw-graphic) 65%,
+    var(--bw-svc, var(--bw-graphic))
+  );
+}
+.bw-area-intro {
+  display: grid;
+  gap: 32px;
+  padding: 40px;
+  margin-top: 40px;
+  background: var(--bw-surface-muted);
+  border-top: 2px solid var(--bw-graphic);
+}
+.bw-area-intro__link {
+  margin-top: 24px;
+  background: var(--bw-brand);
+  color: var(--bw-ink);
+}
+.bw-area-intro__link:hover {
+  filter: brightness(1.08);
+}
+.bw-offerings {
+  border-top: 1px solid var(--bw-line-strong);
+}
+.bw-offering {
+  display: grid;
+  gap: 24px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--bw-line);
+}
+.bw-consulting-process {
+  background: var(--bw-surface-tinted);
+}
+.bw-process-flow {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.bw-process-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px 24px;
+  padding: 0 0 40px;
+}
+.bw-process-step:last-child {
+  padding-bottom: 0;
+}
+.bw-process-step::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 44px;
+  bottom: 0;
+  width: 1px;
+  background: var(--bw-line-strong);
+}
+.bw-process-step:last-child::before {
+  display: none;
+}
+.bw-process-step .bw-marker {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bw-surface-dark);
+  color: var(--bw-graphic);
+}
+.bw-process-step h3 {
+  align-self: center;
+}
+.bw-process-step p {
+  grid-column: 2;
+}
+.bw-education-process {
+  background: var(--bw-surface-tinted);
+  box-shadow: 0 0 0 100vmax var(--bw-surface-tinted);
+  clip-path: inset(0 -100vmax);
+}
+.bw-learning-flow {
+  position: relative;
+  display: grid;
+  gap: 48px;
+  padding-left: 64px;
+}
+.bw-learning-step {
+  position: relative;
+  padding: 0 0 48px;
+  border-bottom: 1px solid var(--bw-line-strong);
+}
+.bw-learning-step:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.bw-learning-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: -46px;
+  top: 36px;
+  bottom: -48px;
+  width: 1px;
+  background: var(--bw-line-strong);
+}
+.bw-learning-step__inner {
+  display: grid;
+  gap: 32px;
+}
+.bw-learning-step__image {
+  min-height: 280px;
+  border-radius: var(--bw-radius-card);
+}
+.bw-learning-step .bw-marker {
+  position: absolute;
+  left: -64px;
+  top: 0;
+  background: var(--bw-surface-dark);
+  color: var(--bw-graphic);
+}
+.bw-learning-step .bw-chip {
+  background: transparent;
+  color: var(--bw-graphic-ink);
+  padding-left: 0;
+}
+.bw-client-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--bw-line);
+  background: var(--bw-line);
+}
+.bw-client-grid__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 128px;
+  padding: 28px;
+  background: #fff;
+}
+.ind-btn:focus-visible,
+.bw-hero-primary:focus-visible,
+.bw-hero-secondary:focus-visible {
+  outline: 2px solid var(--bw-graphic-ink);
+  outline-offset: 4px;
+}
+.ind-dark .ind-btn:focus-visible,
+.bw-service-hero a:focus-visible {
+  outline-color: var(--bw-graphic);
+}
+
+@media (min-width: 768px) {
+  .bw-area-intro {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .bw-offering {
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: 48px;
+  }
+  .bw-process-step {
+    grid-template-columns: 44px minmax(0, 0.5fr) minmax(0, 1fr);
+    column-gap: 32px;
+    min-height: 128px;
+  }
+  .bw-process-step p {
+    grid-column: 3;
+    padding-top: 8px;
+  }
+  .bw-process-step h3 {
+    align-self: start;
+    padding-top: 8px;
+  }
+  .bw-learning-step__inner {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 48px;
+  }
+  .bw-learning-step__image {
+    min-height: 320px;
+  }
+  .bw-client-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .bw-learning-flow {
+    padding-left: 48px;
+  }
+  .bw-learning-step .bw-marker {
+    left: -48px;
+  }
+  .bw-learning-step:not(:last-child)::after {
+    left: -30px;
+  }
+  .bw-area-intro {
+    padding: 24px;
+  }
+  .bw-audience--rail .bw-audience__links {
+    display: grid;
+  }
+  .bw-audience--rail .bw-audience__links > li,
+  .bw-audience__link {
+    min-width: 0;
+  }
+  .bw-audience__link {
+    width: 100%;
+    font-size: 14px;
   }
 }

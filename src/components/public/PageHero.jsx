@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { PageHeroMedia } from "@/components/public/PageHeroMedia";
+import {
+  GraphicMotionControl,
+  useGraphicMotion,
+} from "@/components/public/GraphicMotionControl";
 
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
@@ -55,7 +59,7 @@ function HeroContent({
           {action ? (
             <Link
               href={action.href}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
+              className="bw-hero-primary inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
             >
               {action.label}
             </Link>
@@ -63,7 +67,7 @@ function HeroContent({
           {secondaryAction ? (
             <Link
               href={secondaryAction.href}
-              className={`inline-flex min-h-11 items-center rounded-full border px-6 py-3 text-sm font-semibold transition ${dark ? "border-white/30 text-white hover:bg-white/10" : "border-[var(--bw-color-ink)] text-[var(--bw-color-ink)] hover:bg-white"}`}
+              className={`bw-hero-secondary inline-flex min-h-11 items-center rounded-full border px-6 py-3 text-sm font-semibold transition ${dark ? "border-white/30 text-white hover:bg-white/10" : "border-[var(--bw-color-ink)] text-[var(--bw-color-ink)] hover:bg-white"}`}
             >
               {secondaryAction.label}
             </Link>
@@ -88,6 +92,7 @@ export function PageHero({
   media = null,
   overlayClassName = "",
 }) {
+  const motion = useGraphicMotion();
   const effectiveVariant = variant === "plain" || !media ? "plain" : variant;
   const content = (
     <HeroContent
@@ -107,16 +112,25 @@ export function PageHero({
         role="region"
         aria-label={title}
         data-variant="media"
-        className="relative isolate min-h-[34rem] overflow-hidden pt-28 text-white"
+        data-motion-paused={motion.paused}
+        className="bw-service-hero relative isolate min-h-[34rem] overflow-hidden pt-28 text-white"
       >
         {/* 전면 그래픽. 스크림과 모션은 industrial.css의 .bw-hero-media가 맡는다. */}
-        <div className="bw-hero-media absolute inset-0 -z-20">
+        <div
+          className="bw-hero-media absolute inset-0 -z-20"
+          key={motion.run}
+          onAnimationEnd={motion.finish}
+        >
           <PageHeroMedia media={media} />
+          <div className="bw-hero-media__tint" aria-hidden="true" />
         </div>
         {overlayClassName ? (
           <div className={`absolute inset-0 -z-10 ${overlayClassName}`} />
         ) : null}
-        <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">{content}</div>
+        <div className="bw-service-hero__content mx-auto max-w-6xl px-6 py-20 md:py-28">
+          {content}
+        </div>
+        <GraphicMotionControl motion={motion} />
       </section>
     );
   }

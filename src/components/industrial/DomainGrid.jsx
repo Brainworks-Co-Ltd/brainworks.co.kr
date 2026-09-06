@@ -8,9 +8,8 @@ import { useLocale } from "@/shared/routing/useLocale";
  * 캐러셀은 한 번에 하나만 보여준다. 방문자가 자기 분야를 찾으려면 돌려봐야
  * 한다. 실측한 다섯 곳 모두 분야별 진입 경로를 한 화면에 펼쳐 두었다.
  *
- * 영역마다 고유색을 주지 않는다 (design.md 2.3). 색으로 넷을 구분하면
- * 브랜드 색이 사라지고 화면이 무지개가 된다. 대신 각 영역의 제품 화면으로
- * 구분한다. 영역의 정체성은 스크린샷 그 자체다.
+ * 네 산업의 면적과 정보는 동등하게 유지한다. 넓은 청록 면 위에서
+ * 기존 추상 그래픽과 분야 이름을 함께 보여준다 (2026-09-07 승인).
  */
 
 const SHOT = {
@@ -44,7 +43,7 @@ export default function DomainGrid() {
           <Link
             key={area.id}
             href={`/services?area=${area.id}#business-areas`}
-            className="ind-domain"
+            className="ind-domain bw-reveal"
           >
             {SHOT[area.id] ? (
               <img className="ind-domain__shot" src={SHOT[area.id]} alt="" />

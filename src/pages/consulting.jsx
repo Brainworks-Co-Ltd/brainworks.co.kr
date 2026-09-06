@@ -15,7 +15,8 @@ const copy = {
     // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
     // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
     heroAudience: "무엇을 어떻게 도입할지부터 정해야 하는 담당자",
-    heroScope: "대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다.",
+    heroScope:
+      "대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다.",
     heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
@@ -191,7 +192,11 @@ export default function Consulting() {
       <main id="main-content" data-accent="consulting">
         <PageHero
           variant="media"
-          media={{ kind: "image", src: "/images/services/hero/agent.webp", alt: "" }}
+          media={{
+            kind: "image",
+            src: "/images/services/hero/agent.webp",
+            alt: "",
+          }}
           eyebrow={t.heroTitle}
           title={t.heroAudience}
           description={t.heroScope}
@@ -225,21 +230,19 @@ export default function Consulting() {
           ]}
         />
 
-
         <EditorialSection
           eyebrow="Consulting value"
           title={t.valueTitle}
           surface="plain"
+          className="bw-consulting-value"
         >
-          {/* 카드가 한꺼번에 올라오지 않도록 순서대로 지연을 준다. 숨김·전환·저동작·
-              인쇄 처리는 industrial.css의 .bw-reveal 규칙(--bw-motion-move)이 그대로 맡고,
-              여기서는 시작 시점만 어긋나게 한다. */}
-          <div className="grid gap-6">
+          {/* 제공 가치는 열린 목록으로 읽고, 아래 과정은 연결된 단계로 구분한다. */}
+          <div className="bw-offerings">
             {offerings.map((item, index) => (
               <article
                 key={item.id}
                 style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal grid gap-6 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                className="bw-reveal bw-offering"
               >
                 <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {item.title[language]}
@@ -266,15 +269,16 @@ export default function Consulting() {
           eyebrow="Consulting process"
           title={t.processTitle}
           surface="muted"
+          className="bw-consulting-process"
         >
           {/* 단계 목록도 같은 규칙으로 순차 등장시킨다. 스크롤 위치에 진행도를 묶지 않고
               뷰포트 진입 한 번으로 끝내므로 자동 재생이 아니다(명세 §23.3). */}
-          <ol className="grid gap-4">
+          <ol className="bw-process-flow">
             {processSteps.map((step, index) => (
               <li
                 key={step.id}
                 style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface)] p-[var(--bw-space-6)] md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
+                className="bw-reveal bw-process-step"
               >
                 <div>
                   <span className="bw-marker">0{step.id}</span>

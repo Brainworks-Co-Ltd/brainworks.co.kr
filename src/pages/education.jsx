@@ -496,8 +496,14 @@ export default function Education() {
             눈썹이 페이지 이름, h1이 대상, 설명이 범위다. */}
         <PageHero
           variant="media"
-          media={{ kind: "image", src: "/images/services/hero/healthcare.webp", alt: "" }}
-          eyebrow={language === "ko" ? "AI 전문교육" : "AI Professional Education"}
+          media={{
+            kind: "image",
+            src: "/images/services/hero/healthcare.webp",
+            alt: "",
+          }}
+          eyebrow={
+            language === "ko" ? "AI 전문교육" : "AI Professional Education"
+          }
           title={
             language === "ko"
               ? "조직의 AI 역량을 키워야 하는 담당자"
@@ -533,17 +539,16 @@ export default function Education() {
           ]}
         />
 
-
-        <section className="mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
+        <section className="bw-education-process mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
           <SectionHeader
             eyebrow="Training process"
             title={language === "ko" ? "교육 프로세스" : "Training Process"}
           />
 
-          <div className="flex flex-col gap-12">
+          <div className="bw-learning-flow">
             {processSteps.map((step, index) => {
               const hasImage = Boolean(step.image);
-              const isReversed = hasImage && index % 2 === 1;
+
               const imageAlt =
                 step.image?.alt?.[language] ??
                 step.image?.alt?.en ??
@@ -554,16 +559,14 @@ export default function Education() {
                   key={step.id}
                   /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white"
+                  className="bw-reveal bw-learning-step"
                 >
-                  <div
-                    className={`flex flex-col gap-8 px-6 py-8 md:gap-10 md:px-10 md:py-12 ${
-                      hasImage ? "md:flex-row md:items-stretch" : ""
-                    } ${isReversed ? "md:flex-row-reverse" : ""}`}
-                  >
+                  <div className="bw-learning-step__inner">
                     <div className="flex-1 space-y-5">
                       <div className="flex items-center gap-3">
-                        <span className="bw-marker">{String(index + 1).padStart(2, "0")}</span>
+                        <span className="bw-marker">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
                         <span className="bw-chip">{step.stage[language]}</span>
                       </div>
                       <div className="space-y-2">
@@ -609,7 +612,7 @@ export default function Education() {
                     </div>
 
                     {hasImage && (
-                      <div className="relative h-64 flex-1 overflow-hidden rounded-[var(--bw-radius-feature)] md:h-auto">
+                      <div className="bw-learning-step__image relative h-64 flex-1 overflow-hidden md:h-auto">
                         <Image
                           src={step.image.src}
                           alt={imageAlt}
