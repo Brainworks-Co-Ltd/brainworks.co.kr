@@ -45,9 +45,9 @@ export default function Clients() {
 
         <div className="relative mt-12 overflow-hidden border-y border-[var(--bw-color-line)]">
           <div
-            className="flex items-center"
+            className="animate-scroll flex items-center"
             style={{
-              animation: "scroll 36s linear infinite",
+              animationDuration: "36s",
               width: "fit-content",
             }}
           >
@@ -87,23 +87,6 @@ export default function Clients() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @media (prefers-reduced-motion: reduce) {
-          div[style*="animation"] {
-            animation: none !important;
-          }
-        }
-
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
     </section>
   );
 }
