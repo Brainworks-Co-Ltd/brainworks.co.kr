@@ -1,9 +1,16 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, ne, sql } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
+import { assets } from "@/server/db/schema/assets";
 import { popupNoticeLocales, popupNotices } from "@/server/db/schema/popup-notices";
-import { assertCompleteLocales, assertExpectedVersion } from "@/server/db/integrity";
+import {
+  assertCompleteLocales,
+  assertDraftLocales,
+  assertExpectedVersion,
+} from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 import { validatePopupLocale } from "@/server/modules/notices/domain";
+import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
+import { assertPopupOverlapLimit } from "@/server/modules/popup-notices/domain";
 import type { PopupCommandInput, PopupLocale, PopupPublicationWindow } from "@/server/modules/popup-notices/contracts";
 
 async function bumpPopupVersion(tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0], id: string, expectedVersion: number, actorId: string) {
@@ -14,10 +21,7 @@ async function bumpPopupVersion(tx: Parameters<Parameters<ReturnType<typeof getD
 
 function assertPopupInput(input: PopupCommandInput) {
   assertCompleteLocales(Object.keys(input.locales));
-  for (const locale of ["ko", "en"] as const) {
-    const result = validatePopupLocale(input.locales[locale]);
-    if (!result.valid) throw new HttpError(result.code);
-  }
+  assertDraftLocales(input.locales);
 }
 
 export async function createPopupNotice(input: PopupCommandInput, actorId: string) {
@@ -32,7 +36,31 @@ export async function createPopupNotice(input: PopupCommandInput, actorId: strin
 export async function getAdminPopupNotice(id: string) {
   const parent = await getDb().select().from(popupNotices).where(eq(popupNotices.id, id)).limit(1);
   if (!parent[0]) throw new HttpError("NOT_FOUND");
-  const locales = await getDb().select().from(popupNoticeLocales).where(eq(popupNoticeLocales.popupNoticeId, id));
+  const rows = await getDb()
+    .select({
+      id: popupNoticeLocales.id,
+      locale: popupNoticeLocales.locale,
+      publicationStatus: popupNoticeLocales.publicationStatus,
+      publishStartsAt: popupNoticeLocales.publishStartsAt,
+      publishEndsAt: popupNoticeLocales.publishEndsAt,
+      displayOrder: popupNoticeLocales.displayOrder,
+      title: popupNoticeLocales.title,
+      bodyMarkdown: popupNoticeLocales.bodyMarkdown,
+      imageAssetId: popupNoticeLocales.imageAssetId,
+      imageAlt: popupNoticeLocales.imageAlt,
+      assetStatus: assets.status,
+      storageKey: assets.storageKey,
+    })
+    .from(popupNoticeLocales)
+    .leftJoin(assets, eq(assets.id, popupNoticeLocales.imageAssetId))
+    .where(eq(popupNoticeLocales.popupNoticeId, id));
+  const locales = rows.map(({ assetStatus, storageKey, ...locale }) => ({
+    ...locale,
+    imageUrl:
+      assetStatus === "READY" && storageKey
+        ? resolvePublicAssetUrl(storageKey)
+        : null,
+  }));
   return { ...parent[0], locales };
 }
 
@@ -57,9 +85,48 @@ export async function publishPopupNotice(id: string, locale: PopupLocale, expect
     if (!current) throw new HttpError("NOT_FOUND");
     const result = validatePopupLocale(current);
     if (!result.valid) throw new HttpError(result.code);
-    await bumpPopupVersion(tx, id, expectedVersion, actorId);
     const now = new Date();
     const startsAt = window.startsAt ?? now;
+    const endsAt = window.endsAt ?? null;
+    if (
+      Number.isNaN(startsAt.getTime()) ||
+      (endsAt &&
+        (Number.isNaN(endsAt.getTime()) || endsAt.getTime() <= startsAt.getTime()))
+    ) {
+      throw new HttpError("PUBLICATION_INVALID", "게시 기간을 확인해 주세요.");
+    }
+    await tx.execute(
+      sql`select pg_advisory_xact_lock(hashtext(${`popup-notices:${locale}`}))`,
+    );
+    const publishedIntervals = await tx
+      .select({
+        startsAt: popupNoticeLocales.publishStartsAt,
+        endsAt: popupNoticeLocales.publishEndsAt,
+      })
+      .from(popupNoticeLocales)
+      .innerJoin(
+        popupNotices,
+        eq(popupNotices.id, popupNoticeLocales.popupNoticeId),
+      )
+      .where(
+        and(
+          eq(popupNoticeLocales.locale, locale),
+          inArray(popupNoticeLocales.publicationStatus, [
+            "SCHEDULED",
+            "PUBLISHED",
+          ]),
+          eq(popupNotices.itemStatus, "ACTIVE"),
+          ne(popupNoticeLocales.popupNoticeId, id),
+        ),
+      );
+    assertPopupOverlapLimit([
+      ...publishedIntervals.map((interval) => ({
+        startsAt: interval.startsAt ?? new Date(0),
+        endsAt: interval.endsAt,
+      })),
+      { startsAt, endsAt },
+    ]);
+    await bumpPopupVersion(tx, id, expectedVersion, actorId);
     await tx.update(popupNoticeLocales).set({ publicationStatus: startsAt > now ? "SCHEDULED" : "PUBLISHED", publishStartsAt: startsAt, publishEndsAt: window.endsAt ?? null, firstPublishedAt: current.firstPublishedAt ?? now, lastPublishedAt: now, lastPublishedByActorId: actorId, updatedAt: now, updatedByActorId: actorId }).where(and(eq(popupNoticeLocales.popupNoticeId, id), eq(popupNoticeLocales.locale, locale)));
     return { id, locale, version: expectedVersion + 1 };
   });
@@ -87,6 +154,16 @@ export async function restorePopupNotice(id: string, expectedVersion: number, ac
   return getDb().transaction(async (tx) => {
     await bumpPopupVersion(tx, id, expectedVersion, actorId);
     await tx.update(popupNotices).set({ itemStatus: "ACTIVE", archivedAt: null, archivedByActorId: null }).where(eq(popupNotices.id, id));
+    await tx
+      .update(popupNoticeLocales)
+      .set({
+        publicationStatus: "DRAFT",
+        publishStartsAt: null,
+        publishEndsAt: null,
+        updatedAt: new Date(),
+        updatedByActorId: actorId,
+      })
+      .where(eq(popupNoticeLocales.popupNoticeId, id));
     return { id, version: expectedVersion + 1 };
   });
 }

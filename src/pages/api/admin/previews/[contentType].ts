@@ -19,7 +19,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   }
   const markdown =
     typeof request.body?.markdown === "string" ? request.body.markdown : "";
-  response.status(200).json({ html: renderMarkdownPreview(markdown) });
+  response.status(200).json({
+    data: { html: renderMarkdownPreview(markdown) },
+  });
 }
 
 export default withApiErrorBoundary(handler);

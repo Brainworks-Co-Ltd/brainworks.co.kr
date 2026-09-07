@@ -1,12 +1,14 @@
 import { and, asc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "@/server/db/client";
+import { assets } from "@/server/db/schema/assets";
 import { popupNoticeLocales, popupNotices } from "@/server/db/schema/popup-notices";
 import { noticeLocales, notices } from "@/server/db/schema/notices";
 import { effectiveNoticeVisibility, resolvePopupDetailUrl } from "@/server/modules/notices/domain";
 import type { PopupLocale } from "@/server/modules/popup-notices/contracts";
+import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
 
-export type PublishedPopupNotice = { id: string; title: string; bodyMarkdown: string | null; imageAssetId: string | null; imageAlt: string | null; dismissalRevision: number; displayOrder: number; detailUrl: string | null };
+export type PublishedPopupNotice = { id: string; title: string; bodyMarkdown: string | null; imageUrl: string | null; imageAlt: string | null; dismissalRevision: number; displayOrder: number; detailUrl: string | null };
 
 const popupStatusOrder = { PUBLISHED: 0, SCHEDULED: 1, DRAFT: 2, UNPUBLISHED: 3 } as const;
 const linkedNotices = alias(notices, "linked_notices");
@@ -15,9 +17,10 @@ const linkedNoticeLocales = alias(noticeLocales, "linked_notice_locales");
 export async function getPublishedPopupNotices(locale: PopupLocale, now = new Date()): Promise<PublishedPopupNotice[]> {
   if (!process.env.DATABASE_URL) return [];
   const rows = await getDb()
-    .select({ id: popupNotices.id, noticeId: popupNotices.noticeId, dismissalRevision: popupNotices.dismissalRevision, title: popupNoticeLocales.title, bodyMarkdown: popupNoticeLocales.bodyMarkdown, imageAssetId: popupNoticeLocales.imageAssetId, imageAlt: popupNoticeLocales.imageAlt, displayOrder: popupNoticeLocales.displayOrder, status: popupNoticeLocales.publicationStatus, startsAt: popupNoticeLocales.publishStartsAt, endsAt: popupNoticeLocales.publishEndsAt, linkedItemStatus: linkedNotices.itemStatus, linkedNoticeStatus: linkedNoticeLocales.publicationStatus, linkedNoticeStartsAt: linkedNoticeLocales.publishStartsAt, linkedNoticeEndsAt: linkedNoticeLocales.publishEndsAt, noticePublicNumber: linkedNotices.publicNumber })
+    .select({ id: popupNotices.id, noticeId: popupNotices.noticeId, dismissalRevision: popupNotices.dismissalRevision, title: popupNoticeLocales.title, bodyMarkdown: popupNoticeLocales.bodyMarkdown, imageAlt: popupNoticeLocales.imageAlt, imageStatus: assets.status, imageStorageKey: assets.storageKey, displayOrder: popupNoticeLocales.displayOrder, status: popupNoticeLocales.publicationStatus, startsAt: popupNoticeLocales.publishStartsAt, endsAt: popupNoticeLocales.publishEndsAt, linkedItemStatus: linkedNotices.itemStatus, linkedNoticeStatus: linkedNoticeLocales.publicationStatus, linkedNoticeStartsAt: linkedNoticeLocales.publishStartsAt, linkedNoticeEndsAt: linkedNoticeLocales.publishEndsAt, noticePublicNumber: linkedNotices.publicNumber })
     .from(popupNotices)
     .innerJoin(popupNoticeLocales, eq(popupNoticeLocales.popupNoticeId, popupNotices.id))
+    .leftJoin(assets, eq(assets.id, popupNoticeLocales.imageAssetId))
     .leftJoin(linkedNotices, eq(linkedNotices.id, popupNotices.noticeId))
     .leftJoin(linkedNoticeLocales, and(eq(linkedNoticeLocales.noticeId, linkedNotices.id), eq(linkedNoticeLocales.locale, locale)))
     .where(and(eq(popupNotices.itemStatus, "ACTIVE"), eq(popupNoticeLocales.locale, locale), or(eq(popupNoticeLocales.publicationStatus, "PUBLISHED"), eq(popupNoticeLocales.publicationStatus, "SCHEDULED"))!))
@@ -29,7 +32,10 @@ export async function getPublishedPopupNotices(locale: PopupLocale, now = new Da
       id: row.id,
       title: row.title,
       bodyMarkdown: row.bodyMarkdown,
-      imageAssetId: row.imageAssetId,
+      imageUrl:
+        row.imageStatus === "READY" && row.imageStorageKey
+          ? resolvePublicAssetUrl(row.imageStorageKey)
+          : null,
       imageAlt: row.imageAlt,
       dismissalRevision: row.dismissalRevision,
       displayOrder: row.displayOrder,

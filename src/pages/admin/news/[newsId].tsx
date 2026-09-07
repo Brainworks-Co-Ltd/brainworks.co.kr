@@ -1,57 +1,56 @@
-import Link from "next/link";
-import type { GetServerSideProps } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { NewsForm, type NewsFormValue } from "@/components/admin/NewsForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { getAdminNews } from "@/server/modules/news/repository";
 
-type NewsSummary = { slug: string; version: number } | null;
-
-export default function EditNews({ news }: { news: NewsSummary }) {
+export default function EditNews({ news }: { news: NewsFormValue }) {
   return (
     <AdminShell activePath="/admin/news">
       <AdminPageHeader
-        title="뉴스 수정"
-        description="로케일별 원문과 게시 상태를 확인합니다."
+        title={news.locales.ko.title || news.locales.en.title || "뉴스 편집"}
+        description="내용을 저장한 뒤 국문과 영문의 게시 상태를 각각 관리할 수 있습니다."
       />
-      {news ? (
-        <section className="mt-8 grid gap-5 rounded-2xl border border-slate-200 bg-white p-6">
-          <p className="text-sm text-[var(--bw-color-muted)]">
-            현재 슬러그: {news.slug}
-          </p>
-          <p className="text-sm text-[var(--bw-color-muted)]">
-            버전: {news.version}
-          </p>
-          <p className="text-sm leading-7 text-[var(--bw-color-muted)]">
-            편집 입력과 게시 명령은 같은 버전을 기준으로 저장되어 충돌 시 현재
-            입력을 덮어쓰지 않습니다.
-          </p>
-        </section>
-      ) : (
-        <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
-          <p className="text-sm text-[var(--bw-color-muted)]">
-            DB 연결 후 편집 데이터를 불러옵니다.
-          </p>
-        </section>
-      )}
-      <Link
-        href="/admin/news"
-        className="mt-6 inline-flex text-sm font-semibold underline-offset-4 hover:underline"
-      >
-        뉴스 목록으로 돌아가기
-      </Link>
+      <div className="mt-8">
+        <NewsForm initial={news} />
+      </div>
     </AdminShell>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const guard = await requireAdminPage(context);
   if ("redirect" in guard) return guard;
-  if (!process.env.DATABASE_URL) return { props: { news: null } };
-  const { getAdminNews } = await import("@/server/modules/news/repository");
+  const id = typeof context.params?.newsId === "string" ? context.params.newsId : "";
   try {
-    const record = await getAdminNews(context.params?.newsId as string);
-    return { props: { news: { slug: record.slug, version: record.version } } };
+    const item = await getAdminNews(id);
+    const locales = Object.fromEntries(
+      item.locales.map((locale) => [
+        locale.locale,
+        {
+          title: locale.title,
+          summary: locale.summary,
+          bodyMarkdown: locale.bodyMarkdown,
+          coverAlt: locale.coverAlt || "",
+          publicationStatus: locale.publicationStatus,
+        },
+      ]),
+    ) as NewsFormValue["locales"];
+    return {
+      props: {
+        news: {
+          id: item.id,
+          version: item.version,
+          itemStatus: item.itemStatus,
+          slug: item.slug,
+          category: item.category,
+          displayDate: String(item.displayDate),
+          locales,
+        },
+      },
+    };
   } catch {
     return { notFound: true };
   }
-};
+}

@@ -5,21 +5,29 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
+    setError("");
     try {
-      await fetch("/api/auth/request-password-reset", {
+      const response = await fetch("/api/auth/request-password-reset", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           redirectTo: "/admin/auth/reset-password",
         }),
       });
-    } finally {
+      if (!response.ok) throw new Error("재설정 요청 실패");
       setSubmitted(true);
+    } catch {
+      setError(
+        "요청을 전송하지 못했습니다. 연결을 확인한 뒤 다시 시도해 주세요.",
+      );
+    } finally {
       setIsSubmitting(false);
     }
   }
@@ -51,6 +59,11 @@ export default function ForgotPassword() {
                 className="min-h-11 rounded-xl border border-slate-300 px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
               />
             </label>
+            {error ? (
+              <p role="alert" className="text-sm leading-6 text-red-700">
+                {error}
+              </p>
+            ) : null}
             <button
               type="submit"
               disabled={isSubmitting}

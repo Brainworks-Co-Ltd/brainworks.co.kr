@@ -13,6 +13,17 @@ export function assertCompleteLocales(locales: string[]) {
   }
 }
 
+export function assertDraftLocales(
+  locales: Record<"ko" | "en", { title?: string }>,
+) {
+  if (![locales.ko.title, locales.en.title].some((title) => title?.trim())) {
+    throw new HttpError(
+      "PUBLICATION_INVALID",
+      "국문 또는 영문 제목을 입력해 주세요.",
+    );
+  }
+}
+
 export function assertContinuousOrder(orders: number[]) {
   if (orders.length === 0) {
     return true;

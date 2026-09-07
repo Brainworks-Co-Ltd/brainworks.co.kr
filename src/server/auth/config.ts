@@ -7,7 +7,7 @@ import {
   authAccounts,
   authVerifications,
 } from "@/server/db/schema/auth";
-import { testMailPort } from "@/server/infrastructure/test-mail";
+import { createPasswordResetMailPort } from "@/server/infrastructure/password-reset-mail";
 
 const DEFAULT_APP_ORIGIN = "http://localhost:3000";
 
@@ -24,6 +24,7 @@ export function getAuthAdvancedOptions() {
 }
 
 function createAuth() {
+  const passwordResetMailPort = createPasswordResetMailPort();
   return betterAuth({
     baseURL: getAuthBaseURL(),
     trustedOrigins: [getAppOrigin()],
@@ -43,7 +44,7 @@ function createAuth() {
       disableSignUp: true,
       revokeSessionsOnPasswordReset: true,
       sendResetPassword: async ({ user, url }) => {
-        await testMailPort.sendPasswordReset({ to: user.email, url });
+        await passwordResetMailPort.sendPasswordReset({ to: user.email, url });
       },
     },
     user: {

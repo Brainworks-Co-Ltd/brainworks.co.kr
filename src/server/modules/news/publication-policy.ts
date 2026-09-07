@@ -2,13 +2,17 @@ import { HttpError } from "@/server/http/errors";
 
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+export function assertValidNewsSlug(slug: string) {
+  if (!slugPattern.test(slug)) {
+    throw new HttpError("PUBLICATION_INVALID");
+  }
+}
+
 export function assertPublishableNews(input: {
   slug: string;
   locales: Record<string, { title?: string; bodyMarkdown?: string }>;
 }) {
-  if (!slugPattern.test(input.slug)) {
-    throw new HttpError("PUBLICATION_INVALID");
-  }
+  assertValidNewsSlug(input.slug);
 
   for (const locale of ["ko", "en"]) {
     const content = input.locales[locale];
