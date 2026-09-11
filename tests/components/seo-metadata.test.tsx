@@ -1,9 +1,12 @@
 import { readFileSync } from "node:fs";
+import type { ReactNode } from "react";
 import { render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 // next/head를 자식 그대로 렌더하도록 mock
-vi.mock("next/head", () => ({ default: ({ children }: any) => <>{children}</> }));
+vi.mock("next/head", () => ({
+  default: ({ children }: { children?: ReactNode }) => <>{children}</>,
+}));
 
 vi.mock("next/router", () => ({
   useRouter: () => ({ asPath: "/about", locale: "ko" }),

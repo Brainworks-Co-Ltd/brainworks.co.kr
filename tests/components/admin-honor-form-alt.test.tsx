@@ -58,7 +58,7 @@ describe("HonorForm 대체 설명 저장", () => {
 
     await waitFor(() => expect(fetch).toHaveBeenCalled());
 
-    const body = JSON.parse((fetch as any).mock.calls[0][1].body);
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
     expect(body.locales.ko).toHaveProperty("imageAlt", null);
   });
 });

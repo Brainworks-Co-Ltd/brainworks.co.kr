@@ -1,12 +1,17 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { describe, expect, it, vi } from "vitest";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
 
 function mockResponse() {
-  const response: any = { headersSent: false, headers: {} as Record<string, string> };
-  response.setHeader = vi.fn((k: string, v: string) => { response.headers[k] = v; });
-  response.status = vi.fn(() => response);
-  response.json = vi.fn(() => response);
-  response.end = vi.fn(() => response);
+  const headers: Record<string, string> = {};
+  const response = { headersSent: false } as unknown as NextApiResponse;
+  response.setHeader = vi.fn((k: string, v: string) => {
+    headers[k] = v;
+    return response;
+  }) as unknown as NextApiResponse["setHeader"];
+  response.status = vi.fn(() => response) as unknown as NextApiResponse["status"];
+  response.json = vi.fn(() => response) as unknown as NextApiResponse["json"];
+  response.end = vi.fn(() => response) as unknown as NextApiResponse["end"];
   return response;
 }
 
@@ -15,7 +20,7 @@ describe("withApiErrorBoundary 메서드 허용 목록", () => {
     const handler = vi.fn();
     const wrapped = withApiErrorBoundary(handler, ["POST"]);
     const response = mockResponse();
-    await wrapped({ method: "GET" } as any, response);
+    await wrapped({ method: "GET" } as unknown as NextApiRequest, response);
     expect(handler).not.toHaveBeenCalled();
     expect(response.setHeader).toHaveBeenCalledWith("Allow", "POST");
     expect(response.status).toHaveBeenCalledWith(405);
@@ -23,12 +28,12 @@ describe("withApiErrorBoundary 메서드 허용 목록", () => {
   it("목록 안 메서드는 핸들러로 전달된다", async () => {
     const handler = vi.fn();
     const wrapped = withApiErrorBoundary(handler, ["POST"]);
-    await wrapped({ method: "POST" } as any, mockResponse());
+    await wrapped({ method: "POST" } as unknown as NextApiRequest, mockResponse());
     expect(handler).toHaveBeenCalledTimes(1);
   });
   it("허용 목록이 없으면 기존처럼 모든 메서드를 통과시킨다", async () => {
     const handler = vi.fn();
-    await withApiErrorBoundary(handler)({ method: "DELETE" } as any, mockResponse());
+    await withApiErrorBoundary(handler)({ method: "DELETE" } as unknown as NextApiRequest, mockResponse());
     expect(handler).toHaveBeenCalledTimes(1);
   });
 });
@@ -42,7 +47,7 @@ describe("withApiErrorBoundary 예외 로깅", () => {
     });
     const response = mockResponse();
     await withApiErrorBoundary(handler)(
-      { method: "POST", url: "/api/admin/notices/1/archive" } as any,
+      { method: "POST", url: "/api/admin/notices/1/archive" } as unknown as NextApiRequest,
       response,
     );
     expect(consoleError).toHaveBeenCalledWith(

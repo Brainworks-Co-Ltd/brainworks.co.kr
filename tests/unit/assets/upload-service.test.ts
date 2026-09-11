@@ -1,3 +1,4 @@
+import type { IncomingMessage } from "node:http";
 import { Readable } from "node:stream";
 import { describe, expect, it } from "vitest";
 import { readMultipartImage } from "@/server/modules/assets/upload-service";
@@ -9,7 +10,7 @@ function multipart(boundary: string, contentType: string, filename: string) {
     `Content-Type: ${contentType}\r\n\r\n` +
     `%PDF-1.4 fake\r\n` +
     `--${boundary}--\r\n`;
-  const request = Readable.from([Buffer.from(body)]) as any;
+  const request = Readable.from([Buffer.from(body)]) as unknown as IncomingMessage;
   request.headers = { "content-type": `multipart/form-data; boundary=${boundary}` };
   request.method = "POST";
   return request;

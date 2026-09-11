@@ -97,8 +97,9 @@ export function PageHero({
       action={action}
       secondaryAction={secondaryAction}
       dark={dark || effectiveVariant === "media"}
-      children={children}
-    />
+    >
+      {children}
+    </HeroContent>
   );
 
   if (effectiveVariant === "media") {

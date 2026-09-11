@@ -45,11 +45,11 @@ describe("문의 폼", () => {
   });
 
   it("서버 4xx는 입력 확인 안내, 5xx는 재시도 안내를 낸다", async () => {
-    (fetch as any).mockResolvedValueOnce({
+    vi.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       status: 400,
       json: async () => ({ error: { code: "BAD_REQUEST" } }),
-    });
+    } as unknown as Response);
     render(<ContactPage />);
 
     fireEvent.change(screen.getByRole("textbox", { name: "이름" }), {
@@ -67,7 +67,7 @@ describe("문의 폼", () => {
 
     await screen.findByText(/입력 내용을 확인/);
 
-    (fetch as any).mockRejectedValueOnce(new Error("network down"));
+    vi.mocked(fetch).mockRejectedValueOnce(new Error("network down"));
     fireEvent.click(screen.getByRole("button", { name: /보내기|문의/ }));
 
     await screen.findByText(/잠시 후 다시 시도/);
