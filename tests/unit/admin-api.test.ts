@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AdminApiError, adminApiErrorMessage, requestAdminApi } from "@/lib/admin-api";
+import { AdminApiError, adminApiErrorMessage, isOriginMismatch, requestAdminApi } from "@/lib/admin-api";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -32,5 +32,14 @@ describe("관리자 API 안내", () => {
   it("JSON이 아닌 실패 응답도 안전한 안내로 변환한다", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>오류</html>", { status: 502 })));
     await expect(requestAdminApi("/api/admin/notices")).rejects.toMatchObject({ code: "INTERNAL_ERROR" });
+  });
+
+  it("403과 origin 메시지가 함께일 때만 출처 불일치로 판정한다", () => {
+    expect(isOriginMismatch({ status: 403, message: "Invalid origin" })).toBe(true);
+    expect(isOriginMismatch({ status: 403, message: "권한이 없습니다" })).toBe(false);
+    expect(isOriginMismatch({ status: 401, message: "Invalid origin" })).toBe(false);
+    expect(isOriginMismatch(new AdminApiError("INVALID_ORIGIN", "Invalid origin"))).toBe(true);
+    expect(isOriginMismatch(new AdminApiError("FORBIDDEN"))).toBe(false);
+    expect(isOriginMismatch(null)).toBe(false);
   });
 });

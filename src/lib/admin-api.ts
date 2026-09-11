@@ -46,6 +46,15 @@ export function adminApiErrorMessage(error: unknown) {
   );
 }
 
+export function isOriginMismatch(error: unknown): boolean {
+  if (error instanceof AdminApiError) {
+    return /origin/i.test(error.code) || /origin/i.test(error.message);
+  }
+  if (!error || typeof error !== "object") return false;
+  const { status, message } = error as { status?: unknown; message?: unknown };
+  return status === 403 && typeof message === "string" && /origin/i.test(message);
+}
+
 export async function requestAdminApi<T>(
   url: string,
   init: RequestInit = {},

@@ -10,6 +10,11 @@ npm run dev            # http://localhost:3000
 npm run dev -- -p 3300 # 포트를 바꾸려면
 ```
 
+`.env`의 `APP_ORIGIN`은 브라우저로 접속하는 주소(포트 포함)와 정확히 같아야
+한다. `-p 3300`으로 띄우면 `APP_ORIGIN=http://localhost:3300`으로 바꾸거나
+`APP_ORIGIN=http://localhost:3300 npm run dev -- -p 3300`처럼 덮어쓴다. 다르면
+로그인, 로그아웃, 비밀번호 변경이 전부 403으로 실패한다.
+
 `.env`의 `DATABASE_URL`이 주석 처리되어 있으면 공개 페이지 전체가 승인된 정적
 콘텐츠로 렌더링된다. PostgreSQL도 도커도 띄우지 않아도 된다. 디자인 확인이나
 시연은 이 상태로 한다.

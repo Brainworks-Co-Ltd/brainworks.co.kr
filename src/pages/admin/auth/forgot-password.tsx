@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { isOriginMismatch } from "@/lib/admin-api";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -22,7 +23,16 @@ export default function ForgotPassword() {
           redirectTo: "/admin/auth/reset-password",
         }),
       });
-      if (!response.ok) throw new Error("재설정 요청 실패");
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        if (isOriginMismatch({ status: response.status, message: payload?.message })) {
+          setError(
+            `접속 주소가 서버의 APP_ORIGIN 설정과 다릅니다. 현재 주소(${window.location.origin})로 APP_ORIGIN을 맞춘 뒤 다시 시도해 주세요.`,
+          );
+          return;
+        }
+        throw new Error("재설정 요청 실패");
+      }
       setSubmitted(true);
     } catch {
       setError(
