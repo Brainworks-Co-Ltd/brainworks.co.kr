@@ -46,7 +46,7 @@ export default function About() {
                 <div className="flex justify-center lg:w-1/2">
                   <div className="overflow-hidden rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-surface-muted)]">
                     <img
-                      src="/images/대표사진.png"
+                      src="/images/about/대표사진.webp"
                       alt={language === "ko" ? "CEO 사진" : "CEO photo"}
                       className="h-full w-full object-cover"
                     />

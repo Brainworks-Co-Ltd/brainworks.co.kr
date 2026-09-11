@@ -106,7 +106,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI해커톤.jpg",
+      src: "/images/education/AI해커톤.webp",
       alt: {
         ko: "해커톤 멘토링 현장 사진",
         en: "Mentoring during hackathon photo",
@@ -156,7 +156,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/Global.png",
+      src: "/images/education/Global.webp",
       alt: {
         ko: "해외 인턴십 경험 사진",
         en: "Global internship experience photo",
@@ -206,7 +206,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI포트폴리오.jpg",
+      src: "/images/education/AI포트폴리오.webp",
       alt: {
         ko: "포트폴리오 피드백 워크숍 사진",
         en: "Portfolio feedback workshop photo",
@@ -254,7 +254,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI면접.jpg",
+      src: "/images/education/AI면접.webp",
       alt: {
         ko: "모의 면접 진행 사진",
         en: "Mock interview practice photo",
