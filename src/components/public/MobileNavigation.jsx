@@ -2,6 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/shared/routing/useLocale";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,7 @@ export function MobileNavigation({
   onLanguageChange,
 }) {
   const [openGroup, setOpenGroup] = useState(null);
+  const { language } = useLocale();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,7 +39,10 @@ export function MobileNavigation({
       >
         <Menu aria-hidden="true" />
       </DialogTrigger>
-      <DialogContent className="inset-y-0 left-auto right-0 top-0 h-dvh max-w-sm translate-x-0 translate-y-0 content-start rounded-none p-6">
+      <DialogContent
+        className="inset-y-0 left-auto right-0 top-0 h-dvh max-w-sm translate-x-0 translate-y-0 content-start rounded-none p-6"
+        closeLabel={language === "ko" ? "닫기" : "Close"}
+      >
         <DialogHeader>
           <DialogTitle>{navigationLabel}</DialogTitle>
         </DialogHeader>

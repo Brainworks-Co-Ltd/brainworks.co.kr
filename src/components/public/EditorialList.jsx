@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useLocale } from "@/shared/routing/useLocale";
 
 function StoryMeta({ tag, meta }) {
   return (
@@ -27,6 +28,8 @@ function StoryImage({ image, alt }) {
 }
 
 export function EditorialList({ featured = null, items = [], className = "" }) {
+  const { language } = useLocale();
+
   return (
     <div className={`space-y-10 ${className}`}>
       {featured ? (
@@ -46,7 +49,7 @@ export function EditorialList({ featured = null, items = [], className = "" }) {
               </p>
             ) : null}
             <span className="mt-5 inline-flex text-sm font-semibold text-[var(--bw-color-ink)]">
-              자세히 보기{" "}
+              {language === "ko" ? "자세히 보기" : "Read more"}{" "}
               <span
                 aria-hidden="true"
                 className="ml-2 transition group-hover:translate-x-1"

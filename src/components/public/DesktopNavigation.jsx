@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { BusinessMegaMenu } from "@/components/public/BusinessMegaMenu";
+import { useLocale } from "@/shared/routing/useLocale";
 
 export function DesktopNavigation({
   items,
@@ -9,6 +10,7 @@ export function DesktopNavigation({
   routeKey,
   navigationLabel,
 }) {
+  const { language } = useLocale();
   const [openGroup, setOpenGroup] = useState(null);
   const navigationRef = useRef(null);
   const triggerRefs = useRef(new Map());
@@ -127,13 +129,21 @@ export function DesktopNavigation({
                     onMouseEnter={() => openMenu(item.id)}
                     onMouseLeave={scheduleClose}
                     panelId={`public-nav-panel-${item.id}`}
-                    panelLabel={`${item.label} 하위 메뉴`}
+                    panelLabel={
+                      language === "ko"
+                        ? `${item.label} 하위 메뉴`
+                        : `${item.label} submenu`
+                    }
                   />
                 ) : (
                   <div
                     id={`public-nav-panel-${item.id}`}
                     role="region"
-                    aria-label={`${item.label} 하위 메뉴`}
+                    aria-label={
+                      language === "ko"
+                        ? `${item.label} 하위 메뉴`
+                        : `${item.label} submenu`
+                    }
                     onMouseEnter={() => openMenu(item.id)}
                     onMouseLeave={scheduleClose}
                     className="absolute right-0 top-[calc(100%+0.75rem)] z-50 min-w-72 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-3 shadow-xl"

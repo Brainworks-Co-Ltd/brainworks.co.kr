@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useLocale } from "@/shared/routing/useLocale";
 
 /*
  * 포인터와 가까운 어절을 밝히는 선언 구간이다. 어절의 실제 사각형까지
@@ -19,6 +20,7 @@ function distanceToRect(x, y, rect) {
 }
 
 export function StatementBand({ eyebrow, text }) {
+  const { language } = useLocale();
   const ref = useRef(null);
 
   useEffect(() => {
@@ -75,7 +77,10 @@ export function StatementBand({ eyebrow, text }) {
   }, [text]);
 
   return (
-    <section className="bw-statement" aria-label={eyebrow || "선언"}>
+    <section
+      className="bw-statement"
+      aria-label={eyebrow || (language === "ko" ? "선언" : "Statement")}
+    >
       <div className="bw-statement__inner" ref={ref}>
         {eyebrow ? <p className="bw-statement__eyebrow">{eyebrow}</p> : null}
         <p className="bw-statement__text">
