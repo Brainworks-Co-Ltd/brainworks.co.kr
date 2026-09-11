@@ -9,6 +9,10 @@ const SKIP_TTL_MS = 1000;
 export function useUnsavedChanges(dirty: boolean) {
   // ponytail: 1초 TTL — Link 클릭 직후의 routeChangeStart만 건너뛴다. 수정키 클릭(새 탭)처럼 push가 없으면 만료된다.
   const skipArmedAt = useRef<number | null>(null);
+  // 렌더마다 갱신한다. routeChangeStart 핸들러가 구독 시점의 클로저 값이 아니라
+  // 최신 dirty를 보게 해서, 구독 해제 전에 도착한 이벤트도 올바르게 무시한다.
+  const dirtyRef = useRef(dirty);
+  dirtyRef.current = dirty;
   let router: ReturnType<typeof useRouter> | null;
   try {
     // useRouter는 항상 이 지점에서 정확히 한 번 호출된다. try/catch는 렌더마다
@@ -35,8 +39,10 @@ export function useUnsavedChanges(dirty: boolean) {
     if (!dirty || !router?.events) return;
     const activeRouter = router;
 
-    // 생성 직후 폼이 setBaseline 뒤 router.push를 호출한다. Next 16 pages router는 routeChangeStart 전에 내부 await(_bfl)가 있어 React가 dirty=false로 재구독할 시간이 있다(리뷰에서 router.js 확인).
+    // 생성 직후 폼은 flushSync로 기준선을 동기 갱신한 뒤 router.push를 호출하므로,
+    // 이 시점에 dirtyRef.current는 이미 false다. Next 내부 await 순서에 기대지 않는다.
     const handleRouteChangeStart = (url: string) => {
+      if (!dirtyRef.current) return;
       const armedAt = skipArmedAt.current;
       skipArmedAt.current = null;
       if (armedAt !== null && Date.now() - armedAt <= SKIP_TTL_MS) {

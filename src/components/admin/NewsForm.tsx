@@ -9,6 +9,7 @@ import {
   requestAdminApi,
 } from "@/lib/admin-api";
 import { suggestSlug } from "@/lib/news-slug";
+import { flushSync } from "react-dom";
 
 type NewsLocaleValue = {
   title: string;
@@ -129,7 +130,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(inputPayload()),
         });
-        setBaseline(JSON.stringify(form));
+        // flushSync: router.push가 routeChangeStart를 emit하기 전에 dirty=false를 반영한다.
+        flushSync(() => setBaseline(JSON.stringify(form)));
         await router.push(`/admin/news/${created.id}`);
         return;
       }

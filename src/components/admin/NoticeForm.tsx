@@ -5,6 +5,7 @@ import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { flushSync } from "react-dom";
 import {
   adminApiErrorMessage,
   requestAdminApi,
@@ -120,7 +121,8 @@ export function NoticeForm({
             body: JSON.stringify(payload),
           },
         );
-        setBaseline(JSON.stringify(form));
+        // flushSync: router.push가 routeChangeStart를 emit하기 전에 dirty=false를 반영한다.
+        flushSync(() => setBaseline(JSON.stringify(form)));
         await router.push(`/admin/notices/${created.id}`);
         return;
       }

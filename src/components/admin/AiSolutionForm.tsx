@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { flushSync } from "react-dom";
 import {
   adminApiErrorMessage,
   requestAdminApi,
@@ -126,7 +127,8 @@ export function AiSolutionForm({
             body: JSON.stringify(payload()),
           },
         );
-        setBaseline(JSON.stringify(form));
+        // flushSync: router.push가 routeChangeStart를 emit하기 전에 dirty=false를 반영한다.
+        flushSync(() => setBaseline(JSON.stringify(form)));
         await router.push(`/admin/ai-solutions/${created.id}`);
         return;
       }

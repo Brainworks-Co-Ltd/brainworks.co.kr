@@ -64,4 +64,19 @@ describe("좌측 내비게이션 이동 시 미저장 변경 경고", () => {
 
     nowSpy.mockRestore();
   });
+
+  it("구독 이후 dirty가 false로 바뀌면 이미 붙은 핸들러도 최신 값을 보고 경고하지 않는다", () => {
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    const { rerender } = renderHook((dirty: boolean) => useUnsavedChanges(dirty), {
+      initialProps: true,
+    });
+
+    const handler = on.mock.calls.find(([name]) => name === "routeChangeStart")?.[1];
+    expect(handler).toBeTypeOf("function");
+
+    rerender(false);
+
+    expect(() => handler("/admin/news")).not.toThrow();
+    expect(confirm).not.toHaveBeenCalled();
+  });
 });
