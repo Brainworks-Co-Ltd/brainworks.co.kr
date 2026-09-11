@@ -114,6 +114,7 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload()),
         });
+        setBaseline(JSON.stringify(form));
         await router.push(`/admin/honors/${created.id}`);
         return;
       }

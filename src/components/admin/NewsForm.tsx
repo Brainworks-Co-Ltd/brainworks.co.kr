@@ -129,6 +129,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(inputPayload()),
         });
+        setBaseline(JSON.stringify(form));
         await router.push(`/admin/news/${created.id}`);
         return;
       }

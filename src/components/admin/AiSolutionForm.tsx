@@ -126,6 +126,7 @@ export function AiSolutionForm({
             body: JSON.stringify(payload()),
           },
         );
+        setBaseline(JSON.stringify(form));
         await router.push(`/admin/ai-solutions/${created.id}`);
         return;
       }

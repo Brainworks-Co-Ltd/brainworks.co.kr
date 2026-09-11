@@ -8,11 +8,23 @@ import {
 } from "@/components/admin/NoticeForm";
 import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm";
 
+const routerMock = {
+  push: vi.fn(),
+  asPath: "/admin/notices/new",
+  events: { on: vi.fn(), off: vi.fn(), emit: vi.fn() },
+};
+
 vi.mock("next/router", () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => routerMock,
 }));
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  routerMock.push.mockClear();
+  routerMock.events.on.mockClear();
+  routerMock.events.off.mockClear();
+  routerMock.events.emit.mockClear();
+});
 
 const categories: AdminNoticeCategory[] = [];
 
@@ -104,5 +116,29 @@ describe("NoticeForm 저장 후 상태 갱신", () => {
       status: 201,
       json: async () => ({ data: { id: "n1", version: 1 } }),
     });
+  });
+
+  it("생성 직후에는 미저장 변경 경고 없이 편집 화면으로 이동한다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 201,
+        json: async () => ({ data: { id: "n1", version: 1 } }),
+      }),
+    );
+    const confirmSpy = vi.spyOn(window, "confirm");
+
+    render(<NoticeForm initial={createEmptyNotice()} categories={categories} />);
+
+    const [koTitle] = screen.getAllByLabelText("제목");
+    fireEvent.change(koTitle, { target: { value: "후속 검증 공지" } });
+
+    fireEvent.click(screen.getByRole("button", { name: "초안 저장" }));
+
+    await waitFor(() =>
+      expect(routerMock.push).toHaveBeenCalledWith("/admin/notices/n1"),
+    );
+    expect(confirmSpy).not.toHaveBeenCalled();
   });
 });

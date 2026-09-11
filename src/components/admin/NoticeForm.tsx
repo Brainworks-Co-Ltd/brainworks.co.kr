@@ -120,6 +120,7 @@ export function NoticeForm({
             body: JSON.stringify(payload),
           },
         );
+        setBaseline(JSON.stringify(form));
         await router.push(`/admin/notices/${created.id}`);
         return;
       }

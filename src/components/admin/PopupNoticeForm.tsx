@@ -139,6 +139,7 @@ export function PopupNoticeForm({
             body: JSON.stringify(payload),
           },
         );
+        setBaseline(JSON.stringify(form));
         await router.push(`/admin/popup-notices/${created.id}`);
         return;
       }
