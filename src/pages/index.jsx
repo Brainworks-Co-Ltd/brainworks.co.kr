@@ -7,14 +7,25 @@ import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
+import { SeoMetadata } from "@/components/public/SeoMetadata";
+import { useLocale } from "@/shared/routing/useLocale";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { getPublishedPopupNotices } from "@/server/modules/popup-notices/queries";
 import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
 export default function Home({ newsItems, popupNotices, areas }) {
+  const { language } = useLocale();
   return (
     <div className="min-h-screen">
       <Header />
+      <SeoMetadata
+        title={language === "ko" ? "브레인웍스" : "Brainworks"}
+        description={
+          language === "ko"
+            ? "브레인웍스는 제조, 의료, 도시, 상담 현장에 AI 자동화를 구축합니다."
+            : "Brainworks builds AI automation for manufacturing, healthcare, city operations, and customer support."
+        }
+      />
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
         {/*

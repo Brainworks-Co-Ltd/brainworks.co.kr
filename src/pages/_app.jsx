@@ -4,7 +4,6 @@ import "@/styles/globals.css";
 import "@/styles/ui-variants.css";
 import "@/styles/industrial.css";
 import { SkipLink } from "@/components/public/SkipLink";
-import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const UI_VARIANTS = new Set(["a", "b", "c"]);
 
@@ -78,7 +77,6 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <SkipLink />
-      <SeoMetadata title="Brainworks" />
       <Component {...pageProps} />
     </>
   );

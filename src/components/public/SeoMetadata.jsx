@@ -13,12 +13,15 @@ export function SeoMetadata({ title, description }) {
 
   return (
     <Head>
-      <title>{title}</title>
-      {description ? <meta name="description" content={description} /> : null}
-      <link rel="canonical" href={canonical} />
-      <link rel="alternate" hrefLang="ko" href={alternates.ko} />
-      <link rel="alternate" hrefLang="en" href={alternates.en} />
+      <title key="title">{title}</title>
+      {description ? (
+        <meta key="description" name="description" content={description} />
+      ) : null}
+      <link key="canonical" rel="canonical" href={canonical} />
+      <link key="alternate-ko" rel="alternate" hrefLang="ko" href={alternates.ko} />
+      <link key="alternate-en" rel="alternate" hrefLang="en" href={alternates.en} />
       <link
+        key="alternate-x-default"
         rel="alternate"
         hrefLang="x-default"
         href={alternates["x-default"]}

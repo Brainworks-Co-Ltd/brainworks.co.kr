@@ -16,6 +16,7 @@ type NoticeDetailProps = {
   date: string;
   bodyMarkdown: string;
   contentHtml: string;
+  summary: string;
   backHref: string;
   attachments: Array<{ id: string; displayName: string; downloadUrl: string }>;
 };
@@ -31,7 +32,7 @@ export default function NoticeDetailPage({
       <Header />
       <SeoMetadata
         title={`${notice.title} | ${language === "ko" ? "브레인웍스 공지사항" : "Brainworks Notices"}`}
-        description={notice.title}
+        description={notice.summary}
       />
       <main id="main-content">
         <PageHero
@@ -77,11 +78,17 @@ export async function getServerSideProps({
   if (typeof query.category === "string")
     paramsForBack.set("category", query.category);
   if (typeof query.page === "string") paramsForBack.set("page", query.page);
+  const summary = notice.bodyMarkdown
+    .replace(/[#*>`_[\]()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 120);
   return {
     props: {
       notice: {
         ...notice,
         contentHtml: markdownToHtml(notice.bodyMarkdown),
+        summary,
         backHref: paramsForBack.toString()
           ? `/notices?${paramsForBack.toString()}`
           : "/notices",
