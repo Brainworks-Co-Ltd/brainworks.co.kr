@@ -78,11 +78,12 @@ export async function getServerSideProps({
   if (typeof query.category === "string")
     paramsForBack.set("category", query.category);
   if (typeof query.page === "string") paramsForBack.set("page", query.page);
-  const summary = notice.bodyMarkdown
+  const strippedBody = notice.bodyMarkdown
     .replace(/[#*>`_[\]()]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 120);
+  const summary = strippedBody || notice.title;
   return {
     props: {
       notice: {
