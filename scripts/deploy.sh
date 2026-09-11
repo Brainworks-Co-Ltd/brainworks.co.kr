@@ -12,7 +12,7 @@ export DATABASE_URL="$MIGRATION_DATABASE_URL"
 MIGRATIONS_DIR="$RELEASE_DIR/migrations" node "$RELEASE_DIR/migrate.cjs"
 
 temporary_port="${TEMPORARY_PORT:-3010}"
-PORT="$temporary_port" HOSTNAME=127.0.0.1 node "$RELEASE_DIR/standalone/server.js" >"${RELEASE_DIR}/smoke.log" 2>&1 &
+PORT="$temporary_port" HOSTNAME=127.0.0.1 TZ=Asia/Seoul node "$RELEASE_DIR/standalone/server.js" >"${RELEASE_DIR}/smoke.log" 2>&1 &
 pid=$!
 cleanup() { kill "$pid" 2>/dev/null || true; }
 trap cleanup EXIT
