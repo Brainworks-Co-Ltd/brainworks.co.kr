@@ -8,8 +8,10 @@ function dayKey(id: string) {
   return `brainworks:popup:day:${id}`;
 }
 
+const DAY_FORMATTER = new Intl.DateTimeFormat("sv-SE");
+
 function today() {
-  return new Intl.DateTimeFormat("sv-SE").format(new Date());
+  return DAY_FORMATTER.format(new Date());
 }
 
 export function isDismissed(id: string, revision: number) {

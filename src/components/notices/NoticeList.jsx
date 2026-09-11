@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
-
-function formatDate(value, language) {
-  if (!value) return "";
-  return new Intl.DateTimeFormat(language === "ko" ? "ko-KR" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).format(new Date(value));
-}
+import { formatDate } from "@/lib/format-date";
 
 /**
  * @param {{ items?: Array<{publicNumber: number, title: string, date: string, isPinned: boolean}>, page?: number, totalPages?: number, query?: {q?: string, categoryId?: string} }} props
