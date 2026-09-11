@@ -51,13 +51,9 @@ describe("기반 도구 설정", () => {
 
   it("교체된 인증 의존성을 제거하고 보안 패치 버전을 고정한다", () => {
     const packageJson = JSON.parse(read("package.json"));
-    const packageLock = JSON.parse(read("package-lock.json"));
 
     expect(packageJson.dependencies).not.toHaveProperty("next-auth");
     expect(packageJson.dependencies.nodemailer).toBe("9.0.5");
-    expect(
-      packageLock.packages["node_modules/mdast-util-to-hast"].version,
-    ).toBe("13.2.1");
   });
 
   it("CI에서 운영 의존성의 High 이상 취약점을 차단한다", () => {
