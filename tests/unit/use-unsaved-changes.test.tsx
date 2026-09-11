@@ -46,4 +46,22 @@ describe("좌측 내비게이션 이동 시 미저장 변경 경고", () => {
 
     expect(confirm).toHaveBeenCalledOnce();
   });
+
+  it("confirmNavigation 후 push 없이 새 탭이 열리면(수정키 클릭) 1초 뒤 스킵이 만료되어 다음 이동은 다시 확인한다", () => {
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
+    const { result } = renderHook(() => useUnsavedChanges(true));
+
+    expect(result.current()).toBe(true);
+    expect(confirm).toHaveBeenCalledOnce();
+
+    const nowSpy = vi.spyOn(Date, "now").mockReturnValue(Date.now() + 1500);
+    confirm.mockReturnValue(false);
+
+    const handler = on.mock.calls.find(([name]) => name === "routeChangeStart")?.[1];
+    expect(handler).toBeTypeOf("function");
+    expect(() => handler("/admin/news")).toThrow();
+    expect(confirm).toHaveBeenCalledTimes(2);
+
+    nowSpy.mockRestore();
+  });
 });
