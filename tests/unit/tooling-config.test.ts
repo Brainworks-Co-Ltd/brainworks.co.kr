@@ -54,7 +54,7 @@ describe("기반 도구 설정", () => {
     const packageLock = JSON.parse(read("package-lock.json"));
 
     expect(packageJson.dependencies).not.toHaveProperty("next-auth");
-    expect(packageJson.dependencies.nodemailer).toBe("9.0.5");
+    expect(packageJson.dependencies.nodemailer).toBe("9.1.1");
     expect(
       packageLock.packages["node_modules/mdast-util-to-hast"].version,
     ).toBe("13.2.1");
