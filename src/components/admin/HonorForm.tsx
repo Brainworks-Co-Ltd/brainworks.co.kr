@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -57,12 +57,10 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const baseline = useRef(JSON.stringify(initial));
-  const dirty = useMemo(
-    () => JSON.stringify(form) !== baseline.current,
-    [form],
-  );
+  const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
+  const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
+  const inFlight = useRef(false);
 
   function updateLocale(
     locale: "ko" | "en",
@@ -104,6 +102,8 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
 
   async function save(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -126,11 +126,12 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
         },
       );
       setVersion(result.version);
-      baseline.current = JSON.stringify(form);
+      setBaseline(JSON.stringify(form));
       setMessage("수상 및 인증 내용을 저장했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -160,6 +161,8 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
       if (dirty) setError("변경 내용을 먼저 저장해 주세요.");
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -183,19 +186,22 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(
         `${locale === "ko" ? "국문" : "영문"}을 ${action === "publish" ? "게시했습니다" : "숨겼습니다"}.`,
       );
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
 
   async function itemCommand(action: "archive" | "restore") {
     if (!form.id || !window.confirm(action === "archive" ? "이 항목을 보관하시겠습니까?" : "이 항목을 초안으로 복원하시겠습니까?")) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -220,11 +226,12 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "항목을 보관했습니다." : "항목을 복원했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

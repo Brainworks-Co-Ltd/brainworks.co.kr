@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -67,12 +67,10 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     locale: "ko" | "en";
     html: string;
   } | null>(null);
-  const baseline = useRef(JSON.stringify(initial));
-  const dirty = useMemo(
-    () => JSON.stringify(form) !== baseline.current,
-    [form],
-  );
+  const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
+  const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
+  const inFlight = useRef(false);
 
   function updateLocale(
     locale: "ko" | "en",
@@ -119,6 +117,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
 
   async function save(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -144,11 +144,12 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         },
       );
       setVersion(result.version);
-      baseline.current = JSON.stringify(form);
+      setBaseline(JSON.stringify(form));
       setMessage("뉴스 내용을 저장했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -175,7 +176,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       const next = { ...form, slug: result.slug };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage("뉴스 공개 주소를 변경했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
@@ -190,6 +191,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       setError("변경 내용을 먼저 저장한 뒤 게시 상태를 변경해 주세요.");
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -214,13 +217,14 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(
         `${locale === "ko" ? "국문" : "영문"}을 ${action === "publish" ? "게시했습니다" : "숨겼습니다"}.`,
       );
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -232,6 +236,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         ? "이 뉴스를 보관하면 공개 목록에서 제외됩니다. 계속하시겠습니까?"
         : "뉴스를 복원하면 두 언어 모두 초안 상태가 됩니다. 계속하시겠습니까?";
     if (!window.confirm(prompt)) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -256,11 +262,12 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "뉴스를 보관했습니다." : "뉴스를 복원했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

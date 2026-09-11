@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -68,12 +68,10 @@ export function NoticeForm({
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [previewLocale, setPreviewLocale] = useState<"ko" | "en" | null>(null);
-  const baseline = useRef(JSON.stringify(initial));
-  const dirty = useMemo(
-    () => JSON.stringify(form) !== baseline.current,
-    [form],
-  );
+  const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
+  const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
+  const inFlight = useRef(false);
 
   function updateLocale(
     locale: "ko" | "en",
@@ -91,6 +89,8 @@ export function NoticeForm({
 
   async function save(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -132,11 +132,12 @@ export function NoticeForm({
         },
       );
       setVersion(saved.version);
-      baseline.current = JSON.stringify(form);
+      setBaseline(JSON.stringify(form));
       setMessage("공지 내용을 저장했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -150,6 +151,8 @@ export function NoticeForm({
       setError("변경 내용을 먼저 저장한 뒤 게시 상태를 변경해 주세요.");
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -189,7 +192,7 @@ export function NoticeForm({
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(
         action === "publish"
           ? `${locale === "ko" ? "국문" : "영문"} 게시 상태를 반영했습니다.`
@@ -198,6 +201,7 @@ export function NoticeForm({
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -209,6 +213,8 @@ export function NoticeForm({
         ? "이 공지를 보관하면 공개 목록에서 제외됩니다. 계속하시겠습니까?"
         : "공지를 복원하면 두 언어 모두 초안 상태가 됩니다. 계속하시겠습니까?";
     if (!window.confirm(prompt)) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -233,11 +239,12 @@ export function NoticeForm({
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "공지를 보관했습니다." : "공지를 복원했습니다.");
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
