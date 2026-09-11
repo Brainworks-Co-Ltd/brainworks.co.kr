@@ -15,14 +15,14 @@ import client8 from "../assets/clients/client8.png";
 export default function Clients() {
   const { language } = useLocale();
   const logos = [
-    { src: client1, alt: "client1" },
-    { src: client2, alt: "client2" },
-    { src: client3, alt: "client3" },
-    { src: client4, alt: "client4" },
-    { src: client5, alt: "client5" },
-    { src: client6, alt: "client6" },
-    { src: client7, alt: "client7" },
-    { src: client8, alt: "client8" },
+    { src: client1, alt: "한국항공우주산업" },
+    { src: client2, alt: "한국자동차연구원" },
+    { src: client3, alt: "대구기계부품연구원" },
+    { src: client4, alt: "대구디지털혁신진흥원" },
+    { src: client5, alt: "중소벤처기업진흥공단" },
+    { src: client6, alt: "한국생산성본부" },
+    { src: client7, alt: "충남연구원" },
+    { src: client8, alt: "한국IT비즈니스진흥협회" },
   ];
 
   return (

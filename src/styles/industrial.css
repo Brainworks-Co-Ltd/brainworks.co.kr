@@ -1490,3 +1490,16 @@ section[data-variant="media"] a:focus-visible {
     font-size: 14px;
   }
 }
+
+/* ---------------------------------------------------------------
+ * 어두운 구간 초점 링
+ *
+ * --bw-color-focus가 --bw-ink(#10191b)로 이어지는데 푸터·CTA 배경
+ * (--bw-surface-dark)도 같은 값이라 이 구간의 초점 링이 배경에 묻힌다.
+ * 밝은 골드로 덮어써서 어두운 면에서도 보이게 한다.
+ * --------------------------------------------------------------- */
+.bw-footer :focus-visible,
+.ind-dark :focus-visible,
+section[data-variant="cta"] :focus-visible {
+  outline-color: var(--bw-accent-strong);
+}
