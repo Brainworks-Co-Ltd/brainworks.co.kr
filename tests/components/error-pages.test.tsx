@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { vi } from "vitest";
+import type { ReactNode } from "react";
 
 vi.mock("next/router", () => ({
   useRouter: () => ({ asPath: "/404", locale: "ko", push: vi.fn() }),
@@ -8,6 +9,10 @@ vi.mock("next/router", () => ({
 
 vi.mock("@/shared/routing/useLocale", () => ({
   useLocale: () => ({ language: "ko" }),
+}));
+
+vi.mock("next/head", () => ({
+  default: ({ children }: { children: ReactNode }) => children,
 }));
 
 import NotFoundPage from "@/pages/404";
@@ -24,6 +29,9 @@ describe("오류 페이지", () => {
       "href",
       "/",
     );
+    expect(
+      document.querySelector('link[rel="canonical"]'),
+    ).not.toBeInTheDocument();
   });
 
   it("500은 일시 오류 안내를 렌더한다", () => {
@@ -31,5 +39,8 @@ describe("오류 페이지", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "일시적인 오류가 발생했습니다",
     );
+    expect(
+      document.querySelector('link[rel="canonical"]'),
+    ).not.toBeInTheDocument();
   });
 });
