@@ -10,7 +10,7 @@ import { assertImageUploadMetadata } from "@/server/modules/assets/upload-policy
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
-function readMultipartImage(request: IncomingMessage) {
+export function readMultipartImage(request: IncomingMessage) {
   return new Promise<{ buffer: Buffer; filename: string; mimeType: string }>(
     (resolve, reject) => {
       const parser = Busboy({
@@ -30,13 +30,17 @@ function readMultipartImage(request: IncomingMessage) {
       });
       parser.on("error", () => reject(new HttpError("BAD_REQUEST")));
       parser.on("finish", () => {
-        if (!sawFile || chunks.length === 0) {
-          reject(new HttpError("BAD_REQUEST"));
-          return;
+        try {
+          if (!sawFile || chunks.length === 0) {
+            reject(new HttpError("BAD_REQUEST"));
+            return;
+          }
+          const buffer = Buffer.concat(chunks);
+          assertImageUploadMetadata({ mimeType, bytes: buffer.length });
+          resolve({ buffer, filename, mimeType });
+        } catch (error) {
+          reject(error);
         }
-        const buffer = Buffer.concat(chunks);
-        assertImageUploadMetadata({ mimeType, bytes: buffer.length });
-        resolve({ buffer, filename, mimeType });
       });
       request.pipe(parser);
     },
