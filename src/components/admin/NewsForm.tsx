@@ -114,13 +114,13 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
           title: form.locales.ko.title,
           summary: form.locales.ko.summary,
           bodyMarkdown: form.locales.ko.bodyMarkdown,
-          coverAlt: form.locales.ko.coverAlt || undefined,
+          coverAlt: form.locales.ko.coverAlt || null,
         },
         en: {
           title: form.locales.en.title,
           summary: form.locales.en.summary,
           bodyMarkdown: form.locales.en.bodyMarkdown,
-          coverAlt: form.locales.en.coverAlt || undefined,
+          coverAlt: form.locales.en.coverAlt || null,
         },
       },
     };

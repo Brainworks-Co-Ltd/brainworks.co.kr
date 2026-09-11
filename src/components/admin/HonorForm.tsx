@@ -90,13 +90,13 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
           title: form.locales.ko.title,
           organization: form.locales.ko.organization,
           description: form.locales.ko.description,
-          imageAlt: form.locales.ko.imageAlt || undefined,
+          imageAlt: form.locales.ko.imageAlt || null,
         },
         en: {
           title: form.locales.en.title,
           organization: form.locales.en.organization,
           description: form.locales.en.description,
-          imageAlt: form.locales.en.imageAlt || undefined,
+          imageAlt: form.locales.en.imageAlt || null,
         },
       },
     };

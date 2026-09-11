@@ -99,13 +99,13 @@ export function AiSolutionForm({
           name: form.locales.ko.name,
           summary: form.locales.ko.summary,
           description: form.locales.ko.description,
-          imageAlt: form.locales.ko.imageAlt || undefined,
+          imageAlt: form.locales.ko.imageAlt || null,
         },
         en: {
           name: form.locales.en.name,
           summary: form.locales.en.summary,
           description: form.locales.en.description,
-          imageAlt: form.locales.en.imageAlt || undefined,
+          imageAlt: form.locales.en.imageAlt || null,
         },
       },
     };
