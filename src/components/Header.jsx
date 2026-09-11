@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { DesktopNavigation } from "@/components/public/DesktopNavigation";
-import { MobileNavigation } from "@/components/public/MobileNavigation";
 import {
   buildPublicNavigation,
   getActiveNavigationGroup,
@@ -13,6 +13,14 @@ import {
   getRouteKey,
 } from "@/shared/routing/routes";
 import { useLocale } from "@/shared/routing/useLocale";
+
+const MobileNavigation = dynamic(
+  () =>
+    import("@/components/public/MobileNavigation").then(
+      (m) => m.MobileNavigation,
+    ),
+  { ssr: false, loading: () => <div className="h-10 w-10" aria-hidden="true" /> },
+);
 
 export default function Header() {
   const router = useRouter();
