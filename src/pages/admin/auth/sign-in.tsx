@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { normalizeReturnTo } from "@/server/auth/policy";
@@ -35,6 +36,9 @@ export default function AdminSignIn() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--bw-color-surface-muted)] px-6 py-12">
+      <Head>
+        <meta name="robots" content="noindex,nofollow" key="robots" />
+      </Head>
       <section className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-[var(--bw-shadow-soft)]">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
           Brainworks Admin

@@ -22,6 +22,13 @@ export default class BrainworksDocument extends Document {
     return (
       <Html lang={locale} data-design="industrial">
         <Head>
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href="/fonts/PretendardVariable.woff2"
+            crossOrigin="anonymous"
+          />
           {/* 드러남 숨김 상태를 첫 페인트 전에 켠다. 훅(_app useReveal)이 붙이면 한 프레임 보였다가 사라진다. */}
           <script
             dangerouslySetInnerHTML={{

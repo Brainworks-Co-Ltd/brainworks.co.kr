@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -34,6 +35,9 @@ export function AdminShell({ children, activePath = "/admin" }) {
 
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+      <Head>
+        <meta name="robots" content="noindex,nofollow" key="robots" />
+      </Head>
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="border-b border-slate-200 bg-white px-6 py-6 lg:border-b-0 lg:border-r">
           <Link
