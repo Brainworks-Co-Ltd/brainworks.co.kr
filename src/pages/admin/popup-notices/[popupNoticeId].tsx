@@ -10,6 +10,7 @@ import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminNoticeList } from "@/server/modules/notices/queries";
 import { getAdminPopupNotice } from "@/server/modules/popup-notices/repository";
 import { toDateTimeLocal } from "@/lib/datetime-local";
+import { HttpError } from "@/server/http/errors";
 
 export default function EditPopupNotice({
   popupNotice,
@@ -42,44 +43,51 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     typeof context.params?.popupNoticeId === "string"
       ? context.params.popupNoticeId
       : "";
-  const [item, noticeItems] = await Promise.all([
-    getAdminPopupNotice(id),
-    getAdminNoticeList(),
-  ]);
-  const locales = Object.fromEntries(
-    item.locales.map((locale) => [
-      locale.locale,
-      {
-        title: locale.title,
-        bodyMarkdown: locale.bodyMarkdown || "",
-        imageAssetId: locale.imageAssetId || "",
-        imageAlt: locale.imageAlt || "",
-        imageUrl: locale.imageUrl || "",
-        displayOrder: locale.displayOrder,
-        publicationStatus: locale.publicationStatus,
-        publishStartsAt: toDateTimeLocal(locale.publishStartsAt),
-        publishEndsAt: toDateTimeLocal(locale.publishEndsAt),
+  try {
+    const [item, noticeItems] = await Promise.all([
+      getAdminPopupNotice(id),
+      getAdminNoticeList(),
+    ]);
+    const locales = Object.fromEntries(
+      item.locales.map((locale) => [
+        locale.locale,
+        {
+          title: locale.title,
+          bodyMarkdown: locale.bodyMarkdown || "",
+          imageAssetId: locale.imageAssetId || "",
+          imageAlt: locale.imageAlt || "",
+          imageUrl: locale.imageUrl || "",
+          displayOrder: locale.displayOrder,
+          publicationStatus: locale.publicationStatus,
+          publishStartsAt: toDateTimeLocal(locale.publishStartsAt),
+          publishEndsAt: toDateTimeLocal(locale.publishEndsAt),
+        },
+      ]),
+    ) as PopupNoticeFormValue["locales"];
+    return {
+      props: {
+        popupNotice: {
+          id: item.id,
+          version: item.version,
+          itemStatus: item.itemStatus,
+          noticeId: item.noticeId || "",
+          dismissalRevision: item.dismissalRevision,
+          locales,
+        },
+        notices: noticeItems
+          .filter((notice) => notice.itemStatus === "ACTIVE")
+          .map((notice) => ({
+            id: notice.id,
+            publicNumber: notice.publicNumber,
+            title:
+              notice.locales.ko?.title || notice.locales.en?.title || "제목 없음",
+          })),
       },
-    ]),
-  ) as PopupNoticeFormValue["locales"];
-  return {
-    props: {
-      popupNotice: {
-        id: item.id,
-        version: item.version,
-        itemStatus: item.itemStatus,
-        noticeId: item.noticeId || "",
-        dismissalRevision: item.dismissalRevision,
-        locales,
-      },
-      notices: noticeItems
-        .filter((notice) => notice.itemStatus === "ACTIVE")
-        .map((notice) => ({
-          id: notice.id,
-          publicNumber: notice.publicNumber,
-          title:
-            notice.locales.ko?.title || notice.locales.en?.title || "제목 없음",
-        })),
-    },
-  };
+    };
+  } catch (error) {
+    if (error instanceof HttpError && error.code === "NOT_FOUND") {
+      return { notFound: true };
+    }
+    throw error;
+  }
 }

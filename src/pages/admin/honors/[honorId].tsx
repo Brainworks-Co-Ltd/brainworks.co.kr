@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { HonorForm, type HonorFormValue } from "@/components/admin/HonorForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminHonor } from "@/server/modules/honors/repository";
+import { HttpError } from "@/server/http/errors";
 
 export default function EditHonor({ honor }: { honor: HonorFormValue }) {
   return (
@@ -23,32 +24,39 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const guard = await requireAdminPage(context);
   if ("redirect" in guard) return guard;
   const id = typeof context.params?.honorId === "string" ? context.params.honorId : "";
-  const item = await getAdminHonor(id);
-  const locales = Object.fromEntries(
-    item.locales.map((locale) => [
-      locale.locale,
-      {
-        title: locale.title,
-        organization: locale.organization,
-        description: locale.description,
-        imageAlt: locale.imageAlt || "",
-        publicationStatus: locale.publicationStatus,
+  try {
+    const item = await getAdminHonor(id);
+    const locales = Object.fromEntries(
+      item.locales.map((locale) => [
+        locale.locale,
+        {
+          title: locale.title,
+          organization: locale.organization,
+          description: locale.description,
+          imageAlt: locale.imageAlt || "",
+          publicationStatus: locale.publicationStatus,
+        },
+      ]),
+    ) as HonorFormValue["locales"];
+    return {
+      props: {
+        honor: {
+          id: item.id,
+          version: item.version,
+          itemStatus: item.itemStatus,
+          honorType: item.honorType,
+          occurredYear: item.occurredYear,
+          occurredOn: item.occurredOn ? String(item.occurredOn) : "",
+          displayOrder: item.displayOrder,
+          imageAssetId: item.imageAssetId || "",
+          locales,
+        },
       },
-    ]),
-  ) as HonorFormValue["locales"];
-  return {
-    props: {
-      honor: {
-        id: item.id,
-        version: item.version,
-        itemStatus: item.itemStatus,
-        honorType: item.honorType,
-        occurredYear: item.occurredYear,
-        occurredOn: item.occurredOn ? String(item.occurredOn) : "",
-        displayOrder: item.displayOrder,
-        imageAssetId: item.imageAssetId || "",
-        locales,
-      },
-    },
-  };
+    };
+  } catch (error) {
+    if (error instanceof HttpError && error.code === "NOT_FOUND") {
+      return { notFound: true };
+    }
+    throw error;
+  }
 }

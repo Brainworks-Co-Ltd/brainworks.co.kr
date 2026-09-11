@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { NewsForm, type NewsFormValue } from "@/components/admin/NewsForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminNews } from "@/server/modules/news/repository";
+import { HttpError } from "@/server/http/errors";
 
 export default function EditNews({ news }: { news: NewsFormValue }) {
   return (
@@ -50,7 +51,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       },
     };
-  } catch {
-    return { notFound: true };
+  } catch (error) {
+    if (error instanceof HttpError && error.code === "NOT_FOUND") {
+      return { notFound: true };
+    }
+    throw error;
   }
 }

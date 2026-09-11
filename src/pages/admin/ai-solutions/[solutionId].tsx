@@ -12,6 +12,7 @@ import {
   getAdminAiSolution,
   listAdminBusinessAreaOptions,
 } from "@/server/modules/catalog/repository";
+import { HttpError } from "@/server/http/errors";
 
 export default function EditAiSolution({
   solution,
@@ -40,42 +41,49 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     typeof context.params?.solutionId === "string"
       ? context.params.solutionId
       : "";
-  const [item, areaRows] = await Promise.all([
-    getAdminAiSolution(id),
-    listAdminBusinessAreaOptions(),
-  ]);
-  const publicLabels = new Map(
-    publicBusinessAreas.map((area) => [area.id, area.name.ko]),
-  );
-  const areas = areaRows.map((area) => ({
-    id: area.id,
-    publicKey: area.publicKey,
-    label: publicLabels.get(area.publicKey) || area.publicKey,
-  }));
-  const locales = Object.fromEntries(
-    item.locales.map((locale) => [
-      locale.locale,
-      {
-        name: locale.name,
-        summary: locale.summary,
-        description: locale.description,
-        imageAlt: locale.imageAlt || "",
-        publicationStatus: locale.publicationStatus,
+  try {
+    const [item, areaRows] = await Promise.all([
+      getAdminAiSolution(id),
+      listAdminBusinessAreaOptions(),
+    ]);
+    const publicLabels = new Map(
+      publicBusinessAreas.map((area) => [area.id, area.name.ko]),
+    );
+    const areas = areaRows.map((area) => ({
+      id: area.id,
+      publicKey: area.publicKey,
+      label: publicLabels.get(area.publicKey) || area.publicKey,
+    }));
+    const locales = Object.fromEntries(
+      item.locales.map((locale) => [
+        locale.locale,
+        {
+          name: locale.name,
+          summary: locale.summary,
+          description: locale.description,
+          imageAlt: locale.imageAlt || "",
+          publicationStatus: locale.publicationStatus,
+        },
+      ]),
+    ) as AiSolutionFormValue["locales"];
+    return {
+      props: {
+        areas,
+        solution: {
+          id: item.id,
+          version: item.version,
+          itemStatus: item.itemStatus,
+          businessAreaId: item.businessAreaId,
+          displayOrder: item.displayOrder,
+          imageAssetId: item.imageAssetId || "",
+          locales,
+        },
       },
-    ]),
-  ) as AiSolutionFormValue["locales"];
-  return {
-    props: {
-      areas,
-      solution: {
-        id: item.id,
-        version: item.version,
-        itemStatus: item.itemStatus,
-        businessAreaId: item.businessAreaId,
-        displayOrder: item.displayOrder,
-        imageAssetId: item.imageAssetId || "",
-        locales,
-      },
-    },
-  };
+    };
+  } catch (error) {
+    if (error instanceof HttpError && error.code === "NOT_FOUND") {
+      return { notFound: true };
+    }
+    throw error;
+  }
 }
