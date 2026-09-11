@@ -8,6 +8,7 @@ import {
   adminApiErrorMessage,
   requestAdminApi,
 } from "@/lib/admin-api";
+import { suggestSlug } from "@/lib/news-slug";
 
 type NewsLocaleValue = {
   title: string;
@@ -51,16 +52,6 @@ export function createEmptyNews(): NewsFormValue {
     displayDate: new Date().toISOString().slice(0, 10),
     locales: { ko: emptyLocale(), en: emptyLocale() },
   };
-}
-
-function suggestSlug(title: string, displayDate: string) {
-  const candidate = title
-    .normalize("NFKD")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 80);
-  return candidate || `news-${displayDate.replaceAll("-", "")}`;
 }
 
 export function NewsForm({ initial }: { initial: NewsFormValue }) {

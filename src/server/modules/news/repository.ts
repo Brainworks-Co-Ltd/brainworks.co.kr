@@ -76,11 +76,21 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         updatedByActorId: actorId,
       })),
     );
-    await tx.insert(newsSlugs).values({
-      newsId: created.id,
-      slug: input.slug,
-      createdByActorId: actorId,
-    });
+    try {
+      await tx.insert(newsSlugs).values({
+        newsId: created.id,
+        slug: input.slug,
+        createdByActorId: actorId,
+      });
+    } catch (error) {
+      if ((error as { code?: string }).code === "23505") {
+        throw new HttpError(
+          "BAD_REQUEST",
+          "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
+        );
+      }
+      throw error;
+    }
     return created;
   });
 }
@@ -247,9 +257,19 @@ export async function changeNewsSlug(
       .update(newsSlugs)
       .set({ isCurrent: false })
       .where(eq(newsSlugs.id, current.id));
-    await tx
-      .insert(newsSlugs)
-      .values({ newsId: id, slug: newSlug, createdByActorId: actorId });
+    try {
+      await tx
+        .insert(newsSlugs)
+        .values({ newsId: id, slug: newSlug, createdByActorId: actorId });
+    } catch (error) {
+      if ((error as { code?: string }).code === "23505") {
+        throw new HttpError(
+          "BAD_REQUEST",
+          "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
+        );
+      }
+      throw error;
+    }
     return { id, slug: newSlug, version: expectedVersion + 1 };
   });
 }
