@@ -9,12 +9,7 @@ import {
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminNoticeList } from "@/server/modules/notices/queries";
 import { getAdminPopupNotice } from "@/server/modules/popup-notices/repository";
-
-function toDateTimeLocal(value: Date | string | null) {
-  if (!value) return "";
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 16);
-}
+import { toDateTimeLocal } from "@/lib/datetime-local";
 
 export default function EditPopupNotice({
   popupNotice,

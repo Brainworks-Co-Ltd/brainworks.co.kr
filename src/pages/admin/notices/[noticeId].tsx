@@ -6,12 +6,7 @@ import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm"
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { listAdminNoticeCategories } from "@/server/modules/notices/category-repository";
 import { getAdminNotice } from "@/server/modules/notices/repository";
-
-function toDateTimeLocal(value: Date | string | null) {
-  if (!value) return "";
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 16);
-}
+import { toDateTimeLocal } from "@/lib/datetime-local";
 
 export default function EditNotice({
   notice,
