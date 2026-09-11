@@ -11,9 +11,8 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { getPublishedPopupNotices } from "@/server/modules/popup-notices/queries";
-import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
-export default function Home({ newsItems, popupNotices, areas }) {
+export default function Home({ newsItems, popupNotices }) {
   const { language } = useLocale();
   return (
     <div className="min-h-screen">
@@ -46,19 +45,15 @@ export default function Home({ newsItems, popupNotices, areas }) {
 
 export async function getServerSideProps({ locale }) {
   const currentLocale = locale === "en" ? "en" : "ko";
-  const newsItems = (
-    await getPublishedNewsList({
-      locale: currentLocale,
-    })
-  ).items;
-  const popupNotices = await getPublishedPopupNotices(currentLocale);
-  const areas = await getPublishedBusinessAreas(currentLocale);
+  const [newsList, popupNotices] = await Promise.all([
+    getPublishedNewsList({ locale: currentLocale }),
+    getPublishedPopupNotices(currentLocale),
+  ]);
 
   return {
     props: {
-      newsItems,
+      newsItems: newsList.items,
       popupNotices,
-      areas,
     },
   };
 }
