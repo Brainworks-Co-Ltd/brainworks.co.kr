@@ -29,6 +29,7 @@ const messageByCode: Record<string, string> = {
   DEPENDENCY_UNAVAILABLE:
     "연결된 서비스가 준비되지 않았습니다. 잠시 뒤 다시 시도해 주세요.",
   RATE_LIMITED: "요청이 많습니다. 잠시 뒤 다시 시도해 주세요.",
+  METHOD_NOT_ALLOWED: "허용되지 않는 요청 방식입니다.",
 };
 
 export function adminApiErrorMessage(error: unknown) {

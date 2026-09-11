@@ -10,4 +10,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json({ data: await renotifyPopupNotice(id, Number(request.body?.expectedVersion), await ensureNoticeAdminActor(session.user.id)) });
 }
 
-export default withApiErrorBoundary(handler);
+export default withApiErrorBoundary(handler, ["POST"]);
