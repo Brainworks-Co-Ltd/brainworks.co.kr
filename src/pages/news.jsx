@@ -7,7 +7,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
-import { formatDate } from "@/lib/news";
+import { formatDate } from "@/lib/format-date";
 
 function translate(value, language) {
   if (!value) return "";

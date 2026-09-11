@@ -6,7 +6,7 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { getPublishedNewsDetail } from "@/server/modules/news/query-service";
-import { formatDate } from "@/lib/news";
+import { formatDate } from "@/lib/format-date";
 
 function translate(value, language) {
   if (!value) return "";
