@@ -162,6 +162,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       )
     )
       return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -181,6 +183,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
