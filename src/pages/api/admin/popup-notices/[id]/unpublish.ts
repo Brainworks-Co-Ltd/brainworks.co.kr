@@ -11,4 +11,4 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   response.status(200).json({ data });
 }
 
-export default withApiErrorBoundary(handler);
+export default withApiErrorBoundary(handler, ["POST"]);
