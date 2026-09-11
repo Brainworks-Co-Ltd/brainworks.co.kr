@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 const publicPages = [
   "/",
   "/about",
+  "/about/history",
   "/about/honors",
   "/services",
   "/consulting",
@@ -16,6 +17,12 @@ const publicPages = [
 for (const path of publicPages) {
   test(`${path} 는 200이고 h1이 하나다`, async ({ page }) => {
     const response = await page.goto(path);
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("h1")).toHaveCount(1);
+  });
+
+  test(`en ${path} 는 200이다`, async ({ page }) => {
+    const response = await page.goto(`/en${path === "/" ? "" : path}`);
     expect(response?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
   });
