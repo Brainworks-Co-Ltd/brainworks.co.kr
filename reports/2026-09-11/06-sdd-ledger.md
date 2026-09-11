@@ -143,3 +143,4 @@ FINAL FIX WAVE dispatch base 2bba941
 FINAL FIX WAVE: commits 2bba941..5040aa6 (3건). 재리뷰 대기.
 Ruling(final): nodemailer 9.0.5→9.1.1은 마이너 경계지만 취약 범위가 <=9.1.0이라 불가피 — 틀리면 비용: 메일 발송 회귀(테스트로 미검증, 운영 확인 필요).
 Ruling(final): dirtyRef.current = dirty 렌더 중 대입으로 react-hooks/refs 경고 1건 재발(22→23). 2차 수정 배치는 없으므로 parked. 후속에서 useLayoutEffect 대입으로 바꾸면 해소 — 틀리면 비용: 경고 1건.
+FINAL: fix wave re-review clean. docs commit added. workspace deleted.
