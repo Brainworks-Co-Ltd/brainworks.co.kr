@@ -6,6 +6,7 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { getPublishedNewsDetail } from "@/server/modules/news/query-service";
+import { formatDate } from "@/lib/news";
 
 function translate(value, language) {
   if (!value) return "";
@@ -40,7 +41,7 @@ export default function NewsDetail({ news }) {
           variant="plain"
           eyebrow={translate(news.category, language)}
           title={translate(news.title, language)}
-          description={`${news.date} · ${translate(news.summary, language)}`}
+          description={`${formatDate(news.date, language)}, ${translate(news.summary, language)}`}
         />
         <div className="mx-auto max-w-4xl px-6 py-16">
           {news.thumbnail && (

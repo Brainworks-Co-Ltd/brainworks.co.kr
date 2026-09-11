@@ -7,24 +7,12 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
+import { formatDate } from "@/lib/news";
 
 function translate(value, language) {
   if (!value) return "";
   if (typeof value === "string") return value;
   return value[language] ?? value.ko ?? value.en ?? "";
-}
-
-function formatDate(dateString, language) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) {
-    return dateString;
-  }
-  return new Intl.DateTimeFormat(language === "ko" ? "ko-KR" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).format(date);
 }
 
 const FILTER_KEYWORDS = {
