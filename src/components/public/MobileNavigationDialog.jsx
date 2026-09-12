@@ -19,6 +19,7 @@ export function MobileNavigationDialog({
   navigationLabel,
   languageLabel,
   onLanguageChange,
+  finalFocusRef,
 }) {
   const [openGroup, setOpenGroup] = useState(null);
   const { language } = useLocale();
@@ -26,8 +27,7 @@ export function MobileNavigationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        // 트리거 포커스 복귀는 MobileNavigation의 onOpenChange 래퍼가 담당한다.
-        finalFocus={false}
+        finalFocus={finalFocusRef}
         className="inset-y-0 left-auto right-0 top-0 h-dvh max-w-sm translate-x-0 translate-y-0 content-start rounded-none p-6"
         closeLabel={language === "ko" ? "닫기" : "Close"}
       >

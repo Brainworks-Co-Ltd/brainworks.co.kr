@@ -34,8 +34,6 @@ export function MobileNavigation({
     onOpenChange(next);
     if (next) {
       setHasOpened(true);
-    } else {
-      triggerRef.current?.focus();
     }
   };
 
@@ -62,6 +60,7 @@ export function MobileNavigation({
           navigationLabel={navigationLabel}
           languageLabel={languageLabel}
           onLanguageChange={onLanguageChange}
+          finalFocusRef={triggerRef}
         />
       )}
     </>

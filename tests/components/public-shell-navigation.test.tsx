@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Header from "@/components/Header";
@@ -124,6 +124,24 @@ describe("공개 셸 내비게이션", () => {
     expect(
       screen.getByRole("button", { name: "메뉴 열기" }),
     ).toHaveAttribute("aria-haspopup", "dialog");
+  });
+
+  it("모바일 메뉴를 닫으면 트리거로 초점이 복귀한다 (Base UI finalFocus)", async () => {
+    const user = userEvent.setup();
+
+    render(<Header />);
+
+    const trigger = screen.getByRole("button", { name: "메뉴 열기" });
+    await user.click(trigger);
+
+    await screen.findByRole("dialog", { name: "모바일 메뉴" });
+
+    await user.keyboard("{Escape}");
+
+    expect(
+      screen.queryByRole("dialog", { name: "모바일 메뉴" }),
+    ).not.toBeInTheDocument();
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
   });
 
   it("모바일 메뉴는 같은 계층을 이미지 없이 제공한다", async () => {
