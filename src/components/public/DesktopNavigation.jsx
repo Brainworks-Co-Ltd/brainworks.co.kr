@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { BusinessMegaMenu } from "@/components/public/BusinessMegaMenu";
@@ -15,6 +15,11 @@ export function DesktopNavigation({
   const navigationRef = useRef(null);
   const triggerRefs = useRef(new Map());
   const closeTimerRef = useRef(null);
+  const openGroupRef = useRef(openGroup);
+
+  useLayoutEffect(() => {
+    openGroupRef.current = openGroup;
+  });
 
   const clearCloseTimer = () => {
     if (closeTimerRef.current) {
@@ -42,9 +47,9 @@ export function DesktopNavigation({
 
   useEffect(() => {
     const closeOnEscape = (event) => {
-      if (event.key !== "Escape" || !openGroup) return;
+      const previous = openGroupRef.current;
+      if (event.key !== "Escape" || !previous) return;
 
-      const previous = openGroup;
       setOpenGroup(null);
       requestAnimationFrame(() => triggerRefs.current.get(previous)?.focus());
     };
@@ -57,13 +62,15 @@ export function DesktopNavigation({
     };
 
     document.addEventListener("keydown", closeOnEscape);
-    document.addEventListener("pointerdown", closeOnPointerDown);
+    document.addEventListener("pointerdown", closeOnPointerDown, {
+      passive: true,
+    });
 
     return () => {
       document.removeEventListener("keydown", closeOnEscape);
       document.removeEventListener("pointerdown", closeOnPointerDown);
     };
-  }, [openGroup]);
+  }, []);
 
   return (
     <nav ref={navigationRef} aria-label={navigationLabel}>
