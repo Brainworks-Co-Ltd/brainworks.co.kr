@@ -58,6 +58,8 @@ const statusSets: Record<DashboardContentType, readonly string[]> = {
   honors: ["DRAFT", "PUBLISHED", "HIDDEN"],
 };
 
+const ATTENTION_STATUSES = new Set(["DRAFT", "HIDDEN", "UNPUBLISHED"]);
+
 function emptyStatusCounts(contentType: DashboardContentType) {
   return Object.fromEntries(
     statusSets[contentType].map((status) => [status, 0]),
@@ -85,11 +87,30 @@ function toDashboardItem(row: DashboardRow): DashboardItem {
   };
 }
 
+function sortByTimeDesc<T extends { localeUpdatedAt: string | Date }>(
+  items: T[],
+): T[] {
+  return items
+    .map((item) => ({ item, time: toTime(item.localeUpdatedAt) }))
+    .sort((a, b) => b.time - a.time)
+    .map(({ item }) => item);
+}
+
 export function buildAdminDashboardData(
   rows: DashboardRow[],
 ): AdminDashboardData {
+  const rowsByContentType = new Map<DashboardContentType, DashboardRow[]>();
+  for (const row of rows) {
+    const bucket = rowsByContentType.get(row.contentType);
+    if (bucket) {
+      bucket.push(row);
+    } else {
+      rowsByContentType.set(row.contentType, [row]);
+    }
+  }
+
   const summary = dashboardContentTypes.map((contentType) => {
-    const contentRows = rows.filter((row) => row.contentType === contentType);
+    const contentRows = rowsByContentType.get(contentType) ?? [];
     const itemStatuses = new Map<string, DashboardItemStatus>();
     for (const row of contentRows) {
       itemStatuses.set(row.contentId, row.itemStatus);
@@ -106,25 +127,29 @@ export function buildAdminDashboardData(
       }
     }
 
+    let activeCount = 0;
+    let archivedCount = 0;
+    for (const status of itemStatuses.values()) {
+      if (status === "ACTIVE") {
+        activeCount += 1;
+      } else if (status === "ARCHIVED") {
+        archivedCount += 1;
+      }
+    }
+
     return {
       contentType,
-      activeCount: [...itemStatuses.values()].filter(
-        (status) => status === "ACTIVE",
-      ).length,
-      archivedCount: [...itemStatuses.values()].filter(
-        (status) => status === "ARCHIVED",
-      ).length,
+      activeCount,
+      archivedCount,
       locales,
     };
   });
 
-  const attention = rows
-    .filter(
-      (row) =>
-        row.itemStatus === "ACTIVE" &&
-        ["DRAFT", "HIDDEN", "UNPUBLISHED"].includes(row.publicationStatus),
-    )
-    .sort((a, b) => toTime(b.localeUpdatedAt) - toTime(a.localeUpdatedAt))
+  const attentionRows = rows.filter(
+    (row) =>
+      row.itemStatus === "ACTIVE" && ATTENTION_STATUSES.has(row.publicationStatus),
+  );
+  const attention = sortByTimeDesc(attentionRows)
     .slice(0, 8)
     .map(toDashboardItem);
 
@@ -139,8 +164,7 @@ export function buildAdminDashboardData(
       latestByContent.set(key, row);
     }
   }
-  const recent = [...latestByContent.values()]
-    .sort((a, b) => toTime(b.localeUpdatedAt) - toTime(a.localeUpdatedAt))
+  const recent = sortByTimeDesc([...latestByContent.values()])
     .slice(0, 8)
     .map(toDashboardItem);
 
