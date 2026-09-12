@@ -68,20 +68,20 @@ describe("디자인 개선의 탐색과 제목", () => {
     vi.useFakeTimers();
     const { container } = render(<IndustrialHero />);
     const slot = container.querySelector(".ind-slot");
-    expect(slot).toHaveTextContent("제조 현장");
+    expect(slot).toHaveTextContent("제조 AI");
     act(() => vi.advanceTimersByTime(2400));
     act(() => vi.advanceTimersByTime(40));
-    expect(slot).toHaveTextContent("제조 현");
-    expect(slot).not.toHaveTextContent("제조 현장");
+    expect(slot).toHaveTextContent("제조 A");
+    expect(slot).not.toHaveTextContent("제조 AI");
     for (let i = 0; i < 20; i += 1) act(() => vi.advanceTimersByTime(80));
-    expect(slot).toHaveTextContent("진료 현장");
+    expect(slot).toHaveTextContent("헬스케어 AI");
     expect(
       screen.queryByRole("button", { name: /움직임/ }),
     ).not.toBeInTheDocument();
-    fireEvent.focus(screen.getByRole("button", { name: /도시 관제/ }));
-    fireEvent.click(screen.getByRole("button", { name: /도시 관제/ }));
+    fireEvent.focus(screen.getByRole("button", { name: /스마트시티 AI/ }));
+    fireEvent.click(screen.getByRole("button", { name: /스마트시티 AI/ }));
     act(() => vi.advanceTimersByTime(10000));
-    expect(slot).toHaveTextContent("도시 관제");
+    expect(slot).toHaveTextContent("스마트시티 AI");
   });
 
   it("동작 줄이기를 사용하면 완성된 현장 이름을 유지한다", () => {
@@ -96,7 +96,7 @@ describe("디자인 개선의 탐색과 제목", () => {
     );
     const { container } = render(<IndustrialHero />);
     act(() => vi.advanceTimersByTime(10000));
-    expect(container.querySelector(".ind-slot")).toHaveTextContent("제조 현장");
+    expect(container.querySelector(".ind-slot")).toHaveTextContent("제조 AI");
     expect(container.querySelector(".ind-slot__caret")).toBeNull();
     expect(
       screen.queryByRole("button", { name: /움직임/ }),

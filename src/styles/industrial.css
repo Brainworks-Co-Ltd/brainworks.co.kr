@@ -29,12 +29,17 @@
   /* 골드 면에는 잉크 글자를 짝지어 주요 행동의 대비를 확보한다. */
   --bw-brand: #d29b15;
 
-  /* 이전 산업별 색 토큰은 참조 호환을 위해 남긴다.
-     히어로는 골드로 통일하고 본문의 서비스 분류색은 아래 data-accent가 맡는다. */
-  --bw-slot-manufacturing: #00bdde;
-  --bw-slot-healthcare: #57cf07;
-  --bw-slot-smartcity: #fb8502;
-  --bw-slot-agent: #ca59ff;
+  /* 히어로 슬롯 강조색. 값은 각 슬롯 배경 사진에서 직접 뽑았다.
+     사진의 지배 색상을 찾고, 채도는 사진의 평균 채도를 따르고, 명도만
+     어두운 히어로(#0e1013)에서 6:1을 넘도록 올렸다. 넷이 모두 청록
+     계열인 것은 사진 넷이 그렇기 때문이지 색을 맞춘 것이 아니다.
+     이전 값은 원티드 hue ramp에서 뽑아 사진과 무관했고, 도시 관제가
+     주황인데 화면은 청록이라 강조색이 그림 위에서 겉돌았다.
+     본문의 서비스 분류색은 아래 data-accent가 맡는다. */
+  --bw-slot-manufacturing: #379cc5; /* 기판 하이라이트. 6.10 */
+  --bw-slot-healthcare: #0b9cd0; /* 입자 파동. 6.06 */
+  --bw-slot-smartcity: #2fa292; /* 와이어프레임 도시. 6.08 */
+  --bw-slot-agent: #29a1a8; /* 노드 발광. 6.13 */
 
   /* 2.5 모서리 */
   --bw-radius-control: 9px;
@@ -136,7 +141,8 @@
  * 히어로
  * --------------------------------------------------------------- */
 
-/* 히어로는 본문의 청록 팔레트와 분리해 원래 중립색과 골드만 사용한다. */
+/* 히어로는 본문의 청록 팔레트와 분리해 원래 중립색을 쓴다.
+   주요 행동은 골드, 슬롯 강조는 위 --bw-slot-*이 맡는다. */
 :root[data-design="industrial"] .ind-hero,
 :root[data-design="industrial"] section[data-variant="media"] {
   --bw-surface-dark: #0e1013;
