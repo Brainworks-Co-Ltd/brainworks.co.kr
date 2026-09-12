@@ -1,21 +1,38 @@
+import { useState } from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import IndustrialHero from "@/components/industrial/IndustrialHero";
 
+// router.query는 useRouter()를 호출하는 컴포넌트 안에서 useState로 관리한다.
+// 실제 next/router의 shallow replace처럼, replace가 호출되면 그 즉시 리렌더가
+// 일어나야 BusinessAreaExplorer의 활성 탭 계산(렌더 중 파생값)이 반영된다.
 const router = vi.hoisted(() => ({
-  query: {},
+  query: {} as Record<string, string>,
   pathname: "/services",
   replace: vi.fn(),
   push: vi.fn(),
 }));
-vi.mock("next/router", () => ({ useRouter: () => router }));
+vi.mock("next/router", () => ({
+  useRouter: () => {
+    const [query, setQuery] = useState(router.query);
+    router.replace.mockImplementation((url: { query?: Record<string, string> }) => {
+      router.query = { ...url?.query };
+      setQuery(router.query);
+      return Promise.resolve(true);
+    });
+    return { ...router, query };
+  },
+}));
 vi.mock("@/shared/routing/useLocale", () => ({
   useLocale: () => ({ language: "ko" }),
 }));
 
 beforeEach(() => {
+  router.query = {};
+  router.replace.mockClear();
+  router.push.mockClear();
   vi.stubGlobal(
     "matchMedia",
     vi.fn(() => ({
