@@ -8,20 +8,7 @@ import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { formatDate } from "@/lib/format-date";
-
-function translate(value, language) {
-  if (!value) return "";
-  if (typeof value === "string") return value;
-  return value[language] ?? value.ko ?? value.en ?? "";
-}
-
-const FILTER_KEYWORDS = {
-  all: [],
-  company: ["회사", "company", "press", "브리핑"],
-  business: ["사업", "business", "solution", "product"],
-  partnership: ["협약", "mou", "업무협약", "partnership", "agreement"],
-  awards: ["수상", "award", "awards", "인증", "certification"],
-};
+import { translate, filterNewsItems } from "@/lib/news-filter";
 
 function NewsMeta({ item, language }) {
   return (
@@ -184,44 +171,10 @@ export default function News({ newsItems }) {
     [language],
   );
 
-  const filteredItems = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-
-    return newsItems.filter((item) => {
-      const titleKo = translate(item.title, "ko").toLowerCase();
-      const titleEn = translate(item.title, "en").toLowerCase();
-      const summaryKo = translate(item.summary, "ko").toLowerCase();
-      const summaryEn = translate(item.summary, "en").toLowerCase();
-      const categoryKo = translate(item.category, "ko").toLowerCase();
-      const categoryEn = translate(item.category, "en").toLowerCase();
-
-      const matchesQuery =
-        !query ||
-        titleKo.includes(query) ||
-        titleEn.includes(query) ||
-        summaryKo.includes(query) ||
-        summaryEn.includes(query) ||
-        categoryKo.includes(query) ||
-        categoryEn.includes(query);
-
-      if (!matchesQuery) {
-        return false;
-      }
-
-      if (activeFilter === "all") {
-        return true;
-      }
-
-      const keywords = FILTER_KEYWORDS[activeFilter] || [];
-      if (keywords.length === 0) {
-        return true;
-      }
-
-      return [categoryKo, categoryEn].some((value) =>
-        keywords.some((keyword) => value.includes(keyword.toLowerCase())),
-      );
-    });
-  }, [newsItems, activeFilter, searchQuery]);
+  const filteredItems = useMemo(
+    () => filterNewsItems(newsItems, { query: searchQuery, activeFilter }),
+    [newsItems, activeFilter, searchQuery],
+  );
 
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
