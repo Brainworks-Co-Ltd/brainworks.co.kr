@@ -2,10 +2,8 @@ import { type FormEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
-import {
-  requireAdmin,
-  requireAdminPage,
-} from "@/server/auth/require-admin";
+import { requireAdmin } from "@/server/auth/require-admin";
+import { normalizeReturnTo } from "@/server/auth/policy";
 import { isOriginMismatch } from "@/lib/admin-api";
 
 type Account = {
@@ -162,9 +160,18 @@ export default function AdminAccount({ account }: { account: Account }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const guard = await requireAdminPage(context);
-  if ("redirect" in guard) return guard;
-  const session = await requireAdmin(context.req);
+  let session;
+  try {
+    session = await requireAdmin(context.req);
+  } catch {
+    const returnTo = normalizeReturnTo(context.resolvedUrl);
+    return {
+      redirect: {
+        destination: `/admin/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`,
+        permanent: false,
+      },
+    };
+  }
   const user = session.user as typeof session.user & {
     role?: string;
     accountStatus?: string;
