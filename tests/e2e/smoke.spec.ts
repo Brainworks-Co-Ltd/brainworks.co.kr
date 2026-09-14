@@ -29,6 +29,17 @@ for (const path of publicPages) {
   });
 }
 
+test("/about/honors 의 첫 이미지는 Next 이미지 최적화 경로를 사용한다", async ({
+  page,
+}) => {
+  await page.goto("/about/honors");
+  const firstImageSrc = await page
+    .locator("main img")
+    .first()
+    .getAttribute("src");
+  expect(firstImageSrc).toMatch(/^\/_next\/image\/?\?/);
+});
+
 test("관리자 경로는 로그인 페이지로 리다이렉트된다", async ({ page }) => {
   await page.goto("/admin");
   await expect(page).toHaveURL(/\/admin\/auth\/sign-in/);

@@ -1,3 +1,7 @@
+const assetHost = process.env.ASSET_PUBLIC_BASE_URL
+  ? new URL(process.env.ASSET_PUBLIC_BASE_URL).hostname
+  : null;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -48,7 +52,15 @@ const nextConfig = {
   },
   images: {
     domains: [],
-    unoptimized: true,
+    remotePatterns: assetHost
+      ? [
+          {
+            protocol: new URL(process.env.ASSET_PUBLIC_BASE_URL).protocol.replace(":", ""),
+            hostname: assetHost,
+            pathname: "/**",
+          },
+        ]
+      : [],
   },
 };
 
