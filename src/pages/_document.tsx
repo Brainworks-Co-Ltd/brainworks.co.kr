@@ -22,13 +22,6 @@ export default class BrainworksDocument extends Document {
     return (
       <Html lang={locale} data-design="industrial">
         <Head>
-          <link
-            rel="preload"
-            as="font"
-            type="font/woff2"
-            href="/fonts/PretendardVariable.woff2"
-            crossOrigin="anonymous"
-          />
           <link rel="icon" href="/favicon.ico" sizes="32x32" />
           <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
