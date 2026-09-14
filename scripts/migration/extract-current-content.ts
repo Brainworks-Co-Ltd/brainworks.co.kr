@@ -1,11 +1,10 @@
-import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { getAllNewsMeta, getNewsDetail } from "@/lib/news";
 import { businessAreas } from "@/data/businessAreas";
 import awardsData from "@/utils/awardsData";
 import certificationsData from "@/utils/certificationsData";
-import { ensureReportDirectory, reportDirectory, runIdFromArgs, writeJson, type MigrationSource } from "./migration-utils";
+import { ensureReportDirectory, runIdFromArgs, writeJson, type MigrationSource } from "./migration-utils";
 
 const runId = runIdFromArgs();
 const transformVersion = "2026-08-24.v1";

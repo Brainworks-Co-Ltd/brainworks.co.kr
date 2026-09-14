@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useLocale } from "@/shared/routing/useLocale";
 
 function usePrefersReducedMotion() {
@@ -49,11 +50,14 @@ export function PageHeroMedia({ media }) {
       }
 
       return (
-        <img
+        <Image
           src={media.poster}
-          alt={media.alt}
+          alt={media.alt ?? ""}
+          fill
+          sizes="100vw"
+          priority
           style={mediaStyle}
-          className="block h-full w-full object-cover"
+          className="object-cover"
           onError={() => setPosterFailed(true)}
         />
       );
@@ -76,11 +80,14 @@ export function PageHeroMedia({ media }) {
   }
 
   return (
-    <img
+    <Image
       src={media.src}
-      alt={media.alt}
+      alt={media.alt ?? ""}
+      fill
+      sizes="100vw"
+      priority
       style={mediaStyle}
-      className="block h-full w-full object-cover"
+      className="object-cover"
       onError={() => setFailed(true)}
     />
   );

@@ -52,8 +52,9 @@ describe("PageHero", () => {
       "data-variant",
       "split",
     );
-    expect(screen.getByRole("img", { name: "CEO 사진" })).toHaveAttribute(
-      "src",
+    const image = screen.getByRole("img", { name: "CEO 사진" });
+    // next/image는 src를 최적화 로더 URL로 감싸므로, 원본 경로가 담겨 있는지만 확인한다.
+    expect(decodeURIComponent(image.getAttribute("src") ?? "")).toContain(
       "/ceo.jpg",
     );
   });

@@ -18,6 +18,7 @@ function StoryImage({ image, alt }) {
 
   return (
     <div className="overflow-hidden rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)]">
+      {/* eslint-disable-next-line @next/next/no-img-element -- 소식 목록 썸네일은 관리자가 업로드한 값이라 실제 크기를 미리 알 수 없다. */}
       <img
         src={image}
         alt={alt ?? ""}

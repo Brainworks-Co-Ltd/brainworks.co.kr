@@ -42,6 +42,7 @@ export default function PopupNoticeRegion({ notices = [] }) {
   const [dismissed, setDismissed] = useState(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage/localStorage는 서버에 없어 마운트 후에만 읽을 수 있다. 렌더 중 파생으로 바꾸면 hydration이 어긋난다.
     setDismissed(
       new Set(
         notices
@@ -76,6 +77,7 @@ export default function PopupNoticeRegion({ notices = [] }) {
         className="gap-0 overflow-hidden p-0 sm:max-w-[520px]"
       >
         {notice.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 팝업 이미지라 실제 크기를 미리 알 수 없다.
           <img
             src={notice.imageUrl}
             alt={notice.imageAlt || ""}

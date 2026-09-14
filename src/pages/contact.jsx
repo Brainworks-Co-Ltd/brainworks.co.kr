@@ -49,6 +49,7 @@ export default function Contact() {
       topics.some((item) => item.value === router.query.topic)
         ? router.query.topic
         : "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- router.query는 정적 최적화 페이지에서 router.isReady 전까지 비어 있어, hydration 이후에만 읽을 수 있다.
     setForm((current) => ({
       ...current,
       topic,
@@ -117,7 +118,7 @@ export default function Contact() {
     if (!form.privacyAccepted) {
       setError(
         language === "ko"
-          ? "개인정보 수집·이용에 동의해 주세요."
+          ? "개인정보 수집과 이용에 동의해 주세요."
           : "Please accept the privacy notice.",
       );
       return;

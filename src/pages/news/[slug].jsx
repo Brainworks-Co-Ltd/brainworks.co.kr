@@ -41,6 +41,7 @@ export default function NewsDetail({ news }) {
         <div className="mx-auto max-w-4xl px-6 py-16">
           {news.thumbnail && (
             <div className="mb-12 overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 뉴스 썸네일이라 실제 크기를 미리 알 수 없다. */}
               <img
                 src={news.thumbnail}
                 alt={translate(news.title, language)}

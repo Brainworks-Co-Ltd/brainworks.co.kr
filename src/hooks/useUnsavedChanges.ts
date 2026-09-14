@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
 const CONFIRM_MESSAGE =
@@ -12,7 +12,9 @@ export function useUnsavedChanges(dirty: boolean) {
   // 렌더마다 갱신한다. routeChangeStart 핸들러가 구독 시점의 클로저 값이 아니라
   // 최신 dirty를 보게 해서, 구독 해제 전에 도착한 이벤트도 올바르게 무시한다.
   const dirtyRef = useRef(dirty);
-  dirtyRef.current = dirty;
+  useLayoutEffect(() => {
+    dirtyRef.current = dirty;
+  });
   let router: ReturnType<typeof useRouter> | null;
   try {
     // useRouter는 항상 이 지점에서 정확히 한 번 호출된다. try/catch는 렌더마다

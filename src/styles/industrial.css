@@ -569,15 +569,23 @@
   box-shadow: 0 8px 24px rgb(22 24 29 / 8%);
 }
 
-/* 영역명과 기존 추상 그래픽이 함께 분야를 구분한다. */
-.ind-domain__shot {
-  display: block;
+/* 영역명과 기존 추상 그래픽이 함께 분야를 구분한다.
+ * next/image의 fill 모드는 position:absolute로 채우므로 비율을 정하는
+ * 래퍼가 따로 필요하다. .ind-domain__shot-frame이 비율/래퍼, .ind-domain__shot은
+ * fill 이미지 자체(테두리/배경/object-fit)를 맡는다. */
+.ind-domain__shot-frame {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
+  border-radius: var(--bw-radius-control);
+  overflow: hidden;
+  background: var(--bw-surface-muted);
+}
+
+.ind-domain__shot {
   object-fit: cover;
   border-radius: var(--bw-radius-control);
   border: 1px solid var(--bw-line);
-  background: var(--bw-surface-muted);
 }
 
 /* 카드 안에서 가장 큰 글자. 방문자가 찾는 것은 "내 문제가 어느 분야인가"이고

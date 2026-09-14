@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { businessAreas } from "@/data/businessAreas";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -46,7 +47,15 @@ export default function DomainGrid() {
             className="ind-domain bw-reveal"
           >
             {SHOT[area.id] ? (
-              <img className="ind-domain__shot" src={SHOT[area.id]} alt="" />
+              <div className="ind-domain__shot-frame">
+                <Image
+                  className="ind-domain__shot"
+                  src={SHOT[area.id]}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                />
+              </div>
             ) : null}
 
             {/* 솔루션 개수를 크게 쓰지 않는다. 아래 목록이 이미 이름을 다 보여주므로

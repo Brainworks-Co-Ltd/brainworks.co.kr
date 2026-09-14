@@ -1,7 +1,7 @@
 import { and, asc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { noticeCategories, noticeCategoryLocales } from "@/server/db/schema/notices";
-import { assertCompleteLocales, assertExpectedVersion } from "@/server/db/integrity";
+import { assertCompleteLocales } from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 import type { NoticeLocale } from "@/server/modules/notices/contracts";
 

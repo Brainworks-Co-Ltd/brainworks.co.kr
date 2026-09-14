@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AboutLocalNav } from "@/components/public/AboutLocalNav";
@@ -45,9 +46,12 @@ export default function About() {
               <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
                 <div className="flex justify-center lg:w-1/2">
                   <div className="overflow-hidden rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-surface-muted)]">
-                    <img
+                    <Image
                       src="/images/about/대표사진.webp"
                       alt={language === "ko" ? "CEO 사진" : "CEO photo"}
+                      width={1491}
+                      height={1606}
+                      priority
                       className="h-full w-full object-cover"
                     />
                   </div>
