@@ -211,8 +211,8 @@ export const businessAreas = [
 ];
 
 
-export const getLocalizedBusinessAreas = (language) =>
-  businessAreas.map((area) => ({
+function computeLocalizedBusinessAreas(language) {
+  return businessAreas.map((area) => ({
     ...area,
     title: area.name[language],
     subtitle: area.subtitle[language],
@@ -223,3 +223,10 @@ export const getLocalizedBusinessAreas = (language) =>
       description: solution.description[language],
     })),
   }));
+}
+
+/** @type {Record<string, ReturnType<typeof computeLocalizedBusinessAreas>>} */
+const localizedCache = {};
+
+export const getLocalizedBusinessAreas = (language) =>
+  (localizedCache[language] ??= computeLocalizedBusinessAreas(language));

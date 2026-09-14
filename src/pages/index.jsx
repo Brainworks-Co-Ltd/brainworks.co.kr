@@ -7,14 +7,24 @@ import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
+import { SeoMetadata } from "@/components/public/SeoMetadata";
+import { useLocale } from "@/shared/routing/useLocale";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { getPublishedPopupNotices } from "@/server/modules/popup-notices/queries";
-import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
-export default function Home({ newsItems, popupNotices, areas }) {
+export default function Home({ newsItems, popupNotices }) {
+  const { language } = useLocale();
   return (
     <div className="min-h-screen">
       <Header />
+      <SeoMetadata
+        title={language === "ko" ? "브레인웍스" : "Brainworks"}
+        description={
+          language === "ko"
+            ? "브레인웍스는 제조, 의료, 도시, 상담 현장에 AI 자동화를 구축합니다."
+            : "Brainworks builds AI automation for manufacturing, healthcare, city operations, and customer support."
+        }
+      />
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
         {/*
@@ -35,19 +45,15 @@ export default function Home({ newsItems, popupNotices, areas }) {
 
 export async function getServerSideProps({ locale }) {
   const currentLocale = locale === "en" ? "en" : "ko";
-  const newsItems = (
-    await getPublishedNewsList({
-      locale: currentLocale,
-    })
-  ).items;
-  const popupNotices = await getPublishedPopupNotices(currentLocale);
-  const areas = await getPublishedBusinessAreas(currentLocale);
+  const [newsList, popupNotices] = await Promise.all([
+    getPublishedNewsList({ locale: currentLocale }),
+    getPublishedPopupNotices(currentLocale),
+  ]);
 
   return {
     props: {
-      newsItems,
+      newsItems: newsList.items,
       popupNotices,
-      areas,
     },
   };
 }

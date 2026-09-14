@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AdminApiError, adminApiErrorMessage, requestAdminApi } from "@/lib/admin-api";
+import { AdminApiError, adminApiErrorMessage, isOriginMismatch, requestAdminApi } from "@/lib/admin-api";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -12,6 +12,17 @@ describe("관리자 API 안내", () => {
   ])("%s 오류에서 다음 행동을 안내한다", (code, action) => {
     expect(adminApiErrorMessage(new AdminApiError(code))).toContain(action);
     expect(adminApiErrorMessage(code)).not.toContain(code);
+  });
+
+  it("고정 문구가 없는 코드는 서버가 보낸 구체적인 메시지를 그대로 보여준다", () => {
+    expect(
+      adminApiErrorMessage(
+        new AdminApiError("BAD_REQUEST", "같은 이름의 카테고리가 이미 있습니다."),
+      ),
+    ).toBe("같은 이름의 카테고리가 이미 있습니다.");
+    expect(adminApiErrorMessage(new AdminApiError("BAD_REQUEST"))).toBe(
+      "요청을 처리하지 못했습니다. 입력 내용을 유지한 채 다시 시도해 주세요.",
+    );
   });
 
   it("응답의 data를 반환하고 관리자 요청 헤더를 전달한다", async () => {
@@ -32,5 +43,14 @@ describe("관리자 API 안내", () => {
   it("JSON이 아닌 실패 응답도 안전한 안내로 변환한다", async () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>오류</html>", { status: 502 })));
     await expect(requestAdminApi("/api/admin/notices")).rejects.toMatchObject({ code: "INTERNAL_ERROR" });
+  });
+
+  it("403과 origin 메시지가 함께일 때만 출처 불일치로 판정한다", () => {
+    expect(isOriginMismatch({ status: 403, message: "Invalid origin" })).toBe(true);
+    expect(isOriginMismatch({ status: 403, message: "권한이 없습니다" })).toBe(false);
+    expect(isOriginMismatch({ status: 401, message: "Invalid origin" })).toBe(false);
+    expect(isOriginMismatch(new AdminApiError("INVALID_ORIGIN", "Invalid origin"))).toBe(true);
+    expect(isOriginMismatch(new AdminApiError("FORBIDDEN"))).toBe(false);
+    expect(isOriginMismatch(null)).toBe(false);
   });
 });

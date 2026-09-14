@@ -13,19 +13,9 @@ import {
 } from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 
-type LocalizedSolution = {
-  name: string;
-  summary: string;
-  description: string;
-  imageAlt?: string;
-};
+import type { AiSolutionInput } from "@/server/modules/catalog/schema";
 
-export type AiSolutionInput = {
-  businessAreaId: string;
-  displayOrder: number;
-  imageAssetId?: string | null;
-  locales: Record<"ko" | "en", LocalizedSolution>;
-};
+export type { AiSolutionInput };
 
 type Transaction = Parameters<
   Parameters<ReturnType<typeof getDb>["transaction"]>[0]

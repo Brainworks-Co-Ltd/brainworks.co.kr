@@ -2,10 +2,10 @@ import { type FormEvent, useState } from "react";
 import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
-import {
-  requireAdmin,
-  requireAdminPage,
-} from "@/server/auth/require-admin";
+import { requireAdmin } from "@/server/auth/require-admin";
+import { normalizeReturnTo } from "@/server/auth/policy";
+import { isOriginMismatch } from "@/lib/admin-api";
+import { HttpError } from "@/server/http/errors";
 
 type Account = {
   name: string;
@@ -43,6 +43,13 @@ export default function AdminAccount({ account }: { account: Account }) {
         }),
       });
       if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        if (isOriginMismatch({ status: response.status, message: payload?.message })) {
+          setError(
+            `접속 주소가 서버의 APP_ORIGIN 설정과 다릅니다. 현재 주소(${window.location.origin})로 APP_ORIGIN을 맞춘 뒤 다시 시도해 주세요.`,
+          );
+          return;
+        }
         setError("현재 비밀번호를 확인하거나 새 비밀번호 조건을 확인해 주세요.");
         return;
       }
@@ -154,9 +161,26 @@ export default function AdminAccount({ account }: { account: Account }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const guard = await requireAdminPage(context);
-  if ("redirect" in guard) return guard;
-  const session = await requireAdmin(context.req);
+  let session;
+  try {
+    session = await requireAdmin(context.req);
+  } catch (error) {
+    if (
+      !(
+        error instanceof HttpError &&
+        (error.code === "UNAUTHORIZED" || error.code === "FORBIDDEN")
+      )
+    ) {
+      throw error;
+    }
+    const returnTo = normalizeReturnTo(context.resolvedUrl);
+    return {
+      redirect: {
+        destination: `/admin/auth/sign-in?returnTo=${encodeURIComponent(returnTo)}`,
+        permanent: false,
+      },
+    };
+  }
   const user = session.user as typeof session.user & {
     role?: string;
     accountStatus?: string;

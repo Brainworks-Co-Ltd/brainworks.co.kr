@@ -22,6 +22,9 @@ export default class BrainworksDocument extends Document {
     return (
       <Html lang={locale} data-design="industrial">
         <Head>
+          <link rel="icon" href="/favicon.ico" sizes="32x32" />
+          <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           {/* 드러남 숨김 상태를 첫 페인트 전에 켠다. 훅(_app useReveal)이 붙이면 한 프레임 보였다가 사라진다. */}
           <script
             dangerouslySetInnerHTML={{

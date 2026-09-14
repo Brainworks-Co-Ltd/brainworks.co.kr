@@ -29,6 +29,13 @@
       "when": 1787828887703,
       "tag": "0003_notice_public_number",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789114445667,
+      "tag": "0004_seed_business_areas",
+      "breakpoints": true
     }
   ]
 }

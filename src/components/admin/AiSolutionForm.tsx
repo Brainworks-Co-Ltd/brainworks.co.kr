@@ -1,11 +1,18 @@
-import { type FormEvent, useMemo, useRef, useState } from "react";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import {
+  saveSnapshot,
+  snapshotKey,
+  useSessionSnapshot,
+} from "@/hooks/useSessionSnapshot";
+import { flushSync } from "react-dom";
+import {
   adminApiErrorMessage,
+  isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
 
@@ -68,12 +75,28 @@ export function AiSolutionForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const baseline = useRef(JSON.stringify(initial));
-  const dirty = useMemo(
-    () => JSON.stringify(form) !== baseline.current,
-    [form],
-  );
+  const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
+  const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
+  const inFlight = useRef(false);
+  const restoreSnapshot = useCallback(
+    (value: AiSolutionFormValue) => setForm(value),
+    [],
+  );
+  useSessionSnapshot<AiSolutionFormValue>(
+    snapshotKey("ai-solution", initial.id),
+    restoreSnapshot,
+  );
+
+  // 세션 만료(UNAUTHORIZED) 응답이면 현재 입력을 보존하고 로그인 화면으로 이동한다.
+  function handleUnauthorized(caught: unknown): boolean {
+    if (!isUnauthorized(caught)) return false;
+    saveSnapshot(snapshotKey("ai-solution", form.id), form);
+    flushSync(() => setBaseline(JSON.stringify(form)));
+    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
+    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    return true;
+  }
 
   function updateLocale(
     locale: "ko" | "en",
@@ -99,13 +122,13 @@ export function AiSolutionForm({
           name: form.locales.ko.name,
           summary: form.locales.ko.summary,
           description: form.locales.ko.description,
-          imageAlt: form.locales.ko.imageAlt || undefined,
+          imageAlt: form.locales.ko.imageAlt || null,
         },
         en: {
           name: form.locales.en.name,
           summary: form.locales.en.summary,
           description: form.locales.en.description,
-          imageAlt: form.locales.en.imageAlt || undefined,
+          imageAlt: form.locales.en.imageAlt || null,
         },
       },
     };
@@ -113,6 +136,8 @@ export function AiSolutionForm({
 
   async function save(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -126,6 +151,8 @@ export function AiSolutionForm({
             body: JSON.stringify(payload()),
           },
         );
+        // flushSync: router.push가 routeChangeStart를 emit하기 전에 dirty=false를 반영한다.
+        flushSync(() => setBaseline(JSON.stringify(form)));
         await router.push(`/admin/ai-solutions/${created.id}`);
         return;
       }
@@ -138,17 +165,21 @@ export function AiSolutionForm({
         },
       );
       setVersion(result.version);
-      baseline.current = JSON.stringify(form);
+      setBaseline(JSON.stringify(form));
       setMessage("AI 솔루션 내용을 저장했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
 
   async function uploadImage(file?: File) {
     if (!file) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -161,8 +192,10 @@ export function AiSolutionForm({
       setForm((current) => ({ ...current, imageAssetId: asset.id }));
       setMessage("대표 이미지를 연결했습니다. 변경 저장을 눌러 완료해 주세요.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
@@ -172,6 +205,8 @@ export function AiSolutionForm({
       if (dirty) setError("변경 내용을 먼저 저장해 주세요.");
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -195,19 +230,23 @@ export function AiSolutionForm({
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(
         `${locale === "ko" ? "국문" : "영문"}을 ${action === "publish" ? "게시했습니다" : "숨겼습니다"}.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
 
   async function itemCommand(action: "archive" | "restore") {
     if (!form.id || !window.confirm(action === "archive" ? "이 솔루션을 보관하시겠습니까?" : "이 솔루션을 초안으로 복원하시겠습니까?")) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -232,11 +271,13 @@ export function AiSolutionForm({
       };
       setVersion(result.version);
       setForm(next);
-      baseline.current = JSON.stringify(next);
+      setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "솔루션을 보관했습니다." : "솔루션을 복원했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

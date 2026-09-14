@@ -1,6 +1,8 @@
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { isOriginMismatch } from "@/lib/admin-api";
 
 const navigation = [
   { href: "/admin", label: "운영 현황" },
@@ -24,7 +26,17 @@ export function AdminShell({ children, activePath = "/admin" }) {
         method: "POST",
         credentials: "same-origin",
       });
-      if (!response.ok) throw new Error("로그아웃 요청 실패");
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        if (isOriginMismatch({ status: response.status, message: payload?.message })) {
+          setSignOutError(
+            `접속 주소가 서버의 APP_ORIGIN 설정과 다릅니다. 현재 주소(${window.location.origin})로 APP_ORIGIN을 맞춘 뒤 다시 시도해 주세요.`,
+          );
+          setIsSigningOut(false);
+          return;
+        }
+        throw new Error("로그아웃 요청 실패");
+      }
       await router.replace("/admin/auth/sign-in");
     } catch {
       setSignOutError("로그아웃하지 못했습니다. 잠시 후 다시 시도해 주세요.");
@@ -34,6 +46,9 @@ export function AdminShell({ children, activePath = "/admin" }) {
 
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+      <Head>
+        <meta name="robots" content="noindex,nofollow" key="robots" />
+      </Head>
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="border-b border-slate-200 bg-white px-6 py-6 lg:border-b-0 lg:border-r">
           <Link

@@ -177,11 +177,3 @@ export async function renotifyPopupNotice(id: string, expectedVersion: number, a
     return { id, dismissalRevision: current.dismissalRevision + 1, version: expectedVersion + 1 };
   });
 }
-
-export async function reorderPopupNotices(id: string, locale: PopupLocale, displayOrder: number, expectedVersion: number, actorId: string) {
-  return getDb().transaction(async (tx) => {
-    await bumpPopupVersion(tx, id, expectedVersion, actorId);
-    await tx.update(popupNoticeLocales).set({ displayOrder, updatedAt: new Date(), updatedByActorId: actorId }).where(and(eq(popupNoticeLocales.popupNoticeId, id), eq(popupNoticeLocales.locale, locale)));
-    return { id, locale, displayOrder, version: expectedVersion + 1 };
-  });
-}

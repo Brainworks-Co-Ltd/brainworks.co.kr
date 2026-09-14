@@ -23,15 +23,3 @@ export function parseNoticePublicNumber(value: string) {
   const publicNumber = Number(value);
   return Number.isSafeInteger(publicNumber) ? publicNumber : null;
 }
-
-export function isNoticeCommandInput(
-  value: unknown,
-): value is NoticeCommandInput {
-  if (!value || typeof value !== "object") return false;
-  const input = value as Record<string, unknown>;
-  const locales = input.locales as Record<string, unknown> | undefined;
-  return (
-    typeof input.displayDate === "string" &&
-    Boolean(locales?.ko && locales.en)
-  );
-}

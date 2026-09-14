@@ -97,8 +97,9 @@ export function PageHero({
       action={action}
       secondaryAction={secondaryAction}
       dark={dark || effectiveVariant === "media"}
-      children={children}
-    />
+    >
+      {children}
+    </HeroContent>
   );
 
   if (effectiveVariant === "media") {
@@ -131,7 +132,7 @@ export function PageHero({
       >
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>{content}</div>
-          <div className="min-h-72 overflow-hidden rounded-[var(--bw-radius-feature)]">
+          <div className="relative min-h-72 overflow-hidden rounded-[var(--bw-radius-feature)]">
             <PageHeroMedia media={media} />
           </div>
         </div>

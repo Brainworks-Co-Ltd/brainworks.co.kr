@@ -1,13 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@font-face {
-  font-family: "Pretendard Variable";
-  src: url("/fonts/PretendardVariable.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
+@import "./pretendard.css";
 
 :root {
   --bw-color-ink: #21201f;

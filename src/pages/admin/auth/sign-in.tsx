@@ -1,7 +1,9 @@
 import { FormEvent, useState } from "react";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { normalizeReturnTo } from "@/server/auth/policy";
+import { isOriginMismatch } from "@/lib/admin-api";
 
 export default function AdminSignIn() {
   const router = useRouter();
@@ -22,6 +24,13 @@ export default function AdminSignIn() {
         body: JSON.stringify({ email, password, callbackURL: returnTo }),
       });
       if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        if (isOriginMismatch({ status: response.status, message: payload?.message })) {
+          setError(
+            `접속 주소가 서버의 APP_ORIGIN 설정과 다릅니다. 현재 주소(${window.location.origin})로 APP_ORIGIN을 맞춘 뒤 다시 시도해 주세요.`,
+          );
+          return;
+        }
         setError("이메일 또는 비밀번호를 확인해 주세요.");
         return;
       }
@@ -35,6 +44,9 @@ export default function AdminSignIn() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--bw-color-surface-muted)] px-6 py-12">
+      <Head>
+        <meta name="robots" content="noindex,nofollow" key="robots" />
+      </Head>
       <section className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-[var(--bw-shadow-soft)]">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
           Brainworks Admin

@@ -29,6 +29,7 @@ const messageByCode: Record<string, string> = {
   DEPENDENCY_UNAVAILABLE:
     "연결된 서비스가 준비되지 않았습니다. 잠시 뒤 다시 시도해 주세요.",
   RATE_LIMITED: "요청이 많습니다. 잠시 뒤 다시 시도해 주세요.",
+  METHOD_NOT_ALLOWED: "허용되지 않는 요청 방식입니다.",
 };
 
 export function adminApiErrorMessage(error: unknown) {
@@ -39,10 +40,36 @@ export function adminApiErrorMessage(error: unknown) {
         ? error
         : "INTERNAL_ERROR";
 
+  // 코드별 고정 문구가 없으면, 서버가 함께 보낸 구체적인 메시지(예: 카테고리 이름 중복,
+  // 공개 주소 중복)를 그대로 보여준다. 그마저 없을 때만 일반 안내 문구로 대체한다.
+  const serverMessage =
+    error instanceof AdminApiError && error.message !== error.code
+      ? error.message
+      : undefined;
+
   return (
     messageByCode[code] ||
+    serverMessage ||
     "요청을 처리하지 못했습니다. 입력 내용을 유지한 채 다시 시도해 주세요."
   );
+}
+
+export function isOriginMismatch(error: unknown): boolean {
+  if (error instanceof AdminApiError) {
+    return /origin/i.test(error.code) || /origin/i.test(error.message);
+  }
+  if (!error || typeof error !== "object") return false;
+  const { status, message } = error as { status?: unknown; message?: unknown };
+  return status === 403 && typeof message === "string" && /origin/i.test(message);
+}
+
+export function isUnauthorized(error: unknown): boolean {
+  if (error instanceof AdminApiError) {
+    return error.code === "UNAUTHORIZED";
+  }
+  if (!error || typeof error !== "object") return false;
+  const { status } = error as { status?: unknown };
+  return status === 401;
 }
 
 export async function requestAdminApi<T>(

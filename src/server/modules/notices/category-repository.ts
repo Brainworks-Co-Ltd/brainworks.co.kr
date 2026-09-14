@@ -1,7 +1,7 @@
 import { and, asc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { noticeCategories, noticeCategoryLocales } from "@/server/db/schema/notices";
-import { assertCompleteLocales, assertExpectedVersion } from "@/server/db/integrity";
+import { assertCompleteLocales } from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 import type { NoticeLocale } from "@/server/modules/notices/contracts";
 
@@ -17,6 +17,23 @@ async function bump(tx: Parameters<Parameters<ReturnType<typeof getDb>["transact
 }
 
 function validate(input: CategoryInput) { assertCompleteLocales(Object.keys(input.locales)); for (const locale of ["ko", "en"] as const) if (!input.locales[locale].name.trim()) throw new HttpError("PUBLICATION_INVALID"); }
+
+async function assertNoDuplicateName(
+  tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0],
+  locales: Record<NoticeLocale, { name: string }>,
+  excludeId?: string,
+) {
+  const rows = await tx
+    .select({ categoryId: noticeCategoryLocales.categoryId, locale: noticeCategoryLocales.locale, name: noticeCategoryLocales.name })
+    .from(noticeCategoryLocales)
+    .innerJoin(noticeCategories, eq(noticeCategories.id, noticeCategoryLocales.categoryId))
+    .where(eq(noticeCategories.itemStatus, "ACTIVE"));
+  for (const locale of ["ko", "en"] as const) {
+    const name = locales[locale].name.trim();
+    const duplicate = rows.some((row) => row.locale === locale && row.categoryId !== excludeId && row.name.trim() === name);
+    if (duplicate) throw new HttpError("BAD_REQUEST", "같은 이름의 카테고리가 이미 있습니다.");
+  }
+}
 
 export async function listAdminNoticeCategories() {
   if (!process.env.DATABASE_URL) return [];
@@ -63,6 +80,7 @@ export async function listAdminNoticeCategories() {
 export async function createNoticeCategory(input: CategoryInput, actorId: string) {
   validate(input);
   return getDb().transaction(async (tx) => {
+    await assertNoDuplicateName(tx, input.locales);
     const [created] = await tx.insert(noticeCategories).values({ displayOrder: input.displayOrder ?? 0, createdByActorId: actorId, updatedByActorId: actorId }).returning({ id: noticeCategories.id, version: noticeCategories.version });
     await tx.insert(noticeCategoryLocales).values((Object.keys(input.locales) as NoticeLocale[]).map((locale) => ({ categoryId: created.id, locale, name: input.locales[locale].name, updatedByActorId: actorId })));
     return created;
@@ -81,6 +99,7 @@ export async function saveNoticeCategory(
 ) {
   validate(input);
   return getDb().transaction(async (tx) => {
+    await assertNoDuplicateName(tx, input.locales, id);
     await bump(tx, id, expectedVersion, actorId);
     await tx
       .update(noticeCategories)

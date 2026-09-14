@@ -37,6 +37,7 @@ function DialogContent({
   className = "",
   children,
   showCloseButton = true,
+  closeLabel = "닫기",
   ...props
 }) {
   return (
@@ -57,7 +58,7 @@ function DialogContent({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                aria-label="닫기"
+                aria-label={closeLabel}
                 className="absolute right-4 top-4"
               />
             }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { DesktopNavigation } from "@/components/public/DesktopNavigation";
@@ -64,7 +65,14 @@ export default function Header() {
           className="flex items-center gap-3"
           aria-label={language === "ko" ? "브레인웍스 홈" : "Brainworks home"}
         >
-          <img src="/images/회사로고.png" alt="" className="bw-header__logo h-9 w-auto" />
+          <Image
+            src="/images/회사로고.png"
+            alt=""
+            width={270}
+            height={86}
+            priority
+            className="bw-header__logo h-9 w-auto"
+          />
           <span className="sr-only">Brainworks</span>
         </Link>
 

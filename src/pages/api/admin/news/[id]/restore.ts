@@ -5,6 +5,7 @@ import {
   restoreNews,
 } from "@/server/modules/news/repository";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody, versionCommandSchema } from "@/server/http/validate";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
@@ -13,16 +14,10 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     response.status(405).end();
     return;
   }
-  const expectedVersion = Number(request.body?.expectedVersion);
-  if (!Number.isInteger(expectedVersion)) {
-    response
-      .status(400)
-      .json({ error: { code: "BAD_REQUEST", message: "버전이 필요합니다." } });
-    return;
-  }
+  const command = parseBody(versionCommandSchema, request.body);
   const result = await restoreNews(
     request.query.id as string,
-    expectedVersion,
+    command.expectedVersion,
     await ensureAdminActor(session.user.id),
   );
   response.status(200).json({ data: result });

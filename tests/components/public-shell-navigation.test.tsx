@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Header from "@/components/Header";
@@ -106,6 +106,45 @@ describe("공개 셸 내비게이션", () => {
     );
   });
 
+  it("모바일 메뉴 트리거는 초기 렌더에 존재한다 (SSR 등가)", () => {
+    render(
+      <MobileNavigation
+        items={buildPublicNavigation("ko")}
+        open={false}
+        onOpenChange={vi.fn()}
+        activeGroup="business"
+        routeKey="consulting"
+        menuLabel="메뉴 열기"
+        navigationLabel="모바일 메뉴"
+        languageLabel="English"
+        onLanguageChange={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "메뉴 열기" }),
+    ).toHaveAttribute("aria-haspopup", "dialog");
+  });
+
+  it("모바일 메뉴를 닫으면 트리거로 초점이 복귀한다 (Base UI finalFocus)", async () => {
+    const user = userEvent.setup();
+
+    render(<Header />);
+
+    const trigger = screen.getByRole("button", { name: "메뉴 열기" });
+    await user.click(trigger);
+
+    const dialog = await screen.findByRole("dialog", { name: "모바일 메뉴" });
+    expect(trigger).toHaveAttribute("aria-controls", dialog.id);
+
+    await user.keyboard("{Escape}");
+
+    expect(
+      screen.queryByRole("dialog", { name: "모바일 메뉴" }),
+    ).not.toBeInTheDocument();
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+  });
+
   it("모바일 메뉴는 같은 계층을 이미지 없이 제공한다", async () => {
     const user = userEvent.setup();
 
@@ -123,7 +162,9 @@ describe("공개 셸 내비게이션", () => {
       />,
     );
 
-    const businessToggle = screen.getByRole("button", { name: "사업 영역" });
+    const businessToggle = await screen.findByRole("button", {
+      name: "사업 영역",
+    });
     expect(businessToggle).toHaveAttribute("aria-expanded", "false");
 
     await user.click(businessToggle);

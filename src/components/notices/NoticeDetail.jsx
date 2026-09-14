@@ -9,9 +9,6 @@ export default function NoticeDetail({ notice }) {
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--bw-color-muted)]">
           {notice.date}
         </p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-[-0.025em] text-[var(--bw-color-ink)] md:text-5xl">
-          {notice.title}
-        </h1>
       </div>
       <div
         className="bw-prose mt-10 max-w-none"

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
+import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -38,6 +40,7 @@ export default function Contact() {
   });
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -46,6 +49,7 @@ export default function Contact() {
       topics.some((item) => item.value === router.query.topic)
         ? router.query.topic
         : "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- router.query는 정적 최적화 페이지에서 router.isReady 전까지 비어 있어, hydration 이후에만 읽을 수 있다.
     setForm((current) => ({
       ...current,
       topic,
@@ -59,14 +63,47 @@ export default function Contact() {
   useEffect(() => {
     if (status === "success") resultRef.current?.focus();
   }, [status]);
-  const update = (field) => (event) =>
-    setForm((current) => ({
-      ...current,
-      [field]:
-        event.target.type === "checkbox"
-          ? event.target.checked
-          : event.target.value,
-    }));
+  const update = (field) => (event) => {
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
+    setForm((current) => ({ ...current, [field]: value }));
+    setFieldErrors((current) => {
+      if (!(field in current)) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+  };
+
+  function validateFields(values) {
+    const errors = {};
+    if (!values.name.trim()) {
+      errors.name =
+        language === "ko"
+          ? "이름을 입력해 주세요."
+          : "Please enter your name.";
+    }
+    if (!values.email.trim()) {
+      errors.email =
+        language === "ko"
+          ? "이메일을 입력해 주세요."
+          : "Please enter your email.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+      errors.email =
+        language === "ko"
+          ? "올바른 이메일 주소를 입력해 주세요."
+          : "Please enter a valid email address.";
+    }
+    if (values.message.trim().length < 10) {
+      errors.message =
+        language === "ko"
+          ? "문의 내용을 10자 이상 입력해 주세요."
+          : "Please enter at least 10 characters.";
+    }
+    return errors;
+  }
 
   async function submit(event) {
     event.preventDefault();
@@ -81,11 +118,14 @@ export default function Contact() {
     if (!form.privacyAccepted) {
       setError(
         language === "ko"
-          ? "개인정보 수집·이용에 동의해 주세요."
+          ? "개인정보 수집과 이용에 동의해 주세요."
           : "Please accept the privacy notice.",
       );
       return;
     }
+    const errors = validateFields(form);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     setError("");
     setStatus("submitting");
     try {
@@ -94,7 +134,18 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, locale: language }),
       });
-      if (!response.ok) throw new Error();
+      if (!response.ok) {
+        if (response.status >= 400 && response.status < 500) {
+          setStatus("error");
+          setError(
+            language === "ko"
+              ? "입력 내용을 확인해 주세요."
+              : "Please check your input.",
+          );
+          return;
+        }
+        throw new Error();
+      }
       setStatus("success");
     } catch {
       setStatus("error");
@@ -107,6 +158,11 @@ export default function Contact() {
   }
 
   const disabled = status === "submitting" || status === "success";
+  const selectedArea = form.area
+    ? getLocalizedBusinessAreas(language).find(
+        (area) => area.id === form.area,
+      )
+    : null;
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
@@ -201,14 +257,14 @@ export default function Contact() {
                   </label>
                 ))}
               </div>
-              {form.area ? (
+              {selectedArea ? (
                 <div className="rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)] px-4 py-3 text-sm text-[var(--bw-color-muted)]">
                   {language === "ko"
                     ? "선택한 사업 영역"
                     : "Selected business area"}
                   :{" "}
                   <strong className="text-[var(--bw-color-ink)]">
-                    {form.area}
+                    {selectedArea.title}
                   </strong>
                 </div>
               ) : null}
@@ -245,8 +301,21 @@ export default function Contact() {
                     value={form.name}
                     onChange={update("name")}
                     disabled={disabled}
+                    aria-invalid={fieldErrors.name ? "true" : undefined}
+                    aria-describedby={
+                      fieldErrors.name ? "name-error" : undefined
+                    }
                     className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
                   />
+                  {fieldErrors.name ? (
+                    <span
+                      id="name-error"
+                      role="alert"
+                      className="text-xs font-normal text-red-600"
+                    >
+                      {fieldErrors.name}
+                    </span>
+                  ) : null}
                 </label>
                 <label
                   className="grid gap-2 text-sm font-semibold"
@@ -262,8 +331,21 @@ export default function Contact() {
                     value={form.email}
                     onChange={update("email")}
                     disabled={disabled}
+                    aria-invalid={fieldErrors.email ? "true" : undefined}
+                    aria-describedby={
+                      fieldErrors.email ? "email-error" : undefined
+                    }
                     className="min-h-11 rounded-[var(--bw-radius-control)] border border-slate-300 px-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
                   />
+                  {fieldErrors.email ? (
+                    <span
+                      id="email-error"
+                      role="alert"
+                      className="text-xs font-normal text-red-600"
+                    >
+                      {fieldErrors.email}
+                    </span>
+                  ) : null}
                 </label>
               </div>
               <label
@@ -313,8 +395,21 @@ export default function Contact() {
                 value={form.message}
                 onChange={update("message")}
                 disabled={disabled}
+                aria-invalid={fieldErrors.message ? "true" : undefined}
+                aria-describedby={
+                  fieldErrors.message ? "message-error" : undefined
+                }
                 className="rounded-[var(--bw-radius-control)] border border-slate-300 px-3 py-3 font-normal outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
               />
+              {fieldErrors.message ? (
+                <span
+                  id="message-error"
+                  role="alert"
+                  className="text-xs font-normal text-red-600"
+                >
+                  {fieldErrors.message}
+                </span>
+              ) : null}
             </section>
 
             <div className="grid gap-5 border-t border-[var(--bw-color-line)] pt-8">
@@ -327,9 +422,26 @@ export default function Contact() {
                   className="mt-1 h-4 w-4 accent-[var(--bw-color-brand)]"
                 />
                 <span>
-                  {language === "ko"
-                    ? "문의 처리를 위한 개인정보 수집·이용에 동의합니다. 수집 항목, 목적, 보유 기간은 실제 개인정보 처리방침을 따릅니다."
-                    : "I agree to the collection and use of personal information to process this inquiry."}
+                  {language === "ko" ? (
+                    <>
+                      문의 처리를 위한 개인정보 수집, 이용에 동의합니다.
+                      수집 항목, 목적, 보유 기간은{" "}
+                      <Link href="/privacy" className="underline">
+                        개인정보 처리방침
+                      </Link>
+                      을 따릅니다.
+                    </>
+                  ) : (
+                    <>
+                      I agree to the collection and use of personal
+                      information to process this inquiry. Collected items,
+                      purpose, and retention period follow our{" "}
+                      <Link href="/privacy" className="underline">
+                        privacy notice
+                      </Link>
+                      .
+                    </>
+                  )}
                 </span>
               </label>
             </div>

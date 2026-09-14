@@ -1,7 +1,14 @@
-import { and, desc, eq, ilike, or } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, or } from "drizzle-orm";
 import { markdownToHtml } from "@/lib/markdown";
 import { getDb } from "@/server/db/client";
-import { news, newsLocales, newsSlugs } from "@/server/db/schema/news";
+import { assets } from "@/server/db/schema/assets";
+import {
+  news,
+  newsExternalLinks,
+  newsLocales,
+  newsSlugs,
+} from "@/server/db/schema/news";
+import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
 import { validateNewsQuery } from "@/server/modules/news/publication-policy";
 
 export async function readDatabaseNewsList(
@@ -38,17 +45,27 @@ export async function readDatabaseNewsList(
       category: news.category,
       title: newsLocales.title,
       summary: newsLocales.summary,
+      storageKey: assets.storageKey,
     })
     .from(newsSlugs)
     .innerJoin(news, eq(newsSlugs.newsId, news.id))
     .innerJoin(newsLocales, eq(newsLocales.newsId, news.id))
+    .leftJoin(
+      assets,
+      and(eq(assets.id, news.coverAssetId), eq(assets.status, "READY")),
+    )
     .where(and(...filters))
     .orderBy(desc(news.displayDate));
   const start = (options.page - 1) * options.pageSize;
   return {
-    items: rows
-      .slice(start, start + options.pageSize)
-      .map((row) => ({ ...row, date: String(row.date), thumbnail: "" })),
+    items: rows.slice(start, start + options.pageSize).map((row) => {
+      const { storageKey, ...rest } = row;
+      return {
+        ...rest,
+        date: String(row.date),
+        thumbnail: (storageKey && resolvePublicAssetUrl(storageKey)) || "",
+      };
+    }),
     page: options.page,
     pageSize: options.pageSize,
     total: rows.length,
@@ -80,14 +97,20 @@ export async function readDatabaseNewsDetail(
   if (!currentSlug[0]) return null;
   const row = await db
     .select({
+      newsLocaleId: newsLocales.id,
       date: news.displayDate,
       category: news.category,
       title: newsLocales.title,
       summary: newsLocales.summary,
       bodyMarkdown: newsLocales.bodyMarkdown,
+      storageKey: assets.storageKey,
     })
     .from(news)
     .innerJoin(newsLocales, eq(newsLocales.newsId, news.id))
+    .leftJoin(
+      assets,
+      and(eq(assets.id, news.coverAssetId), eq(assets.status, "READY")),
+    )
     .where(
       and(
         eq(news.id, requested[0].newsId),
@@ -101,14 +124,26 @@ export async function readDatabaseNewsDetail(
     return requested[0].isCurrent
       ? null
       : { redirect: currentSlug[0].slug, news: null };
+  const externalLinks = await db
+    .select({
+      label: newsExternalLinks.label,
+      url: newsExternalLinks.url,
+    })
+    .from(newsExternalLinks)
+    .where(eq(newsExternalLinks.newsLocaleId, row[0].newsLocaleId))
+    .orderBy(asc(newsExternalLinks.displayOrder));
   return {
     redirect: requested[0].isCurrent ? null : currentSlug[0].slug,
     news: {
-      ...row[0],
+      slug: currentSlug[0].slug,
       date: String(row[0].date),
-      thumbnail: "",
+      category: row[0].category,
+      title: row[0].title,
+      summary: row[0].summary,
+      thumbnail:
+        (row[0].storageKey && resolvePublicAssetUrl(row[0].storageKey)) || "",
       content: markdownToHtml(row[0].bodyMarkdown),
-      externalLinks: [],
+      externalLinks,
     },
   };
 }

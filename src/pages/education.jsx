@@ -106,7 +106,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI해커톤.jpg",
+      src: "/images/education/AI해커톤.webp",
       alt: {
         ko: "해커톤 멘토링 현장 사진",
         en: "Mentoring during hackathon photo",
@@ -156,7 +156,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/Global.png",
+      src: "/images/education/Global.webp",
       alt: {
         ko: "해외 인턴십 경험 사진",
         en: "Global internship experience photo",
@@ -206,7 +206,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI포트폴리오.jpg",
+      src: "/images/education/AI포트폴리오.webp",
       alt: {
         ko: "포트폴리오 피드백 워크숍 사진",
         en: "Portfolio feedback workshop photo",
@@ -254,7 +254,7 @@ const processSteps = [
       ],
     },
     image: {
-      src: "/images/education/AI면접.jpg",
+      src: "/images/education/AI면접.webp",
       alt: {
         ko: "모의 면접 진행 사진",
         en: "Mock interview practice photo",
@@ -709,6 +709,7 @@ export default function Education() {
                 style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
                 className="bw-reveal flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element -- 협력기관 로고 6종은 svg/png/jpg가 섞여 있고 object-contain 박스에 담겨 최적화 이득이 적다. */}
                 <img
                   src={client.logo}
                   alt={client.name}

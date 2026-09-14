@@ -1,7 +1,16 @@
+import { useLocale } from "@/shared/routing/useLocale";
+
 const statusCopy = {
-  loading: "불러오는 중입니다.",
-  empty: "표시할 내용이 없습니다.",
-  error: "내용을 불러오지 못했습니다.",
+  ko: {
+    loading: "불러오는 중입니다.",
+    empty: "표시할 내용이 없습니다.",
+    error: "내용을 불러오지 못했습니다.",
+  },
+  en: {
+    loading: "Loading...",
+    empty: "Nothing to show yet.",
+    error: "Something went wrong.",
+  },
 };
 
 export function StatePanel({
@@ -12,7 +21,9 @@ export function StatePanel({
   onAction,
   className = "",
 }) {
-  const resolvedTitle = title || statusCopy[status] || statusCopy.empty;
+  const { language } = useLocale();
+  const copy = statusCopy[language];
+  const resolvedTitle = title || copy[status] || copy.empty;
 
   return (
     <section

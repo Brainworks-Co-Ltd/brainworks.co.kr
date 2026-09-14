@@ -3,17 +3,25 @@ import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
 
 /*
- * 히어로: 질문 하나와 현장별 답.
+ * 히어로: 질문 하나와 사업 영역별 답.
  *
- *   「제조 현장」의 문제를 AI로 풀 수 있을까요?
+ *   「제조 AI」는 어떤 문제를 풀었을까요?
  *   진동 이상 탐지와 비전 불량 판별을 자동화했습니다.
  *
  * 슬롯이 바뀌면 답도 같이 바뀐다. 산업마다 해결책이 달라야 한다는
  * 대표 메시지를 화면이 그대로 증명하게 만드는 구조다.
  *
- * 슬롯을 산업명이 아니라 '현장'으로 잡은 이유: 사업 영역 넷 중 에이전트만
- * 기술 이름이라 산업으로 세우면 층위가 깨진다. 현장으로 잡으면 넷이
- * 같은 층위가 되고 "현장의 언어로 답한다"와도 맞는다.
+ * 슬롯은 바로 아래 사업 영역 카드와 같은 넷을 가리키므로 같은 이름을 쓴다.
+ * 원래 '제조 현장'처럼 일반명사로 잡았는데 어느 회사나 쓸 수 있는 말이라
+ * 우리가 실제로 무엇을 파는지가 첫 화면에서 드러나지 않았고, 카드가 쓰는
+ * Manufacturing AI 계열 이름과도 어긋났다. 한글은 뒤에 AI를 붙여 넷을
+ * 같은 꼴로 맞춘다. 조사도 넷 다 '는'으로 떨어진다.
+ *
+ * 질문에서 'AI로'를 뺀 이유: 슬롯 이름에 이미 AI가 들어가 한 문장에 두 번 나온다.
+ *
+ * 질문에 '문제'를 남긴 이유: '무엇을 풀었을까요'만으로는 아래 답을 읽기 전까지
+ * 무엇을 묻는지 알 수 없다. 첫 화면은 스치듯 읽히므로 묻는 대상을 문장 안에
+ * 적어 둔다. 답의 '자동화했습니다'와 동어반복도 아니다.
  *
  * 답은 주장이 아니라 사실이어야 한다. '가능합니다'로 답하지 않는다.
  *
@@ -30,7 +38,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 const SLOTS = [
   {
     id: "manufacturing",
-    site: { ko: "제조 현장", en: "the factory floor" },
+    site: { ko: "제조 AI", en: "Manufacturing AI" },
     answer: {
       ko: "진동 이상 탐지와 비전 불량 판별을 자동화했습니다.",
       en: "We automated vibration anomaly detection and visual defect inspection.",
@@ -39,7 +47,7 @@ const SLOTS = [
   },
   {
     id: "healthcare",
-    site: { ko: "진료 현장", en: "the clinic" },
+    site: { ko: "헬스케어 AI", en: "Healthcare AI" },
     answer: {
       ko: "심전도와 치과 영상 판독을 자동화했습니다.",
       en: "We automated ECG and dental imaging reads.",
@@ -48,7 +56,7 @@ const SLOTS = [
   },
   {
     id: "smartcity",
-    site: { ko: "도시 관제", en: "city operations" },
+    site: { ko: "스마트시티 AI", en: "SmartCity AI" },
     answer: {
       ko: "위치, 이륜차, 드론 기록을 한 화면에 모았습니다.",
       en: "We brought location, micromobility, and drone records into one view.",
@@ -57,7 +65,7 @@ const SLOTS = [
   },
   {
     id: "agent",
-    site: { ko: "고객 응대", en: "customer support" },
+    site: { ko: "에이전트 AI", en: "sLLM Agent" },
     answer: {
       ko: "실시간 음성 통역과 교육 Q&A를 에이전트로 만들었습니다.",
       en: "We built agents for live interpretation and course Q&A.",
@@ -176,14 +184,13 @@ export default function IndustrialHero() {
 
   const question =
     language === "ko"
-      ? { before: "", after: "의 문제를 AI로 풀 수 있을까요?" }
-      : { before: "Can AI solve what happens on ", after: "?" };
+      ? { before: "", after: "는 어떤 문제를 풀었을까요?" }
+      : { before: "What problem has ", after: " solved?" };
 
-  /* 스크린리더에는 애니메이션 대신 완성된 문장 하나를 준다 */
-  const spoken =
-    language === "ko"
-      ? `${SLOTS.map((s) => s.site.ko).join(", ")}의 문제를 AI로 풀 수 있을까요? ${SLOTS.map((s) => s.answer.ko).join(" ")}`
-      : `${question.before}${SLOTS.map((s) => s.site.en).join(", ")}${question.after} ${SLOTS.map((s) => s.answer.en).join(" ")}`;
+  /* 스크린리더에는 애니메이션 대신 완성된 문장 하나를 준다.
+     보이는 문장과 같은 틀에서 만든다. 로케일별로 따로 쓰면 질문을 고칠 때
+     한쪽만 고쳐져 읽어주는 문장이 화면과 어긋난다. */
+  const spoken = `${question.before}${SLOTS.map((s) => s.site[language]).join(", ")}${question.after} ${SLOTS.map((s) => s.answer[language]).join(" ")}`;
 
   return (
     <section
@@ -233,13 +240,18 @@ export default function IndustrialHero() {
             <span aria-hidden="true">
               {question.before}
               {/*
-                폭을 미리 잡지 않는다. 한글 네 단어가 모두 같은 길이라
-                단어가 바뀔 때 문장이 튀지 않고, 고정하면 타이핑 중에
-                빈 공간만 벌어진다. 뒤 문장이 커서를 따라오게 둔다.
+                폭을 미리 잡지 않는다. 고정하면 타이핑 중에 빈 공간만 벌어진다.
+                뒤 문장이 커서를 따라오게 둔다.
+
+                슬롯 이름이 5~9글자로 길이가 제각각인데도 이대로 두는 이유:
+                1440px과 390px에서 넷 다 두 줄로 떨어지고 줄바꿈 지점도 같다.
+                첫 줄 길이만 달라진다. 질문에서 '현장의'를 뺀 것이 여기에
+                필요했다. 그 단어가 있으면 390px에서 스마트시티 AI만 세 줄이
+                되어 아래 답과 버튼이 52px씩 오르내렸다.
               */}
               <span
                 className="ind-slot"
-                style={{ "--slot-accent": "var(--bw-brand)" }}
+                style={{ "--slot-accent": `var(--bw-slot-${slot.id})` }}
               >
                 {typed}
                 {reduced ? null : <i className="ind-slot__caret" />}
@@ -285,7 +297,7 @@ export default function IndustrialHero() {
             type="button"
             className="ind-hero__tab"
             data-active={i === index}
-            style={{ "--tab-accent": "var(--bw-brand)" }}
+            style={{ "--tab-accent": `var(--bw-slot-${s.id})` }}
             aria-current={i === index ? "true" : undefined}
             onClick={() => goTo(i)}
           >

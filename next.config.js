@@ -1,8 +1,13 @@
+const assetOrigin = process.env.ASSET_PUBLIC_BASE_URL
+  ? new URL(process.env.ASSET_PUBLIC_BASE_URL)
+  : undefined;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
   trailingSlash: true,
+  poweredByHeader: false,
   i18n: {
     locales: ["ko", "en"],
     defaultLocale: "ko",
@@ -29,9 +34,32 @@ const nextConfig = {
       },
     ];
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
   images: {
-    domains: [],
-    unoptimized: true,
+    remotePatterns: assetOrigin
+      ? [
+          {
+            protocol: assetOrigin.protocol.replace(":", ""),
+            hostname: assetOrigin.hostname,
+            pathname: "/**",
+          },
+        ]
+      : [],
   },
 };
 

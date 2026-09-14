@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
-
-function formatDate(value, language) {
-  if (!value) return "";
-  return new Intl.DateTimeFormat(language === "ko" ? "ko-KR" : "en-US", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  }).format(new Date(value));
-}
+import { formatDate } from "@/lib/format-date";
 
 /**
  * @param {{ items?: Array<{publicNumber: number, title: string, date: string, isPinned: boolean}>, page?: number, totalPages?: number, query?: {q?: string, categoryId?: string} }} props
@@ -70,23 +62,39 @@ export default function NoticeList({
           className="mt-8 flex items-center justify-center gap-3"
           aria-label={language === "ko" ? "공지사항 페이지" : "Notice pages"}
         >
-          <Link
-            aria-disabled={page <= 1}
-            href={makeHref(Math.max(1, page - 1))}
-            className={`rounded-full border border-slate-300 px-4 py-2 text-sm ${page <= 1 ? "pointer-events-none opacity-40" : "hover:border-[var(--bw-color-ink)] hover:bg-white"}`}
-          >
-            {language === "ko" ? "이전" : "Previous"}
-          </Link>
+          {page <= 1 ? (
+            <span
+              aria-disabled="true"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm opacity-40"
+            >
+              {language === "ko" ? "이전" : "Previous"}
+            </span>
+          ) : (
+            <Link
+              href={makeHref(page - 1)}
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm hover:border-[var(--bw-color-ink)] hover:bg-white"
+            >
+              {language === "ko" ? "이전" : "Previous"}
+            </Link>
+          )}
           <span className="text-sm text-[var(--bw-color-muted)]">
             {page} / {totalPages}
           </span>
-          <Link
-            aria-disabled={page >= totalPages}
-            href={makeHref(Math.min(totalPages, page + 1))}
-            className={`rounded-full border border-slate-300 px-4 py-2 text-sm ${page >= totalPages ? "pointer-events-none opacity-40" : "hover:border-[var(--bw-color-ink)] hover:bg-white"}`}
-          >
-            {language === "ko" ? "다음" : "Next"}
-          </Link>
+          {page >= totalPages ? (
+            <span
+              aria-disabled="true"
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm opacity-40"
+            >
+              {language === "ko" ? "다음" : "Next"}
+            </span>
+          ) : (
+            <Link
+              href={makeHref(page + 1)}
+              className="rounded-full border border-slate-300 px-4 py-2 text-sm hover:border-[var(--bw-color-ink)] hover:bg-white"
+            >
+              {language === "ko" ? "다음" : "Next"}
+            </Link>
+          )}
         </nav>
       ) : null}
     </div>

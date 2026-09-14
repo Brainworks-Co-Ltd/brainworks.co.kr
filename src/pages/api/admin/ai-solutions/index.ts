@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody } from "@/server/http/validate";
 import {
   createAiSolution,
   listAdminAiSolutions,
 } from "@/server/modules/catalog/repository";
+import { aiSolutionCommandSchema } from "@/server/modules/catalog/schema";
 import { ensureAdminActor } from "@/server/modules/news/repository";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -15,7 +17,7 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
   }
   if (request.method === "POST") {
     const data = await createAiSolution(
-      request.body,
+      parseBody(aiSolutionCommandSchema, request.body),
       await ensureAdminActor(session.user.id),
     );
     response.status(201).json({ data });

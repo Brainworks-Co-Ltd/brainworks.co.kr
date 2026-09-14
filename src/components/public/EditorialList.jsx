@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useLocale } from "@/shared/routing/useLocale";
 
 function StoryMeta({ tag, meta }) {
   return (
@@ -17,6 +18,7 @@ function StoryImage({ image, alt }) {
 
   return (
     <div className="overflow-hidden rounded-[var(--bw-radius-card)] bg-[var(--bw-color-surface-muted)]">
+      {/* eslint-disable-next-line @next/next/no-img-element -- 소식 목록 썸네일은 관리자가 업로드한 값이라 실제 크기를 미리 알 수 없다. */}
       <img
         src={image}
         alt={alt ?? ""}
@@ -27,6 +29,8 @@ function StoryImage({ image, alt }) {
 }
 
 export function EditorialList({ featured = null, items = [], className = "" }) {
+  const { language } = useLocale();
+
   return (
     <div className={`space-y-10 ${className}`}>
       {featured ? (
@@ -46,7 +50,7 @@ export function EditorialList({ featured = null, items = [], className = "" }) {
               </p>
             ) : null}
             <span className="mt-5 inline-flex text-sm font-semibold text-[var(--bw-color-ink)]">
-              자세히 보기{" "}
+              {language === "ko" ? "자세히 보기" : "Read more"}{" "}
               <span
                 aria-hidden="true"
                 className="ml-2 transition group-hover:translate-x-1"

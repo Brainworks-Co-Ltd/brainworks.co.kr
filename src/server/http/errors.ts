@@ -13,6 +13,7 @@ export const errorCodes = [
   "RATE_LIMITED",
   "DEPENDENCY_UNAVAILABLE",
   "INTERNAL_ERROR",
+  "METHOD_NOT_ALLOWED",
 ] as const;
 
 export type ErrorCode = (typeof errorCodes)[number];
@@ -32,6 +33,7 @@ const statusByCode: Record<ErrorCode, number> = {
   RATE_LIMITED: 429,
   DEPENDENCY_UNAVAILABLE: 503,
   INTERNAL_ERROR: 500,
+  METHOD_NOT_ALLOWED: 405,
 };
 
 export class HttpError extends Error {

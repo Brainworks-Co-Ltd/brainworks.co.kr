@@ -159,6 +159,12 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
+          <Link
+            href="/privacy"
+            className="inline-flex min-h-11 items-center text-slate-400 transition hover:text-white"
+          >
+            {language === "ko" ? "개인정보처리방침" : "Privacy Policy"}
+          </Link>
         </div>
       </div>
     </footer>

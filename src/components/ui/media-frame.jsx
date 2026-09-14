@@ -36,6 +36,7 @@ export function MediaFrame({
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element -- 재사용 UI 프리미티브라 호출부마다 이미지 크기가 달라 미리 알 수 없다.
     <img
       src={mediaSrc}
       alt={alt}

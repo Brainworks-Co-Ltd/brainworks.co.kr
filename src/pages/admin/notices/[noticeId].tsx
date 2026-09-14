@@ -6,12 +6,8 @@ import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm"
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { listAdminNoticeCategories } from "@/server/modules/notices/category-repository";
 import { getAdminNotice } from "@/server/modules/notices/repository";
-
-function toDateTimeLocal(value: Date | string | null) {
-  if (!value) return "";
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 16);
-}
+import { toDateTimeLocal } from "@/lib/datetime-local";
+import { HttpError } from "@/server/http/errors";
 
 export default function EditNotice({
   notice,
@@ -38,36 +34,43 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if ("redirect" in guard) return guard;
   const noticeId =
     typeof context.params?.noticeId === "string" ? context.params.noticeId : "";
-  const [item, categories] = await Promise.all([
-    getAdminNotice(noticeId),
-    listAdminNoticeCategories(),
-  ]);
-  const locales = Object.fromEntries(
-    item.locales.map((locale) => [
-      locale.locale,
-      {
-        title: locale.title,
-        bodyMarkdown: locale.bodyMarkdown,
-        publicationStatus: locale.publicationStatus,
-        publishStartsAt: toDateTimeLocal(locale.publishStartsAt),
-        publishEndsAt: toDateTimeLocal(locale.publishEndsAt),
+  try {
+    const [item, categories] = await Promise.all([
+      getAdminNotice(noticeId),
+      listAdminNoticeCategories(),
+    ]);
+    const locales = Object.fromEntries(
+      item.locales.map((locale) => [
+        locale.locale,
+        {
+          title: locale.title,
+          bodyMarkdown: locale.bodyMarkdown,
+          publicationStatus: locale.publicationStatus,
+          publishStartsAt: toDateTimeLocal(locale.publishStartsAt),
+          publishEndsAt: toDateTimeLocal(locale.publishEndsAt),
+        },
+      ]),
+    ) as NoticeFormValue["locales"];
+    return {
+      props: {
+        notice: {
+          id: item.id,
+          version: item.version,
+          publicNumber: item.publicNumber,
+          itemStatus: item.itemStatus,
+          categoryId: item.categoryId || "",
+          displayDate: String(item.displayDate),
+          isPinned: item.isPinned,
+          pinOrder: item.pinOrder || 1,
+          locales,
+        },
+        categories,
       },
-    ]),
-  ) as NoticeFormValue["locales"];
-  return {
-    props: {
-      notice: {
-        id: item.id,
-        version: item.version,
-        publicNumber: item.publicNumber,
-        itemStatus: item.itemStatus,
-        categoryId: item.categoryId || "",
-        displayDate: String(item.displayDate),
-        isPinned: item.isPinned,
-        pinOrder: item.pinOrder || 1,
-        locales,
-      },
-      categories,
-    },
-  };
+    };
+  } catch (error) {
+    if (error instanceof HttpError && error.code === "NOT_FOUND") {
+      return { notFound: true };
+    }
+    throw error;
+  }
 }

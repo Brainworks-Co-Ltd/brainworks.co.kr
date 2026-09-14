@@ -6,12 +6,8 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { getPublishedNewsDetail } from "@/server/modules/news/query-service";
-
-function translate(value, language) {
-  if (!value) return "";
-  if (typeof value === "string") return value;
-  return value[language] ?? value.ko ?? value.en ?? "";
-}
+import { formatDate } from "@/lib/format-date";
+import { translate } from "@/lib/news-filter";
 
 export default function NewsDetail({ news }) {
   const { language } = useLocale();
@@ -40,11 +36,12 @@ export default function NewsDetail({ news }) {
           variant="plain"
           eyebrow={translate(news.category, language)}
           title={translate(news.title, language)}
-          description={`${news.date} · ${translate(news.summary, language)}`}
+          description={`${formatDate(news.date, language)}, ${translate(news.summary, language)}`}
         />
         <div className="mx-auto max-w-4xl px-6 py-16">
           {news.thumbnail && (
             <div className="mb-12 overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 뉴스 썸네일이라 실제 크기를 미리 알 수 없다. */}
               <img
                 src={news.thumbnail}
                 alt={translate(news.title, language)}

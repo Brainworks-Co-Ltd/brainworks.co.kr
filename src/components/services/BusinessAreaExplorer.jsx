@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -15,20 +15,14 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
   );
   const queryArea =
     typeof router.query.area === "string" ? router.query.area : "";
-  const [activeId, setActiveId] = useState(queryArea || areas[0]?.id || "");
+  const activeId = areas.some((area) => area.id === queryArea)
+    ? queryArea
+    : areas[0]?.id || "";
   const tabs = useRef(new Map());
-
-  useEffect(() => {
-    const nextId = areas.some((area) => area.id === queryArea)
-      ? queryArea
-      : areas[0]?.id || "";
-    setActiveId(nextId);
-  }, [areas, queryArea]);
 
   const activeArea = areas.find((area) => area.id === activeId) || areas[0];
 
   const selectArea = (id) => {
-    setActiveId(id);
     void router.replace(
       { pathname: router.pathname, query: { area: id } },
       undefined,
