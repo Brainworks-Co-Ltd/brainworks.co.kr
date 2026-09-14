@@ -13,6 +13,7 @@ const publicRouteKeys = [
   "globalPrograms",
   "news.list",
   "contact",
+  "privacy",
 ] as const;
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {

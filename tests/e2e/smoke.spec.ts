@@ -12,6 +12,7 @@ const publicPages = [
   "/news",
   "/notices",
   "/contact",
+  "/privacy",
 ];
 
 for (const path of publicPages) {

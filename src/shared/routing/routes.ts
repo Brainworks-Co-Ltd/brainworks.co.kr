@@ -20,6 +20,7 @@ const routeDefinitions: RouteDefinition[] = [
   { key: "notices.list", path: "/notices" },
   { key: "notices.detail", path: "/notices/:slug" },
   { key: "contact", path: "/contact" },
+  { key: "privacy", path: "/privacy" },
 ];
 
 const dynamicRouteDefinitions = routeDefinitions.filter((route) =>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
@@ -420,9 +421,26 @@ export default function Contact() {
                   className="mt-1 h-4 w-4 accent-[var(--bw-color-brand)]"
                 />
                 <span>
-                  {language === "ko"
-                    ? "문의 처리를 위한 개인정보 수집·이용에 동의합니다. 수집 항목, 목적, 보유 기간은 실제 개인정보 처리방침을 따릅니다."
-                    : "I agree to the collection and use of personal information to process this inquiry."}
+                  {language === "ko" ? (
+                    <>
+                      문의 처리를 위한 개인정보 수집, 이용에 동의합니다.
+                      수집 항목, 목적, 보유 기간은{" "}
+                      <Link href="/privacy" className="underline">
+                        개인정보 처리방침
+                      </Link>
+                      을 따릅니다.
+                    </>
+                  ) : (
+                    <>
+                      I agree to the collection and use of personal
+                      information to process this inquiry. Collected items,
+                      purpose, and retention period follow our{" "}
+                      <Link href="/privacy" className="underline">
+                        privacy notice
+                      </Link>
+                      .
+                    </>
+                  )}
                 </span>
               </label>
             </div>
