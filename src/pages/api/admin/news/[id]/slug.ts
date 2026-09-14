@@ -4,7 +4,9 @@ import {
   changeNewsSlug,
   ensureAdminActor,
 } from "@/server/modules/news/repository";
+import { newsSlugCommandSchema } from "@/server/modules/news/schema";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody } from "@/server/http/validate";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
@@ -13,20 +15,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     response.status(405).end();
     return;
   }
-  const expectedVersion = Number(request.body?.expectedVersion);
-  if (
-    !Number.isInteger(expectedVersion) ||
-    typeof request.body?.slug !== "string"
-  ) {
-    response.status(400).json({
-      error: { code: "BAD_REQUEST", message: "슬러그와 버전이 필요합니다." },
-    });
-    return;
-  }
+  const command = parseBody(newsSlugCommandSchema, request.body);
   const result = await changeNewsSlug(
     request.query.id as string,
-    request.body.slug,
-    expectedVersion,
+    command.slug,
+    command.expectedVersion,
     await ensureAdminActor(session.user.id),
   );
   response.status(200).json({ data: result });

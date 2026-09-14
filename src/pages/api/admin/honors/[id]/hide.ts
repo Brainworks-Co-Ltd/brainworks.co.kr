@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { localeCommandSchema, parseBody } from "@/server/http/validate";
 import { hideHonor } from "@/server/modules/honors/repository";
 import { ensureAdminActor } from "@/server/modules/news/repository";
 
@@ -12,11 +13,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return;
   }
   const id = typeof request.query.id === "string" ? request.query.id : "";
-  const locale = request.body?.locale === "en" ? "en" : "ko";
+  const command = parseBody(localeCommandSchema, request.body);
   const data = await hideHonor(
     id,
-    locale,
-    Number(request.body?.expectedVersion),
+    command.locale,
+    command.expectedVersion,
     await ensureAdminActor(session.user.id),
   );
   response.status(200).json({ data });

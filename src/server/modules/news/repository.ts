@@ -10,25 +10,9 @@ import {
 import { assertValidNewsSlug } from "@/server/modules/news/publication-policy";
 import { HttpError } from "@/server/http/errors";
 
-export type NewsCommandInput = {
-  slug: string;
-  category: string;
-  displayDate: string;
-  locales: {
-    ko: {
-      title: string;
-      summary: string;
-      bodyMarkdown: string;
-      coverAlt?: string;
-    };
-    en: {
-      title: string;
-      summary: string;
-      bodyMarkdown: string;
-      coverAlt?: string;
-    };
-  };
-};
+import type { NewsCommandInput } from "@/server/modules/news/schema";
+
+export type { NewsCommandInput };
 
 /**
  * drizzle는 드라이버 오류를 DrizzleQueryError로 감싸므로 cause까지 본다.

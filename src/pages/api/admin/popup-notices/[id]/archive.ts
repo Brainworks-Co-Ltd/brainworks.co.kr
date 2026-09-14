@@ -1,13 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody, versionCommandSchema } from "@/server/http/validate";
 import { ensureNoticeAdminActor } from "@/server/modules/notices/repository";
 import { archivePopupNotice } from "@/server/modules/popup-notices/repository";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
   const id = typeof request.query.id === "string" ? request.query.id : "";
-  response.status(200).json({ data: await archivePopupNotice(id, Number(request.body?.expectedVersion), await ensureNoticeAdminActor(session.user.id)) });
+  const command = parseBody(versionCommandSchema, request.body);
+  const data = await archivePopupNotice(
+    id,
+    command.expectedVersion,
+    await ensureNoticeAdminActor(session.user.id),
+  );
+  response.status(200).json({ data });
 }
 
 export default withApiErrorBoundary(handler, ["POST"]);

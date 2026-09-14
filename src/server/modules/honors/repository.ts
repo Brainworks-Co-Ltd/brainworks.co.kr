@@ -9,27 +9,9 @@ import {
 import { HttpError } from "@/server/http/errors";
 import type { HonorType } from "@/server/modules/honors/types";
 
-export type HonorInput = {
-  honorType: HonorType;
-  occurredYear: number;
-  occurredOn?: string | null;
-  displayOrder: number;
-  imageAssetId?: string | null;
-  locales: {
-    ko: {
-      title: string;
-      organization: string;
-      description: string;
-      imageAlt?: string;
-    };
-    en: {
-      title: string;
-      organization: string;
-      description: string;
-      imageAlt?: string;
-    };
-  };
-};
+import type { HonorInput } from "@/server/modules/honors/schema";
+
+export type { HonorInput };
 
 type Transaction = Parameters<
   Parameters<ReturnType<typeof getDb>["transaction"]>[0]

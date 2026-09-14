@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  isNoticeCommandInput,
-  parseNoticePublicNumber,
-} from "@/server/modules/notices/contracts";
+import { parseNoticePublicNumber } from "@/server/modules/notices/contracts";
+import { noticeCommandSchema } from "@/server/modules/notices/schema";
 
 describe("공지 공개 번호 계약", () => {
   it("양의 안전 정수만 공개 번호로 받는다", () => {
@@ -22,13 +20,13 @@ describe("공지 공개 번호 계약", () => {
 
   it("슬러그 없이 국문·영문 입력을 받는다", () => {
     expect(
-      isNoticeCommandInput({
+      noticeCommandSchema.safeParse({
         displayDate: "2026-08-27",
         locales: {
           ko: { title: "공지", bodyMarkdown: "본문" },
           en: { title: "Notice", bodyMarkdown: "Body" },
         },
-      }),
+      }).success,
     ).toBe(true);
   });
 });

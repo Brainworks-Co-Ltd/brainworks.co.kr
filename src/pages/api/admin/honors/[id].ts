@@ -1,10 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody } from "@/server/http/validate";
 import {
   getAdminHonor,
   saveHonor,
 } from "@/server/modules/honors/repository";
+import { honorSaveSchema } from "@/server/modules/honors/schema";
 import { ensureAdminActor } from "@/server/modules/news/repository";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -15,10 +17,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return;
   }
   if (request.method === "PUT") {
+    const input = parseBody(honorSaveSchema, request.body);
     const data = await saveHonor(
       id,
-      request.body,
-      Number(request.body?.expectedVersion),
+      input,
+      input.expectedVersion,
       await ensureAdminActor(session.user.id),
     );
     response.status(200).json({ data });

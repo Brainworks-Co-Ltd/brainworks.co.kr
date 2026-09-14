@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody } from "@/server/http/validate";
 import { ensureNoticeAdminActor, createNotice } from "@/server/modules/notices/repository";
 import { getAdminNoticeList } from "@/server/modules/notices/queries";
-import { isNoticeCommandInput } from "@/server/modules/notices/contracts";
+import { noticeCommandSchema } from "@/server/modules/notices/schema";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   const session = await requireAdmin(request);
@@ -12,8 +13,11 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return;
   }
   if (request.method === "POST") {
-    if (!isNoticeCommandInput(request.body)) { response.status(400).json({ error: { code: "BAD_REQUEST", message: "공지 입력값이 올바르지 않습니다." } }); return; }
-    const created = await createNotice(request.body, await ensureNoticeAdminActor(session.user.id));
+    const input = parseBody(noticeCommandSchema, request.body);
+    const created = await createNotice(
+      input,
+      await ensureNoticeAdminActor(session.user.id),
+    );
     response.status(201).json({ data: created });
     return;
   }
