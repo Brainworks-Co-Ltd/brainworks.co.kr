@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 const navigation = [
   { href: "/admin", label: "운영 현황" },
@@ -6,9 +8,30 @@ const navigation = [
   { href: "/admin/notices", label: "공지사항" },
   { href: "/admin/popup-notices", label: "팝업 공지" },
   { href: "/admin/honors", label: "수상 및 인증" },
+  { href: "/admin/ai-solutions", label: "AI 솔루션" },
 ];
 
 export function AdminShell({ children, activePath = "/admin" }) {
+  const router = useRouter();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
+
+  async function signOut() {
+    setIsSigningOut(true);
+    setSignOutError("");
+    try {
+      const response = await fetch("/api/auth/sign-out", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      if (!response.ok) throw new Error("로그아웃 요청 실패");
+      await router.replace("/admin/auth/sign-in");
+    } catch {
+      setSignOutError("로그아웃하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      setIsSigningOut(false);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[240px_minmax(0,1fr)]">
@@ -47,6 +70,19 @@ export function AdminShell({ children, activePath = "/admin" }) {
             >
               계정 설정
             </Link>
+            <button
+              type="button"
+              disabled={isSigningOut}
+              onClick={signOut}
+              className="mt-3 block min-h-10 text-sm text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)] disabled:opacity-60"
+            >
+              {isSigningOut ? "로그아웃 중…" : "로그아웃"}
+            </button>
+            {signOutError ? (
+              <p role="alert" className="mt-2 text-xs leading-5 text-red-700">
+                {signOutError}
+              </p>
+            ) : null}
           </div>
         </aside>
         <main id="main-content" className="px-6 py-8 md:px-10 md:py-12">

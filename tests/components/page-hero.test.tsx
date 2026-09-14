@@ -20,11 +20,13 @@ vi.mock("next/link", () => ({
 }));
 
 describe("PageHero", () => {
-  it("서비스별 보조 색을 위한 tone 클래스를 plain Hero에 적용한다", () => {
-    render(<PageHero tone="education" title="AI 전문교육" />);
+  // 페이지별 tone은 제거했다. 08 §2.2 "크롬은 거의 무채색으로 죽인다"에 따라
+  // 상세 페이지 히어로는 네 개가 같은 무채색 표면을 쓴다.
+  it("plain Hero는 페이지와 무관하게 같은 무채색 표면을 쓴다", () => {
+    render(<PageHero title="AI 전문교육" />);
 
     expect(screen.getByRole("region", { name: "AI 전문교육" })).toHaveClass(
-      "bw-page-hero--education",
+      "bw-page-hero",
     );
   });
 

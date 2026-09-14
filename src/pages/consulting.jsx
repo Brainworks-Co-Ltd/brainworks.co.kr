@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { EditorialSection } from "@/components/public/EditorialSection";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 
@@ -11,6 +12,11 @@ const copy = {
   ko: {
     heroTitle: "AI 컨설팅",
     heroSubtitle: "전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공",
+    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
+    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
+    heroAudience: "무엇을 어떻게 도입할지부터 정해야 하는 담당자",
+    heroScope:
+      "대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다.",
     heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
@@ -23,6 +29,9 @@ const copy = {
     heroTitle: "AI Consulting",
     heroSubtitle:
       "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
+    heroAudience: "Teams that still need to decide what to adopt and how",
+    heroScope:
+      "Covers the problems we take on, the value we deliver, and how an engagement runs.",
     heroCta: "Request a Consultation",
     valueTitle: "How We Create Value",
     processTitle: "Consulting Methodology",
@@ -180,13 +189,17 @@ export default function Consulting() {
         title={`${t.heroTitle} | Brainworks`}
         description={t.heroSubtitle}
       />
-      <main id="main-content">
+      <main id="main-content" data-accent="consulting">
         <PageHero
-          variant="plain"
-          tone="consulting"
-          eyebrow="Brainworks Consulting"
-          title={t.heroTitle}
-          description={t.heroSubtitle}
+          variant="media"
+          media={{
+            kind: "image",
+            src: "/images/services/hero/agent.webp",
+            alt: "",
+          }}
+          eyebrow={t.heroTitle}
+          title={t.heroAudience}
+          description={t.heroScope}
           action={{
             href: "/contact?topic=consulting",
             label: t.heroCta,
@@ -197,23 +210,45 @@ export default function Consulting() {
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
         />
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
+        <PageAudience
+          redirects={[
+            {
+              href: "/services",
+              label:
+                language === "ko"
+                  ? "도입할 제품이 정해졌다면 AI 솔루션"
+                  : "Already know which product you need? See AI Solutions",
+            },
+            {
+              href: "/education",
+              label:
+                language === "ko"
+                  ? "인력 양성이 목적이라면 AI 전문교육"
+                  : "Looking to train your people? See AI Professional Education",
+            },
+          ]}
+        />
 
         <EditorialSection
           eyebrow="Consulting value"
           title={t.valueTitle}
           surface="plain"
+          className="bw-consulting-value"
         >
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {offerings.map((item) => (
+          {/* 제공 가치는 열린 목록으로 읽고, 아래 과정은 연결된 단계로 구분한다. */}
+          <div className="bw-offerings">
+            {offerings.map((item, index) => (
               <article
                 key={item.id}
-                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12 md:py-10"
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal bw-offering"
               >
-                <h3 className="text-2xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-3xl">
+                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {item.title[language]}
                 </h3>
                 <div>
-                  <p className="max-w-2xl text-base leading-8 text-[var(--bw-color-muted)]">
+                  <p className="bw-body max-w-2xl text-[var(--bw-color-muted)]">
                     {item.description[language]}
                   </p>
                   <ul className="mt-6 grid gap-x-8 gap-y-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
@@ -234,20 +269,24 @@ export default function Consulting() {
           eyebrow="Consulting process"
           title={t.processTitle}
           surface="muted"
+          className="bw-consulting-process"
         >
-          <ol className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {processSteps.map((step) => (
+          {/* 단계 목록도 같은 규칙으로 순차 등장시킨다. 스크롤 위치에 진행도를 묶지 않고
+              뷰포트 진입 한 번으로 끝내므로 자동 재생이 아니다(명세 §23.3). */}
+          <ol className="bw-process-flow">
+            {processSteps.map((step, index) => (
               <li
                 key={step.id}
-                className="grid gap-4 py-6 md:grid-cols-[5rem_minmax(0,0.5fr)_minmax(0,1fr)] md:items-start md:gap-8"
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal bw-process-step"
               >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  0{step.id}
+                <div>
+                  <span className="bw-marker">0{step.id}</span>
                 </div>
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {step.title[language]}
                 </h3>
-                <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                <p className="bw-body text-[var(--bw-color-muted)]">
                   {step.desc[language]}
                 </p>
               </li>
@@ -255,14 +294,14 @@ export default function Consulting() {
           </ol>
         </EditorialSection>
 
-        <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactDesc}
             href="/contact?topic=consulting"
             label={t.heroCta}
           />
-        </div>
+        </section>
       </main>
       <Footer />
     </div>

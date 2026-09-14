@@ -7,7 +7,11 @@ import {
   noticeLocales,
   notices,
 } from "@/server/db/schema/notices";
-import { assertCompleteLocales, assertExpectedVersion } from "@/server/db/integrity";
+import {
+  assertCompleteLocales,
+  assertDraftLocales,
+  assertExpectedVersion,
+} from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 import type { NoticeCommandInput, NoticeLocale, NoticePublicationWindow } from "@/server/modules/notices/contracts";
 
@@ -28,6 +32,7 @@ async function bumpNoticeVersion(
 
 function assertNoticeInput(input: NoticeCommandInput) {
   assertCompleteLocales(Object.keys(input.locales));
+  assertDraftLocales(input.locales);
   if (input.isPinned && (!input.pinOrder || input.pinOrder < 1)) {
     throw new HttpError("PUBLICATION_INVALID");
   }
@@ -167,6 +172,16 @@ export async function restoreNotice(id: string, expectedVersion: number, actorId
   return getDb().transaction(async (tx) => {
     await bumpNoticeVersion(tx, id, expectedVersion, actorId);
     await tx.update(notices).set({ itemStatus: "ACTIVE", archivedAt: null, archivedByActorId: null }).where(eq(notices.id, id));
+    await tx
+      .update(noticeLocales)
+      .set({
+        publicationStatus: "DRAFT",
+        publishStartsAt: null,
+        publishEndsAt: null,
+        updatedAt: new Date(),
+        updatedByActorId: actorId,
+      })
+      .where(eq(noticeLocales.noticeId, id));
     return { id, version: expectedVersion + 1 };
   });
 }

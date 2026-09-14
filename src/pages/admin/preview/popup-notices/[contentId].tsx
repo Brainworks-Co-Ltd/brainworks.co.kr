@@ -1,7 +1,52 @@
 import type { GetServerSidePropsContext } from "next";
 import { AdminShell } from "@/components/admin/AdminShell";
+import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminPopupNotice } from "@/server/modules/popup-notices/repository";
 
-export default function PopupPreview({ notice }: { notice: { title: string; body: string } }) { return <AdminShell activePath="/admin/popup-notices"><div className="mx-auto max-w-md"><p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">팝업 미리보기 · 실제 공개 상태 변경 없음</p><article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl"><h1 className="text-xl font-semibold">{notice.title}</h1>{notice.body ? <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">{notice.body}</p> : null}</article></div></AdminShell>; }
-export async function getServerSideProps(context: GetServerSidePropsContext) { const guard = await requireAdminPage(context); if ("redirect" in guard) return guard; const id = typeof context.params?.contentId === "string" ? context.params.contentId : ""; const item = await getAdminPopupNotice(id); const locale = item.locales.find((value) => value.locale === "ko"); return { props: { notice: { title: locale?.title || "", body: locale?.bodyMarkdown || "" } } }; }
+type PopupPreviewProps = {
+  notice: {
+    id: string;
+    title: string;
+    bodyMarkdown: string | null;
+    imageUrl: string | null;
+    imageAlt: string | null;
+    detailUrl: string | null;
+    dismissalRevision: number;
+    displayOrder: number;
+  };
+};
+
+export default function PopupPreview({ notice }: PopupPreviewProps) {
+  return (
+    <AdminShell activePath="/admin/popup-notices">
+      <p className="text-sm text-slate-500">
+        실제 공개 팝업 미리보기 · 공개 상태는 변경되지 않습니다.
+      </p>
+      <PopupNoticeRegion notices={[notice]} />
+    </AdminShell>
+  );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const guard = await requireAdminPage(context);
+  if ("redirect" in guard) return guard;
+  const id =
+    typeof context.params?.contentId === "string" ? context.params.contentId : "";
+  const item = await getAdminPopupNotice(id);
+  const locale = item.locales.find((value) => value.locale === "ko");
+  return {
+    props: {
+      notice: {
+        id: `admin-preview-${item.id}`,
+        title: locale?.title || "제목 없음",
+        bodyMarkdown: locale?.bodyMarkdown || null,
+        imageUrl: locale?.imageUrl || null,
+        imageAlt: locale?.imageAlt || null,
+        detailUrl: null,
+        dismissalRevision: item.dismissalRevision,
+        displayOrder: locale?.displayOrder || 0,
+      },
+    },
+  };
+}

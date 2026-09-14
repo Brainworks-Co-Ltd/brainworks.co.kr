@@ -1,140 +1,31 @@
-import { FormEvent, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { createEmptyNotice, NoticeForm } from "@/components/admin/NoticeForm";
+import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { listAdminNoticeCategories } from "@/server/modules/notices/category-repository";
 
-const initial = {
-  categoryId: "",
-  displayDate: new Date().toISOString().slice(0, 10),
-  koTitle: "",
-  koBody: "",
-  enTitle: "",
-  enBody: "",
-};
-
-export default function NewNotice() {
-  const router = useRouter();
-  const [form, setForm] = useState(initial);
-  const [error, setError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const update =
-    (key: keyof typeof initial) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-      setForm((current) => ({ ...current, [key]: event.target.value }));
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSaving(true);
-    setError("");
-    try {
-      const response = await fetch("/api/admin/notices", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          categoryId: form.categoryId || null,
-          displayDate: form.displayDate,
-          locales: {
-            ko: { title: form.koTitle, bodyMarkdown: form.koBody },
-            en: { title: form.enTitle, bodyMarkdown: form.enBody },
-          },
-        }),
-      });
-      if (!response.ok) throw new Error();
-      await router.push("/admin/notices");
-    } catch {
-      setError("저장하지 못했습니다. 관리자 세션과 입력값을 확인해 주세요.");
-    } finally {
-      setSaving(false);
-    }
-  }
+export default function NewNotice({
+  categories,
+}: {
+  categories: AdminNoticeCategory[];
+}) {
   return (
     <AdminShell activePath="/admin/notices">
       <AdminPageHeader
         title="새 공지사항"
-        description="국문 및 영문 원문을 함께 저장합니다. 게시 전에는 초안으로 남습니다."
+        description="국문 또는 영문 중 준비된 내용부터 초안으로 저장할 수 있습니다. 공개 번호는 저장할 때 자동으로 발급됩니다."
       />
-      <form onSubmit={submit} className="mt-8 grid gap-6">
-        <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-2">
-          <label className="grid gap-2 text-sm font-medium">
-            카테고리 ID
-            <input
-              value={form.categoryId}
-              onChange={update("categoryId")}
-              className="min-h-11 rounded-xl border border-slate-300 px-3"
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            표시일
-            <input
-              type="date"
-              required
-              value={form.displayDate}
-              onChange={update("displayDate")}
-              className="min-h-11 rounded-xl border border-slate-300 px-3"
-            />
-          </label>
-        </section>
-        <section className="grid gap-6 lg:grid-cols-2">
-          {(["ko", "en"] as const).map((locale) => {
-            const titleId = `notice-locale-${locale}`;
-            return (
-              <section
-                key={locale}
-                aria-labelledby={titleId}
-                className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6"
-              >
-                <h2 id={titleId} className="text-lg font-semibold">
-                  {locale === "ko" ? "한국어" : "English"}
-                </h2>
-                <label className="grid gap-2 text-sm font-medium">
-                  제목
-                  <input
-                    required
-                    value={form[`${locale}Title`]}
-                    onChange={update(`${locale}Title`)}
-                    className="min-h-11 rounded-xl border border-slate-300 px-3"
-                  />
-                </label>
-                <label className="grid gap-2 text-sm font-medium">
-                  Markdown 본문
-                  <textarea
-                    required
-                    value={form[`${locale}Body`]}
-                    onChange={update(`${locale}Body`)}
-                    rows={12}
-                    className="rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm"
-                  />
-                </label>
-              </section>
-            );
-          })}
-        </section>
-        {error ? (
-          <p
-            role="alert"
-            className="rounded-xl bg-red-50 p-4 text-sm text-red-700"
-          >
-            {error}
-          </p>
-        ) : null}
-        <div className="flex gap-3">
-          <Link
-            href="/admin/notices"
-            className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
-          >
-            취소
-          </Link>
-          <button
-            disabled={saving}
-            className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {saving ? "저장 중…" : "초안 저장"}
-          </button>
-        </div>
-      </form>
+      <div className="mt-8">
+        <NoticeForm initial={createEmptyNotice()} categories={categories} />
+      </div>
     </AdminShell>
   );
 }
 
-export const getServerSideProps = requireAdminPage;
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const guard = await requireAdminPage(context);
+  if ("redirect" in guard) return guard;
+  return { props: { categories: await listAdminNoticeCategories() } };
+}

@@ -1,0 +1,1492 @@
+/*
+ * 브레인웍스 디자인 시스템 구현
+ *
+ * 값을 여기서 정하지 않는다. 전부 docs/planning/08-design-system.md 2절에서
+ * 온다. 값을 바꾸려면 문서를 먼저 고친다.
+ *
+ * 기준 레퍼런스는 Upstage(2026-08-31 실측). 밝은 본문에 어두운 구간 하나를
+ * 얹는 구조이며, 브랜드색만 브레인웍스 기존 값을 쓴다.
+ */
+
+:root[data-design="industrial"] {
+  /* 2026-09-07 승인: 청록 면과 그래픽, 골드 주요 행동을 결합한다. */
+  --bw-surface: #ffffff;
+  --bw-surface-muted: #f4f7f5;
+  --bw-surface-tinted: #e7f0ec;
+  --bw-surface-dark: #10191b;
+  --bw-surface-dark-deep: #18302f;
+  --bw-graphic: #71d6c7;
+  --bw-graphic-ink: #286c61;
+
+  --bw-ink: #10191b;
+  --bw-muted: #53615d;
+  --bw-dim: #61736b;
+  --bw-on-dark: #ffffff;
+
+  --bw-line: #d7e1dc;
+  --bw-line-strong: #b5c9c2;
+
+  /* 골드 면에는 잉크 글자를 짝지어 주요 행동의 대비를 확보한다. */
+  --bw-brand: #d29b15;
+
+  /* 이전 산업별 색 토큰은 참조 호환을 위해 남긴다.
+     히어로는 골드로 통일하고 본문의 서비스 분류색은 아래 data-accent가 맡는다. */
+  --bw-slot-manufacturing: #00bdde;
+  --bw-slot-healthcare: #57cf07;
+  --bw-slot-smartcity: #fb8502;
+  --bw-slot-agent: #ca59ff;
+
+  /* 2.5 모서리 */
+  --bw-radius-control: 9px;
+  --bw-radius-card: 16px;
+  --bw-radius-feature: 45px;
+
+  /* 2.6 간격 */
+  --bw-space-1: 4px;
+  --bw-space-2: 8px;
+  --bw-space-3: 12px;
+  --bw-space-4: 16px;
+  --bw-space-5: 24px;
+  --bw-space-6: 32px;
+  --bw-space-7: 48px;
+  --bw-space-8: 64px;
+  --bw-space-9: 96px;
+
+  /* 2.7 움직임 */
+  --bw-motion-press: 0.2s ease;
+  --bw-motion-move: 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root[data-design="industrial"] body {
+  background: var(--bw-surface);
+  color: var(--bw-ink);
+}
+
+/* ---------------------------------------------------------------
+ * 2.4 타이포
+ * --------------------------------------------------------------- */
+
+.ind-display {
+  font-size: clamp(2.5rem, 5.2vw, 4rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.ind-section-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.ind-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bw-dim);
+  margin: 0;
+}
+
+.ind-lead {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--bw-muted);
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------
+ * 2.1 어두운 구간. 히어로와 푸터만 어둡다.
+ * --------------------------------------------------------------- */
+
+.ind-dark {
+  background: var(--bw-surface-dark);
+  color: var(--bw-on-dark);
+}
+
+.ind-dark .ind-eyebrow {
+  color: rgb(255 255 255 / 55%);
+}
+
+.ind-dark .ind-lead {
+  color: rgb(255 255 255 / 72%);
+}
+
+/* 어두운 구간의 배경 격자. 히어로에서는 이미지 위에 얹힌다 */
+.ind-grid-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(
+    ellipse 80% 60% at 20% 40%,
+    #000 0%,
+    transparent 75%
+  );
+}
+
+/* ---------------------------------------------------------------
+ * 히어로
+ * --------------------------------------------------------------- */
+
+/* 히어로는 본문의 청록 팔레트와 분리해 원래 중립색과 골드만 사용한다. */
+:root[data-design="industrial"] .ind-hero,
+:root[data-design="industrial"] section[data-variant="media"] {
+  --bw-surface-dark: #0e1013;
+  --bw-surface-dark-deep: #181b21;
+  --bw-ink: #16181d;
+  --bw-accent: var(--bw-brand);
+  --bw-accent-text: var(--bw-brand);
+}
+.ind-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* 레일이 히어로의 바닥이다. 아래 여백을 두지 않는다.
+     이 값이 살아 있으려면 섹션에 data-variant가 있어야 한다. 없으면 상세
+     페이지 공통 규칙이 위아래 96px을 덮어쓴다 */
+  padding-block: var(--bw-space-9) 0;
+}
+
+/*
+ * 전면 배경. 이미지가 늘어나지 않도록 cover만 쓴다.
+ * 원본은 1920x1080이고 히어로는 화면 폭에 따라 대략 1.8:1에서 3.2:1까지
+ * 변하므로, cover가 잘라내는 쪽은 위아래다. 넷 다 주제가 가운데 몰리지 않은
+ * 추상 화면이라 위아래가 잘려도 그림이 깨지지 않는다.
+ */
+.ind-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.ind-hero__bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.ind-hero__bg img[data-active="true"] {
+  opacity: 1;
+}
+
+/*
+ * 히어로 그래픽 모션 (08 §1.6, 대표 지시 2026-09-01).
+ * 솔트룩스 홈은 13MB mp4 루프를 깐다. 우리는 아직 영상 에셋이 없으므로
+ * 정지 렌더 위에 느린 줌·드리프트와 빛줄기 하나를 CSS로 얹어 같은 인상을 낸다.
+ * transform과 opacity만 움직여 합성 단계에서 끝난다.
+ * 상세 페이지의 .bw-hero-media도 같은 규칙을 쓴다. 전면 배경은 대비를 스스로
+ * 지키지 못하므로(08 §1.6) 스크림을 ::before로 함께 깐다.
+ * ponytail: 영상 에셋이 오면 PageHeroMedia에 kind:"video"로 꽂고 이 드리프트는 빼도 된다.
+ */
+.ind-hero__bg img[data-active="true"],
+.bw-hero-media img,
+.bw-hero-media video {
+  animation: bw-hero-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.ind-hero__bg::after,
+.bw-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    rgb(255 255 255 / 6%) 50%,
+    transparent 58%
+  );
+  animation: bw-hero-sweep 11s ease-in-out infinite;
+}
+
+.bw-hero-media {
+  overflow: hidden;
+}
+
+.bw-hero-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(14 16 19 / 94%) 0%,
+      rgb(14 16 19 / 82%) 36%,
+      rgb(14 16 19 / 36%) 66%,
+      rgb(14 16 19 / 0%) 88%
+    ),
+    linear-gradient(180deg, rgb(14 16 19 / 55%) 0%, transparent 30%);
+}
+
+@media (max-width: 1023px) {
+  .bw-hero-media::before {
+    background: linear-gradient(
+      180deg,
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
+    );
+  }
+}
+
+@keyframes bw-hero-drift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes bw-hero-sweep {
+  from {
+    transform: translate3d(-55%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(55%, 0, 0);
+  }
+}
+
+/*
+ * 스크림. 문구가 놓이는 왼쪽을 덮어 흰 글자를 읽히게 만든다.
+ * 배경이 원래 어두운 그림이라 두 겹으로 덮으면 그림이 통째로 죽는다.
+ * 왼쪽만 확실히 눌러주고 오른쪽은 그대로 둔다.
+ */
+.ind-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(14 16 19 / 96%) 0%,
+      rgb(14 16 19 / 88%) 32%,
+      rgb(14 16 19 / 38%) 62%,
+      rgb(14 16 19 / 0%) 84%
+    ),
+    linear-gradient(180deg, transparent 60%, rgb(14 16 19 / 70%) 100%);
+}
+
+/*
+ * 좁은 화면에서는 문구가 그림 한가운데를 가로지른다. 가로 방향 스크림으로는
+ * 오른쪽 끝 글자를 못 지키므로 세로 방향으로 바꿔 화면 전체를 눌러준다.
+ * 그림이 어두워지는 대신 글자가 확실히 읽힌다.
+ */
+@media (max-width: 1023px) {
+  .ind-hero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgb(14 16 19 / 92%) 0%,
+      rgb(14 16 19 / 78%) 55%,
+      rgb(14 16 19 / 88%) 100%
+    );
+  }
+}
+
+.ind-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--bw-space-7);
+  align-content: center;
+  min-height: min(72vh, 640px);
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 0 var(--bw-space-5) var(--bw-space-8);
+}
+
+@media (min-width: 1024px) {
+  .ind-hero__inner {
+    /* 문구가 그림의 밝은 쪽까지 넘어가지 않도록 왼쪽 절반에 묶는다 */
+    grid-template-columns: minmax(0, 48%);
+    gap: var(--bw-space-8);
+  }
+}
+
+.ind-hero__title {
+  margin-top: var(--bw-space-4);
+}
+
+.ind-hero__answer {
+  margin-top: var(--bw-space-5);
+  max-width: 34rem;
+  animation: ind-rise 0.5s ease both;
+}
+
+.ind-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bw-space-3);
+  margin-top: var(--bw-space-6);
+}
+
+@keyframes ind-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ind-hero__answer {
+    animation: none;
+  }
+
+  .ind-hero__bg img {
+    transition: none;
+  }
+
+  .ind-hero__bg img[data-active="true"],
+  .bw-hero-media img,
+  .bw-hero-media video,
+  .ind-hero__bg::after,
+  .bw-hero-media::after {
+    animation: none;
+  }
+}
+
+/* 하단 레일 */
+.ind-hero__rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  max-width: 1440px;
+  margin-inline: auto;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  /*
+   * 레일은 원래 단색 위에 있었다. 전면 배경이 들어오면서 밝은 그림 위에
+   * 얹히자 탭 글자 대비가 2.97:1(활성), 1.81:1(비활성)까지 떨어졌다.
+   * 14px 글자 기준 4.5:1을 못 지키므로 레일에 자기 배경을 돌려준다.
+   */
+  background: rgb(14 16 19 / 95%);
+}
+
+.ind-hero__tab {
+  display: flex;
+  align-items: baseline;
+  gap: var(--bw-space-3);
+  padding: var(--bw-space-5);
+  background: none;
+  border: 0;
+  border-right: 1px solid rgb(255 255 255 / 10%);
+  color: rgb(255 255 255 / 50%);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--bw-motion-press),
+    background var(--bw-motion-press);
+}
+
+.ind-hero__tab:hover {
+  color: var(--bw-on-dark);
+  background: rgb(255 255 255 / 5%);
+}
+
+.ind-hero__tab:focus-visible {
+  outline: 2px solid var(--tab-accent);
+  outline-offset: -2px;
+  color: var(--bw-on-dark);
+}
+
+.ind-hero__tab:last-child {
+  border-right: 0;
+}
+
+.ind-hero__tab[data-active="true"] {
+  color: var(--bw-on-dark);
+  box-shadow: inset 0 2px 0 var(--tab-accent);
+}
+
+.ind-hero__tab-index {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: inherit;
+}
+
+/* 비활성 탭은 색을 갖지 않는다. 넷이 동시에 물들면 무지개가 된다 (2.3) */
+.ind-hero__tab[data-active="true"] .ind-hero__tab-index {
+  color: var(--tab-accent);
+}
+
+.ind-hero__tab-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* 타이핑 슬롯 */
+.ind-slot {
+  color: var(--slot-accent, var(--bw-brand));
+  white-space: nowrap;
+}
+
+.ind-slot__caret {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.95em;
+  margin-left: 0.06em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  animation: ind-caret 1s steps(1) infinite;
+}
+
+@keyframes ind-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------
+ * 버튼
+ * --------------------------------------------------------------- */
+
+.ind-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.875rem;
+  padding-inline: var(--bw-space-5);
+  border-radius: var(--bw-radius-control);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  transition:
+    background var(--bw-motion-press),
+    border-color var(--bw-motion-press);
+}
+
+.ind-dark .ind-btn--solid {
+  background: var(--bw-brand);
+  color: var(--bw-surface-dark);
+}
+
+.ind-dark .ind-btn--ghost {
+  border: 1px solid rgb(255 255 255 / 28%);
+  color: var(--bw-on-dark);
+}
+
+.ind-dark .ind-btn--ghost:hover {
+  border-color: rgb(255 255 255 / 55%);
+  background: rgb(255 255 255 / 8%);
+}
+
+/* ---------------------------------------------------------------
+ * 도메인 그리드. 밝은 본문 위에 놓인다.
+ * --------------------------------------------------------------- */
+
+.ind-domains {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--bw-space-9) var(--bw-space-5);
+  background: var(--bw-surface-muted);
+  box-shadow: 0 0 0 100vmax var(--bw-surface-muted);
+  clip-path: inset(0 -100vmax);
+}
+
+.ind-domains__head {
+  margin-bottom: var(--bw-space-7);
+}
+
+.ind-domains__head .ind-section-title {
+  margin-top: var(--bw-space-3);
+}
+
+/* 네 타일은 같은 크기다.
+ *
+ * 이전에는 1024px 이상에서 솔루션 수(4/2/2/3)만큼 타일 면적을 달리 줬다. 그러면
+ * 재고 수량이 영역 사이의 서열로 읽힌다. 03-03이 비교 우선형을 기각한 이유가
+ * "비교표가 서비스 간 우열을 암시"였는데, 면적은 정보량이 더 적으면서 같은 일을 한다.
+ * nth-child로 자리를 고정하던 방식이라 영역이 4개가 아니게 되면 깨지는 문제도 있었다.
+ *
+ * 열 수는 명시한다. auto-fit은 1100px 부근에서 3열이 되어 넷째 타일만 아래로
+ * 떨어지는데, 그 배치가 다시 서열처럼 보인다. */
+.ind-domains__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--bw-space-4);
+}
+
+@media (min-width: 640px) {
+  .ind-domains__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ind-domains__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ind-domain {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--bw-space-6) var(--bw-space-5);
+  background: var(--bw-surface);
+  border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius-card);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    border-color var(--bw-motion-press),
+    box-shadow var(--bw-motion-press);
+}
+
+.ind-domain:hover,
+.ind-domain:focus-visible {
+  border-color: var(--bw-line-strong);
+  box-shadow: 0 8px 24px rgb(22 24 29 / 8%);
+}
+
+/* 영역명과 기존 추상 그래픽이 함께 분야를 구분한다. */
+.ind-domain__shot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--bw-radius-control);
+  border: 1px solid var(--bw-line);
+  background: var(--bw-surface-muted);
+}
+
+/* 카드 안에서 가장 큰 글자. 방문자가 찾는 것은 "내 문제가 어느 분야인가"이고
+ * 거기에 답하는 것이 이름이다. 이전에는 개수(2.5rem)에 눌려 세 번째로 컸다.
+ * 섹션 제목(.ind-section-title, 최대 2.5rem)보다는 작게 두어 위계를 지킨다. */
+.ind-domain__name {
+  margin-top: var(--bw-space-5);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--bw-ink);
+}
+
+.ind-domain__subtitle {
+  margin-top: var(--bw-space-2);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--bw-muted);
+}
+
+.ind-domain__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bw-space-2);
+  margin-top: var(--bw-space-5);
+  padding-top: var(--bw-space-4);
+  border-top: 1px solid var(--bw-line);
+}
+
+.ind-domain__item {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  /* dim은 3.81이라 본문 크기에 못 쓴다 (2.2). 솔루션명은 읽는 글자다 */
+  color: var(--bw-muted);
+}
+
+/* ---------------------------------------------------------------
+ * 기존 섹션. 본문은 밝게 두므로 표면을 뒤집지 않는다.
+ * 선과 보조 글자만 새 토큰에 맞춘다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-header {
+  background: var(--bw-surface);
+  border-bottom: 0;
+}
+
+:root[data-design="industrial"] .bw-header {
+  transition: transform var(--bw-motion-press);
+}
+
+:root[data-design="industrial"] .bw-header[data-hidden] {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design="industrial"] .bw-header {
+    transition: none;
+  }
+}
+
+:root[data-design="industrial"] .border-slate-100,
+:root[data-design="industrial"] .border-slate-200,
+:root[data-design="industrial"] .border-slate-300 {
+  border-color: var(--bw-line) !important;
+}
+
+:root[data-design="industrial"] .text-slate-400,
+:root[data-design="industrial"] .text-slate-500,
+:root[data-design="industrial"] .text-slate-600 {
+  color: var(--bw-muted) !important;
+}
+
+/* 푸터는 어두운 구간이다. 원래 ink 배경을 쓰고 있어 표면만 맞춘다 */
+:root[data-design="industrial"] .bw-footer {
+  background: var(--bw-surface-dark) !important;
+}
+
+/* 고객사 구간은 보조 표면으로 본문과 구분한다 */
+:root[data-design="industrial"] .bw-clients {
+  background: var(--bw-surface-muted) !important;
+}
+
+/* 어두운 구간 안에서는 보조 글자를 밝은 쪽으로 뒤집는다.
+   위의 --bw-muted(#52525b)를 그대로 두면 #191722 배경에서 대비가 2:1도
+   안 된다. 밝은 본문 기준으로 만든 규칙이 어두운 구간까지 덮은 탓이다. */
+:root[data-design="industrial"] .bw-footer .text-slate-200,
+:root[data-design="industrial"] .bw-footer .text-slate-300,
+:root[data-design="industrial"] .bw-footer .text-slate-400,
+:root[data-design="industrial"] .bw-footer .text-slate-500,
+:root[data-design="industrial"] .ind-dark .text-slate-400,
+:root[data-design="industrial"] .ind-dark .text-slate-500,
+:root[data-design="industrial"] .ind-dark .text-slate-600 {
+  color: rgb(255 255 255 / 68%) !important;
+}
+
+:root[data-design="industrial"] .bw-footer .border-slate-800,
+:root[data-design="industrial"] .bw-footer .border-white\/10 {
+  border-color: rgb(255 255 255 / 14%) !important;
+}
+
+/* 어두운 면은 한 값으로 통일한다. CTA 블록이 기존 ink를 쓰고 있어
+   히어로·푸터와 미묘하게 달랐다 */
+:root[data-design="industrial"] .bg-\[var\(--bw-color-ink\)\] {
+  background-color: var(--bw-surface-dark) !important;
+}
+
+/* ---------------------------------------------------------------
+ * 진입 분기 (docs/designs/detail-page-roles.md)
+ * 상세 페이지 맨 위에서 대상과 비대상을 밝힌다.
+ * --------------------------------------------------------------- */
+
+/* 진입 분기. 이 페이지가 누구를 위한 것인지 말하는 구간이다.
+ * 골드 전면으로 칠해봤다가 되돌렸다. 큰 겨자색 면은 디자인이 아니라
+ * 색 덩어리로 읽힌다. 면은 조용히 두고 타입 크기로 위계를 만든다. */
+.bw-audience {
+  position: relative;
+  border-bottom: 1px solid var(--bw-line);
+  background: var(--bw-surface-muted);
+  color: var(--bw-ink);
+}
+
+.bw-audience::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 4px;
+  background: var(--bw-accent);
+}
+
+.bw-audience__inner {
+  display: grid;
+  gap: var(--bw-space-6);
+  max-width: 1152px;
+  margin-inline: auto;
+  padding: var(--bw-space-8) var(--bw-space-5);
+}
+
+@media (min-width: 900px) {
+  .bw-audience__inner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: var(--bw-space-8);
+    align-items: start;
+  }
+}
+
+.bw-audience__label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bw-accent-text);
+}
+
+.bw-audience__audience {
+  margin: var(--bw-space-3) 0 0;
+  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--bw-ink);
+}
+
+.bw-audience__scope {
+  margin: var(--bw-space-4) 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--bw-muted);
+}
+
+.bw-audience__links {
+  display: grid;
+  gap: var(--bw-space-2);
+  margin: var(--bw-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bw-audience__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bw-space-4);
+  padding: var(--bw-space-3) var(--bw-space-4);
+  border: 1px solid var(--bw-line-strong);
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-surface);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--bw-ink);
+  text-decoration: none;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  transition:
+    border-color var(--bw-motion-press),
+    background var(--bw-motion-press);
+}
+
+.bw-audience__link:hover,
+.bw-audience__link:focus-visible {
+  border-color: var(--bw-ink);
+  background: var(--bw-surface-muted);
+}
+
+/* 분기 레일. 대상과 범위가 히어로로 올라간 상세 페이지에서는 분기만 남으므로
+ * 2단 그리드 대신 접힘선 아래 얇은 가로 띠로 깐다. 라벨을 왼쪽에 붙이고
+ * 링크를 가로로 펴 첫 화면 끝자락에서 "다른 데로 갈 수 있다"가 바로 읽히게 한다. */
+.bw-audience--rail .bw-audience__inner {
+  padding-block: var(--bw-space-6);
+}
+
+/* 칩은 글자 길이만큼만 차지하고 서로 붙어 있는다.
+ * 앞서 1fr 두 칸으로 나눴더니 칸은 463px인데 링크는 345px이라 사이가 126px
+ * 벌어졌다. 강제로 채우면 이번엔 칩 안에서 글자와 화살표가 갈라진다.
+ * 라우팅 안내는 문장에 가깝지 표 칸이 아니므로 내용 크기로 둔다. */
+.bw-audience--rail .bw-audience__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--bw-space-3);
+  margin-top: 0;
+}
+
+/* 문구 길이가 달라 한쪽만 두 줄이 되면 칩 높이가 어긋난다.
+   li를 flex로 열어 링크가 행 높이까지 늘어나게 한다. */
+.bw-audience--rail .bw-audience__links > li {
+  display: flex;
+}
+
+/* 라벨은 링크를 소개하는 자리다. 링크가 16px/600 잉크인데 라벨이 14px/700
+ * 강조색이면 소개가 본문보다 세진다. 굵기와 색을 한 단 내린다.
+ * 강조색은 왼쪽 4px 띠가 이미 갖고 있다. */
+.bw-audience--rail .bw-audience__label {
+  font-weight: 600;
+  color: var(--bw-muted);
+  white-space: nowrap;
+}
+
+/* 0.14em 자간과 대문자 변환은 라틴 라벨 기준이다. 한글에 그대로 걸면
+   낱자가 흩어진다. 히어로 눈썹에서 고친 것과 같은 결함이다. */
+.bw-audience__label--ko {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (min-width: 900px) {
+  .bw-audience--rail .bw-audience__inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--bw-space-6);
+  }
+}
+
+/* ---------------------------------------------------------------
+ * 상세 페이지 공통 규칙 (docs/designs/detail-page-roles.md)
+ *
+ * 섹션 간격이 py-20 md:py-28, mt-16, mt-20으로 흩어져 있어 페이지마다
+ * 리듬이 달랐다. 하나로 모은다. 카드도 모서리·테두리·여백을 통일한다.
+ * --------------------------------------------------------------- */
+
+/* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
+   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다. */
+:root[data-design="industrial"]
+  main
+  > section:not([data-variant]):not(.bw-audience),
+:root[data-design="industrial"] main > div > section:not([data-variant]) {
+  padding-block: var(--bw-space-9);
+}
+
+/* mt-16 / mt-20으로 띄우던 섹션은 padding으로 옮겼으므로 margin을 없앤다 */
+:root[data-design="industrial"] main > section.mt-16,
+:root[data-design="industrial"] main > section.mt-20 {
+  margin-top: 0;
+}
+
+/* 본문 카드 */
+:root[data-design="industrial"] main .rounded-2xl,
+:root[data-design="industrial"] main .rounded-3xl,
+:root[data-design="industrial"] main .rounded-\[var\(--bw-radius-feature\)\] {
+  border-radius: var(--bw-radius-card);
+}
+
+/* ---------------------------------------------------------------
+ * 옛 토큰을 새 팔레트로 연결한다.
+ *
+ * 상세 페이지 8개는 globals.css의 --bw-color-* 를 쓰고, 새 팔레트는
+ * --bw-* 다. 그래서 확정한 색이 새로 쓴 컴포넌트에만 붙어 있었다.
+ * 여기서 한 번 이어주면 기존 페이지가 전부 새 팔레트로 넘어간다.
+ *
+ * 값은 docs/planning/08-design-system.md 2.2가 기준이다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] {
+  --bw-color-surface: var(--bw-surface);
+  --bw-color-surface-muted: var(--bw-surface-muted);
+  --bw-color-ink: var(--bw-ink);
+  --bw-color-muted: var(--bw-muted);
+  --bw-color-line: var(--bw-line);
+
+  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 골드 면과 잉크 글자로 지정한다. */
+  --bw-color-brand: var(--bw-ink);
+  --bw-color-black: var(--bw-ink);
+  --bw-color-focus: var(--bw-ink);
+
+  /* 태그·눈썹 문구처럼 글자로 쓰는 골드만 남긴다.
+     기존 #9b700d는 흰 배경에서 4.45로 모자라 한 단 어둡게 잡았다 (5.37) */
+  --bw-color-brand-strong: #8a6408;
+
+  --bw-radius-control: 9px;
+  --bw-radius-card: 16px;
+  --bw-radius-feature: 45px;
+}
+
+/* ---------------------------------------------------------------
+ * 강조색 (docs/planning/08-design-system.md 2.2.2)
+ *
+ * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 원인은 골드를
+ * 흰 배경에서 글자로 못 쓴다는 것(2.49)이었고, 그래서 색을 아예
+ * 안 쓰게 됐다.
+ *
+ * DeepLearning.AI가 딥레드 #620001을 큰 면으로 깔고 그 위에 글자를
+ * 얹는 방식을 2026-09-01에 실측했다. 같은 방식을 쓰면 골드를 면으로
+ * 깔고 잉크를 얹어 7.14를 확보할 수 있다. 남의 색을 빌리지 않는다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] {
+  --bw-accent: #d29b15; /* 강조 면. 잉크 글자와 7.14 */
+  --bw-accent-strong: #f0be4e; /* 밝은 골드. 잉크와 10.3 */
+  --bw-accent-soft: #fdf6e3; /* 칩 배경 */
+  --bw-accent-text: #8a6408; /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
+}
+
+/* 카테고리 칩 */
+.bw-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-accent-soft);
+  color: var(--bw-accent-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* 번호 마커. 트랙·단계처럼 순서가 있는 항목에 쓴다 */
+.bw-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding-inline: 0.5rem;
+  border-radius: var(--bw-radius-control);
+  background: var(--bw-accent);
+  color: var(--bw-ink);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 섹션 눈썹을 강조색으로. 지금은 회색이라 섹션 경계가 안 읽힌다 */
+:root[data-design="industrial"] .bw-section-eyebrow,
+:root[data-design="industrial"] [class*="tracking-[0.18em]"],
+:root[data-design="industrial"] [class*="uppercase"][class*="tracking"] {
+  color: var(--bw-accent-text);
+}
+
+/* 주요 행동과 목록 점을 강조색으로.
+ *
+ * 08 §2.2.1은 골드를 상호작용에 쓰지 말라고 했다. 근거는 골드 위 흰 글자가
+ * 2.49로 미달한다는 것이었다. 그 계산은 글자가 흰색일 때만 맞는다.
+ * 잉크를 얹으면 7.14로 통과한다. DeepLearning.AI가 딥레드 면 위에
+ * 흰 글자를 쓰는 것과 같은 구조다. 면과 글자를 한 쌍으로 묶어 지정한다.
+ */
+:root[data-design="industrial"]
+  main
+  .rounded-full.bg-\[var\(--bw-color-brand\)\] {
+  background-color: var(--bw-brand) !important;
+  color: var(--bw-ink) !important;
+  border-radius: var(--bw-radius-control);
+}
+
+/* ---------------------------------------------------------------
+ * 스크롤 진입 시 드러남
+ *
+ * 2026-09-01 실측: DeepLearning.AI와 업스테이지 모두 섹션이 스크롤에
+ * 맞춰 올라오며 나타난다. 정지 화면에서 카드가 한꺼번에 놓여 있는 것과
+ * 인상이 크게 다르다.
+ *
+ * 라이브러리를 쓰지 않는다. IntersectionObserver 12줄과 CSS transition으로 한다.
+ *
+ * 08 §2.7: 자리 이동은 --bw-motion-move(1s)를 따르고
+ * prefers-reduced-motion에서는 전환을 끄고 최종 상태를 바로 보여준다.
+ *
+ * 부모 섹션은 움직이지 않고 .bw-reveal 항목만 진입한다.
+ * 히어로는 별도의 타이핑과 배경 모션을 사용하므로 등장 효과를 중첩하지 않는다.
+ * --------------------------------------------------------------- */
+
+/* 요소가 화면에 들어오는 순간 IntersectionObserver(_app.jsx useReveal)가
+ * data-in을 한 번 붙이고, 여기서는 그 전후 상태만 transition으로 잇는다.
+ * 스크롤 위치에 진행도를 묶는 방식(animation-timeline)은 빨리 내리면 순간에
+ * 끝나고 큰 화면에서는 시작도 못 해 효과가 안 읽혔다(2026-09-02).
+ * 숨김 상태는 훅이 :root에 data-reveal을 붙인 뒤에만 적용되므로
+ * 자바스크립트가 없으면 처음부터 최종 상태로 보인다. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-design="industrial"][data-reveal="ready"] .bw-reveal {
+    transition:
+      opacity var(--bw-motion-move),
+      transform var(--bw-motion-move);
+  }
+  :root[data-design="industrial"][data-reveal] .bw-reveal:not([data-in]) {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  /* 사업 분야 렌더는 흑백으로 들어와 원색이 된다. 글자에는 걸지 않는다. */
+  :root[data-design="industrial"][data-reveal="ready"] .ind-domain__shot {
+    transition: filter var(--bw-motion-move);
+  }
+  :root[data-design="industrial"][data-reveal]
+    .ind-domain:not([data-in])
+    .ind-domain__shot {
+    filter: grayscale(1);
+  }
+}
+
+/* 인쇄에서는 드러남을 끈다 */
+@media print {
+  :root[data-design="industrial"] main > section,
+  :root[data-design="industrial"] main > div > section,
+  :root[data-design="industrial"] .bw-reveal {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  :root[data-design="industrial"] .ind-domain__shot {
+    transition: none !important;
+    filter: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+ * 2.4 타이포 스케일 (docs/planning/08-design-system.md)
+ *
+ * 상세 페이지 실측이 60/36/30/22/20px였다. 문서 스케일은
+ * 64/40/28/24/18이다. Tailwind의 text-3xl(30)·text-4xl(36)을 그대로
+ * 쓰던 자리를 문서 값으로 맞춘다.
+ *
+ * clamp의 기울기는 375px에서 하한, 1440px에서 상한이 되도록 잡았다.
+ * :root[data-design] 선택자라 Tailwind의 text-* 유틸리티를 이긴다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-display {
+  font-size: clamp(40px, 2.25vw + 31.6px, 64px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+:root[data-design="industrial"] .bw-h1 {
+  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+:root[data-design="industrial"] .bw-h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+:root[data-design="industrial"] .bw-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+:root[data-design="industrial"] .bw-body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+:root[data-design="industrial"] .bw-body-sm {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+:root[data-design="industrial"] .bw-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+/* ---------------------------------------------------------------
+ * 어두운 히어로의 강조 글자
+ *
+ * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#8a6408)로 잡는데,
+ * 그 값은 어두운 면에서 2.2라 읽히지 않는다. 08 §2.2.1이 정한
+ * 어두운 구간용 밝은 골드로 바꾼다 (#0e1013 위에서 10.3).
+ * --------------------------------------------------------------- */
+:root[data-design="industrial"]
+  .bg-\[var\(--bw-color-ink\)\]
+  [class*="uppercase"][class*="tracking"],
+:root[data-design="industrial"]
+  .bg-\[var\(--bw-color-surface-dark\)\]
+  [class*="uppercase"][class*="tracking"] {
+  color: var(--bw-accent-strong);
+}
+
+/* ---------------------------------------------------------------
+ * 서비스별 강조색 (docs/planning/08-design-system.md 2.3)
+ *
+ * 2.3의 원티드 hue ramp 4색은 홈 히어로 슬롯에만 묶여 있었고, 상세
+ * 페이지는 전부 골드 하나였다. 골드만 반복하니 네 페이지가 같아 보이고
+ * 강조가 남발됐다. 같은 램프에서 나온 값이라 넷이 서로 어울린다.
+ *
+ * -600은 어두운 면 위 값이다(대비는 2.3 표). 밝은 면에서 글자로 쓰면
+ * 미달하므로 어두운 단계를 한 벌 더 둔다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] [data-accent] {
+  --bw-accent: var(--bw-svc);
+  --bw-accent-strong: var(--bw-svc-bright);
+  --bw-accent-text: var(--bw-svc-ink);
+  --bw-accent-soft: var(--bw-svc-soft);
+}
+
+:root[data-design="industrial"] [data-accent="solution"] {
+  --bw-svc: #00bdde; /* cyan-600 */
+  --bw-svc-bright: #4dd9f2; /* 어두운 면 위 강조 */
+  --bw-svc-ink: #00606f; /* 밝은 면 위 글자 */
+  --bw-svc-soft: #e6f8fc;
+}
+
+:root[data-design="industrial"] [data-accent="consulting"] {
+  --bw-svc: #fb8502; /* orange-600 */
+  --bw-svc-bright: #ffab4d;
+  --bw-svc-ink: #8a4700;
+  --bw-svc-soft: #fff2e3;
+}
+
+:root[data-design="industrial"] [data-accent="education"] {
+  --bw-svc: #57cf07; /* lime-600 */
+  --bw-svc-bright: #8ae64b;
+  --bw-svc-ink: #2f6b04;
+  --bw-svc-soft: #eefae1;
+}
+
+:root[data-design="industrial"] [data-accent="global"] {
+  --bw-svc: #ca59ff; /* purple-600 */
+  --bw-svc-bright: #dd91ff;
+  --bw-svc-ink: #7a1aa3;
+  --bw-svc-soft: #f9ecff;
+}
+
+/* ---------------------------------------------------------------
+ * 히어로 표면 (faculty.ai 실측 2026-09-01)
+ *
+ * faculty의 히어로는 canvas 1280x720 위에 도는 WebGL이다. 눈으로 보면
+ * 세 겹이다. (1) 위가 짙고 아래가 밝은 세로 그라데이션, (2) 가로로
+ * 흐르는 5px 안팎의 미세한 결, (3) 그 위의 그레인.
+ *
+ * 셰이더 없이 세 겹을 그대로 쌓는다. 라디얼 색 안개와 다른 점은
+ * 방향과 결이 있다는 것이다. 안개는 형태가 없어서 슬롭으로 읽히고
+ * 결은 재질로 읽힌다.
+ *
+ * 글자는 위쪽 짙은 구간에 있고, 밝아지는 아래쪽은 제품 화면 카드가
+ * 앉는 자리다. 히어로가 본문으로 넘어가는 전환이 된다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-hero-texture {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    /* 3. 결 */
+    repeating-linear-gradient(
+      180deg,
+      rgb(255 255 255 / 2.2%) 0 1px,
+      transparent 1px 6px
+    ),
+    /* 2. 서비스 색을 위쪽에 물린다 */
+    linear-gradient(
+        180deg,
+        color-mix(
+            in oklab,
+            var(--bw-svc, var(--bw-accent)) 26%,
+            var(--bw-surface-dark)
+          )
+          0%,
+        var(--bw-surface-dark) 38%,
+        var(--bw-surface-dark) 62%,
+        color-mix(
+            in oklab,
+            var(--bw-svc, var(--bw-accent)) 12%,
+            var(--bw-surface-dark)
+          )
+          78%,
+        var(--bw-surface-muted) 100%
+      );
+}
+
+/* 1. 그레인. feTurbulence 한 장을 겹친다 */
+:root[data-design="industrial"] .bw-hero-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.085;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------------------------------
+ * 한글 줄바꿈
+ *
+ * word-break가 normal이라 한국어가 어절 안에서 끊긴다. 라틴은 단어
+ * 사이에만 끊기지만 한글은 normal에서 음절 블록 사이 아무 데나 끊긴다.
+ * "담당자"가 "담당 / 자"로 갈라질 수 있다는 뜻이다.
+ *
+ * keep-all이면 공백에서만 끊는다. 08 §2.4가 "행간과 자간은 한글 기준으로
+ * 조정한다"고 한 것과 같은 이유다.
+ *
+ * balance는 제목의 줄 길이를 고르게 맞춘다. 마지막 줄에 단어 하나만
+ * 남는 것(고아 줄)을 막는다. 하드 <br>과 달리 폭에 따라 다시 계산되므로
+ * 반응형이 깨지지 않는다. 미지원 브라우저는 그냥 지금처럼 흐른다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] h1,
+:root[data-design="industrial"] h2,
+:root[data-design="industrial"] h3,
+:root[data-design="industrial"] h4,
+:root[data-design="industrial"] .bw-display,
+:root[data-design="industrial"] .bw-h1,
+:root[data-design="industrial"] .bw-h2,
+:root[data-design="industrial"] .bw-title,
+:root[data-design="industrial"] .bw-audience__audience {
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+/* 본문은 balance를 쓰지 않는다. 여섯 줄이 넘으면 브라우저가 무시하고,
+   긴 문단에서는 pretty가 맞다 (고아 단어만 막는다) */
+:root[data-design="industrial"] .bw-body,
+:root[data-design="industrial"] .bw-body-sm,
+:root[data-design="industrial"] .bw-audience__scope {
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------
+ * 선언 구간 (faculty.ai statement 실측 2026-09-01)
+ *
+ * 히어로와 같은 표면을 쓴다. 결과 그레인이 페이지 안에서 두 번
+ * 나타나며 어두운 구간의 재질이 된다.
+ *
+ * 어절 opacity는 자바스크립트가 잡는다. 여기서는 전환만 정의한다.
+ * transition 대상을 opacity로 한정한다. faculty는 all인데 스크롤마다
+ * 전 속성을 확인하게 되어 필요 없는 비용이 든다.
+ * --------------------------------------------------------------- */
+
+:root[data-design="industrial"] .bw-statement {
+  padding-block: var(--bw-space-9);
+  color: #fff;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      rgb(255 255 255 / 2.2%) 0 1px,
+      transparent 1px 6px
+    ),
+    linear-gradient(
+      180deg,
+      var(--bw-surface-dark) 0%,
+      color-mix(
+          in oklab,
+          var(--bw-svc, var(--bw-accent)) 16%,
+          var(--bw-surface-dark)
+        )
+        50%,
+      var(--bw-surface-dark) 100%
+    );
+}
+
+:root[data-design="industrial"] .bw-statement__inner {
+  max-width: 1152px;
+  margin-inline: auto;
+  padding-inline: var(--bw-space-5);
+}
+
+:root[data-design="industrial"] .bw-statement__eyebrow {
+  margin: 0 0 var(--bw-space-5);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bw-accent-strong);
+  text-align: center;
+}
+
+:root[data-design="industrial"] .bw-statement__text {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.12em 0.28em;
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 64px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+:root[data-design="industrial"] .bw-statement__word {
+  transition: opacity 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design="industrial"] .bw-statement__word {
+    opacity: 1 !important;
+    transition: none;
+  }
+}
+
+/* 승인된 색면과 내용별 구성. 의미가 다른 구간을 같은 카드로 반복하지 않는다. */
+.bw-area-intro {
+  display: grid;
+  gap: 32px;
+  padding: 40px;
+  margin-top: 40px;
+  background: var(--bw-surface-muted);
+  border-top: 2px solid var(--bw-graphic);
+}
+.bw-area-intro__link {
+  margin-top: 24px;
+  background: var(--bw-brand);
+  color: var(--bw-ink);
+}
+.bw-area-intro__link:hover {
+  filter: brightness(1.08);
+}
+.bw-offerings {
+  border-top: 1px solid var(--bw-line-strong);
+}
+.bw-offering {
+  display: grid;
+  gap: 24px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--bw-line);
+}
+.bw-consulting-process {
+  background: var(--bw-surface-tinted);
+}
+.bw-process-flow {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.bw-process-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px 24px;
+  padding: 0 0 40px;
+}
+.bw-process-step:last-child {
+  padding-bottom: 0;
+}
+.bw-process-step::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 44px;
+  bottom: 0;
+  width: 1px;
+  background: var(--bw-line-strong);
+}
+.bw-process-step:last-child::before {
+  display: none;
+}
+.bw-process-step .bw-marker {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bw-surface-dark);
+  color: var(--bw-graphic);
+}
+.bw-process-step h3 {
+  align-self: center;
+}
+.bw-process-step p {
+  grid-column: 2;
+}
+.bw-education-process {
+  background: var(--bw-surface-tinted);
+  box-shadow: 0 0 0 100vmax var(--bw-surface-tinted);
+  clip-path: inset(0 -100vmax);
+}
+.bw-learning-flow {
+  position: relative;
+  display: grid;
+  gap: 48px;
+  padding-left: 64px;
+}
+.bw-learning-step {
+  position: relative;
+  padding: 0 0 48px;
+  border-bottom: 1px solid var(--bw-line-strong);
+}
+.bw-learning-step:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.bw-learning-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: -46px;
+  top: 36px;
+  bottom: -48px;
+  width: 1px;
+  background: var(--bw-line-strong);
+}
+.bw-learning-step__inner {
+  display: grid;
+  gap: 32px;
+}
+.bw-learning-step__image {
+  min-height: 280px;
+  border-radius: var(--bw-radius-card);
+}
+.bw-learning-step .bw-marker {
+  position: absolute;
+  left: -64px;
+  top: 0;
+  background: var(--bw-surface-dark);
+  color: var(--bw-graphic);
+}
+.bw-learning-step .bw-chip {
+  background: transparent;
+  color: var(--bw-graphic-ink);
+  padding-left: 0;
+}
+.ind-btn:focus-visible {
+  outline: 2px solid var(--bw-graphic-ink);
+  outline-offset: 4px;
+}
+.ind-hero a:focus-visible,
+section[data-variant="media"] a:focus-visible {
+  outline: 2px solid var(--bw-brand);
+  outline-offset: 4px;
+}
+
+@media (min-width: 768px) {
+  .bw-area-intro {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .bw-offering {
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: 48px;
+  }
+  .bw-process-step {
+    grid-template-columns: 44px minmax(0, 0.5fr) minmax(0, 1fr);
+    column-gap: 32px;
+    min-height: 128px;
+  }
+  .bw-process-step p {
+    grid-column: 3;
+    padding-top: 8px;
+  }
+  .bw-process-step h3 {
+    align-self: start;
+    padding-top: 8px;
+  }
+  .bw-learning-step__inner {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 48px;
+  }
+  .bw-learning-step__image {
+    min-height: 320px;
+  }
+}
+@media (max-width: 767px) {
+  .bw-learning-flow {
+    padding-left: 48px;
+  }
+  .bw-learning-step .bw-marker {
+    left: -48px;
+  }
+  .bw-learning-step:not(:last-child)::after {
+    left: -30px;
+  }
+  .bw-area-intro {
+    padding: 24px;
+  }
+  .bw-audience--rail .bw-audience__links {
+    display: grid;
+  }
+  .bw-audience--rail .bw-audience__links > li,
+  .bw-audience__link {
+    min-width: 0;
+  }
+  .bw-audience__link {
+    width: 100%;
+    font-size: 14px;
+  }
+}

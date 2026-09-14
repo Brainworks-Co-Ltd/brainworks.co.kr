@@ -17,9 +17,18 @@ export default class BrainworksDocument extends Document {
         ? "en"
         : "ko";
 
+    // data-design은 서버에서 붙인다. 어두운 배경이라 클라이언트에서
+    // 붙이면 첫 프레임에 흰 화면이 번쩍인다.
     return (
-      <Html lang={locale}>
-        <Head />
+      <Html lang={locale} data-design="industrial">
+        <Head>
+          {/* 드러남 숨김 상태를 첫 페인트 전에 켠다. 훅(_app useReveal)이 붙이면 한 프레임 보였다가 사라진다. */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: 'document.documentElement.dataset.reveal="";',
+            }}
+          />
+        </Head>
         <body>
           <Main />
           <NextScript />

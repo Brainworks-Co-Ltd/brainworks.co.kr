@@ -5,8 +5,6 @@ export type BusinessMegaMenuArea = {
   id: string;
   label: string;
   href: string;
-  image: string;
-  alt: string;
 };
 
 export type BusinessMegaMenuService = {
@@ -45,9 +43,9 @@ export function buildBusinessMegaMenu(
     areas: localizedAreas.map((area) => ({
       id: area.id,
       label: area.title,
-      href: `${getLocalizedPath("solutions.list", locale)}?area=${encodeURIComponent(area.id)}`,
-      image: area.heroImage,
-      alt: area.title,
+      // 해시가 있어야 브라우저가 사업 영역 구간까지 내려준다.
+      // 없으면 area 질의만 반영되고 화면은 페이지 맨 위에 머문다.
+      href: `${getLocalizedPath("solutions.list", locale)}?area=${encodeURIComponent(area.id)}#business-areas`,
     })),
     services,
   };

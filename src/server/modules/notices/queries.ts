@@ -7,6 +7,44 @@ import type { NoticeLocale } from "@/server/modules/notices/contracts";
 
 export type PublicNoticeQuery = { q?: string; categoryId?: string; page?: number; pageSize?: number };
 
+export function toPublishedNoticeListItem<
+  T extends {
+    publicNumber: number;
+    title: string;
+    displayDate: string | Date;
+    isPinned: boolean;
+  },
+>(row: T) {
+  return {
+    publicNumber: row.publicNumber,
+    title: row.title,
+    date: String(row.displayDate),
+    isPinned: row.isPinned,
+  };
+}
+
+export function toPublishedNoticeDetail<
+  T extends {
+    title: string;
+    bodyMarkdown: string;
+    displayDate: string | Date;
+  },
+>(
+  row: T,
+  attachments: Array<{
+    id: string;
+    displayName: string;
+    downloadUrl: string;
+  }>,
+) {
+  return {
+    title: row.title,
+    bodyMarkdown: row.bodyMarkdown,
+    date: String(row.displayDate),
+    attachments,
+  };
+}
+
 export async function getPublishedNoticeList(locale: NoticeLocale, query: PublicNoticeQuery = {}) {
   if (!process.env.DATABASE_URL) return { items: [], page: query.page ?? 1, pageSize: query.pageSize ?? 12, total: 0, totalPages: 1 };
   const page = Math.max(1, Math.min(query.page ?? 1, 1000));
@@ -26,7 +64,7 @@ export async function getPublishedNoticeList(locale: NoticeLocale, query: Public
     .orderBy(desc(notices.isPinned), asc(notices.pinOrder), desc(notices.displayDate));
   const visible = rows.filter((row) => effectiveNoticeVisibility({ status: row.status, startsAt: row.startsAt, endsAt: row.endsAt }));
   const start = (page - 1) * pageSize;
-  return { items: visible.slice(start, start + pageSize).map((row) => ({ ...row, date: String(row.displayDate) })), page, pageSize, total: visible.length, totalPages: Math.max(1, Math.ceil(visible.length / pageSize)) };
+  return { items: visible.slice(start, start + pageSize).map(toPublishedNoticeListItem), page, pageSize, total: visible.length, totalPages: Math.max(1, Math.ceil(visible.length / pageSize)) };
 }
 
 export async function getPublishedNoticeDetail(publicNumber: number, locale: NoticeLocale) {
@@ -44,14 +82,13 @@ export async function getPublishedNoticeDetail(publicNumber: number, locale: Not
     .innerJoin(assets, eq(assets.id, noticeAttachments.assetId))
     .where(and(eq(noticeAttachments.noticeLocaleId, row[0].localeId), eq(assets.status, "READY")))
     .orderBy(asc(noticeAttachments.displayOrder));
-  return {
-    ...row[0],
-    date: String(row[0].displayDate),
-    attachments: attachments.map((attachment) => ({
+  return toPublishedNoticeDetail(
+    row[0],
+    attachments.map((attachment) => ({
       ...attachment,
       downloadUrl: `/api/notices/${row[0].publicNumber}/attachments/${encodeURIComponent(attachment.id)}/download?locale=${locale}`,
     })),
-  };
+  );
 }
 
 export async function getPublishedNoticePublicNumberByLegacySlug(

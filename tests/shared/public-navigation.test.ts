@@ -47,7 +47,7 @@ describe("공개 내비게이션 계약", () => {
     expect(children.every((item) => !("description" in item))).toBe(true);
   });
 
-  it("사업 영역 메가메뉴가 기존 사업 이미지와 실제 라우트를 제공한다", () => {
+  it("사업 영역 메가메뉴가 영역 이름과 실제 라우트를 제공한다", () => {
     const items = buildPublicNavigation("ko");
     const business = items.find(
       (item) => item.type === "group" && item.id === "business",
@@ -63,8 +63,9 @@ describe("공개 내비게이션 계약", () => {
       "smartcity",
     ]);
     expect(business.megaMenu?.areas[0]).toMatchObject({
-      href: "/services?area=manufacturing",
-      image: "/images/services/제조AI.jpg",
+      // 메뉴에서 영역을 누르면 사업 영역 구간까지 내려가야 한다.
+      href: "/services?area=manufacturing#business-areas",
+      label: "Manufacturing AI",
     });
     expect(business.megaMenu?.services.map((service) => service.href)).toEqual([
       "/consulting",

@@ -4,8 +4,12 @@ import type { NextApiRequest } from "next";
 import { getAuth } from "@/server/auth/config";
 import { isActiveAdmin, normalizeReturnTo } from "@/server/auth/policy";
 import { HttpError } from "@/server/http/errors";
+import { assertSameOrigin } from "@/server/http/origin-guard";
 
-export async function requireAdmin(request: Pick<NextApiRequest, "headers">) {
+export async function requireAdmin(
+  request: Pick<NextApiRequest, "method" | "headers">,
+) {
+  assertSameOrigin(request);
   const session = await getAuth().api.getSession({
     headers: fromNodeHeaders(request.headers),
   });

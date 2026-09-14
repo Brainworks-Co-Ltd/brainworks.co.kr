@@ -73,7 +73,7 @@ export function DesktopNavigation({
                 <Link
                   href={item.href}
                   aria-current={activeGroup === item.id ? "page" : undefined}
-                  className="rounded-full px-3 py-2 text-sm font-medium text-[var(--bw-color-muted)] transition hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"
+                  className="inline-flex items-center rounded-full px-3 py-3 text-sm font-medium text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)]"
                 >
                   {item.label}
                 </Link>
@@ -109,7 +109,7 @@ export function DesktopNavigation({
                 aria-controls={`public-nav-panel-${item.id}`}
                 data-current={activeGroup === item.id ? "true" : undefined}
                 onClick={() => openMenu(item.id)}
-                className={`inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium transition ${activeGroup === item.id || isOpen ? "bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]" : "text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"}`}
+                className={`inline-flex items-center gap-1 rounded-full px-3 py-3 text-sm font-medium transition ${activeGroup === item.id || isOpen ? "bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]" : "text-[var(--bw-color-ink)] hover:bg-[var(--bw-color-surface-muted)]"}`}
               >
                 {item.label}
                 <ChevronDown

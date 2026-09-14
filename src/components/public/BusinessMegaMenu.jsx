@@ -1,6 +1,19 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+/*
+ * 사업 영역 메뉴.
+ *
+ * 네 서비스를 같은 높이로 세운다. 승인 기획 07 §12는 솔루션·컨설팅·교육·
+ * 글로벌을 "별개 상품이 아니라 동행의 단계"로 배열하라고 한다. 넷은 동등하다.
+ *
+ * 이전에는 마키나락스식으로 왼쪽에 대표 카드를 두고 오른쪽에 링크를 몰았다
+ * (2026-08-24 메가메뉴 설계). 그 카드의 존재 이유는 사업 영역 heroImage였는데
+ * 자산이 낡아 이미지를 걷어내면서 절반이 빈 상자가 됐고, 컨설팅·교육·글로벌은
+ * 좁은 열의 맨 아래로 밀려 묻혔다.
+ *
+ * 대표 카드를 없애고 넷을 나란히 둔다. 사업 영역 넷은 솔루션 아래에만 건다.
+ */
 
 export function BusinessMegaMenu({
   menu,
@@ -11,20 +24,22 @@ export function BusinessMegaMenu({
   panelId,
   panelLabel,
 }) {
-  const [activeAreaId, setActiveAreaId] = useState(menu.areas[0]?.id || "");
-  const [failedImage, setFailedImage] = useState("");
-  const activeArea =
-    menu.areas.find((area) => area.id === activeAreaId) || menu.areas[0];
-
-  useEffect(() => {
-    setActiveAreaId(menu.areas[0]?.id || "");
-    setFailedImage("");
-  }, [menu]);
-
-  const selectArea = (area) => {
-    setActiveAreaId(area.id);
-    setFailedImage("");
-  };
+  const entries = [
+    {
+      id: "solutions",
+      label: menu.featured.label,
+      href: menu.featured.href,
+      isActive: routeKey === "solutions.list",
+      areas: menu.areas,
+    },
+    ...menu.services.map((service) => ({
+      id: service.id,
+      label: service.label,
+      href: service.href,
+      isActive: service.activeRouteKeys.includes(routeKey),
+      areas: [],
+    })),
+  ];
 
   return (
     <div
@@ -33,103 +48,44 @@ export function BusinessMegaMenu({
       aria-label={panelLabel}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="fixed left-1/2 top-16 z-50 grid max-h-[calc(100vh-5rem)] w-[min(56rem,calc(100vw-2rem))] -translate-x-1/2 grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-8 overflow-y-auto rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white p-6 shadow-xl"
+      className="fixed left-1/2 top-16 z-50 max-h-[calc(100vh-5rem)] w-[min(26rem,calc(100vw-2rem))] -translate-x-1/2 overflow-y-auto rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface)] p-3 shadow-xl"
     >
-      <Link
-        href={menu.featured.href}
-        onClick={onClose}
-        className="group overflow-hidden rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] transition hover:border-[var(--bw-color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
-      >
-        <div className="relative aspect-[4/3] overflow-hidden bg-[var(--bw-color-surface)]">
-          {activeArea && failedImage !== activeArea.image ? (
-            <img
-              src={activeArea.image}
-              alt={activeArea.alt}
-              loading="eager"
-              onError={() => setFailedImage(activeArea.image)}
-              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02] motion-reduce:transition-none"
-            />
-          ) : (
-            <div
-              role="img"
-              aria-label={
-                activeArea?.alt ||
-                (menu.featured.label === "AI 솔루션"
-                  ? "AI 솔루션"
-                  : menu.featured.label)
-              }
-              className="flex h-full items-center justify-center px-6 text-center text-sm font-semibold text-[var(--bw-color-muted)]"
+      <ul className="grid gap-0.5">
+        {entries.map((entry) => (
+          <li key={entry.id}>
+            <Link
+              href={entry.href}
+              onClick={onClose}
+              aria-current={entry.isActive ? "page" : undefined}
+              className="group flex items-center justify-between gap-4 rounded-[var(--bw-radius-control)] px-4 py-3 text-base font-semibold text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
             >
-              {menu.featured.label}
-            </div>
-          )}
-        </div>
-        <div className="flex items-center justify-between gap-4 p-5">
-          <span className="text-lg font-semibold text-[var(--bw-color-ink)]">
-            {menu.featured.label}
-          </span>
-          <ArrowUpRight
-            aria-hidden="true"
-            className="size-5 text-[var(--bw-color-muted)] transition group-hover:text-[var(--bw-color-ink)]"
-          />
-        </div>
-      </Link>
+              {entry.label}
+              <ArrowRight
+                aria-hidden="true"
+                className="size-4 shrink-0 text-[var(--bw-color-muted)] transition group-hover:text-[var(--bw-color-ink)]"
+              />
+            </Link>
 
-      <div className="grid content-start gap-8 py-1">
-        <section aria-labelledby={`${panelId}-areas-title`}>
-          <h3
-            id={`${panelId}-areas-title`}
-            className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--bw-color-muted)]"
-          >
-            AI 사업 분야
-          </h3>
-          <ul className="mt-4 grid gap-1">
-            {menu.areas.map((area) => (
-              <li key={area.id}>
-                <Link
-                  href={area.href}
-                  aria-current={
-                    routeKey === "solutions.list" ? "page" : undefined
-                  }
-                  onMouseEnter={() => selectArea(area)}
-                  onFocus={() => selectArea(area)}
-                  onClick={onClose}
-                  className="block rounded-xl px-3 py-2.5 text-base font-medium text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
-                >
-                  {area.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section aria-labelledby={`${panelId}-services-title`}>
-          <h3
-            id={`${panelId}-services-title`}
-            className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--bw-color-muted)]"
-          >
-            서비스
-          </h3>
-          <ul className="mt-4 grid gap-1">
-            {menu.services.map((service) => (
-              <li key={service.id}>
-                <Link
-                  href={service.href}
-                  aria-current={
-                    service.activeRouteKeys.includes(routeKey)
-                      ? "page"
-                      : undefined
-                  }
-                  onClick={onClose}
-                  className="block rounded-xl px-3 py-2.5 text-base font-medium text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
-                >
-                  {service.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+            {entry.areas.length ? (
+              <ul className="mb-2 grid gap-0.5 pl-3">
+                {entry.areas.map((area) => (
+                  <li key={area.id}>
+                    <Link
+                      href={area.href}
+                      onClick={onClose}
+                      className="block rounded-[var(--bw-radius-control)] px-4 py-2 text-sm text-[var(--bw-color-muted)] transition hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)]/40"
+                    >
+                      {area.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
+
+export default BusinessMegaMenu;

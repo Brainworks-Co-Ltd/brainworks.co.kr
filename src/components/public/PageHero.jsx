@@ -4,8 +4,23 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string, tone?: "consulting" | "education" | "global" | null }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
+
+/*
+ * 눈썹 자간은 글자 체계에 따라 다르게 준다. 0.22em은 라틴 대문자 기준이고
+ * 한글에 그대로 걸면 낱자가 흩어져 읽힌다. 상세 페이지가 눈썹에 서비스명을
+ * 한글로 넣으면서 두 경우가 같이 생겼다.
+ *
+ * 어두운 히어로의 눈썹 색은 --bw-accent다. --bw-color-brand는 industrial
+ * 스코프에서 잉크(#16181d)로 덮여 있어 어두운 면에서 읽히지 않는다. 그동안은
+ * industrial.css의 [class*="uppercase"][class*="tracking"] 규칙이 색을 덮어써서
+ * 가려져 있었다. 클래스 문자열에 기대는 그 경로 대신 토큰을 직접 지정한다.
+ * 08 §2.3이 영역색의 적용처로 히어로 글자를 지목했고 대비도 5.79~9.38로 실측돼 있다.
+ */
+function hasHangul(value) {
+  return /[ㄱ-ㆎ가-힣]/.test(String(value));
+}
 
 function HeroContent({
   eyebrow,
@@ -20,27 +35,27 @@ function HeroContent({
     <>
       {eyebrow ? (
         <p
-          className={`bw-page-hero__eyebrow text-sm font-semibold uppercase tracking-[0.22em] ${dark ? "text-[var(--bw-color-brand)]" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__eyebrow text-sm font-semibold ${hasHangul(eyebrow) ? "tracking-[0.02em]" : "uppercase tracking-[0.22em]"} ${dark ? "text-[var(--bw-accent)]" : "text-[var(--bw-color-muted)]"}`}
         >
           {eyebrow}
         </p>
       ) : null}
-      <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-tight tracking-[-0.025em] md:text-6xl">
+      <h1 className="bw-display mt-4 max-w-4xl [.text-center_&]:mx-auto">
         {title}
       </h1>
       {description ? (
         <p
-          className={`bw-page-hero__description mt-6 max-w-3xl text-lg leading-8 md:text-xl ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
+          className={`bw-page-hero__description bw-title mt-6 max-w-3xl [.text-center_&]:mx-auto ${dark ? "text-white/75" : "text-[var(--bw-color-muted)]"}`}
         >
           {description}
         </p>
       ) : null}
       {action || secondaryAction ? (
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3 [.text-center_&]:justify-center">
           {action ? (
             <Link
               href={action.href}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-ink)] transition hover:brightness-95"
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
             >
               {action.label}
             </Link>
@@ -72,7 +87,6 @@ export function PageHero({
   variant = "plain",
   media = null,
   overlayClassName = "",
-  tone = null,
 }) {
   const effectiveVariant = variant === "plain" || !media ? "plain" : variant;
   const content = (
@@ -95,7 +109,8 @@ export function PageHero({
         data-variant="media"
         className="relative isolate min-h-[34rem] overflow-hidden pt-28 text-white"
       >
-        <div className="absolute inset-0 -z-20">
+        {/* 전면 그래픽. 스크림과 모션은 industrial.css의 .bw-hero-media가 맡는다. */}
+        <div className="bw-hero-media absolute inset-0 -z-20">
           <PageHeroMedia media={media} />
         </div>
         {overlayClassName ? (
@@ -124,11 +139,9 @@ export function PageHero({
     );
   }
 
-  const toneClass = tone ? `bw-page-hero bw-page-hero--${tone}` : "";
   const surface = dark
-    ? "bg-[var(--bw-color-ink)] text-white"
-    : toneClass ||
-      "border-b border-slate-200 bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]";
+    ? "bw-hero-texture bg-[var(--bw-color-ink)] text-white"
+    : "bw-page-hero";
 
   return (
     <section
@@ -137,7 +150,9 @@ export function PageHero({
       data-variant="plain"
       className={`pt-28 ${surface}`}
     >
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">{content}</div>
+      <div className="mx-auto max-w-4xl px-6 py-20 text-center md:py-28">
+        {content}
+      </div>
     </section>
   );
 }

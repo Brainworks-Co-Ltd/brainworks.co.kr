@@ -1,23 +1,90 @@
-import { useState } from "react";
 import type { GetServerSidePropsContext } from "next";
-import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
+import {
+  PopupNoticeForm,
+  type PopupNoticeFormValue,
+  type PopupNoticeLinkOption,
+} from "@/components/admin/PopupNoticeForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { getAdminNoticeList } from "@/server/modules/notices/queries";
 import { getAdminPopupNotice } from "@/server/modules/popup-notices/repository";
 
-type PopupNotice = { id: string; version: number; locales: Array<{ locale: string; title: string }> };
-export default function EditPopupNotice({ notice }: { notice: PopupNotice }) {
-  const [message, setMessage] = useState("");
-  const [currentVersion, setCurrentVersion] = useState(notice.version);
-  async function command(path: string, body: Record<string, unknown>) {
-    const response = await fetch(`/api/admin/popup-notices/${notice.id}/${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, expectedVersion: currentVersion }) });
-    if (response.ok) {
-      const result = await response.json();
-      if (typeof result.data?.version === "number") setCurrentVersion(result.data.version);
-    }
-    setMessage(response.ok ? "처리했습니다." : "처리하지 못했습니다. 버전을 확인해 주세요.");
-  }
-  return <AdminShell activePath="/admin/popup-notices"><AdminPageHeader title={notice.locales.find((locale) => locale.locale === "ko")?.title || "팝업 공지 편집"} description={`현재 버전 ${currentVersion}, 연결 공지는 선택 사항입니다.`} /><section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6"><div className="flex flex-wrap gap-3"><button onClick={() => command("publish", { locale: "ko" })} className="rounded-full bg-[var(--bw-color-ink)] px-4 py-2 text-sm font-semibold text-white">국문 게시</button><button onClick={() => command("unpublish", { locale: "ko" })} className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold">게시 중단</button><button onClick={() => command("renotify", {})} className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold">수정 내용을 다시 알림</button><Link href="/" className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold">홈 미리보기</Link></div>{message ? <p role="status" className="mt-4 text-sm text-[var(--bw-color-muted)]">{message}</p> : null}</section></AdminShell>;
+function toDateTimeLocal(value: Date | string | null) {
+  if (!value) return "";
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 16);
 }
-export async function getServerSideProps(context: GetServerSidePropsContext) { const guard = await requireAdminPage(context); if ("redirect" in guard) return guard; const id = typeof context.params?.popupNoticeId === "string" ? context.params.popupNoticeId : ""; return { props: { notice: await getAdminPopupNotice(id) } }; }
+
+export default function EditPopupNotice({
+  popupNotice,
+  notices,
+}: {
+  popupNotice: PopupNoticeFormValue;
+  notices: PopupNoticeLinkOption[];
+}) {
+  return (
+    <AdminShell activePath="/admin/popup-notices">
+      <AdminPageHeader
+        title={
+          popupNotice.locales.ko.title ||
+          popupNotice.locales.en.title ||
+          "팝업 공지 편집"
+        }
+        description="변경 내용을 저장한 뒤 언어별 노출 기간과 게시 상태를 적용할 수 있습니다."
+      />
+      <div className="mt-8">
+        <PopupNoticeForm initial={popupNotice} notices={notices} />
+      </div>
+    </AdminShell>
+  );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const guard = await requireAdminPage(context);
+  if ("redirect" in guard) return guard;
+  const id =
+    typeof context.params?.popupNoticeId === "string"
+      ? context.params.popupNoticeId
+      : "";
+  const [item, noticeItems] = await Promise.all([
+    getAdminPopupNotice(id),
+    getAdminNoticeList(),
+  ]);
+  const locales = Object.fromEntries(
+    item.locales.map((locale) => [
+      locale.locale,
+      {
+        title: locale.title,
+        bodyMarkdown: locale.bodyMarkdown || "",
+        imageAssetId: locale.imageAssetId || "",
+        imageAlt: locale.imageAlt || "",
+        imageUrl: locale.imageUrl || "",
+        displayOrder: locale.displayOrder,
+        publicationStatus: locale.publicationStatus,
+        publishStartsAt: toDateTimeLocal(locale.publishStartsAt),
+        publishEndsAt: toDateTimeLocal(locale.publishEndsAt),
+      },
+    ]),
+  ) as PopupNoticeFormValue["locales"];
+  return {
+    props: {
+      popupNotice: {
+        id: item.id,
+        version: item.version,
+        itemStatus: item.itemStatus,
+        noticeId: item.noticeId || "",
+        dismissalRevision: item.dismissalRevision,
+        locales,
+      },
+      notices: noticeItems
+        .filter((notice) => notice.itemStatus === "ACTIVE")
+        .map((notice) => ({
+          id: notice.id,
+          publicNumber: notice.publicNumber,
+          title:
+            notice.locales.ko?.title || notice.locales.en?.title || "제목 없음",
+        })),
+    },
+  };
+}

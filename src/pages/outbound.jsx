@@ -1,18 +1,24 @@
-﻿import React from "react";
+import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import { GlobalNetwork } from "@/components/public/GlobalNetwork";
+import styles from "@/components/public/GlobalNetwork.module.css";
 
 const copy = {
   ko: {
-    heroBadge: "Global Program",
     heroTitle: "글로벌 프로그램",
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
+    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
+    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
+    heroAudience: "해외 진출과 국제 협력이 목적인 기업·기관",
+    heroScope: "해외 진출·국제 협력 프로그램을 설명하고 상담으로 연결합니다.",
     ctaPrimary: "상담 요청",
     sectionTitle: "주요 프로그램",
     sectionSubtitle:
@@ -26,10 +32,13 @@ const copy = {
     contactCta: "상담 요청",
   },
   en: {
-    heroBadge: "Global Program",
     heroTitle: "Global Program",
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
+    heroAudience:
+      "Companies and institutions pursuing overseas expansion or international partnerships",
+    heroScope:
+      "Covers our overseas expansion and international partnership programmes.",
     ctaPrimary: "Request a Consultation",
     sectionTitle: "Programme Components",
     sectionSubtitle:
@@ -210,9 +219,6 @@ export default function Outbound() {
   const { language } = useLocale();
   const t = copy[language];
 
-  const networkMapSrc =
-    language === "ko" ? "/images/outbound/맵.png" : "/images/outbound/map.png";
-
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
@@ -221,17 +227,40 @@ export default function Outbound() {
         description={t.heroSubtitle}
       />
 
-      <main id="main-content" className="pb-16">
+      <main id="main-content" data-accent="global" className="pb-16">
         <PageHero
-          variant="plain"
-          tone="global"
-          eyebrow={t.heroBadge}
-          title={t.heroTitle}
-          description={t.heroSubtitle}
+          variant="media"
+          media={{
+            kind: "image",
+            src: "/images/services/hero/smartcity.webp",
+            alt: "",
+          }}
+          eyebrow={t.heroTitle}
+          title={t.heroAudience}
+          description={t.heroScope}
           action={{
             href: "/contact?topic=global",
             label: t.ctaPrimary,
           }}
+        />
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
+        <PageAudience
+          redirects={[
+            {
+              href: "/education",
+              label:
+                language === "ko"
+                  ? "국내 교육 과정이라면 AI 전문교육"
+                  : "Looking for domestic training? See AI Professional Education",
+            },
+            {
+              href: "/services",
+              label:
+                language === "ko"
+                  ? "AI 제품 도입이라면 AI 솔루션"
+                  : "Adopting an AI product? See AI Solutions",
+            },
+          ]}
         />
 
         <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
@@ -251,43 +280,7 @@ export default function Outbound() {
             />
           </div>
 
-          <div className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-slate-200 bg-white shadow-sm">
-            <div className="relative h-90 w-full bg-[var(--bw-color-surface-muted)] md:h-[28rem]">
-              <img
-                src={networkMapSrc}
-                alt={
-                  language === "ko"
-                    ? "글로벌 파트너 네트워크 지도"
-                    : "Global partner network map"
-                }
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="grid gap-4 p-6 md:grid-cols-4">
-              {[
-                { key: "usa", label: "U.S.A.", count: 1 },
-                { key: "qatar", label: "Qatar", count: 1 },
-                { key: "vietnam", label: "Vietnam", count: 4 },
-                { key: "poland", label: "Poland", count: 1 },
-                { key: "indonesia", label: "Indonesia", count: 3 },
-                { key: "australia", label: "Australia", count: 1 },
-                { key: "uzbekistan", label: "Uzbekistan", count: 8 },
-                { key: "singapore", label: "Singapore", count: 1 },
-              ].map((country) => (
-                <div
-                  key={country.key}
-                  className="flex flex-col items-start gap-1 rounded-[var(--bw-radius-card)] bg-[var(--bw-color-ink)] px-4 py-3 text-white"
-                >
-                  <span className="text-2xl font-semibold">
-                    {country.count}
-                  </span>
-                  <span className="text-sm uppercase tracking-[0.2em]">
-                    {country.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <GlobalNetwork language={language} />
 
           <div className="grid gap-4 md:grid-cols-5">
             {[
@@ -353,10 +346,12 @@ export default function Outbound() {
                   language === "ko" ? "국내 2개 기업" : "2 domestic companies",
                 ],
               },
-            ].map((category) => (
+            ].map((category, index) => (
               <div
                 key={category.key}
-                className="rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-4 shadow-sm"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-4 shadow-sm"
               >
                 <p className="text-sm font-semibold text-[var(--bw-color-ink)]">
                   {category.title}
@@ -371,47 +366,53 @@ export default function Outbound() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <SectionHeader
-            eyebrow="Global programs"
-            title={t.sectionTitle}
-            description={t.sectionSubtitle}
-          />
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {programs.map((program, index) => (
-              <article
-                key={program.id}
-                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
-              >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
-                    {program.badge[language]}
-                  </p>
-                  <h3 className="mt-3 text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
-                    {program.title[language]}
-                  </h3>
-                </div>
-                <div>
-                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
-                    {program.description[language]}
-                  </p>
-                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
-                    {program.bullets[language].map((bullet) => (
-                      <li
-                        key={[program.id, bullet].join("-")}
-                        className="flex gap-2"
-                      >
-                        <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
+        <section className="bg-[var(--bw-color-surface-muted)]">
+          <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6">
+            <SectionHeader
+              eyebrow="Global programs"
+              title={t.sectionTitle}
+              description={t.sectionSubtitle}
+            />
+            <div className={styles.programList}>
+              {programs.map((program, index) => (
+                <article
+                  key={program.id}
+                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className={`bw-reveal ${styles.program}`}
+                >
+                  <div>
+                    <span className="bw-marker">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--bw-color-muted)]">
+                      {program.badge[language]}
+                    </p>
+                    <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
+                      {program.title[language]}
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="bw-body text-[var(--bw-color-muted)]">
+                      {program.description[language]}
+                    </p>
+                    <ul className={styles.programBullets}>
+                      {program.bullets[language].map((bullet) => (
+                        <li
+                          key={[program.id, bullet].join("-")}
+                          className="flex gap-2"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -422,23 +423,27 @@ export default function Outbound() {
             description={t.aiSectionSubtitle}
           />
 
-          <div className="mt-10 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+          <div className={styles.educationGrid}>
             {aiPrograms.map((program, index) => (
               <article
                 key={program.id}
-                className="grid gap-6 py-8 md:grid-cols-[5rem_minmax(0,0.8fr)_minmax(0,1.2fr)] md:items-start md:gap-10"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className={`bw-reveal ${styles.education}`}
               >
-                <div className="text-sm font-semibold tracking-[0.18em] text-[var(--bw-color-brand-strong)]">
-                  {String(index + 1).padStart(2, "0")}
+                <div>
+                  <span className="bw-marker">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <h3 className="text-xl font-semibold leading-tight text-[var(--bw-color-ink)] md:text-2xl">
+                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
                   {program.title[language]}
                 </h3>
                 <div>
-                  <p className="text-base leading-7 text-[var(--bw-color-muted)]">
+                  <p className="bw-body text-[var(--bw-color-muted)]">
                     {program.description[language]}
                   </p>
-                  <ul className="mt-5 grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
+                  <ul className={styles.programBullets}>
                     {program.bullets[language].map((bullet) => (
                       <li
                         key={[program.id, bullet].join("-")}

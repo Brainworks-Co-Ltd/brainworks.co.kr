@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
+import { PageAudience } from "@/components/public/PageAudience";
 import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
@@ -474,23 +475,6 @@ const faqItems = [
 
 export default function Education() {
   const { language } = useLocale();
-  const chips =
-    language === "ko"
-      ? [
-          "AI 전문교육",
-          "생성형 AI 심화",
-          "해커톤 & 멘토링",
-          "국내·글로벌 인턴십",
-          "커리어 포트폴리오·면접",
-        ]
-      : [
-          "AI Specialised Training",
-          "Generative AI Intensive",
-          "Hackathon & Mentoring",
-          "Domestic & Global Internships",
-          "Career Portfolio & Interviews",
-        ];
-
   return (
     <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
       <Header />
@@ -507,48 +491,64 @@ export default function Education() {
         }
       />
 
-      <main id="main-content" className="pb-16">
+      <main id="main-content" data-accent="education" className="pb-16">
+        {/* 상단 계약 — docs/designs/detail-page-roles.md
+            눈썹이 페이지 이름, h1이 대상, 설명이 범위다. */}
         <PageHero
-          variant="plain"
-          tone="education"
-          eyebrow="AI Professional Education"
+          variant="media"
+          media={{
+            kind: "image",
+            src: "/images/services/hero/healthcare.webp",
+            alt: "",
+          }}
+          eyebrow={
+            language === "ko" ? "AI 전문교육" : "AI Professional Education"
+          }
           title={
             language === "ko"
-              ? "체계적인 AI 전문 인재 양성"
-              : "Structured development of AI specialists"
+              ? "조직의 AI 역량을 키워야 하는 담당자"
+              : "Teams that need to build AI capability inside the organisation"
           }
           description={
             language === "ko"
-              ? "AI 전문교육, 생성형 AI 심화, 해커톤, 국내·글로벌 인턴십, 취업 포트폴리오까지 단계별 AI 인재 양성"
-              : "We deliver a practical journey that spans specialist education, generative AI training, hackathons, internships, and job-ready portfolios."
+              ? "교육 대상과 과정, 결과물과 문의 방법을 다룹니다."
+              : "Covers who the training is for, the curriculum, the outcomes, and how to get in touch."
           }
           action={{
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
-        >
-          <div className="flex flex-wrap gap-3">
-            {chips.map((item) => (
-              <span
-                key={item}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-[var(--bw-color-ink)]"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        </PageHero>
+        />
+        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
+        <PageAudience
+          redirects={[
+            {
+              href: "/global-programs",
+              label:
+                language === "ko"
+                  ? "해외 인턴십·국제 프로그램이라면 글로벌 프로그램"
+                  : "Looking for overseas internships or international programmes? See Global Program",
+            },
+            {
+              href: "/consulting",
+              label:
+                language === "ko"
+                  ? "도입 전략부터 필요하다면 AI 컨설팅"
+                  : "Need an adoption strategy first? See AI Consulting",
+            },
+          ]}
+        />
 
-        <section className="mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
+        <section className="bw-education-process mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
           <SectionHeader
             eyebrow="Training process"
             title={language === "ko" ? "교육 프로세스" : "Training Process"}
           />
 
-          <div className="flex flex-col gap-12">
+          <div className="bw-learning-flow">
             {processSteps.map((step, index) => {
               const hasImage = Boolean(step.image);
-              const isReversed = hasImage && index % 2 === 1;
+
               const imageAlt =
                 step.image?.alt?.[language] ??
                 step.image?.alt?.en ??
@@ -557,23 +557,20 @@ export default function Education() {
               return (
                 <article
                   key={step.id}
-                  className="overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white"
+                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal bw-learning-step"
                 >
-                  <div
-                    className={`flex flex-col gap-8 px-6 py-8 md:gap-10 md:px-10 md:py-12 ${
-                      hasImage ? "md:flex-row md:items-stretch" : ""
-                    } ${isReversed ? "md:flex-row-reverse" : ""}`}
-                  >
+                  <div className="bw-learning-step__inner">
                     <div className="flex-1 space-y-5">
-                      <div className="inline-flex items-center gap-3 rounded-full bg-[var(--bw-color-surface-muted)] px-4 py-1.5 text-xs font-semibold text-[var(--bw-color-muted)]">
-                        <span
-                          className="flex h-2 w-2 rounded-full bg-[var(--bw-color-brand)]"
-                          aria-hidden="true"
-                        />
-                        {step.stage[language]}
+                      <div className="flex items-center gap-3">
+                        <span className="bw-marker">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span className="bw-chip">{step.stage[language]}</span>
                       </div>
                       <div className="space-y-2">
-                        <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                        <h3 className="bw-title text-[var(--bw-color-ink)]">
                           {step.focus[language]}
                         </h3>
                         <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
@@ -615,7 +612,7 @@ export default function Education() {
                     </div>
 
                     {hasImage && (
-                      <div className="relative h-64 flex-1 overflow-hidden rounded-[var(--bw-radius-feature)] md:h-auto">
+                      <div className="bw-learning-step__image relative h-64 flex-1 overflow-hidden md:h-auto">
                         <Image
                           src={step.image.src}
                           alt={imageAlt}
@@ -660,13 +657,19 @@ export default function Education() {
           </div>
 
           <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {generativeAITracks.map((track) => (
+            {generativeAITracks.map((track, trackIndex) => (
               <article
                 key={track.id}
-                className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(trackIndex, 6) * 80}ms` }}
+                className="bw-reveal grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12 md:px-8"
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                  {/* 번호 마커 — 레퍼런스 실측(DeepLearning.AI)의 카테고리 칩 자리 */}
+                  <span className="bw-marker">
+                    {String(trackIndex + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="bw-title mt-4 text-[var(--bw-color-ink)]">
                     {track.title[language]}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[var(--bw-color-muted)]">
@@ -699,10 +702,12 @@ export default function Education() {
             />
           </div>
           <div className="grid gap-0 border-y border-[var(--bw-color-line)] bg-white sm:grid-cols-3">
-            {educationClients.map((client) => (
+            {educationClients.map((client, index) => (
               <div
                 key={client.id}
-                className="flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
+                /* 로고가 한 줄씩 채워지듯 들어오게 한다. 지연만 주고 나머지는 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
               >
                 <img
                   src={client.logo}
@@ -729,13 +734,15 @@ export default function Education() {
             }
           />
 
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {supportPillars.map((pillar) => (
+          <div className="grid gap-6">
+            {supportPillars.map((pillar, index) => (
               <div
                 key={pillar.id}
-                className="grid gap-5 py-8 md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
+                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className="bw-reveal grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
               >
-                <h3 className="text-xl font-semibold text-[var(--bw-color-ink)]">
+                <h3 className="bw-title text-[var(--bw-color-ink)]">
                   {pillar.title[language]}
                 </h3>
                 <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">

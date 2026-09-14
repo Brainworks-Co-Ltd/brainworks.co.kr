@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
-import HomeHero from "@/components/HomeHero";
-import BusinessAreaCarousel from "@/components/home/BusinessAreaCarousel";
+import IndustrialHero from "@/components/industrial/IndustrialHero";
+import DomainGrid from "@/components/industrial/DomainGrid";
 import LatestNews from "@/components/home/LatestNews";
 import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
@@ -17,9 +17,14 @@ export default function Home({ newsItems, popupNotices, areas }) {
       <Header />
       <main id="main-content">
         <PopupNoticeRegion notices={popupNotices} />
-        <HomeHero />
+        {/*
+          순서는 승인 기획 07의 핵심 여정을 따른다.
+          정체성 → 사업 영역 → 신뢰 근거 → 다음 행동.
+          고객사 로고는 신뢰 근거이므로 사업 영역 뒤에 온다.
+        */}
+        <IndustrialHero />
+        <DomainGrid />
         <Clients />
-        <BusinessAreaCarousel areas={areas} />
         <LatestNews items={newsItems} />
         <CTA />
       </main>

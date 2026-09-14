@@ -94,7 +94,7 @@ export default function BusinessAreaCarousel({ areas: providedAreas = null }) {
               </div>
             }
             action={{
-              href: `/services?area=${encodeURIComponent(activeArea.id)}`,
+              href: `/services?area=${encodeURIComponent(activeArea.id)}#business-areas`,
               label:
                 language === "ko" ? "전체 솔루션 보기" : "View all solutions",
             }}

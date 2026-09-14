@@ -1,0 +1,88 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
+import IndustrialHero from "@/components/industrial/IndustrialHero";
+
+const router = vi.hoisted(() => ({
+  query: {},
+  pathname: "/services",
+  replace: vi.fn(),
+  push: vi.fn(),
+}));
+vi.mock("next/router", () => ({ useRouter: () => router }));
+vi.mock("@/shared/routing/useLocale", () => ({
+  useLocale: () => ({ language: "ko" }),
+}));
+
+beforeEach(() => {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })),
+  );
+});
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
+
+describe("디자인 개선의 탐색과 제목", () => {
+  it("탭 방향키를 연속해서 누르면 선택과 초점이 함께 이동하고 양끝을 순환한다", async () => {
+    const user = userEvent.setup();
+    render(<BusinessAreaExplorer />);
+    const tabs = screen.getAllByRole("tab");
+    tabs[0].focus();
+    await user.keyboard("{ArrowRight}{ArrowRight}");
+    expect(tabs[2]).toHaveFocus();
+    expect(tabs[2]).toHaveAttribute("aria-selected", "true");
+    await user.keyboard("{End}{ArrowRight}");
+    expect(tabs[0]).toHaveFocus();
+    await user.keyboard("{ArrowLeft}");
+    expect(tabs[3]).toHaveFocus();
+    await user.keyboard("{Home}");
+    expect(tabs[0]).toHaveFocus();
+  });
+
+  it("현장 이름을 지우고 다음 현장을 타이핑하며 재생 버튼은 표시하지 않는다", () => {
+    vi.useFakeTimers();
+    const { container } = render(<IndustrialHero />);
+    const slot = container.querySelector(".ind-slot");
+    expect(slot).toHaveTextContent("제조 현장");
+    act(() => vi.advanceTimersByTime(2400));
+    act(() => vi.advanceTimersByTime(40));
+    expect(slot).toHaveTextContent("제조 현");
+    expect(slot).not.toHaveTextContent("제조 현장");
+    for (let i = 0; i < 20; i += 1) act(() => vi.advanceTimersByTime(80));
+    expect(slot).toHaveTextContent("진료 현장");
+    expect(
+      screen.queryByRole("button", { name: /움직임/ }),
+    ).not.toBeInTheDocument();
+    fireEvent.focus(screen.getByRole("button", { name: /도시 관제/ }));
+    fireEvent.click(screen.getByRole("button", { name: /도시 관제/ }));
+    act(() => vi.advanceTimersByTime(10000));
+    expect(slot).toHaveTextContent("도시 관제");
+  });
+
+  it("동작 줄이기를 사용하면 완성된 현장 이름을 유지한다", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    );
+    const { container } = render(<IndustrialHero />);
+    act(() => vi.advanceTimersByTime(10000));
+    expect(container.querySelector(".ind-slot")).toHaveTextContent("제조 현장");
+    expect(container.querySelector(".ind-slot__caret")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /움직임/ }),
+    ).not.toBeInTheDocument();
+  });
+});

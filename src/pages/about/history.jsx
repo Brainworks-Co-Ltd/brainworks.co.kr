@@ -11,10 +11,7 @@ export default function CompanyHistoryPage() {
   const { language } = useLocale();
 
   return (
-    <div
-      id="main-content"
-      className="min-h-screen bg-[var(--bw-color-surface-muted)]"
-    >
+    <div className="min-h-screen bg-[var(--bw-color-surface-muted)]">
       <Header />
       <SeoMetadata
         title={
@@ -28,6 +25,7 @@ export default function CompanyHistoryPage() {
             : "Explore Brainworks milestones."
         }
       />
+      <main id="main-content">
       <PageHero
         variant="plain"
         eyebrow={language === "ko" ? "About Brainworks" : "About Brainworks"}
@@ -56,7 +54,7 @@ export default function CompanyHistoryPage() {
                         className={"absolute inset-x-0 top-0 h-1 " + accent}
                         aria-hidden="true"
                       />
-                      <div className="grid gap-6 py-8 md:grid-cols-[minmax(0,_140px)_1fr] md:gap-10 md:py-10">
+                      <div className="grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,_140px)_1fr] md:gap-10 md:px-8 md:py-10">
                         <div className="flex flex-col gap-2">
                           <span className="text-3xl font-semibold text-[var(--bw-color-ink)]">
                             {item.year}
@@ -90,6 +88,7 @@ export default function CompanyHistoryPage() {
           </div>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>

@@ -278,10 +278,11 @@ export default function News({ newsItems }) {
                 type="search"
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
+                aria-label={language === "ko" ? "소식 검색" : "Search news"}
                 placeholder={
                   language === "ko" ? "검색어를 입력하세요" : "Search news"
                 }
-                className="w-full rounded-full border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm text-[var(--bw-color-ink)] shadow-sm outline-none transition focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
+                className="w-full rounded-full border border-slate-200 bg-white py-3 pl-9 pr-4 text-sm text-[var(--bw-color-ink)] shadow-sm outline-none transition focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/20"
               />
             </div>
           </div>
@@ -297,7 +298,7 @@ export default function News({ newsItems }) {
                 type="button"
                 role="tab"
                 aria-selected={activeFilter === option.value}
-                className={`whitespace-nowrap border-b-2 px-1 pb-3 text-sm font-semibold transition ${activeFilter === option.value ? "border-[var(--bw-color-brand)] text-[var(--bw-color-ink)]" : "border-transparent text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"}`}
+                className={`whitespace-nowrap border-b-2 px-1 py-3 text-sm font-semibold transition ${activeFilter === option.value ? "border-[var(--bw-color-brand)] text-[var(--bw-color-ink)]" : "border-transparent text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"}`}
                 onClick={() => setActiveFilter(option.value)}
               >
                 {option.label}

@@ -1,3 +1,6 @@
+/**
+ * @param {{ eyebrow?: string, title: string, description?: string, action?: import("react").ReactNode }} props
+ */
 export function AdminPageHeader({
   eyebrow = "Admin",
   title,

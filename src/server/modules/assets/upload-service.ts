@@ -83,7 +83,6 @@ export async function uploadImageAsset(
       })
       .returning({
         id: assets.id,
-        storageKey: assets.storageKey,
         width: assets.width,
         height: assets.height,
       });

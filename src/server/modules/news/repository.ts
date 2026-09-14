@@ -4,9 +4,10 @@ import { auditActors } from "@/server/db/schema/audit";
 import { news, newsLocales, newsSlugs } from "@/server/db/schema/news";
 import {
   assertCompleteLocales,
+  assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
-import { assertPublishableNews } from "@/server/modules/news/publication-policy";
+import { assertValidNewsSlug } from "@/server/modules/news/publication-policy";
 import { HttpError } from "@/server/http/errors";
 
 export type NewsCommandInput = {
@@ -50,7 +51,8 @@ async function bumpNewsVersion(
 
 export async function createNews(input: NewsCommandInput, actorId: string) {
   assertCompleteLocales(Object.keys(input.locales));
-  assertPublishableNews(input);
+  assertDraftLocales(input.locales);
+  assertValidNewsSlug(input.slug);
   const db = getDb();
   return db.transaction(async (tx) => {
     const [created] = await tx
@@ -106,6 +108,8 @@ export async function saveNews(
   actorId: string,
 ) {
   assertCompleteLocales(Object.keys(input.locales));
+  assertDraftLocales(input.locales);
+  assertValidNewsSlug(input.slug);
   const db = getDb();
   return db.transaction(async (tx) => {
     const current = await tx.query.news.findFirst({ where: eq(news.id, id) });
@@ -214,6 +218,14 @@ export async function restoreNews(
       .update(news)
       .set({ itemStatus: "ACTIVE", archivedAt: null, archivedByActorId: null })
       .where(eq(news.id, id));
+    await tx
+      .update(newsLocales)
+      .set({
+        publicationStatus: "DRAFT",
+        updatedAt: new Date(),
+        updatedByActorId: actorId,
+      })
+      .where(eq(newsLocales.newsId, id));
     return { id, version: expectedVersion + 1 };
   });
 }
