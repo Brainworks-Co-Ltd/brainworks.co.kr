@@ -1,6 +1,6 @@
-const assetHost = process.env.ASSET_PUBLIC_BASE_URL
-  ? new URL(process.env.ASSET_PUBLIC_BASE_URL).hostname
-  : null;
+const assetOrigin = process.env.ASSET_PUBLIC_BASE_URL
+  ? new URL(process.env.ASSET_PUBLIC_BASE_URL)
+  : undefined;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -51,12 +51,11 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: [],
-    remotePatterns: assetHost
+    remotePatterns: assetOrigin
       ? [
           {
-            protocol: new URL(process.env.ASSET_PUBLIC_BASE_URL).protocol.replace(":", ""),
-            hostname: assetHost,
+            protocol: assetOrigin.protocol.replace(":", ""),
+            hostname: assetOrigin.hostname,
             pathname: "/**",
           },
         ]

@@ -9,15 +9,15 @@ const CSS_PATH = join(process.cwd(), "src/styles/pretendard.css");
 const OLD_FONT_PATH = join(process.cwd(), "public/fonts/PretendardVariable.woff2");
 
 describe("Pretendard 동적 서브셋 자체 호스팅", () => {
-  it("서브셋 디렉터리에 woff2 파일이 80개 이상 있다", () => {
+  it("서브셋 디렉터리에 woff2 파일이 정확히 92개 있다", () => {
     const files = readdirSync(SUBSET_DIR).filter((f) => f.endsWith(".woff2"));
-    expect(files.length).toBeGreaterThanOrEqual(80);
+    expect(files.length).toBe(92);
   });
 
-  it("CSS에 unicode-range 선언이 80개 이상 있다", () => {
+  it("CSS에 unicode-range 선언이 정확히 92개 있다", () => {
     const css = readFileSync(CSS_PATH, "utf-8");
     const matches = css.match(/unicode-range:/g) ?? [];
-    expect(matches.length).toBeGreaterThanOrEqual(80);
+    expect(matches.length).toBe(92);
   });
 
   it("CSS가 옛 단일 PretendardVariable.woff2 파일을 더 이상 참조하지 않는다", () => {

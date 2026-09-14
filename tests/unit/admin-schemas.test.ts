@@ -10,6 +10,7 @@ import { newsCommandSchema, newsSaveSchema } from "@/server/modules/news/schema"
 import {
   noticeCategoryActiveSchema,
   noticeCategoryCommandSchema,
+  noticeCategorySaveSchema,
   noticeCommandSchema,
 } from "@/server/modules/notices/schema";
 import { popupCommandSchema } from "@/server/modules/popup-notices/schema";
@@ -122,6 +123,28 @@ describe("관리자 저장 스키마", () => {
   it("서버가 쓰지 않는 키는 버린다", () => {
     const parsed = noticeCommandSchema.parse({ ...bodies.notice, version: 3 });
     expect(parsed).not.toHaveProperty("version");
+  });
+
+  it("카테고리 이름은 생성과 수정 모두에서 공백만 있으면 거절한다", () => {
+    expect(
+      noticeCategoryCommandSchema.safeParse({
+        ...bodies.noticeCategory,
+        locales: { ko: { name: "   " }, en: { name: "General" } },
+      }).success,
+    ).toBe(false);
+    expect(
+      noticeCategorySaveSchema.safeParse({
+        ...bodies.noticeCategory,
+        expectedVersion: 1,
+        locales: { ko: { name: "일반" }, en: { name: "   " } },
+      }).success,
+    ).toBe(false);
+    expect(
+      noticeCategorySaveSchema.safeParse({
+        ...bodies.noticeCategory,
+        expectedVersion: 1,
+      }).success,
+    ).toBe(true);
   });
 });
 
