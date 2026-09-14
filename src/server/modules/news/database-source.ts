@@ -135,6 +135,7 @@ export async function readDatabaseNewsDetail(
   return {
     redirect: requested[0].isCurrent ? null : currentSlug[0].slug,
     news: {
+      slug: currentSlug[0].slug,
       date: String(row[0].date),
       category: row[0].category,
       title: row[0].title,

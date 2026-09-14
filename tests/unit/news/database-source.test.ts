@@ -112,6 +112,7 @@ describe("DB 뉴스 상세 조회", () => {
 
     const detail = await readDatabaseNewsDetail("news-1", "ko");
 
+    expect(detail?.news?.slug).toBe("news-1");
     expect(detail?.news?.thumbnail).toBe(
       resolvePublicAssetUrl("news/cover.webp"),
     );

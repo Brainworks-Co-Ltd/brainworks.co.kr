@@ -14,6 +14,17 @@ describe("관리자 API 안내", () => {
     expect(adminApiErrorMessage(code)).not.toContain(code);
   });
 
+  it("고정 문구가 없는 코드는 서버가 보낸 구체적인 메시지를 그대로 보여준다", () => {
+    expect(
+      adminApiErrorMessage(
+        new AdminApiError("BAD_REQUEST", "같은 이름의 카테고리가 이미 있습니다."),
+      ),
+    ).toBe("같은 이름의 카테고리가 이미 있습니다.");
+    expect(adminApiErrorMessage(new AdminApiError("BAD_REQUEST"))).toBe(
+      "요청을 처리하지 못했습니다. 입력 내용을 유지한 채 다시 시도해 주세요.",
+    );
+  });
+
   it("응답의 data를 반환하고 관리자 요청 헤더를 전달한다", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { id: "notice-1" } }), { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);

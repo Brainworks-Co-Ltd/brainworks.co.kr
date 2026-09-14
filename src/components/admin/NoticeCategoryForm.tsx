@@ -163,6 +163,9 @@ export function NoticeCategoryForm({
         }),
       });
       await router.replace(router.asPath);
+      setKoName("");
+      setEnName("");
+      setDisplayOrder(categories.length + 2);
     } catch (caught) {
       setError(adminApiErrorMessage(caught));
     } finally {

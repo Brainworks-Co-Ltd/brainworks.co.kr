@@ -40,8 +40,16 @@ export function adminApiErrorMessage(error: unknown) {
         ? error
         : "INTERNAL_ERROR";
 
+  // 코드별 고정 문구가 없으면, 서버가 함께 보낸 구체적인 메시지(예: 카테고리 이름 중복,
+  // 공개 주소 중복)를 그대로 보여준다. 그마저 없을 때만 일반 안내 문구로 대체한다.
+  const serverMessage =
+    error instanceof AdminApiError && error.message !== error.code
+      ? error.message
+      : undefined;
+
   return (
     messageByCode[code] ||
+    serverMessage ||
     "요청을 처리하지 못했습니다. 입력 내용을 유지한 채 다시 시도해 주세요."
   );
 }

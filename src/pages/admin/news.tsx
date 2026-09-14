@@ -102,14 +102,19 @@ export default function AdminNews({
                   >
                     편집
                   </Link>
-                  <Link
-                    href={`/news/${item.slug}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-semibold underline-offset-4 hover:underline"
-                  >
-                    공개 보기
-                  </Link>
+                  {item.locales.ko?.publicationStatus === "PUBLISHED" ||
+                  item.locales.en?.publicationStatus === "PUBLISHED" ? (
+                    <Link
+                      href={`/news/${item.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold underline-offset-4 hover:underline"
+                    >
+                      공개 보기
+                    </Link>
+                  ) : (
+                    <span className="text-[var(--bw-color-muted)]">아직 공개되지 않음</span>
+                  )}
                 </div>
               </li>
             ))}
