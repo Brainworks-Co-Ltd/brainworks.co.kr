@@ -1,6 +1,233 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --bw-color-ink: #21201f;
+  --bw-color-black: #000000;
+  --bw-color-surface: #ffffff;
+  --bw-color-surface-muted: #f1f3fb;
+  --bw-color-brand: #d29b15;
+  --bw-color-brand-strong: #9b700d;
+  --bw-color-muted: #8d8da5;
+  --bw-color-line: #dfe3ec;
+  --bw-color-focus: #1d4ed8;
+  --bw-space-1: 12px;
+  --bw-space-2: 16px;
+  --bw-space-3: 20px;
+  --bw-space-4: 24px;
+  --bw-radius-control: 4px;
+  --bw-radius-card: 12px;
+  --bw-radius-feature: 24px;
+  --bw-shadow-soft: 0 10px 30px rgb(33 32 31 / 8%);
+  --bw-motion-standard: 180ms ease;
+  --bw-motion-slow: 360ms ease;
+  --background: var(--bw-color-surface);
+  --foreground: var(--bw-color-ink);
+  --card: var(--bw-color-surface);
+  --card-foreground: var(--bw-color-ink);
+  --popover: var(--bw-color-surface);
+  --popover-foreground: var(--bw-color-ink);
+  --primary: var(--bw-color-ink);
+  --primary-foreground: var(--bw-color-surface);
+  --secondary: var(--bw-color-surface-muted);
+  --secondary-foreground: var(--bw-color-ink);
+  --muted: var(--bw-color-surface-muted);
+  --muted-foreground: var(--bw-color-muted);
+  --accent: var(--bw-color-surface-muted);
+  --accent-foreground: var(--bw-color-ink);
+  --border: var(--bw-color-line);
+  --input: var(--bw-color-line);
+  --ring: var(--bw-color-focus);
+  --radius: var(--bw-radius-control);
+}
+
+@theme inline {
+  --font-sans:
+    "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --color-ink: var(--bw-color-ink);
+  --color-surface: var(--bw-color-surface);
+  --color-surface-muted: var(--bw-color-surface-muted);
+  --color-brand: var(--bw-color-brand);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-focus: var(--bw-color-focus);
+  --radius-control: var(--bw-radius-control);
+  --radius-card: var(--bw-radius-card);
+  --radius-feature: var(--bw-radius-feature);
+}
+
+html {
+  background: var(--bw-color-surface);
+  color: var(--bw-color-ink);
+  font-family:
+    "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--bw-color-surface);
+  color: var(--bw-color-ink);
+  font-size: 16px;
+  line-height: 1.625;
+  letter-spacing: -0.01em;
+}
+
+.bw-page-hero {
+  border-bottom: 1px solid var(--bw-page-hero-line);
+  background: var(--bw-page-hero-surface);
+  color: var(--bw-color-ink);
+}
+
+.bw-page-hero .bw-page-hero__eyebrow {
+  color: var(--bw-page-hero-accent);
+}
+
+.bw-page-hero .bw-page-hero__description {
+  color: var(--bw-page-hero-muted);
+}
+
+.bw-page-hero--consulting {
+  --bw-page-hero-surface: #edf4f8;
+  --bw-page-hero-line: #d3e0e8;
+  --bw-page-hero-accent: #345c79;
+  --bw-page-hero-muted: #5a7081;
+}
+
+.bw-page-hero--education {
+  --bw-page-hero-surface: #eef7f4;
+  --bw-page-hero-line: #d0e3dc;
+  --bw-page-hero-accent: #2f6a5a;
+  --bw-page-hero-muted: #55766a;
+}
+
+.bw-page-hero--global {
+  --bw-page-hero-surface: #fbf1eb;
+  --bw-page-hero-line: #ead8cc;
+  --bw-page-hero-accent: #8b5436;
+  --bw-page-hero-muted: #7c695d;
+}
+
+.bw-prose {
+  color: var(--bw-color-ink);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.bw-prose > * + * {
+  margin-top: 1.25rem;
+}
+
+.bw-prose h2,
+.bw-prose h3 {
+  color: var(--bw-color-ink);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.bw-prose h2 {
+  margin-top: 3rem;
+  font-size: 1.75rem;
+}
+
+.bw-prose h3 {
+  margin-top: 2.25rem;
+  font-size: 1.35rem;
+}
+
+.bw-prose ul,
+.bw-prose ol {
+  padding-left: 1.5rem;
+}
+
+.bw-prose ul {
+  list-style: disc;
+}
+
+.bw-prose ol {
+  list-style: decimal;
+}
+
+.bw-prose a {
+  color: var(--bw-color-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.bw-prose a:hover {
+  color: var(--bw-color-brand);
+}
+
+.bw-prose blockquote {
+  border-left: 3px solid var(--bw-color-brand);
+  padding-left: 1rem;
+  color: var(--bw-color-muted);
+}
+
+.bw-prose img {
+  border-radius: var(--bw-radius-card);
+}
+
+.bw-prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.bw-prose th,
+.bw-prose td {
+  border: 1px solid rgb(33 32 31 / 12%);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bw-prose th {
+  background: var(--bw-color-surface-muted);
+  font-weight: 600;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bw-color-focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
 
 @keyframes scroll {
   0% {

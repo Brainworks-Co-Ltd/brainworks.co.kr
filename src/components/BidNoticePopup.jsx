@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Megaphone, X } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 function translate(value, language) {
   if (!value) return '';
@@ -20,7 +20,7 @@ function isPopupActive(popup) {
 }
 
 export default function BidNoticePopup({ popups = [] }) {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const activePopup = useMemo(() => popups.find(isPopupActive), [popups]);
   const [isVisible, setIsVisible] = useState(false);
 

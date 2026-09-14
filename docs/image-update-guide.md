@@ -1,3 +1,10 @@
+---
+wiki_type: guide
+status: review
+updated: 2026-08-23
+sources: []
+---
+
 # Image Update Guide
 
 이 문서는 메인 홈페이지와 서비스 관련 페이지의 이미지 교체 방법을 정리한 가이드입니다. 모든 이미지는 Next.js Image 컴포넌트를 통해 로드되므로, 교체 시 동일한 파일 경로와 적절한 해상도를 유지해 주세요.

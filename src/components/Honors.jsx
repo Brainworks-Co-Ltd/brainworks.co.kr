@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Award, ShieldCheck } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 import awardsData from '@/utils/awardsData';
 import certificationsData from '@/utils/certificationsData';
 
@@ -37,7 +37,7 @@ const formatAwardPeriod = (year, date) => {
 };
 
 export default function Honors() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = copy[language];
 
   const featuredAwards = awardsData.slice(0, 4);

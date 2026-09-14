@@ -13,7 +13,7 @@ export const businessAreas = [
       ko: '공정 진동 이상 탐지부터 불량품 판별, 수율 예측까지 제조 현장의 효율을 극대화하는 AI 솔루션을 제공합니다.',
       en: 'From vibration anomaly detection to defect classification and yield prediction, our AI delivers peak efficiency on the production floor.',
     },
-    heroImage: '/images/services/제조AI.jpg',
+    heroImage: '/images/services/hero/manufacturing.webp',
     accent: 'from-sky-500 to-blue-700',
     solutions: [
       {
@@ -80,7 +80,7 @@ export const businessAreas = [
       ko: 'sLLM 기반 음성·텍스트 지능 에이전트가 통역, 상담, 교육까지 폭넓게 지원합니다.',
       en: 'Small LLM-powered voice and text agents cover translation, support, and learning scenarios.',
     },
-    heroImage: '/images/services/AIagent.jpg',
+    heroImage: '/images/services/hero/agent.webp',
     accent: 'from-violet-600 to-fuchsia-500',
     solutions: [
       {
@@ -124,7 +124,7 @@ export const businessAreas = [
       ko: '심전도 분석과 치아 자동 디자인 등 의료 현장의 정확성과 속도를 높이는 AI를 제공합니다.',
       en: 'ECG analytics and automated dental design speed up clinical decisions and improve accuracy.',
     },
-    heroImage: '/images/services/헬스케어AI.jpg',
+    heroImage: '/images/services/hero/healthcare.webp',
     accent: 'from-emerald-500 to-cyan-500',
     solutions: [
       {
@@ -167,7 +167,7 @@ export const businessAreas = [
       ko: '위치 정보 기반 안전 관제와 드론 모니터링으로 스마트시티 구현을 가속화합니다.',
       en: 'Accelerates smart city deployment with geolocation safety control and drone monitoring.',
     },
-    heroImage: '/images/services/스마트시티.jpg',
+    heroImage: '/images/services/hero/smartcity.webp',
     accent: 'from-emerald-600 to-teal-500',
     solutions: [
       {

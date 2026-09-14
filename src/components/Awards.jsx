@@ -2,7 +2,7 @@ import React from 'react';
 import { Award } from 'lucide-react';
 import awardsData from '@/utils/awardsData';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLocale } from '@/shared/routing/useLocale';
 
 const copy = {
   ko: {
@@ -33,7 +33,7 @@ const formatAwardPeriod = (year, date, language) => {
 };
 
 export default function Awards() {
-  const { language } = useLanguage();
+  const { language } = useLocale();
   const t = copy[language];
 
   return (
