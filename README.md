@@ -44,11 +44,20 @@ DB를 끄고 다시 공개 사이트만 보려면 `.env`의 `DATABASE_URL`을 �
 | 서비스 | 포트 | 용도 |
 |---|---|---|
 | `postgres-dev` | 5433 | 개발용. `npm run dev`가 쓴다 |
-| `postgres-test` | 5434 | DB 테스트용으로 준비되어 있으나 현재는 쓰이지 않는다 |
+| `postgres-test` | 5434 | `npm run test:db`의 `*.db.test.ts`가 쓴다 |
 
-`npm test`(vitest)와 `npm run test:db`는 모두 DB를 쓰지 않으므로 컨테이너 없이
-돈다. 현재 `tests/db/**`는 실제 DB에 접속하지 않는 정책 테스트라 컨테이너 없이
-돈다. `DATABASE_TEST_URL`은 아직 읽는 코드가 없다.
+`npm test`(vitest)는 DB를 쓰지 않는다. `npm run test:db`는 두 종류를 함께 돌린다.
+`tests/db/*.test.ts`는 DB에 접속하지 않는 정책 테스트이고,
+`tests/db/*.db.test.ts`는 `DATABASE_TEST_URL`이 가리키는 실제 Postgres에 붙는다.
+
+`vitest.db.config.ts`가 Node 내장 `process.loadEnvFile(".env")`로 `.env`를 읽고
+(`dotenv` 의존성 없음), `tests/db/global-setup.ts`가 시작할 때 마이그레이션을 한 번
+적용한다. `tests/db/setup.ts`는 테스트 프로세스 안에서만 `DATABASE_URL`을
+`DATABASE_TEST_URL`로 덮어쓰고 파일마다 콘텐츠 테이블을 비운다. 개발 DB(5433)는
+건드리지 않는다.
+
+`DATABASE_TEST_URL`이 비어 있으면 `*.db.test.ts`는 전부 skip되고 종료 코드는 0이므로,
+컨테이너 없이도 `npm run test:db`가 돈다.
 
 ### 서버 시간대는 Asia/Seoul로 고정한다
 
@@ -69,7 +78,7 @@ Next.js 한 프로세스가 화면과 API를 모두 처리한다. `npm run dev` 
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm test` | vitest. DB 불필요 |
-| `npm run test:db` | DB 접속 없는 정책 테스트. `postgres-test` 불필요 |
+| `npm run test:db` | 정책 테스트 + 실제 Postgres 저장소 테스트. `DATABASE_TEST_URL`이 없으면 후자는 skip |
 | `npm run test:e2e` | Playwright |
 | `npm run db:generate` | 스키마 변경 후 마이그레이션 파일 생성 |
 | `npm run db:migrate` | 마이그레이션 적용 |

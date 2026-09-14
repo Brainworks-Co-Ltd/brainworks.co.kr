@@ -45,7 +45,9 @@ describe("기반 도구 설정", () => {
 
     expect(dbConfig).toContain('environment: "node"');
     expect(dbConfig).toContain('include: ["tests/db/**/*.test.ts"]');
-    expect(dbConfig).toContain("setupFiles: []");
+    expect(dbConfig).toContain('setupFiles: ["tests/db/setup.ts"]');
+    expect(dbConfig).toContain('globalSetup: ["tests/db/global-setup.ts"]');
+    expect(dbConfig).toContain("fileParallelism: false");
     expect(dbConfig).not.toContain("mergeConfig");
   });
 
@@ -63,8 +65,6 @@ describe("기반 도구 설정", () => {
   it("CI에서 운영 의존성의 High 이상 취약점을 차단한다", () => {
     const ciWorkflow = read(".github/workflows/ci.yml");
 
-    expect(ciWorkflow).toContain(
-      "npm audit --omit=dev --audit-level=high",
-    );
+    expect(ciWorkflow).toContain("npm audit --omit=dev --audit-level=high");
   });
 });

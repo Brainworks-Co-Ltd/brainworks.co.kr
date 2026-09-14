@@ -30,6 +30,22 @@ export type NewsCommandInput = {
   };
 };
 
+/**
+ * drizzle는 드라이버 오류를 DrizzleQueryError로 감싸므로 cause까지 본다.
+ */
+function assertNotDuplicateSlug(error: unknown): never {
+  const codes = [error, (error as { cause?: unknown })?.cause].map(
+    (candidate) => (candidate as { code?: string } | undefined)?.code,
+  );
+  if (codes.includes("23505")) {
+    throw new HttpError(
+      "BAD_REQUEST",
+      "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
+    );
+  }
+  throw error;
+}
+
 async function bumpNewsVersion(
   tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0],
   id: string,
@@ -83,13 +99,7 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         createdByActorId: actorId,
       });
     } catch (error) {
-      if ((error as { code?: string }).code === "23505") {
-        throw new HttpError(
-          "BAD_REQUEST",
-          "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
-        );
-      }
-      throw error;
+      assertNotDuplicateSlug(error);
     }
     return created;
   });
@@ -262,13 +272,7 @@ export async function changeNewsSlug(
         .insert(newsSlugs)
         .values({ newsId: id, slug: newSlug, createdByActorId: actorId });
     } catch (error) {
-      if ((error as { code?: string }).code === "23505") {
-        throw new HttpError(
-          "BAD_REQUEST",
-          "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
-        );
-      }
-      throw error;
+      assertNotDuplicateSlug(error);
     }
     return { id, slug: newSlug, version: expectedVersion + 1 };
   });
