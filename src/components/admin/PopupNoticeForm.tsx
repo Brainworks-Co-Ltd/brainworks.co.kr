@@ -191,6 +191,8 @@ export function PopupNoticeForm({
 
   async function uploadImage(locale: "ko" | "en", file?: File) {
     if (!file) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setMessage("");
@@ -210,6 +212,7 @@ export function PopupNoticeForm({
       if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

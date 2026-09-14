@@ -304,6 +304,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
   }
 
   async function showPreview(locale: "ko" | "en") {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -320,6 +322,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }

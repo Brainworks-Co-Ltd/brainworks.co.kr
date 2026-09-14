@@ -64,6 +64,14 @@ describe("디자인 개선의 탐색과 제목", () => {
     expect(tabs[0]).toHaveFocus();
   });
 
+  it("탭을 마우스로 클릭하면 즉시 선택 상태가 바뀐다", () => {
+    render(<BusinessAreaExplorer />);
+    const tabs = screen.getAllByRole("tab");
+    fireEvent.click(tabs[2]);
+    expect(tabs[2]).toHaveAttribute("aria-selected", "true");
+    expect(tabs[0]).toHaveAttribute("aria-selected", "false");
+  });
+
   it("현장 이름을 지우고 다음 현장을 타이핑하며 재생 버튼은 표시하지 않는다", () => {
     vi.useFakeTimers();
     const { container } = render(<IndustrialHero />);

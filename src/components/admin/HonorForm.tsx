@@ -163,6 +163,8 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
 
   async function uploadImage(file?: File) {
     if (!file) return;
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     try {
@@ -178,6 +180,7 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
       if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
+      inFlight.current = false;
       setBusy(false);
     }
   }
