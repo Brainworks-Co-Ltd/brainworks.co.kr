@@ -7,12 +7,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { getPublishedNewsDetail } from "@/server/modules/news/query-service";
 import { formatDate } from "@/lib/format-date";
-
-function translate(value, language) {
-  if (!value) return "";
-  if (typeof value === "string") return value;
-  return value[language] ?? value.ko ?? value.en ?? "";
-}
+import { translate } from "@/lib/news-filter";
 
 export default function NewsDetail({ news }) {
   const { language } = useLocale();

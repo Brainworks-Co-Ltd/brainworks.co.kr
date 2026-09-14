@@ -31,7 +31,15 @@ export async function requireAdminPage(context: GetServerSidePropsContext) {
   try {
     await requireAdmin(context.req);
     return { props: {} };
-  } catch {
+  } catch (error) {
+    if (
+      !(
+        error instanceof HttpError &&
+        (error.code === "UNAUTHORIZED" || error.code === "FORBIDDEN")
+      )
+    ) {
+      throw error;
+    }
     const returnTo = normalizeReturnTo(context.resolvedUrl);
     return {
       redirect: {

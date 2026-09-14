@@ -46,6 +46,7 @@ export function MobileNavigation({
         aria-label={menuLabel}
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-controls={open || hasOpened ? "mobile-navigation-dialog" : undefined}
         onClick={() => handleOpenChange(true)}
       >
         <Menu aria-hidden="true" />

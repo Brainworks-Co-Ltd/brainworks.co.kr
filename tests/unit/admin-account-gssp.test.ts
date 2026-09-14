@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext } from "next";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { normalizeReturnTo } from "@/server/auth/policy";
+import { HttpError } from "@/server/http/errors";
 
 const { requireAdminMock } = vi.hoisted(() => ({
   requireAdminMock: vi.fn(),
@@ -52,7 +53,7 @@ describe("관리자 계정 페이지 GSSP", () => {
   });
 
   it("세션 조회에 실패하면 requireAdminPage와 동일한 리다이렉트를 반환한다", async () => {
-    requireAdminMock.mockRejectedValue(new Error("UNAUTHORIZED"));
+    requireAdminMock.mockRejectedValue(new HttpError("UNAUTHORIZED"));
     const resolvedUrl = "/admin/account?tab=security";
 
     const result = await getServerSideProps(makeContext(resolvedUrl));
@@ -64,5 +65,13 @@ describe("관리자 계정 페이지 GSSP", () => {
         permanent: false,
       },
     });
+  });
+
+  it("HttpError가 아닌 예외(DB 장애 등)는 그대로 다시 던진다", async () => {
+    requireAdminMock.mockRejectedValue(new Error("db down"));
+
+    await expect(
+      getServerSideProps(makeContext("/admin/account")),
+    ).rejects.toThrow("db down");
   });
 });

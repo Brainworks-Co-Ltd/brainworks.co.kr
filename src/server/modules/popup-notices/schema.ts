@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-  expectedVersionSchema,
-  localeCommandSchema,
-} from "@/server/http/validate";
+import { expectedVersionSchema } from "@/server/http/validate";
 
 const popupLocaleSchema = z.object({
   title: z.string(),
@@ -19,8 +16,4 @@ export const popupCommandSchema = z.object({
 
 export const popupSaveSchema = popupCommandSchema.extend({
   expectedVersion: expectedVersionSchema,
-});
-
-export const popupReorderCommandSchema = localeCommandSchema.extend({
-  displayOrder: z.number().int(),
 });

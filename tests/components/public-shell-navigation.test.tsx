@@ -134,7 +134,8 @@ describe("공개 셸 내비게이션", () => {
     const trigger = screen.getByRole("button", { name: "메뉴 열기" });
     await user.click(trigger);
 
-    await screen.findByRole("dialog", { name: "모바일 메뉴" });
+    const dialog = await screen.findByRole("dialog", { name: "모바일 메뉴" });
+    expect(trigger).toHaveAttribute("aria-controls", dialog.id);
 
     await user.keyboard("{Escape}");
 

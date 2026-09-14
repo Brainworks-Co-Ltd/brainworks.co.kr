@@ -27,6 +27,7 @@ export function MobileNavigationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
+        id="mobile-navigation-dialog"
         finalFocus={finalFocusRef}
         className="inset-y-0 left-auto right-0 top-0 h-dvh max-w-sm translate-x-0 translate-y-0 content-start rounded-none p-6"
         closeLabel={language === "ko" ? "닫기" : "Close"}

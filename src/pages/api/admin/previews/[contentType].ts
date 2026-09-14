@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { renderMarkdownPreview } from "@/server/modules/preview/preview-service";
+import { previewCommandSchema } from "@/server/modules/preview/schema";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
+import { parseBody } from "@/server/http/validate";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
   await requireAdmin(request);
@@ -17,10 +19,9 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
       });
     return;
   }
-  const markdown =
-    typeof request.body?.markdown === "string" ? request.body.markdown : "";
+  const command = parseBody(previewCommandSchema, request.body);
   response.status(200).json({
-    data: { html: renderMarkdownPreview(markdown) },
+    data: { html: renderMarkdownPreview(command.markdown) },
   });
 }
 

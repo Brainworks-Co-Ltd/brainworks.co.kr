@@ -5,6 +5,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { normalizeReturnTo } from "@/server/auth/policy";
 import { isOriginMismatch } from "@/lib/admin-api";
+import { HttpError } from "@/server/http/errors";
 
 type Account = {
   name: string;
@@ -163,7 +164,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let session;
   try {
     session = await requireAdmin(context.req);
-  } catch {
+  } catch (error) {
+    if (
+      !(
+        error instanceof HttpError &&
+        (error.code === "UNAUTHORIZED" || error.code === "FORBIDDEN")
+      )
+    ) {
+      throw error;
+    }
     const returnTo = normalizeReturnTo(context.resolvedUrl);
     return {
       redirect: {

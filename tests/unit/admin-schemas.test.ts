@@ -12,12 +12,10 @@ import {
   noticeCategoryCommandSchema,
   noticeCommandSchema,
 } from "@/server/modules/notices/schema";
-import {
-  popupCommandSchema,
-  popupReorderCommandSchema,
-} from "@/server/modules/popup-notices/schema";
+import { popupCommandSchema } from "@/server/modules/popup-notices/schema";
 import { honorCommandSchema } from "@/server/modules/honors/schema";
 import { aiSolutionCommandSchema } from "@/server/modules/catalog/schema";
+import { previewCommandSchema } from "@/server/modules/preview/schema";
 
 /** 관리자 폼이 실제로 보내는 본문. tests/components/admin-*-form*.test.tsx가 키 집합을 단언한다. */
 const bodies = {
@@ -175,14 +173,13 @@ describe("관리자 명령 스키마", () => {
     ).toBe(false);
   });
 
-  it("팝업 순서 변경은 정수 순서를 요구한다", () => {
-    expect(
-      popupReorderCommandSchema.safeParse({
-        locale: "ko",
-        expectedVersion: 1,
-        displayOrder: 1.5,
-      }).success,
-    ).toBe(false);
+  it("뉴스 미리보기는 마크다운 문자열을 요구한다", () => {
+    expect(previewCommandSchema.safeParse({ markdown: "# 제목" }).success).toBe(
+      true,
+    );
+    expect(previewCommandSchema.safeParse({ markdown: "" }).success).toBe(true);
+    expect(previewCommandSchema.safeParse({}).success).toBe(false);
+    expect(previewCommandSchema.safeParse({ markdown: 1 }).success).toBe(false);
   });
 });
 
