@@ -55,6 +55,15 @@ export function isOriginMismatch(error: unknown): boolean {
   return status === 403 && typeof message === "string" && /origin/i.test(message);
 }
 
+export function isUnauthorized(error: unknown): boolean {
+  if (error instanceof AdminApiError) {
+    return error.code === "UNAUTHORIZED";
+  }
+  if (!error || typeof error !== "object") return false;
+  const { status } = error as { status?: unknown };
+  return status === 401;
+}
+
 export async function requestAdminApi<T>(
   url: string,
   init: RequestInit = {},

@@ -1,11 +1,17 @@
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import {
+  saveSnapshot,
+  snapshotKey,
+  useSessionSnapshot,
+} from "@/hooks/useSessionSnapshot";
+import {
   adminApiErrorMessage,
+  isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
 import { suggestSlug } from "@/lib/news-slug";
@@ -72,6 +78,21 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
   const inFlight = useRef(false);
+  const restoreSnapshot = useCallback((value: NewsFormValue) => setForm(value), []);
+  useSessionSnapshot<NewsFormValue>(
+    snapshotKey("news", initial.id),
+    restoreSnapshot,
+  );
+
+  // 세션 만료(UNAUTHORIZED) 응답이면 현재 입력을 보존하고 로그인 화면으로 이동한다.
+  function handleUnauthorized(caught: unknown): boolean {
+    if (!isUnauthorized(caught)) return false;
+    saveSnapshot(snapshotKey("news", form.id), form);
+    flushSync(() => setBaseline(JSON.stringify(form)));
+    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
+    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    return true;
+  }
 
   function updateLocale(
     locale: "ko" | "en",
@@ -150,6 +171,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       setBaseline(JSON.stringify(form));
       setMessage("뉴스 내용을 저장했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -184,6 +206,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       setBaseline(JSON.stringify(next));
       setMessage("뉴스 공개 주소를 변경했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -228,6 +251,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         `${locale === "ko" ? "국문" : "영문"}을 ${action === "publish" ? "게시했습니다" : "숨겼습니다"}.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -271,6 +295,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "뉴스를 보관했습니다." : "뉴스를 복원했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -292,6 +317,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       );
       setPreview({ locale, html: result.html });
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       setBusy(false);

@@ -1,13 +1,19 @@
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import {
+  saveSnapshot,
+  snapshotKey,
+  useSessionSnapshot,
+} from "@/hooks/useSessionSnapshot";
 import { flushSync } from "react-dom";
 import {
   adminApiErrorMessage,
+  isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
 
@@ -85,6 +91,24 @@ export function PopupNoticeForm({
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
   const inFlight = useRef(false);
+  const restoreSnapshot = useCallback(
+    (value: PopupNoticeFormValue) => setForm(value),
+    [],
+  );
+  useSessionSnapshot<PopupNoticeFormValue>(
+    snapshotKey("popup-notice", initial.id),
+    restoreSnapshot,
+  );
+
+  // 세션 만료(UNAUTHORIZED) 응답이면 현재 입력을 보존하고 로그인 화면으로 이동한다.
+  function handleUnauthorized(caught: unknown): boolean {
+    if (!isUnauthorized(caught)) return false;
+    saveSnapshot(snapshotKey("popup-notice", form.id), form);
+    flushSync(() => setBaseline(JSON.stringify(form)));
+    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
+    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    return true;
+  }
 
   function updateLocale<K extends keyof PopupLocaleValue>(
     locale: "ko" | "en",
@@ -157,6 +181,7 @@ export function PopupNoticeForm({
       setBaseline(JSON.stringify(form));
       setMessage("팝업 내용을 저장했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -182,6 +207,7 @@ export function PopupNoticeForm({
         `${locale === "ko" ? "국문" : "영문"} 팝업 이미지를 연결했습니다. 변경 저장을 눌러 완료해 주세요.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       setBusy(false);
@@ -245,6 +271,7 @@ export function PopupNoticeForm({
           : `${locale === "ko" ? "국문" : "영문"} 게시를 중단했습니다.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -288,6 +315,7 @@ export function PopupNoticeForm({
       setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "팝업을 보관했습니다." : "팝업을 복원했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -325,6 +353,7 @@ export function PopupNoticeForm({
       setBaseline(JSON.stringify(next));
       setMessage("방문자에게 수정 내용을 다시 알리도록 설정했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;

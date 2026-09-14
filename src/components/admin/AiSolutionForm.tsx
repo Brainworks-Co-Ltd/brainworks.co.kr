@@ -1,12 +1,18 @@
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import {
+  saveSnapshot,
+  snapshotKey,
+  useSessionSnapshot,
+} from "@/hooks/useSessionSnapshot";
 import { flushSync } from "react-dom";
 import {
   adminApiErrorMessage,
+  isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
 
@@ -73,6 +79,24 @@ export function AiSolutionForm({
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
   const inFlight = useRef(false);
+  const restoreSnapshot = useCallback(
+    (value: AiSolutionFormValue) => setForm(value),
+    [],
+  );
+  useSessionSnapshot<AiSolutionFormValue>(
+    snapshotKey("ai-solution", initial.id),
+    restoreSnapshot,
+  );
+
+  // 세션 만료(UNAUTHORIZED) 응답이면 현재 입력을 보존하고 로그인 화면으로 이동한다.
+  function handleUnauthorized(caught: unknown): boolean {
+    if (!isUnauthorized(caught)) return false;
+    saveSnapshot(snapshotKey("ai-solution", form.id), form);
+    flushSync(() => setBaseline(JSON.stringify(form)));
+    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
+    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    return true;
+  }
 
   function updateLocale(
     locale: "ko" | "en",
@@ -144,6 +168,7 @@ export function AiSolutionForm({
       setBaseline(JSON.stringify(form));
       setMessage("AI 솔루션 내용을 저장했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -165,6 +190,7 @@ export function AiSolutionForm({
       setForm((current) => ({ ...current, imageAssetId: asset.id }));
       setMessage("대표 이미지를 연결했습니다. 변경 저장을 눌러 완료해 주세요.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       setBusy(false);
@@ -206,6 +232,7 @@ export function AiSolutionForm({
         `${locale === "ko" ? "국문" : "영문"}을 ${action === "publish" ? "게시했습니다" : "숨겼습니다"}.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -244,6 +271,7 @@ export function AiSolutionForm({
       setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "솔루션을 보관했습니다." : "솔루션을 복원했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;

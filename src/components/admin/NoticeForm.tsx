@@ -1,13 +1,19 @@
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import type { AdminNoticeCategory } from "@/components/admin/NoticeCategoryForm";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import {
+  saveSnapshot,
+  snapshotKey,
+  useSessionSnapshot,
+} from "@/hooks/useSessionSnapshot";
 import { flushSync } from "react-dom";
 import {
   adminApiErrorMessage,
+  isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
 
@@ -73,6 +79,21 @@ export function NoticeForm({
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
   const inFlight = useRef(false);
+  const restoreSnapshot = useCallback((value: NoticeFormValue) => setForm(value), []);
+  useSessionSnapshot<NoticeFormValue>(
+    snapshotKey("notice", initial.id),
+    restoreSnapshot,
+  );
+
+  // 세션 만료(UNAUTHORIZED) 응답이면 현재 입력을 보존하고 로그인 화면으로 이동한다.
+  function handleUnauthorized(caught: unknown): boolean {
+    if (!isUnauthorized(caught)) return false;
+    saveSnapshot(snapshotKey("notice", form.id), form);
+    flushSync(() => setBaseline(JSON.stringify(form)));
+    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
+    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    return true;
+  }
 
   function updateLocale(
     locale: "ko" | "en",
@@ -138,6 +159,7 @@ export function NoticeForm({
       setBaseline(JSON.stringify(form));
       setMessage("공지 내용을 저장했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -202,6 +224,7 @@ export function NoticeForm({
           : `${locale === "ko" ? "국문" : "영문"} 게시를 중단했습니다.`,
       );
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
@@ -245,6 +268,7 @@ export function NoticeForm({
       setBaseline(JSON.stringify(next));
       setMessage(action === "archive" ? "공지를 보관했습니다." : "공지를 복원했습니다.");
     } catch (caught) {
+      if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
     } finally {
       inFlight.current = false;
