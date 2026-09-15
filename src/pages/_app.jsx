@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import "@/styles/globals.css";
 import "@/styles/industrial.css";
+import "@/styles/layout.css";
 import { SkipLink } from "@/components/public/SkipLink";
 
 /**

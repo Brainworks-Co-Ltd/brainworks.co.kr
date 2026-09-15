@@ -3,14 +3,19 @@
 @import "./pretendard.css";
 
 :root {
-  --bw-color-ink: #21201f;
+  --bw-color-ink: #10191b;
   --bw-color-black: #000000;
   --bw-color-surface: #ffffff;
-  --bw-color-surface-muted: #f1f3fb;
+  --bw-color-surface-muted: #f1f2fb;
   --bw-color-brand: #d29b15;
   --bw-color-brand-strong: #9b700d;
   --bw-color-muted: #8d8da5;
-  --bw-color-line: #dfe3ec;
+  --bw-color-line: #e1e3f0;
+  --bw-color-accent: #5b63d3;
+  --bw-color-accent-strong: #8b93ea;
+  --bw-color-accent-text: #4a55c6;
+  --bw-color-tint: #f1f2fb;
+  --bw-color-surface-dark-deep: #262a48;
   --bw-color-focus: #1d4ed8;
   --bw-space-1: 12px;
   --bw-space-2: 16px;
@@ -46,9 +51,16 @@
   --font-sans:
     "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --color-ink: var(--bw-color-ink);
+  --color-ink-strong: var(--bw-color-ink);
   --color-surface: var(--bw-color-surface);
   --color-surface-muted: var(--bw-color-surface-muted);
+  --color-tint: var(--bw-color-tint);
+  --color-line: var(--bw-color-line);
   --color-brand: var(--bw-color-brand);
+  --color-accent: var(--bw-color-accent);
+  --color-accent-strong: var(--bw-color-accent-strong);
+  --color-accent-text: var(--bw-color-accent-text);
+  --color-surface-dark-deep: var(--bw-color-surface-dark-deep);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

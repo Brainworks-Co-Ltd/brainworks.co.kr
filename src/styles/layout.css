@@ -1,0 +1,84 @@
+/* 시안에서 이식한 공개 레이아웃 원시 클래스입니다. */
+
+.inner {
+  max-width: 1296px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.rail {
+  --gutter: max(24px, calc((100% - 1296px) / 2));
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-inline: var(--gutter);
+  padding-block: 8px 24px;
+  margin-block-end: -24px;
+  scroll-padding-inline: var(--gutter);
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail > * {
+  scroll-snap-align: start;
+  flex: none;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+  padding-inline: 28px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.pill-outline {
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-strong);
+}
+
+.pill-outline:hover {
+  border-color: var(--color-ink-strong);
+  background: var(--color-ink-strong);
+  color: white;
+}
+
+.pill-dark {
+  background: #10191b;
+  color: #fff;
+}
+
+.pill-dark:hover {
+  background: var(--color-surface-dark-deep);
+}
+
+.pill-light {
+  background: white;
+  color: var(--color-ink-strong);
+}
+
+.pill-light:hover {
+  background: #e5e5e5;
+}
