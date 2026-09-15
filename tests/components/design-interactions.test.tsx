@@ -2,6 +2,8 @@ import { useState } from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import HeroSlot from "@/components/public/HeroSlot";
+import Rail from "@/components/public/Rail";
 import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
 import IndustrialHero from "@/components/industrial/IndustrialHero";
 
@@ -17,11 +19,13 @@ const router = vi.hoisted(() => ({
 vi.mock("next/router", () => ({
   useRouter: () => {
     const [query, setQuery] = useState(router.query);
-    router.replace.mockImplementation((url: { query?: Record<string, string> }) => {
-      router.query = { ...url?.query };
-      setQuery(router.query);
-      return Promise.resolve(true);
-    });
+    router.replace.mockImplementation(
+      (url: { query?: Record<string, string> }) => {
+        router.query = { ...url?.query };
+        setQuery(router.query);
+        return Promise.resolve(true);
+      },
+    );
     return { ...router, query };
   },
 }));
@@ -108,6 +112,50 @@ describe("디자인 개선의 탐색과 제목", () => {
     expect(container.querySelector(".ind-slot__caret")).toBeNull();
     expect(
       screen.queryByRole("button", { name: /움직임/ }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("새 HeroSlot은 현장 이름을 비운 뒤 다음 현장을 타이핑한다", () => {
+    vi.useFakeTimers();
+    render(<HeroSlot slots={["제조 현장", "진료 현장"]} />);
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveTextContent("제조 현장");
+    act(() => vi.advanceTimersByTime(3000));
+    expect(heading).not.toHaveTextContent("제조 현장");
+    act(() => vi.advanceTimersByTime(60 * "진료 현장".length));
+    expect(heading).toHaveTextContent("진료 현장");
+  });
+
+  it("새 HeroSlot은 동작 줄이기에서도 현장 이름을 완성된 상태로 전환한다", () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    );
+    render(<HeroSlot slots={["제조 현장", "진료 현장"]} />);
+    const heading = screen.getByRole("heading", { level: 2 });
+    act(() => vi.advanceTimersByTime(3000));
+    expect(heading).toHaveTextContent("진료 현장");
+    act(() => vi.advanceTimersByTime(3000));
+    expect(heading).toHaveTextContent("제조 현장");
+  });
+
+  it("카드가 모두 들어오면 Rail 이동 인디케이터를 숨긴다", () => {
+    render(
+      <Rail>
+        <li>첫 카드</li>
+        <li>두 번째 카드</li>
+      </Rail>,
+    );
+    expect(
+      screen.queryByRole("button", { name: "이전" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "다음" }),
     ).not.toBeInTheDocument();
   });
 });
