@@ -77,7 +77,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             role="tab"
             aria-selected={area.id === activeArea.id}
             tabIndex={area.id === activeArea.id ? 0 : -1}
-            className={`min-h-11 whitespace-nowrap rounded-full border px-4 py-3 text-sm font-medium transition ${area.id === activeArea.id ? "border-transparent bg-[var(--bw-accent)] text-[var(--bw-ink)]" : "border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-muted)] hover:border-[var(--bw-line-strong)] hover:text-[var(--bw-color-ink)]"}`}
+            className={`min-h-11 whitespace-nowrap rounded-full border px-4 py-3 text-sm font-medium transition ${area.id === activeArea.id ? "border-transparent bg-[var(--bw-accent)] text-[var(--bw-on-dark)]" : "border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-muted)] hover:border-[var(--bw-line-strong)] hover:text-[var(--bw-color-ink)]"}`}
             onClick={() => selectArea(area.id)}
             onKeyDown={(event) => {
               if (event.key === "ArrowRight" || event.key === "ArrowDown") {

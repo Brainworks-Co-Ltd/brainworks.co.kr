@@ -9,25 +9,29 @@
  */
 
 :root[data-design="industrial"] {
-  /* 2026-09-07 승인: 청록 면과 그래픽, 골드 주요 행동을 결합한다. */
+  /* 2026-09-16 결정: 보라빛 파랑 하나를 강조로 쓴다. 청록 면과 그래픽,
+     골드 주요 행동은 걷어냈다. 골드는 로고 파일에만 남는다.
+     globals.css의 --bw-color-* 와 같은 값이다. 여기서 var()로 참조하면
+     아래 매핑 블록과 순환 참조가 되므로 값을 그대로 적는다. */
   --bw-surface: #ffffff;
-  --bw-surface-muted: #f4f7f5;
-  --bw-surface-tinted: #e7f0ec;
+  --bw-surface-muted: #f1f2fb;
+  --bw-surface-tinted: #e5e7f6;
   --bw-surface-dark: #10191b;
-  --bw-surface-dark-deep: #18302f;
-  --bw-graphic: #71d6c7;
-  --bw-graphic-ink: #286c61;
+  --bw-surface-dark-deep: #262a48;
+  --bw-graphic: #8b93ea;
+  --bw-graphic-ink: #4a55c6;
 
   --bw-ink: #10191b;
-  --bw-muted: #53615d;
-  --bw-dim: #61736b;
+  --bw-muted: #5d6070;
+  --bw-dim: #6f7286;
   --bw-on-dark: #ffffff;
 
-  --bw-line: #d7e1dc;
-  --bw-line-strong: #b5c9c2;
+  --bw-line: #e1e3f0;
+  --bw-line-strong: #c6cade;
 
-  /* 골드 면에는 잉크 글자를 짝지어 주요 행동의 대비를 확보한다. */
-  --bw-brand: #d29b15;
+  /* 강조 면에는 흰 글자를 짝지어 주요 행동의 대비를 확보한다.
+     잉크 글자는 이 면 위에서 3.56이라 미달한다. */
+  --bw-brand: #5b63d3;
 
   /* 히어로 슬롯 강조색. 값은 각 슬롯 배경 사진에서 직접 뽑았다.
      사진의 지배 색상을 찾고, 채도는 사진의 평균 채도를 따르고, 명도만
@@ -486,7 +490,7 @@
 
 .ind-dark .ind-btn--solid {
   background: var(--bw-brand);
-  color: var(--bw-surface-dark);
+  color: var(--bw-on-dark);
 }
 
 .ind-dark .ind-btn--ghost {
@@ -887,14 +891,13 @@
   --bw-color-muted: var(--bw-muted);
   --bw-color-line: var(--bw-line);
 
-  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 골드 면과 잉크 글자로 지정한다. */
+  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 강조 면과 흰 글자로 지정한다. */
   --bw-color-brand: var(--bw-ink);
   --bw-color-black: var(--bw-ink);
   --bw-color-focus: var(--bw-ink);
 
-  /* 태그·눈썹 문구처럼 글자로 쓰는 골드만 남긴다.
-     기존 #9b700d는 흰 배경에서 4.45로 모자라 한 단 어둡게 잡았다 (5.37) */
-  --bw-color-brand-strong: #8a6408;
+  /* 태그와 눈썹 문구처럼 글자로 쓰는 강조색. 흰 배경에서 6.12 */
+  --bw-color-brand-strong: #4a55c6;
 
   --bw-radius-control: 9px;
   --bw-radius-card: 16px;
@@ -904,20 +907,18 @@
 /* ---------------------------------------------------------------
  * 강조색 (docs/planning/08-design-system.md 2.2.2)
  *
- * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 원인은 골드를
- * 흰 배경에서 글자로 못 쓴다는 것(2.49)이었고, 그래서 색을 아예
- * 안 쓰게 됐다.
+ * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 골드를 흰 배경에서
+ * 글자로 못 쓰는 탓(2.49)에 색을 아예 안 쓰게 된 것이 원인이었다.
  *
- * DeepLearning.AI가 딥레드 #620001을 큰 면으로 깔고 그 위에 글자를
- * 얹는 방식을 2026-09-01에 실측했다. 같은 방식을 쓰면 골드를 면으로
- * 깔고 잉크를 얹어 7.14를 확보할 수 있다. 남의 색을 빌리지 않는다.
+ * 2026-09-16에 골드 대신 보라빛 파랑을 강조로 쓰기로 했다. 면으로 깔 때는
+ * 흰 글자를 얹고, 흰 배경에 글자로 쓸 때는 한 단 어두운 값을 쓴다.
  * --------------------------------------------------------------- */
 
 :root[data-design="industrial"] {
-  --bw-accent: #d29b15; /* 강조 면. 잉크 글자와 7.14 */
-  --bw-accent-strong: #f0be4e; /* 밝은 골드. 잉크와 10.3 */
-  --bw-accent-soft: #fdf6e3; /* 칩 배경 */
-  --bw-accent-text: #8a6408; /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
+  --bw-accent: #5b63d3; /* 강조 면. 흰 글자와 4.99 */
+  --bw-accent-strong: #8b93ea; /* 밝은 보라. 어두운 면 위에서 쓴다 */
+  --bw-accent-soft: #f1f2fb; /* 칩 배경 */
+  --bw-accent-text: #4a55c6; /* 칩과 강조 글자. 흰 배경 6.12, soft 위 5.78 */
 }
 
 /* 카테고리 칩 */
@@ -943,7 +944,7 @@
   padding-inline: 0.5rem;
   border-radius: var(--bw-radius-control);
   background: var(--bw-accent);
-  color: var(--bw-ink);
+  color: var(--bw-on-dark);
   font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -967,7 +968,7 @@
   main
   .rounded-full.bg-\[var\(--bw-color-brand\)\] {
   background-color: var(--bw-brand) !important;
-  color: var(--bw-ink) !important;
+  color: var(--bw-on-dark) !important;
   border-radius: var(--bw-radius-control);
 }
 
@@ -1093,7 +1094,7 @@
 /* ---------------------------------------------------------------
  * 어두운 히어로의 강조 글자
  *
- * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#8a6408)로 잡는데,
+ * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#4a55c6)로 잡는데,
  * 그 값은 어두운 면에서 2.2라 읽히지 않는다. 08 §2.2.1이 정한
  * 어두운 구간용 밝은 골드로 바꾼다 (#0e1013 위에서 10.3).
  * --------------------------------------------------------------- */
@@ -1107,50 +1108,13 @@
 }
 
 /* ---------------------------------------------------------------
- * 서비스별 강조색 (docs/planning/08-design-system.md 2.3)
+ * 서비스별 강조색은 걷어냈다 (2026-09-16 결정).
  *
- * 2.3의 원티드 hue ramp 4색은 홈 히어로 슬롯에만 묶여 있었고, 상세
- * 페이지는 전부 골드 하나였다. 골드만 반복하니 네 페이지가 같아 보이고
- * 강조가 남발됐다. 같은 램프에서 나온 값이라 넷이 서로 어울린다.
- *
- * -600은 어두운 면 위 값이다(대비는 2.3 표). 밝은 면에서 글자로 쓰면
- * 미달하므로 어두운 단계를 한 벌 더 둔다.
+ * 청록, 주황, 라임, 자주 넷을 페이지마다 갈아 끼우던 규칙이 있었다.
+ * 강조색을 보라빛 파랑 하나로 정하면서 넷 다 지운다. --bw-svc를 쓰는
+ * 세 자리는 var(--bw-svc, var(--bw-accent)) 꼴이라 그대로 강조색으로
+ * 떨어진다. data-accent 속성은 페이지 표시용으로 남는다.
  * --------------------------------------------------------------- */
-
-:root[data-design="industrial"] [data-accent] {
-  --bw-accent: var(--bw-svc);
-  --bw-accent-strong: var(--bw-svc-bright);
-  --bw-accent-text: var(--bw-svc-ink);
-  --bw-accent-soft: var(--bw-svc-soft);
-}
-
-:root[data-design="industrial"] [data-accent="solution"] {
-  --bw-svc: #00bdde; /* cyan-600 */
-  --bw-svc-bright: #4dd9f2; /* 어두운 면 위 강조 */
-  --bw-svc-ink: #00606f; /* 밝은 면 위 글자 */
-  --bw-svc-soft: #e6f8fc;
-}
-
-:root[data-design="industrial"] [data-accent="consulting"] {
-  --bw-svc: #fb8502; /* orange-600 */
-  --bw-svc-bright: #ffab4d;
-  --bw-svc-ink: #8a4700;
-  --bw-svc-soft: #fff2e3;
-}
-
-:root[data-design="industrial"] [data-accent="education"] {
-  --bw-svc: #57cf07; /* lime-600 */
-  --bw-svc-bright: #8ae64b;
-  --bw-svc-ink: #2f6b04;
-  --bw-svc-soft: #eefae1;
-}
-
-:root[data-design="industrial"] [data-accent="global"] {
-  --bw-svc: #ca59ff; /* purple-600 */
-  --bw-svc-bright: #dd91ff;
-  --bw-svc-ink: #7a1aa3;
-  --bw-svc-soft: #f9ecff;
-}
 
 /* ---------------------------------------------------------------
  * 히어로 표면 (faculty.ai 실측 2026-09-01)
@@ -1333,7 +1297,7 @@
 .bw-area-intro__link {
   margin-top: 24px;
   background: var(--bw-brand);
-  color: var(--bw-ink);
+  color: var(--bw-on-dark);
 }
 .bw-area-intro__link:hover {
   filter: brightness(1.08);
