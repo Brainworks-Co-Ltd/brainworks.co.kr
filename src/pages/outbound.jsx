@@ -305,7 +305,10 @@ export default function Outbound() {
               ))}
             </ul>
 
-            <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-5">
+            {/* 사업 영역별 국가 수치다. 카드 다섯 장으로 깔면 내용이 한 줄뿐인
+                영역도 같은 높이를 차지해 빈 면만 남는다. 위 국가 목록과 같은
+                줄 형태로 맞춘다. */}
+            <dl className="mt-12">
               {[
                 {
                   key: "education",
@@ -379,20 +382,18 @@ export default function Outbound() {
                 <div
                   key={category.key}
                   /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-tint p-6 lg:p-8"
+                  style={{ transitionDelay: `${Math.min(index, 6) * 60}ms` }}
+                  className="bw-reveal grid gap-1 border-t border-line py-5 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-8"
                 >
-                  <p className="text-[18px] font-semibold text-ink-strong">
+                  <dt className="text-[16px] font-semibold text-ink-strong">
                     {category.title}
-                  </p>
-                  <ul className="mt-3 space-y-1 text-[15px] text-muted-foreground">
-                    {category.lines.map((line, idx) => (
-                      <li key={[category.key, idx].join("-")}>{line}</li>
-                    ))}
-                  </ul>
+                  </dt>
+                  <dd className="m-0 text-[15px] leading-[1.7] text-muted-foreground">
+                    {category.lines.join(", ")}
+                  </dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
         </section>
 
