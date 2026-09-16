@@ -6,8 +6,21 @@ import { PageHero } from "@/components/public/PageHero";
 import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
-import { GlobalNetwork } from "@/components/public/GlobalNetwork";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
+
+/* 국가명과 수치는 원본 지도 이미지(public/images/outbound)에 적힌 그대로다.
+   국내는 지도 아래 "Korea 10개사"로 따로 적혀 있던 것을 목록에 합쳤다. */
+const partnerCountries = [
+  { key: "korea", label: "Korea", count: 10 },
+  { key: "uzbekistan", label: "Uzbekistan", count: 8 },
+  { key: "vietnam", label: "Vietnam", count: 4 },
+  { key: "indonesia", label: "Indonesia", count: 3 },
+  { key: "usa", label: "U.S.A.", count: 1 },
+  { key: "qatar", label: "Qatar", count: 1 },
+  { key: "poland", label: "Poland", count: 1 },
+  { key: "australia", label: "Australia", count: 1 },
+  { key: "singapore", label: "Singapore", count: 1 },
+];
 
 const copy = {
   ko: {
@@ -269,7 +282,28 @@ export default function Outbound() {
               }
             />
 
-            <GlobalNetwork language={language} />
+            {/* 원본 지도 이미지에 적혀 있던 국가명과 수치를 그대로 옮긴 목록이다.
+                도식 그림을 걷어낸 이유는 노드 위치가 지리와 무관해 아무것도
+                나타내지 않았기 때문이다. 아홉 나라뿐이라 지도로 채우기보다
+                조용한 목록이 정확하다. */}
+            <ul className="mt-10 grid grid-cols-2 gap-x-8 lg:grid-cols-3 lg:gap-x-12">
+              {partnerCountries.map((country, index) => (
+                <li
+                  key={country.key}
+                  style={{ transitionDelay: `${Math.min(index, 6) * 60}ms` }}
+                  className="bw-reveal flex items-baseline justify-between gap-4 border-b border-line py-4"
+                >
+                  <span className="text-[15px] text-muted-foreground">
+                    {country.label}
+                  </span>
+                  <span className="text-[15px] font-semibold text-ink-strong">
+                    {language === "ko"
+                      ? `${country.count}개사`
+                      : `${country.count}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
             <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-5">
               {[
