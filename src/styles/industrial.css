@@ -1360,3 +1360,65 @@ section[data-variant="media"] a:focus-visible {
 section[data-variant="cta"] :focus-visible {
   outline-color: var(--bw-accent-strong);
 }
+
+/* ---------------------------------------------------------------
+ * 문의 블록의 면
+ *
+ * 검은 사각형 하나로는 페이지 끝이 비어 보인다는 지적을 받았다. 강조색과
+ * 그보다 밝은 보라, 한 단 푸른 값을 큰 원으로 겹쳐 번지게 하고 그 위에
+ * 그레인을 얹는다. 색은 셋 다 팔레트 안에 있고 푸른 값만 이 면 전용이다.
+ *
+ * 메인은 이 블록이 화면 폭을 다 쓰므로 모서리를 깎으면 페이지 가장자리에
+ * 둥근 자국이 남는다. 메인에서만 각을 세우고 글을 가운데로 모은다.
+ * --------------------------------------------------------------- */
+:root[data-design="industrial"] {
+  --bw-cta-blue: #3f6fd8; /* 문의 면 전용. 강조색과 같은 계열의 푸른 쪽 */
+}
+
+section[data-variant="cta"] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    radial-gradient(72% 125% at 4% 10%, var(--bw-cta-blue), transparent 66%),
+    radial-gradient(66% 115% at 96% 18%, var(--bw-accent), transparent 64%),
+    radial-gradient(
+      54% 95% at 74% 108%,
+      color-mix(in oklab, var(--bw-accent-strong) 78%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      62% 105% at 20% 112%,
+      color-mix(in oklab, var(--bw-cta-blue) 70%, transparent),
+      transparent 72%
+    ),
+    /* 바닥 깔개. 이게 없으면 원과 원 사이가 검게 남아 구간이 둘로 갈라진다 */
+    linear-gradient(
+        112deg,
+        color-mix(in oklab, var(--bw-cta-blue) 52%, var(--bw-surface-dark)) 0%,
+        color-mix(in oklab, var(--bw-accent) 46%, var(--bw-surface-dark)) 52%,
+        var(--bw-surface-dark-deep) 100%
+      );
+}
+
+/* 그레인. 히어로와 같은 한 장을 쓴다 */
+section[data-variant="cta"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+:root[data-design="industrial"] main .home-contact-cta {
+  border-radius: 0;
+  padding-block: var(--bw-space-9);
+  text-align: center;
+}
+
+:root[data-design="industrial"] main .home-contact-cta > * {
+  margin-inline: auto;
+}
