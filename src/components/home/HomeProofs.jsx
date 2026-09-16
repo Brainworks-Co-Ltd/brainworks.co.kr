@@ -53,7 +53,7 @@ export default function HomeProofs() {
                 >
                   {PROOF_ICONS[index]}
                 </svg>
-                <p className="mt-8 text-[15px] text-muted lg:text-[16px]">
+                <p className="mt-8 text-[15px] text-muted-foreground lg:text-[16px]">
                   {proof.label[language]}
                 </p>
                 <h3 className="mt-3 text-[22px] font-semibold text-ink-strong [overflow-wrap:anywhere] lg:text-[24px]">

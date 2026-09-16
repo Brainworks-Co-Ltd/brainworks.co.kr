@@ -73,8 +73,8 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  /* shadcn의 --color-accent 짝은 위에서 정한 강조색을 덮어써서 bg-accent가
+     옅은 면으로 풀렸다. 쓰는 곳이 없어 지운다. 면은 bg-tint를 쓴다. */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

@@ -38,7 +38,7 @@ export default function NewsRail({ items = [] }) {
                 <h3 className="mt-3 line-clamp-2 text-[18px] leading-[1.45] text-ink-strong group-hover:underline lg:text-[22px]">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-[14px] text-muted">
+                <p className="mt-3 text-[14px] text-muted-foreground">
                   {item.date.replaceAll("-", ".")}
                 </p>
               </Link>

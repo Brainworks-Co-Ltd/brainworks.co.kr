@@ -473,7 +473,7 @@ const faqItems = [
 ];
 
 const CHIP_CLASS =
-  "inline-flex h-9 items-center rounded-full border border-line px-4 text-[14px] text-muted";
+  "inline-flex h-9 items-center rounded-full border border-line px-4 text-[14px] text-muted-foreground";
 
 export default function Education() {
   const { language } = useLocale();
@@ -765,7 +765,7 @@ export default function Education() {
                       +
                     </span>
                   </summary>
-                  <p className="pb-6 text-[16px] text-muted">
+                  <p className="pb-6 text-[16px] text-muted-foreground">
                     {item.answer[language]}
                   </p>
                 </details>
