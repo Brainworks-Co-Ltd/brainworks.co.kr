@@ -58,12 +58,14 @@ function NoticeCard({ notice, language, onDismiss }) {
     <aside
       role="region"
       aria-label={ko ? "팝업 공지" : "Popup notice"}
-      className="fixed left-4 right-4 top-24 z-40 max-w-[360px] overflow-hidden rounded-[var(--bw-radius-card)] border border-line bg-white shadow-[var(--bw-shadow-soft)]"
+      className="fixed left-5 right-5 top-20 z-40 max-w-[500px] overflow-hidden rounded-[var(--bw-radius-card)] border border-line bg-white shadow-[var(--bw-shadow-soft)]"
     >
-      <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
         <p
           className={
-            imageOnly ? "sr-only" : "text-[15px] font-semibold text-ink-strong"
+            imageOnly
+              ? "sr-only"
+              : "text-[16px] font-semibold leading-[1.45] text-ink-strong"
           }
         >
           {notice.title}
@@ -78,35 +80,33 @@ function NoticeCard({ notice, language, onDismiss }) {
         </button>
       </div>
 
-      <div className="max-h-[60vh] overflow-y-auto">
-        {notice.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 팝업 이미지라 실제 크기를 미리 알 수 없다.
-          <img
-            src={notice.imageUrl}
-            alt={notice.imageAlt || ""}
-            className="block w-full"
-          />
-        ) : null}
-        {notice.bodyMarkdown || notice.detailUrl ? (
-          <div className="p-4">
-            {notice.bodyMarkdown ? (
-              <p className="whitespace-pre-wrap text-[14px] leading-6 text-muted-foreground">
-                {notice.bodyMarkdown}
-              </p>
-            ) : null}
-            {notice.detailUrl ? (
-              <Link
-                href={notice.detailUrl}
-                className="mt-3 inline-flex min-h-9 items-center rounded-full bg-ink-strong px-4 text-sm font-semibold text-white"
-              >
-                {ko ? "자세히 보기" : "View details"}
-              </Link>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
+      {notice.imageUrl || notice.bodyMarkdown || notice.detailUrl ? (
+        <div className="max-h-[60vh] space-y-4 overflow-y-auto p-5">
+          {notice.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 팝업 이미지라 실제 크기를 미리 알 수 없다.
+            <img
+              src={notice.imageUrl}
+              alt={notice.imageAlt || ""}
+              className="block w-full"
+            />
+          ) : null}
+          {notice.bodyMarkdown ? (
+            <p className="whitespace-pre-wrap text-[14px] leading-6 text-muted-foreground">
+              {notice.bodyMarkdown}
+            </p>
+          ) : null}
+          {notice.detailUrl ? (
+            <Link
+              href={notice.detailUrl}
+              className="inline-flex min-h-9 items-center rounded-[var(--bw-radius-control)] bg-ink-strong px-4 text-sm font-semibold text-white"
+            >
+              {ko ? "자세히 보기" : "View details"}
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
 
-      <div className="flex items-center justify-between gap-3 border-t border-line px-4 py-3">
+      <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4">
         <label className="flex items-center gap-2 text-[14px] text-muted-foreground">
           <input
             type="checkbox"
@@ -119,7 +119,7 @@ function NoticeCard({ notice, language, onDismiss }) {
         <button
           type="button"
           onClick={() => onDismiss(keepHiddenToday ? "day" : "session")}
-          className="min-h-9 shrink-0 rounded-full bg-ink-strong px-4 text-sm font-semibold text-white transition hover:opacity-90"
+          className="min-h-10 shrink-0 rounded-[var(--bw-radius-control)] bg-ink-strong px-5 text-sm font-semibold text-white transition hover:opacity-90"
         >
           {ko ? "닫기" : "Close"}
         </button>
