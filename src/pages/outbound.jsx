@@ -8,6 +8,24 @@ import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 
+/* 국가명과 파트너 수는 원본 지도 이미지(public/images/outbound)에 적힌 그대로다.
+   국내는 지도 아래 "Korea 10개사"로 따로 적혀 있던 값이다. */
+const partnerCountries = [
+  { key: "korea", label: { ko: "대한민국", en: "Korea" }, count: 10 },
+  {
+    key: "uzbekistan",
+    label: { ko: "우즈베키스탄", en: "Uzbekistan" },
+    count: 8,
+  },
+  { key: "vietnam", label: { ko: "베트남", en: "Vietnam" }, count: 4 },
+  { key: "indonesia", label: { ko: "인도네시아", en: "Indonesia" }, count: 3 },
+  { key: "usa", label: { ko: "미국", en: "U.S.A." }, count: 1 },
+  { key: "qatar", label: { ko: "카타르", en: "Qatar" }, count: 1 },
+  { key: "poland", label: { ko: "폴란드", en: "Poland" }, count: 1 },
+  { key: "australia", label: { ko: "호주", en: "Australia" }, count: 1 },
+  { key: "singapore", label: { ko: "싱가포르", en: "Singapore" }, count: 1 },
+];
+
 const copy = {
   ko: {
     heroTitle: "글로벌 프로그램",
@@ -252,29 +270,35 @@ export default function Outbound() {
           ]}
         />
 
-        <section>
-          <div className="inner">
-            <DetailSectionHead
-              eyebrow="Global network"
-              title={
-                language === "ko"
-                  ? "글로벌 엑셀레이터 프로그램"
-                  : "Global Accelerator Program"
-              }
-              description={
-                language === "ko"
-                  ? "전세계 12개국 이상의 파트너와 연결된 글로벌 엑셀러레이터 네트워크"
-                  : "We operate an accelerator network connected to partners across more than 12 countries."
-              }
-            />
-
-            {/* 어디까지 닿아 있는지만 보여준다. 나라별 개사 수까지 표로 깔면
-                방문자가 읽을 일 없는 숫자가 열네 줄이 된다. */}
-            <p className="mt-8 text-center text-[16px] leading-[1.8] text-muted-foreground">
-              {language === "ko"
-                ? "미국, 카타르, 베트남, 폴란드, 인도네시아, 호주, 우즈베키스탄, 싱가포르"
-                : "U.S.A., Qatar, Vietnam, Poland, Indonesia, Australia, Uzbekistan, Singapore"}
+        {/* 파트너 망은 표가 아니라 이름으로 보여준다. 나라 이름을 크게 세우고
+            파트너 수는 곁의 작은 숫자로 붙인다. 읽을 표가 아니라 한눈에 지나가는
+            면이 되도록 어두운 구간에 얹는다. 이 페이지의 유일한 어두운 구간이다. */}
+        <section className="bg-ink-strong text-white">
+          <div className="inner text-center">
+            <p className="text-[16px] font-semibold text-accent-strong">
+              Global network
             </p>
+            <h2 className="mt-4 text-[28px] font-semibold leading-[1.3] lg:text-[40px]">
+              {language === "ko"
+                ? "전세계 12개국 이상의 파트너와 일합니다"
+                : "We work with partners across more than 12 countries"}
+            </h2>
+            <ul className="mt-14 flex flex-wrap items-baseline justify-center gap-x-10 gap-y-6 lg:mt-20 lg:gap-x-14">
+              {partnerCountries.map((country, index) => (
+                <li
+                  key={country.key}
+                  style={{ transitionDelay: `${Math.min(index, 8) * 60}ms` }}
+                  className="bw-reveal flex items-baseline gap-2"
+                >
+                  <span className="text-[26px] font-semibold leading-none lg:text-[38px]">
+                    {country.label[language]}
+                  </span>
+                  <span className="text-[15px] font-semibold text-accent-strong lg:text-[17px]">
+                    {country.count}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
