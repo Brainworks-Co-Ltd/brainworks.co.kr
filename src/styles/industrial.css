@@ -15,7 +15,6 @@
      아래 매핑 블록과 순환 참조가 되므로 값을 그대로 적는다. */
   --bw-surface: #ffffff;
   --bw-surface-muted: #f1f2fb;
-  --bw-surface-tinted: #e5e7f6;
   --bw-surface-dark: #10191b;
   --bw-surface-dark-deep: #262a48;
   --bw-graphic: #8b93ea;
@@ -51,7 +50,6 @@
   --bw-radius-feature: 45px;
 
   /* 2.6 간격 */
-  --bw-space-1: 4px;
   --bw-space-2: 8px;
   --bw-space-3: 12px;
   --bw-space-4: 16px;
@@ -1311,14 +1309,6 @@
 }
 .bw-area-intro__link:hover {
   filter: brightness(1.08);
-}
-.bw-consulting-process {
-  background: var(--bw-surface-tinted);
-}
-.bw-education-process {
-  background: var(--bw-surface-tinted);
-  box-shadow: 0 0 0 100vmax var(--bw-surface-tinted);
-  clip-path: inset(0 -100vmax);
 }
 .ind-btn:focus-visible {
   outline: 2px solid var(--bw-graphic-ink);

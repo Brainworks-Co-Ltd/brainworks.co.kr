@@ -73,10 +73,10 @@
   --color-secondary-foreground: var(--secondary-foreground);
   /* muted는 글자색이다. --muted(옅은 면)를 걸면 흰 배경에 흰 글자가 된다.
      accent는 위에서 강조색으로 이미 정했다. shadcn 관례대로 옅은 면을 다시
-     걸면 뒤에 오는 선언이 이겨서 강조색이 통째로 사라진다. */
+     걸면 뒤에 오는 선언이 이겨서 강조색이 통째로 사라진다. 짝이 되는
+     --color-accent-foreground도 쓰는 곳이 없어 함께 지운다. 면은 bg-tint다. */
   --color-muted: var(--bw-color-muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent-foreground: var(--accent-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

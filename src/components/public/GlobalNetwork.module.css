@@ -167,51 +167,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.programList {
-  border-top: 1px solid var(--bw-line-strong);
-}
-
-.program {
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 32px;
-  padding: 40px 0;
-  border-bottom: 1px solid var(--bw-line-strong);
-}
-
-.programBullets {
-  display: grid;
-  gap: 12px;
-  margin-top: 20px;
-  color: var(--bw-ink);
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.educationGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 40px;
-  border-top: 3px solid var(--bw-graphic, #8b93ea);
-  background: var(--bw-surface-muted);
-}
-
-.education {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 0;
-  padding: 32px;
-}
-
-.education + .education {
-  border-left: 1px solid var(--bw-line);
-}
-
-.education h3 {
-  min-height: 2.8em;
-}
-
 @media (max-width: 1023px) {
   .network {
     grid-template-columns: minmax(0, 1fr);
@@ -222,16 +177,6 @@
   .countries {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 24px;
-  }
-  .program {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: 24px;
-  }
-  .program > :last-child {
-    grid-column: 2;
-  }
-  .education {
-    padding: 24px;
   }
 }
 
@@ -250,24 +195,6 @@
     gap: 8px;
     padding: 10px 6px;
     font-size: 14px;
-  }
-  .program {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-    padding: 32px 0;
-  }
-  .program > :last-child {
-    grid-column: auto;
-  }
-  .educationGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .education + .education {
-    border-left: 0;
-    border-top: 1px solid var(--bw-line);
-  }
-  .education h3 {
-    min-height: 0;
   }
 }
 

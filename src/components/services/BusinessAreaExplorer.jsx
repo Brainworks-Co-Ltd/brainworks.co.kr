@@ -1,9 +1,10 @@
 import { useMemo, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedBusinessAreas } from "@/data/businessAreas";
-import { SolutionCard } from "@/components/public/SolutionCard";
+import DetailSectionHead from "@/components/public/DetailSectionHead";
 import { StatePanel } from "@/components/ui/state-panel";
 
 export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
@@ -77,7 +78,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
             role="tab"
             aria-selected={area.id === activeArea.id}
             tabIndex={area.id === activeArea.id ? 0 : -1}
-            className={`min-h-11 whitespace-nowrap rounded-full border px-4 py-3 text-sm font-medium transition ${area.id === activeArea.id ? "border-transparent bg-[var(--bw-accent)] text-[var(--bw-on-dark)]" : "border-[var(--bw-color-line)] bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-muted)] hover:border-[var(--bw-line-strong)] hover:text-[var(--bw-color-ink)]"}`}
+            className={`inline-flex h-9 items-center whitespace-nowrap rounded-full border px-4 text-[14px] font-medium transition ${area.id === activeArea.id ? "border-transparent bg-accent text-[var(--bw-on-dark)]" : "border-line bg-tint text-muted-foreground hover:text-ink-strong"}`}
             onClick={() => selectArea(area.id)}
             onKeyDown={(event) => {
               if (event.key === "ArrowRight" || event.key === "ArrowDown") {
@@ -119,19 +120,24 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
         tabIndex={0}
       >
         {/* 선택한 산업의 설명을 읽고 바로 솔루션을 비교한다. 첫 화면 이미지는 반복하지 않는다. */}
-        <div className="bw-area-intro" key={activeArea.id}>
+        <div
+          key={activeArea.id}
+          className="bw-reveal grid grid-cols-1 gap-8 rounded-[24px] bg-tint p-8 lg:grid-cols-2 lg:p-10"
+        >
           <div>
-            <p className="bw-label text-[var(--bw-accent-text)]">
+            <p className="text-[14px] font-bold text-accent-text">
               {activeArea.title}
             </p>
-            <h2 className="bw-h1 mt-4">{activeArea.subtitle}</h2>
+            <h2 className="mt-4 text-[28px] font-semibold text-ink-strong">
+              {activeArea.subtitle}
+            </h2>
           </div>
           <div>
-            <p className="bw-body text-[var(--bw-muted)]">
+            <p className="text-[16px] leading-[1.6] text-muted-foreground">
               {activeArea.description}
             </p>
             <Link
-              className="ind-btn bw-area-intro__link"
+              className="mt-6 inline-flex h-11 items-center rounded-full bg-ink-strong px-6 text-[15px] font-semibold text-white transition hover:opacity-90"
               href={`/contact?topic=solution&area=${encodeURIComponent(activeArea.id)}`}
             >
               {language === "ko" ? "이 영역 문의하기" : "Discuss this area"}
@@ -140,16 +146,7 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
         </div>
 
         <div className="mt-14">
-          {/* 개수 표기를 두지 않는다. 카드마다 01 / 04 진행 표기가 이미 있어 중복이고,
-            목록 옆에 총계를 붙이면 세어 준 만큼의 정보가 늘지 않는다. */}
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--bw-color-muted)]">
-              {language === "ko" ? "솔루션" : "Solutions"}
-            </p>
-            <h3 className="bw-h2 mt-3 text-[var(--bw-color-ink)]">
-              {activeArea.title}
-            </h3>
-          </div>
+          <DetailSectionHead eyebrow="Solutions" title={activeArea.title} />
           {activeArea.solutions.length === 0 ? (
             <StatePanel
               status="empty"
@@ -167,16 +164,35 @@ export default function BusinessAreaExplorer({ areas: providedAreas = null }) {
               className="mt-6"
             />
           ) : (
-            <div className="mt-8 grid gap-6 md:mt-12 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               {activeArea.solutions.map((solution, index) => (
-                <SolutionCard
+                <article
                   key={solution.id}
-                  index={index + 1}
-                  total={activeArea.solutions.length}
-                  title={solution.title}
-                  description={solution.description}
-                  image={solution.image}
-                />
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal flex flex-col rounded-[24px] bg-tint p-8 lg:p-10"
+                >
+                  {solution.image ? (
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-white">
+                      <Image
+                        src={solution.image}
+                        alt={solution.imageAlt || solution.title}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : null}
+                  <h4
+                    className={`text-[22px] font-semibold text-ink-strong ${solution.image ? "mt-6" : ""}`}
+                  >
+                    {solution.title}
+                  </h4>
+                  {solution.description ? (
+                    <p className="mt-3 text-[16px] leading-[1.6] text-muted-foreground">
+                      {solution.description}
+                    </p>
+                  ) : null}
+                </article>
               ))}
             </div>
           )}
