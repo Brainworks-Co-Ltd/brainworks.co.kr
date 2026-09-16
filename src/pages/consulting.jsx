@@ -282,7 +282,7 @@ export default function Consulting() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section className="inner">
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactDesc}

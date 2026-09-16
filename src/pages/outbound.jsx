@@ -445,7 +445,7 @@ export default function Outbound() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 max-w-5xl px-6">
+        <section className="inner">
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactSubtitle}

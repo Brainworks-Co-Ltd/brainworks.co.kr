@@ -85,7 +85,7 @@ export default function Services({ areas }) {
           }
         />
 
-        <section className="mx-auto max-w-5xl px-6">
+        <section className="inner">
           <ContactCtaBlock
             title={
               language === "ko"

@@ -774,7 +774,7 @@ export default function Education() {
           </div>
         </section>
 
-        <section className="mx-auto mt-20 max-w-5xl px-6">
+        <section className="inner">
           <ContactCtaBlock
             title={
               language === "ko"
