@@ -27,7 +27,9 @@ describe("공개 셸 내비게이션", () => {
     const trigger = screen.getByRole("button", { name: "사업 영역" });
     await user.click(trigger);
     expect(screen.getByRole("link", { name: /AI 컨설팅/ })).toBeVisible();
-    expect(screen.queryByText("전략부터 구축·확산까지")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("전략부터 구축·확산까지"),
+    ).not.toBeInTheDocument();
 
     await user.keyboard("{Escape}");
 
@@ -43,13 +45,19 @@ describe("공개 셸 내비게이션", () => {
     render(<Header />);
 
     await user.hover(screen.getByRole("button", { name: "회사소개" }));
-    expect(screen.getByRole("region", { name: "회사소개 하위 메뉴" })).toBeVisible();
+    expect(
+      screen.getByRole("region", { name: "회사소개 하위 메뉴" }),
+    ).toBeVisible();
 
     await user.hover(screen.getByRole("button", { name: "사업 영역" }));
-    expect(screen.getByRole("region", { name: "사업 영역 하위 메뉴" })).toBeVisible();
+    expect(
+      screen.getByRole("region", { name: "사업 영역 하위 메뉴" }),
+    ).toBeVisible();
 
     await user.hover(screen.getByRole("button", { name: "소식" }));
-    expect(screen.getByRole("region", { name: "소식 하위 메뉴" })).toBeVisible();
+    expect(
+      screen.getByRole("region", { name: "소식 하위 메뉴" }),
+    ).toBeVisible();
   });
 
   it("사업 영역 메뉴가 네 서비스를 같은 높이로 제공한다", async () => {
@@ -88,10 +96,10 @@ describe("공개 셸 내비게이션", () => {
 
     expect(
       screen.getByRole("link", { name: "sLLM base AI Agent" }),
-    ).toHaveAttribute("href", "/services?area=agent#business-areas");
+    ).toHaveAttribute("href", "/services/agent");
     expect(
       screen.getByRole("link", { name: "Manufacturing AI" }),
-    ).toHaveAttribute("href", "/services?area=manufacturing#business-areas");
+    ).toHaveAttribute("href", "/services/manufacturing");
   });
 
   it("Footer가 Header와 같은 세 그룹을 제공한다", () => {
@@ -121,9 +129,10 @@ describe("공개 셸 내비게이션", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("button", { name: "메뉴 열기" }),
-    ).toHaveAttribute("aria-haspopup", "dialog");
+    expect(screen.getByRole("button", { name: "메뉴 열기" })).toHaveAttribute(
+      "aria-haspopup",
+      "dialog",
+    );
   });
 
   it("모바일 메뉴를 닫으면 트리거로 초점이 복귀한다 (Base UI finalFocus)", async () => {

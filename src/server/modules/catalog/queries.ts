@@ -24,6 +24,7 @@ export async function getPublishedBusinessAreas(locale: "ko" | "en") {
       displayOrder: aiSolutions.displayOrder,
       name: aiSolutionLocales.name,
       summary: aiSolutionLocales.summary,
+      description: aiSolutionLocales.description,
       imageAlt: aiSolutionLocales.imageAlt,
       storageKey: assets.storageKey,
     })
@@ -53,8 +54,21 @@ export async function getPublishedBusinessAreas(locale: "ko" | "en") {
         id: solution.id,
         title: solution.name,
         description: solution.summary,
+        detail: solution.description,
         image: resolvePublicAssetUrl(solution.storageKey) || "",
         imageAlt: solution.imageAlt || "",
       })),
   }));
+}
+
+/**
+ * 상세 페이지 하나만 필요할 때도 목록 조회를 그대로 재사용한다. 사업 영역은
+ * 넷뿐이라 별도 SQL을 추가할 만큼 무겁지 않다.
+ */
+export async function getPublishedBusinessArea(
+  areaId: string,
+  locale: "ko" | "en",
+) {
+  const areas = await getPublishedBusinessAreas(locale);
+  return areas.find((area) => area.id === areaId) || null;
 }

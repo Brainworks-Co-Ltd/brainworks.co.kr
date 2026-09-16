@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
@@ -5,8 +7,9 @@ import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { StatementBand } from "@/components/public/StatementBand";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
-import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
+import { Arrow } from "@/components/public/SectionTitle";
 import { useLocale } from "@/shared/routing/useLocale";
+import { getLocalizedPath } from "@/shared/routing/routes";
 import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
 export default function Services({ areas }) {
@@ -72,9 +75,45 @@ export default function Services({ areas }) {
           ]}
         />
 
-        <div className="mx-auto max-w-6xl px-6">
-          <BusinessAreaExplorer areas={areas} />
-        </div>
+        <section>
+          <div className="inner">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-14 lg:grid-cols-2">
+              {(areas || []).map((area, index) => (
+                <Link
+                  key={area.id}
+                  href={getLocalizedPath("solutions.detail", language, {
+                    area: area.id,
+                  })}
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal group flex flex-col"
+                >
+                  <span className="relative block aspect-[16/10] overflow-hidden rounded-2xl">
+                    <Image
+                      src={area.heroImage}
+                      alt={area.title}
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </span>
+                  <p className="mt-6 text-[14px] font-bold text-accent-text">
+                    {area.subtitle}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
+                    {area.title}
+                  </h3>
+                  <p className="mt-3 text-[18px] leading-[1.75]">
+                    {area.description}
+                  </p>
+                  <span className="mt-6 inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
+                    {language === "ko" ? "자세히 보기" : "Learn more"}
+                    <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* 문구는 새로 짓지 않는다. 08 §1.1이 대표 메시지 원문[src:1]으로
             인용한 문장을 §1.4의 합니다체로 옮긴 것이다. */}
