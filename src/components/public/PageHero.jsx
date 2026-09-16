@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, chips?: string[] | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 /*
@@ -26,6 +26,7 @@ function HeroContent({
   eyebrow,
   title,
   description,
+  chips,
   action,
   secondaryAction,
   dark,
@@ -49,6 +50,18 @@ function HeroContent({
         >
           {description}
         </p>
+      ) : null}
+      {chips && chips.length > 0 ? (
+        <ul className="mt-6 flex flex-wrap gap-2 [.text-center_&]:justify-center">
+          {chips.map((chip) => (
+            <li
+              key={chip}
+              className={`flex h-9 items-center justify-center rounded-full border px-4 text-[14px] ${dark ? "border-white/30 text-white/80" : "border-line text-muted-foreground"}`}
+            >
+              #{chip}
+            </li>
+          ))}
+        </ul>
       ) : null}
       {action || secondaryAction ? (
         <div className="mt-8 flex flex-wrap gap-3 [.text-center_&]:justify-center">
@@ -80,6 +93,7 @@ export function PageHero({
   eyebrow,
   title,
   description,
+  chips = null,
   action = null,
   secondaryAction = null,
   dark = false,
@@ -94,6 +108,7 @@ export function PageHero({
       eyebrow={eyebrow}
       title={title}
       description={description}
+      chips={chips}
       action={action}
       secondaryAction={secondaryAction}
       dark={dark || effectiveVariant === "media"}

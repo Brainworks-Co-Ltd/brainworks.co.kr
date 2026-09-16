@@ -495,8 +495,9 @@ export default function Education() {
       />
 
       <main id="main-content" data-accent="education" className="pb-16">
-        {/* 상단 계약 — docs/designs/detail-page-roles.md
-            눈썹이 페이지 이름, h1이 대상, 설명이 범위다. */}
+        {/* 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정)
+            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다.
+            대상 분기는 히어로 아래 PageAudience가 맡는다. */}
         <PageHero
           variant="media"
           media={{
@@ -504,25 +505,22 @@ export default function Education() {
             src: "/images/services/hero/healthcare.webp",
             alt: "",
           }}
-          eyebrow={
-            language === "ko" ? "AI 전문교육" : "AI Professional Education"
-          }
+          eyebrow={language === "ko" ? "사업 영역" : "Business"}
           title={
-            language === "ko"
-              ? "조직의 AI 역량을 키워야 하는 담당자"
-              : "Teams that need to build AI capability inside the organisation"
+            language === "ko" ? "AI 전문교육" : "AI Professional Education"
           }
           description={
             language === "ko"
-              ? "교육 대상과 과정, 결과물과 문의 방법을 다룹니다."
-              : "Covers who the training is for, the curriculum, the outcomes, and how to get in touch."
+              ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
+              : "Practical AI and AX education programmes from Brainworks."
           }
+          chips={processSteps[0].modules[language]}
           action={{
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
         />
-        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
+        {/* 대상 분기만 담당한다. 페이지 이름과 서비스 설명은 히어로가 맡는다. */}
         <PageAudience
           redirects={[
             {
