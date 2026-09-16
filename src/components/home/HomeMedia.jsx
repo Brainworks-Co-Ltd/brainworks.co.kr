@@ -56,7 +56,6 @@ export default function HomeMedia() {
                 alt=""
                 width={120}
                 height={52}
-                style={{ width: "auto", height: "52px" }}
                 className="object-contain"
               />
             </span>
