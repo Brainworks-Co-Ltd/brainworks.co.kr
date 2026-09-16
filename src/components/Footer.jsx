@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { buildPublicNavigation } from "@/shared/navigation/publicNavigation";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -54,18 +55,22 @@ export default function Footer() {
   const contact = navigation.find((item) => item.id === "contact");
 
   return (
-    <footer className="bw-footer bg-[var(--bw-color-ink)] text-slate-200">
-      <div className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-14">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,_1fr)_minmax(0,_0.6fr)]">
+    <footer className="bw-footer bg-ink-strong text-white">
+      <div className="inner flex flex-col gap-16 py-24 pb-14">
+        <div className="grid gap-16 lg:grid-cols-[1fr_auto]">
           <div className="space-y-6">
             <div>
-              <span className="text-2xl font-semibold text-white">
-                Brainworks
-              </span>
-              <p className="mt-3 text-sm text-slate-400">
+              <Image
+                src="/images/회사로고.png"
+                alt="브레인웍스"
+                width={270}
+                height={86}
+                className="h-[52px] w-auto brightness-0 invert"
+              />
+              <p className="mt-6 text-[17px] font-semibold leading-[1.5] text-white">
                 {language === "ko"
-                  ? "데이터와 AI로 고객의 혁신을 실현하는 파트너, 브레인웍스입니다."
-                  : "Brainworks is your partner for turning data and AI into real business impact."}
+                  ? "브레인웍스 소식을 이메일로 받을 수 있습니다."
+                  : "Get Brainworks news and updates by email."}
               </p>
             </div>
             <nav
@@ -108,17 +113,17 @@ export default function Footer() {
                 </div>
               ) : null}
             </nav>
-            <div className="space-y-1 text-sm">
-              <p className="text-slate-300">Email · austin@brainworks.co.kr</p>
-              <p className="text-slate-300">Tel · +82-10-6639-4084</p>
+            <div className="space-y-1 text-sm text-white/70">
+              <p>Email · austin@brainworks.co.kr</p>
+              <p>Tel · +82-10-6639-4084</p>
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-x-16 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
             {offices.map((office) => (
               <div
                 key={office.label.en}
-                className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 p-4"
+                className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 p-4 lg:border-0 lg:bg-transparent lg:p-0"
               >
                 <p className="text-sm font-semibold text-white">
                   {office.label[language]}
@@ -134,7 +139,7 @@ export default function Footer() {
         {certificationsData.length > 0 && (
           <section
             aria-label={certLabel[language]}
-            className="border-t border-slate-800 pt-8"
+            className="border-t border-white/15 pt-8"
           >
             <h3 className="text-sm font-semibold text-white">
               {certLabel[language]}
@@ -157,7 +162,7 @@ export default function Footer() {
           </section>
         )}
 
-        <div className="flex flex-col gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-t border-white/15 pt-6 text-xs text-white/70 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
           <Link
             href="/privacy"

@@ -21,6 +21,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const headerRef = useRef(null);
   const [isHidden, setIsHidden] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // 아래로 스크롤하면 헤더를 숨기고 위로 올리면 보인다. 메뉴가 열려 있거나 헤더 안에 초점이 있으면 숨기지 않는다.
   useEffect(() => {
@@ -32,6 +33,7 @@ export default function Header() {
         el?.contains(document.activeElement) ||
         el?.querySelector('[aria-expanded="true"]');
       setIsHidden(!busy && y > 100 && y > last);
+      setIsScrolled(y > 10);
       last = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -56,10 +58,11 @@ export default function Header() {
     <header
       ref={headerRef}
       data-hidden={isHidden || undefined}
+      data-scrolled={isScrolled ? "true" : undefined}
       onFocus={() => setIsHidden(false)}
-      className="bw-header fixed inset-x-0 top-0 z-50 bg-white"
+      className="bw-header fixed inset-x-0 top-0 z-50 border-b border-transparent bg-white/90 backdrop-blur transition-colors data-[scrolled=true]:border-line data-[scrolled=true]:shadow-[0_1px_0_rgba(0,0,0,.04)]"
     >
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-5">
+      <div className="inner flex h-20 items-center justify-between gap-10">
         <Link
           href={getLocalizedPath("home", language)}
           className="flex items-center gap-3"
@@ -71,7 +74,7 @@ export default function Header() {
             width={270}
             height={86}
             priority
-            className="bw-header__logo h-9 w-auto"
+            className="bw-header__logo h-11 w-auto"
           />
           <span className="sr-only">Brainworks</span>
         </Link>
@@ -87,11 +90,17 @@ export default function Header() {
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <Link
+            href={getLocalizedPath("contact", language)}
+            className="pill pill-dark hidden h-10 px-6 text-[15px] lg:inline-flex"
+          >
+            {language === "ko" ? "문의하기" : "Contact"}
+          </Link>
           <button
             type="button"
             onClick={toggleLanguage}
-            className="hidden rounded-full border border-slate-300 px-3 py-3.5 text-xs font-semibold text-[var(--bw-color-ink)] transition hover:border-[var(--bw-color-ink)] lg:inline-flex"
+            className="hidden rounded-full border border-line px-3 py-3.5 text-xs font-semibold text-ink-strong transition hover:border-ink-strong lg:inline-flex"
           >
             {language === "ko" ? "EN" : "KO"}
           </button>
