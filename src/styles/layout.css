@@ -40,6 +40,27 @@
   animation: marquee 40s linear infinite;
 }
 
+@keyframes bw-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.bw-hero-caret {
+  display: inline-block;
+  width: 3px;
+  height: 0.8em;
+  margin-left: 2px;
+  vertical-align: -0.05em;
+  background: var(--color-accent);
+  animation: bw-caret-blink 1s steps(1) infinite;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;

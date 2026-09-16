@@ -1,59 +1,98 @@
 import { useEffect, useState } from "react";
 
-export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
-  const [typed, setTyped] = useState(slots[0] ?? "");
+/*
+ * 네 단계를 명시적으로 도는 타이핑 루프. 60ms 인터벌로 경과 시간을 누적하던
+ * 예전 방식은 히어로를 1~2초만 보고 스크롤하는 방문자에게 사실상 정지 화면으로
+ * 보였다. chainSetTimeout으로 단계마다 다음 지연을 스스로 예약해 타이핑,
+ * 정지, 지움, 쉼이 눈에 보이는 리듬으로 이어지게 한다.
+ */
+const TYPE_MS = 110;
+const HOLD_MS = 1500;
+const ERASE_MS = 55;
+const PAUSE_MS = 400;
+const REDUCED_MS = 3000;
+
+function useHeroTyping(slots) {
+  const [motionQuery] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)")
+      : null,
+  );
+  const [reduced, setReduced] = useState(() => motionQuery?.matches ?? false);
+  const [paused, setPaused] = useState(
+    () => typeof document !== "undefined" && document.hidden,
+  );
+  const [index, setIndex] = useState(0);
+  const [typed, setTyped] = useState("");
+  const [phase, setPhase] = useState("typing");
 
   useEffect(() => {
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reduceMotion = motion.matches;
-    let elapsed = 0;
-    let current = 0;
-    let started = false;
-    let interval = null;
+    if (!motionQuery) return undefined;
+    const onMotion = (event) => setReduced(event.matches);
+    motionQuery.addEventListener("change", onMotion);
+    return () => motionQuery.removeEventListener("change", onMotion);
+  }, [motionQuery]);
 
-    const start = () => {
-      if (interval) return;
-      interval = setInterval(() => {
-        elapsed += 60;
-        if (elapsed >= 3000) {
-          elapsed = 0;
-          current = (current + 1) % slots.length;
-          started = true;
-          setTyped(reduceMotion ? (slots[current] ?? "") : "");
-          return;
-        }
-        if (!reduceMotion && started) {
-          const target = slots[current] ?? "";
-          const position = Math.min(Math.floor(elapsed / 60), target.length);
-          setTyped(target.slice(0, position));
-        }
-      }, 60);
-    };
-
-    const stop = () => {
-      if (!interval) return;
-      clearInterval(interval);
-      interval = null;
-    };
-
-    const onVisibility = () => {
-      if (document.hidden) stop();
-      else start();
-    };
-    const onMotionChange = (event) => {
-      reduceMotion = event.matches;
-    };
-
-    if (!document.hidden && slots.length > 1) start();
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
     document.addEventListener("visibilitychange", onVisibility);
-    motion.addEventListener("change", onMotionChange);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
 
-    return () => {
-      stop();
-      document.removeEventListener("visibilitychange", onVisibility);
-      motion.removeEventListener("change", onMotionChange);
-    };
-  }, [slots]);
+  useEffect(() => {
+    if (paused || slots.length < 2) return undefined;
+    const word = slots[index] ?? "";
+
+    if (reduced) {
+      const timer = setTimeout(() => {
+        setIndex((i) => (i + 1) % slots.length);
+      }, REDUCED_MS);
+      return () => clearTimeout(timer);
+    }
+
+    let delay;
+    let step;
+    if (phase === "typing") {
+      if (typed.length < word.length) {
+        delay = TYPE_MS;
+        step = () => setTyped(word.slice(0, typed.length + 1));
+      } else {
+        delay = 0;
+        step = () => setPhase("holding");
+      }
+    } else if (phase === "holding") {
+      delay = HOLD_MS;
+      step = () => setPhase("deleting");
+    } else if (phase === "deleting") {
+      if (typed.length > 0) {
+        delay = ERASE_MS;
+        step = () => setTyped(word.slice(0, typed.length - 1));
+      } else {
+        delay = 0;
+        step = () => setPhase("pausing");
+      }
+    } else {
+      delay = PAUSE_MS;
+      step = () => {
+        setIndex((i) => (i + 1) % slots.length);
+        setPhase("typing");
+      };
+    }
+
+    const timer = setTimeout(step, delay);
+    return () => clearTimeout(timer);
+  }, [phase, typed, index, paused, reduced, slots]);
+
+  let display = typed;
+  if (slots.length < 2) display = slots[0] ?? "";
+  else if (reduced) display = slots[index] ?? "";
+
+  return { typed: display, showCaret: !reduced && slots.length >= 2 };
+}
+
+export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
+  const { typed, showCaret } = useHeroTyping(slots);
+  const longest = slots.reduce((a, b) => (b.length > a.length ? b : a), "");
 
   const Heading = as;
   const [questionBefore, questionAfter = ""] = (
@@ -63,8 +102,18 @@ export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
   return (
     <Heading className="text-[32px] font-semibold leading-[1.3] text-ink lg:text-[45px]">
       {questionBefore}
-      <span className="text-ink shadow-[inset_0_-0.35em_0_var(--color-accent-strong)]">
-        {typed}
+      <span className="relative inline-block">
+        <span aria-hidden="true" className="invisible whitespace-nowrap">
+          {longest}
+        </span>
+        <span className="bw-hero-live absolute left-0 top-0 whitespace-nowrap text-ink">
+          {typed}
+          {showCaret && <span aria-hidden="true" className="bw-hero-caret" />}
+        </span>
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-[-0.15em] h-[3px] bg-[var(--color-accent-strong)]"
+        />
       </span>
       {questionAfter}
     </Heading>
