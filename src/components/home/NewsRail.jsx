@@ -35,7 +35,7 @@ export default function NewsRail({ items = [] }) {
                 <p className="mt-8 text-[14px] font-bold text-accent-text">
                   {item.category}
                 </p>
-                <h3 className="mt-3 line-clamp-2 text-[18px] leading-[1.45] text-ink-strong group-hover:underline lg:text-[22px]">
+                <h3 className="mt-3 line-clamp-2 text-[18px] font-semibold leading-[1.45] text-ink-strong transition-colors group-hover:text-accent-text lg:text-[22px]">
                   {item.title}
                 </h3>
                 <p className="mt-3 text-[14px] text-muted">

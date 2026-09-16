@@ -34,12 +34,14 @@ export default function AreasRail({ areas = [] }) {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </span>
-                <span className="mt-6 block text-[22px] font-semibold text-ink-strong lg:text-[26px]">
+                {/* 제목은 heading으로 둔다. 의미도 맞고, 한글 줄바꿈 규칙
+                    (keep-all, balance)이 heading에 걸려 있어 어절이 안 쪼개진다. */}
+                <h3 className="mt-6 text-[22px] font-semibold text-ink-strong lg:text-[26px]">
                   {area.title || area.name}
-                </span>
-                <span className="mt-3 block text-[15px] leading-[1.6] text-muted lg:text-[16px]">
+                </h3>
+                <p className="mt-3 text-[15px] leading-[1.6] text-muted lg:text-[16px]">
                   {area.subtitle}
-                </span>
+                </p>
                 <span className="mt-auto pt-7">
                   <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
                     {language === "ko" ? "자세히 보기" : "Learn more"}

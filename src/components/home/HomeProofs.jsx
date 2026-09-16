@@ -37,47 +37,31 @@ export default function HomeProofs() {
     <section className="py-[120px] lg:py-[250px]">
       <div className="inner">
         <SectionTitle>{homeCopy.proofSection.title[language]}</SectionTitle>
-        {/* 네 칸이 흰 바탕에 글자만 있어 구간이 비어 보였다. 면을 주고 첫 칸은
-            강조색으로 채운다. 첫 칸은 회사가 스스로를 소개하는 문장이라
-            나머지와 무게가 다르다. 링크가 아니므로 hover로 색을 바꾸지 않는다.
-            누를 수 없는 것이 눌릴 것처럼 보이면 그게 더 큰 문제다. */}
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {homeCopy.proofs.map((proof, index) => {
-            const filled = index === 0;
-            return (
-              <li key={proof.title.ko} className="h-full">
-                <div
-                  className={`bw-reveal flex h-full flex-col rounded-[24px] p-8 text-center ${filled ? "bg-accent text-white" : "bg-tint"}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+        {/* 채워진 칸이 마우스를 따라 옮겨 다닌다. 처음에는 첫 칸이 채워져 있고
+            다른 칸에 마우스가 올라가면 그쪽으로 넘어간다. 색 규칙은 칸 사이를
+            오가야 해서 industrial.css의 .bw-proofs가 들고 있다. */}
+        <ul className="bw-proofs grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {homeCopy.proofs.map((proof, index) => (
+            <li key={proof.title.ko}>
+              <div
+                className="bw-proof bw-reveal"
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  className="bw-proof__icon"
+                  aria-hidden="true"
                 >
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 24 24"
-                    className={`mx-auto ${filled ? "text-white" : "text-accent"}`}
-                    aria-hidden="true"
-                  >
-                    {PROOF_ICONS[index]}
-                  </svg>
-                  <p
-                    className={`mt-8 text-[15px] lg:text-[16px] ${filled ? "text-white/75" : "text-muted"}`}
-                  >
-                    {proof.label[language]}
-                  </p>
-                  <h3
-                    className={`mt-3 text-[22px] font-semibold [overflow-wrap:anywhere] lg:text-[24px] ${filled ? "text-white" : "text-ink-strong"}`}
-                  >
-                    {proof.title[language]}
-                  </h3>
-                  <p
-                    className={`mt-4 text-[15px] leading-[1.6] lg:text-[17px] ${filled ? "text-white/85" : ""}`}
-                  >
-                    {proof.desc[language]}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
+                  {PROOF_ICONS[index]}
+                </svg>
+                <p className="bw-proof__label">{proof.label[language]}</p>
+                <h3 className="bw-proof__title">{proof.title[language]}</h3>
+                <p className="bw-proof__desc">{proof.desc[language]}</p>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
     </section>
