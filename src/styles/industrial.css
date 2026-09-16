@@ -1302,57 +1302,8 @@
 .bw-area-intro__link:hover {
   filter: brightness(1.08);
 }
-.bw-offerings {
-  border-top: 1px solid var(--bw-line-strong);
-}
-.bw-offering {
-  display: grid;
-  gap: 24px;
-  padding: 40px 0;
-  border-bottom: 1px solid var(--bw-line);
-}
 .bw-consulting-process {
   background: var(--bw-surface-tinted);
-}
-.bw-process-flow {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-.bw-process-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: 12px 24px;
-  padding: 0 0 40px;
-}
-.bw-process-step:last-child {
-  padding-bottom: 0;
-}
-.bw-process-step::before {
-  content: "";
-  position: absolute;
-  left: 21px;
-  top: 44px;
-  bottom: 0;
-  width: 1px;
-  background: var(--bw-line-strong);
-}
-.bw-process-step:last-child::before {
-  display: none;
-}
-.bw-process-step .bw-marker {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--bw-surface-dark);
-  color: var(--bw-graphic);
-}
-.bw-process-step h3 {
-  align-self: center;
-}
-.bw-process-step p {
-  grid-column: 2;
 }
 .bw-education-process {
   background: var(--bw-surface-tinted);
@@ -1417,23 +1368,6 @@ section[data-variant="media"] a:focus-visible {
   .bw-area-intro {
     grid-template-columns: 1fr 1fr;
     gap: 48px;
-  }
-  .bw-offering {
-    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-    gap: 48px;
-  }
-  .bw-process-step {
-    grid-template-columns: 44px minmax(0, 0.5fr) minmax(0, 1fr);
-    column-gap: 32px;
-    min-height: 128px;
-  }
-  .bw-process-step p {
-    grid-column: 3;
-    padding-top: 8px;
-  }
-  .bw-process-step h3 {
-    align-self: start;
-    padding-top: 8px;
   }
   .bw-learning-step__inner {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);

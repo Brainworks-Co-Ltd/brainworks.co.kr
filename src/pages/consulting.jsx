@@ -5,8 +5,9 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
 import { PageAudience } from "@/components/public/PageAudience";
-import { EditorialSection } from "@/components/public/EditorialSection";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import DetailSectionHead from "@/components/public/DetailSectionHead";
+import ProcessSteps from "@/components/public/ProcessSteps";
 
 const copy = {
   ko: {
@@ -57,7 +58,7 @@ const offerings = [
       ko: [
         "현황 진단 및 성숙도 평가",
         "우선 과제 발굴 및 ROI 분석",
-        "데이터·기술 아키텍처 설계",
+        "데이터와 기술 아키텍처 설계",
         "거버넌스 및 운영 체계 수립",
       ],
       en: [
@@ -80,7 +81,7 @@ const offerings = [
     },
     bullets: {
       ko: [
-        "파일럿 및 PoC 설계·운영",
+        "파일럿 및 PoC 설계와 운영",
         "모델 개발 및 성능 개선",
         "MLOps/데이터 파이프라인 구축",
         "서비스 전환 및 운영 이관",
@@ -105,7 +106,7 @@ const offerings = [
     },
     bullets: {
       ko: [
-        "AI 교육·코칭 프로그램 운영",
+        "AI 교육과 코칭 프로그램 운영",
         "성과 관리 지표 체계화",
         "사내 거버넌스/CoE 구축",
         "지속적 고도화를 위한 체계 마련",
@@ -161,7 +162,7 @@ const processSteps = [
       en: "Deliver",
     },
     desc: {
-      ko: "모델을 개발·검증하고 MLOps 환경으로 연결",
+      ko: "모델을 개발, 검증하고 MLOps 환경으로 연결",
       en: "Build and validate the solution, connecting it to MLOps for deployment.",
     },
   },
@@ -230,69 +231,56 @@ export default function Consulting() {
           ]}
         />
 
-        <EditorialSection
-          eyebrow="Consulting value"
-          title={t.valueTitle}
-          surface="plain"
-          className="bw-consulting-value"
-        >
-          {/* 제공 가치는 열린 목록으로 읽고, 아래 과정은 연결된 단계로 구분한다. */}
-          <div className="bw-offerings">
-            {offerings.map((item, index) => (
-              <article
-                key={item.id}
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal bw-offering"
-              >
-                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
-                  {item.title[language]}
-                </h3>
-                <div>
-                  <p className="bw-body max-w-2xl text-[var(--bw-color-muted)]">
+        <section>
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Consulting value"
+              title={t.valueTitle}
+            />
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {offerings.map((item, index) => (
+                <article
+                  key={item.id}
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                  className="bw-reveal rounded-[24px] bg-tint p-8 lg:p-10"
+                >
+                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                    {item.title[language]}
+                  </h3>
+                  <p className="mt-3 text-[16px] leading-[1.6]">
                     {item.description[language]}
                   </p>
-                  <ul className="mt-6 grid gap-x-8 gap-y-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
+                  <ul className="mt-6 space-y-3">
                     {item.bullets[language].map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
+                      <li
+                        key={bullet}
+                        className="flex items-start gap-2 text-[15px]"
+                      >
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{bullet}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
-        </EditorialSection>
+        </section>
 
-        <EditorialSection
-          eyebrow="Consulting process"
-          title={t.processTitle}
-          surface="muted"
-          className="bw-consulting-process"
-        >
-          {/* 단계 목록도 같은 규칙으로 순차 등장시킨다. 스크롤 위치에 진행도를 묶지 않고
-              뷰포트 진입 한 번으로 끝내므로 자동 재생이 아니다(명세 §23.3). */}
-          <ol className="bw-process-flow">
-            {processSteps.map((step, index) => (
-              <li
-                key={step.id}
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal bw-process-step"
-              >
-                <div>
-                  <span className="bw-marker">0{step.id}</span>
-                </div>
-                <h3 className="bw-title text-[var(--bw-color-ink)]">
-                  {step.title[language]}
-                </h3>
-                <p className="bw-body text-[var(--bw-color-muted)]">
-                  {step.desc[language]}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </EditorialSection>
+        <section className="bg-tint">
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Consulting process"
+              title={t.processTitle}
+            />
+            <ProcessSteps
+              steps={processSteps.map((step) => ({
+                title: step.title[language],
+                desc: step.desc[language],
+              }))}
+            />
+          </div>
+        </section>
 
         <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <ContactCtaBlock
