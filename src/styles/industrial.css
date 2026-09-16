@@ -853,11 +853,16 @@
  * --------------------------------------------------------------- */
 
 /* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
-   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다. */
+   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다.
+   메인(.bw-home)도 제외한다. 메인은 섹션마다 자기 여백을 들고 있는데
+   이 규칙이 그것을 전부 96px로 눌러 히어로 위가 붙고 리듬이 사라졌다. */
 :root[data-design="industrial"]
-  main
+  main:not(.bw-home)
   > section:not([data-variant]):not(.bw-audience),
-:root[data-design="industrial"] main > div > section:not([data-variant]) {
+:root[data-design="industrial"]
+  main:not(.bw-home)
+  > div
+  > section:not([data-variant]) {
   padding-block: var(--bw-space-9);
 }
 
