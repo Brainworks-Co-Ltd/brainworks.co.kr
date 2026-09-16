@@ -8,20 +8,6 @@ import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 
-/* 국가명과 수치는 원본 지도 이미지(public/images/outbound)에 적힌 그대로다.
-   국내는 지도 아래 "Korea 10개사"로 따로 적혀 있던 것을 목록에 합쳤다. */
-const partnerCountries = [
-  { key: "korea", label: "Korea", count: 10 },
-  { key: "uzbekistan", label: "Uzbekistan", count: 8 },
-  { key: "vietnam", label: "Vietnam", count: 4 },
-  { key: "indonesia", label: "Indonesia", count: 3 },
-  { key: "usa", label: "U.S.A.", count: 1 },
-  { key: "qatar", label: "Qatar", count: 1 },
-  { key: "poland", label: "Poland", count: 1 },
-  { key: "australia", label: "Australia", count: 1 },
-  { key: "singapore", label: "Singapore", count: 1 },
-];
-
 const copy = {
   ko: {
     heroTitle: "글로벌 프로그램",
@@ -282,118 +268,13 @@ export default function Outbound() {
               }
             />
 
-            {/* 원본 지도 이미지에 적혀 있던 국가명과 수치를 그대로 옮긴 목록이다.
-                도식 그림을 걷어낸 이유는 노드 위치가 지리와 무관해 아무것도
-                나타내지 않았기 때문이다. 아홉 나라뿐이라 지도로 채우기보다
-                조용한 목록이 정확하다. */}
-            <ul className="mt-10 grid grid-cols-2 gap-x-8 lg:grid-cols-3 lg:gap-x-12">
-              {partnerCountries.map((country, index) => (
-                <li
-                  key={country.key}
-                  style={{ transitionDelay: `${Math.min(index, 6) * 60}ms` }}
-                  className="bw-reveal flex items-baseline justify-between gap-4 border-b border-line py-4"
-                >
-                  <span className="text-[15px] text-muted-foreground">
-                    {country.label}
-                  </span>
-                  <span className="text-[15px] font-semibold text-ink-strong">
-                    {language === "ko"
-                      ? `${country.count}개사`
-                      : `${country.count}`}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            {/* 사업 영역별 국가 수치다. 카드 다섯 장으로 깔면 내용이 한 줄뿐인
-                영역도 같은 높이를 차지해 빈 면만 남는다. 위 국가 목록과 같은
-                줄 형태로 맞춘다. */}
-            <dl className="mt-12">
-              {[
-                {
-                  key: "education",
-                  title: language === "ko" ? "AI 교육 협력" : "AI Education",
-                  lines: [
-                    language === "ko"
-                      ? "국내 대학 4곳, 미국 대학 1곳"
-                      : "4 domestic universities, 1 U.S. university",
-                    language === "ko"
-                      ? "베트남 대학 1곳, 우즈베키스탄 기업 1곳"
-                      : "1 Vietnamese university, 1 Uzbek company",
-                    language === "ko" ? "카타르 기업 1곳" : "1 Qatari company",
-                  ],
-                },
-                {
-                  key: "manufacturing",
-                  title: language === "ko" ? "제조 AI" : "Manufacturing AI",
-                  lines: [
-                    language === "ko"
-                      ? "인도네시아 3개 기업, 베트남 3개 기업"
-                      : "3 Indonesian companies, 3 Vietnamese companies",
-                    language === "ko"
-                      ? "우즈베키스탄 7개 기업, 폴란드 1개 기업"
-                      : "7 Uzbek firms, 1 Polish firm",
-                    language === "ko"
-                      ? "싱가포르 1개 기업"
-                      : "1 Singaporean company",
-                  ],
-                },
-                {
-                  key: "agent",
-                  title:
-                    language === "ko"
-                      ? "sLLM 기반 AI 에이전트"
-                      : "sLLM Based AI Agent",
-                  lines: [
-                    language === "ko"
-                      ? "국내 2개 기업"
-                      : "2 domestic companies",
-                    language === "ko"
-                      ? "카타르 1개 기업"
-                      : "1 company in Qatar",
-                  ],
-                },
-                {
-                  key: "smartcity",
-                  title:
-                    language === "ko"
-                      ? "스마트시티 & 안전 AI"
-                      : "SmartCity & Safety AI",
-                  lines: [
-                    language === "ko" ? "국내 1개 기업" : "1 domestic company",
-                    language === "ko"
-                      ? "호주 1개 기업"
-                      : "1 company in Australia",
-                  ],
-                },
-                {
-                  key: "healthcare",
-                  title:
-                    language === "ko"
-                      ? "헬스케어 & 바이오 AI"
-                      : "Healthcare & Bio AI",
-                  lines: [
-                    language === "ko"
-                      ? "국내 2개 기업"
-                      : "2 domestic companies",
-                  ],
-                },
-              ].map((category, index) => (
-                <div
-                  key={category.key}
-                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                  style={{ transitionDelay: `${Math.min(index, 6) * 60}ms` }}
-                  className="bw-reveal grid gap-1 border-t border-line py-5 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-8"
-                >
-                  <dt className="text-[16px] font-semibold text-ink-strong">
-                    {category.title}
-                  </dt>
-                  <dd className="m-0 text-[15px] leading-[1.7] text-muted-foreground">
-                    {category.lines.join(", ")}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {/* 어디까지 닿아 있는지만 보여준다. 나라별 개사 수까지 표로 깔면
+                방문자가 읽을 일 없는 숫자가 열네 줄이 된다. */}
+            <p className="mt-8 text-center text-[16px] leading-[1.8] text-muted-foreground">
+              {language === "ko"
+                ? "미국, 카타르, 베트남, 폴란드, 인도네시아, 호주, 우즈베키스탄, 싱가포르"
+                : "U.S.A., Qatar, Vietnam, Poland, Indonesia, Australia, Uzbekistan, Singapore"}
+            </p>
           </div>
         </section>
 
