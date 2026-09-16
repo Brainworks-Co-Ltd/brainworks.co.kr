@@ -1310,50 +1310,6 @@
   box-shadow: 0 0 0 100vmax var(--bw-surface-tinted);
   clip-path: inset(0 -100vmax);
 }
-.bw-learning-flow {
-  position: relative;
-  display: grid;
-  gap: 48px;
-  padding-left: 64px;
-}
-.bw-learning-step {
-  position: relative;
-  padding: 0 0 48px;
-  border-bottom: 1px solid var(--bw-line-strong);
-}
-.bw-learning-step:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-.bw-learning-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: -46px;
-  top: 36px;
-  bottom: -48px;
-  width: 1px;
-  background: var(--bw-line-strong);
-}
-.bw-learning-step__inner {
-  display: grid;
-  gap: 32px;
-}
-.bw-learning-step__image {
-  min-height: 280px;
-  border-radius: var(--bw-radius-card);
-}
-.bw-learning-step .bw-marker {
-  position: absolute;
-  left: -64px;
-  top: 0;
-  background: var(--bw-surface-dark);
-  color: var(--bw-graphic);
-}
-.bw-learning-step .bw-chip {
-  background: transparent;
-  color: var(--bw-graphic-ink);
-  padding-left: 0;
-}
 .ind-btn:focus-visible {
   outline: 2px solid var(--bw-graphic-ink);
   outline-offset: 4px;
@@ -1369,24 +1325,8 @@ section[data-variant="media"] a:focus-visible {
     grid-template-columns: 1fr 1fr;
     gap: 48px;
   }
-  .bw-learning-step__inner {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 48px;
-  }
-  .bw-learning-step__image {
-    min-height: 320px;
-  }
 }
 @media (max-width: 767px) {
-  .bw-learning-flow {
-    padding-left: 48px;
-  }
-  .bw-learning-step .bw-marker {
-    left: -48px;
-  }
-  .bw-learning-step:not(:last-child)::after {
-    left: -30px;
-  }
   .bw-area-intro {
     padding: 24px;
   }

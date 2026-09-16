@@ -12,18 +12,14 @@ vi.mock("next/router", () => ({
 }));
 
 describe("AI 전문교육 FAQ", () => {
-  it("FAQ를 모달형 컨테이너와 일관된 내부 여백으로 제공한다", () => {
+  it("FAQ를 가운데 정렬된 네이티브 details/summary 아코디언으로 제공한다", () => {
     render(<Education />);
 
     const question = screen.getByText("교육은 어떤 방식으로 진행되나요?");
     const faqPanel = question.closest("div");
     const faqItem = question.closest("details");
 
-    expect(faqPanel).toHaveClass(
-      "mt-6",
-      "rounded-[var(--bw-radius-feature)]",
-      "shadow-[var(--bw-shadow-soft)]",
-    );
-    expect(faqItem).toHaveClass("px-6", "md:px-8");
+    expect(faqPanel).toHaveClass("mx-auto", "max-w-[860px]");
+    expect(faqItem).toHaveClass("group", "border-b", "border-line");
   });
 });

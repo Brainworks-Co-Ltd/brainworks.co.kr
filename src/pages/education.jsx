@@ -1,14 +1,13 @@
-﻿import React from "react";
+import React from "react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { PageAudience } from "@/components/public/PageAudience";
-import { SectionHeader } from "@/components/public/SectionHeader";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import DetailSectionHead from "@/components/public/DetailSectionHead";
 
 const processSteps = [
   {
@@ -22,7 +21,7 @@ const processSteps = [
       en: "AI/AX Specialisation",
     },
     summary: {
-      ko: "AI/AX 기반 데이터·엔지니어링·보안·로봇·IoT 응용 역량 향상 교육",
+      ko: "AI/AX 기반 데이터, 엔지니어링, 보안, 로봇, IoT 응용 역량 향상 교육",
       en: "Training to enhance applied skills in AI/AX-based data, engineering, security, robotics, and IoT",
     },
     modules: {
@@ -124,7 +123,7 @@ const processSteps = [
       en: "Global Competency",
     },
     summary: {
-      ko: "국내외 연수와 인턴십으로 글로벌 역량 확보",
+      ko: "국내와 해외 연수와 인턴십으로 글로벌 역량 확보",
       en: "Connect domestic and overseas training with internships to build global credentials and experience.",
     },
     modules: {
@@ -148,7 +147,7 @@ const processSteps = [
     highlights: {
       ko: [
         "미국 조지아 주립대학교 등 해외 기관과의 고급 커리큘럼",
-        "국내·해외 인턴십 연계로 실무 경험과 네트워크 확대",
+        "국내와 해외 인턴십 연계로 실무 경험과 네트워크 확대",
       ],
       en: [
         "Advanced curricula with partners such as Georgia State University.",
@@ -286,7 +285,7 @@ const generativeAITracks = [
       en: "GenAI Foundations & Ethics",
     },
     description: {
-      ko: "AI 개념과 최신 트렌드, 공공·기업 활용 방안 교육",
+      ko: "AI 개념과 최신 트렌드, 공공과 기업 활용 방안 교육",
       en: "Covers AI fundamentals, current trends, and safe adoption principles for public and enterprise teams.",
     },
     points: {
@@ -315,7 +314,7 @@ const generativeAITracks = [
     points: {
       ko: [
         "프롬프트 리팩토링으로 응답 품질 향상",
-        "기획·홍보·민원·교육 등 역할별 시나리오 작성",
+        "기획, 홍보, 민원, 교육 등 역할별 시나리오 작성",
         "즉시 활용 가능한 프롬프트 카드와 체크리스트 제작",
       ],
       en: [
@@ -332,13 +331,13 @@ const generativeAITracks = [
       en: "Gen AI Workflow Automation",
     },
     description: {
-      ko: "문서 작성와 톤 변환, 협업 도구 연동까지 실무 위주 교육",
+      ko: "문서 작성과 톤 변환, 협업 도구 연동까지 실무 위주 교육",
       en: "Focuses on document automation, tone adjustments, and integrations with everyday collaboration tools.",
     },
     points: {
       ko: [
-        "보고서·기안·FAQ 등 반복 문서 작성 실습",
-        "정중/간결 등 톤·형식 변환으로 메시지 다듬기",
+        "보고서, 기안, FAQ 등 반복 문서 작성 실습",
+        "정중/간결 등 톤과 형식 변환으로 메시지 다듬기",
         "Google Workspace 등 협업 플랫폼과 연동 체험",
       ],
       en: [
@@ -355,13 +354,13 @@ const generativeAITracks = [
       en: "Applied Project & Feedback",
     },
     description: {
-      ko: "팀 과제를 선정해 문제 정의부터 보고서·발표 자료까지 완성하고 피드백 확보",
+      ko: "팀 과제를 선정해 문제 정의부터 보고서와 발표 자료까지 완성하고 피드백 확보",
       en: "Select a team project, move from problem framing to final deliverables, and receive expert feedback.",
     },
     points: {
       ko: [
         "과제 선정 후 문제 정의 → 해결안 설계 워크숍",
-        "제안서·보고서·발표 자료 구성 및 작성",
+        "제안서, 보고서, 발표 자료 구성 및 작성",
         "전문 코치 피드백으로 개선 포인트 확인",
       ],
       en: [
@@ -409,7 +408,7 @@ const supportPillars = [
       en: "Real-world Project Delivery",
     },
     description: {
-      ko: "기업 실무 데이터를 기반으로 기획부터 배포·검증까지 단계별 프로젝트",
+      ko: "기업 실무 데이터를 기반으로 기획부터 배포와 검증까지 단계별 프로젝트",
       en: "Handle projects end to end from data collection to deployment and validation.",
     },
     points: {
@@ -431,7 +430,7 @@ const supportPillars = [
       en: "Connect portfolio building, interview prep, and internships to convert outcomes into offers.",
     },
     points: {
-      ko: ["기업 네트워킹 데이", "국내·해외 인턴십 추천"],
+      ko: ["기업 네트워킹 데이", "국내와 해외 인턴십 추천"],
       en: [
         "Employer networking days",
         "Domestic & global internship referrals",
@@ -453,7 +452,7 @@ const faqItems = [
   },
   {
     question: {
-      ko: "국내·글로벌 인턴십은 어떻게 연계되나요?",
+      ko: "국내와 글로벌 인턴십은 어떻게 연계되나요?",
       en: "How are the domestic and global internships arranged?",
     },
     answer: {
@@ -473,10 +472,14 @@ const faqItems = [
   },
 ];
 
+const CHIP_CLASS =
+  "inline-flex h-9 items-center rounded-full border border-line px-4 text-[14px] text-muted";
+
 export default function Education() {
   const { language } = useLocale();
+
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white">
       <Header />
       <SeoMetadata
         title={
@@ -486,7 +489,7 @@ export default function Education() {
         }
         description={
           language === "ko"
-            ? "현장 중심 AI·AX 전문교육 프로그램을 소개합니다."
+            ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
             : "Practical AI and AX education programmes from Brainworks."
         }
       />
@@ -526,7 +529,7 @@ export default function Education() {
               href: "/global-programs",
               label:
                 language === "ko"
-                  ? "해외 인턴십·국제 프로그램이라면 글로벌 프로그램"
+                  ? "해외 인턴십과 국제 프로그램이라면 글로벌 프로그램"
                   : "Looking for overseas internships or international programmes? See Global Program",
             },
             {
@@ -539,99 +542,80 @@ export default function Education() {
           ]}
         />
 
-        <section className="bw-education-process mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-6">
-          <SectionHeader
-            eyebrow="Training process"
-            title={language === "ko" ? "교육 프로세스" : "Training Process"}
-          />
+        <section>
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Training process"
+              title={language === "ko" ? "교육 프로세스" : "Training Process"}
+            />
+            <div className="flex flex-col gap-y-20 lg:gap-y-28">
+              {processSteps.map((step, index) => {
+                const isEvenRow = index % 2 === 1;
+                const imageAlt = step.image.alt[language] ?? step.image.alt.en;
 
-          <div className="bw-learning-flow">
-            {processSteps.map((step, index) => {
-              const hasImage = Boolean(step.image);
-
-              const imageAlt =
-                step.image?.alt?.[language] ??
-                step.image?.alt?.en ??
-                step.stage[language];
-
-              return (
-                <article
-                  key={step.id}
-                  /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal bw-learning-step"
-                >
-                  <div className="bw-learning-step__inner">
-                    <div className="flex-1 space-y-5">
+                return (
+                  <article
+                    key={step.id}
+                    className="bw-reveal grid grid-cols-1 gap-10 lg:grid-cols-2"
+                    style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  >
+                    <div
+                      className={`relative aspect-[4/3] overflow-hidden rounded-2xl ${
+                        isEvenRow ? "lg:order-2" : ""
+                      }`}
+                    >
+                      <Image
+                        src={step.image.src}
+                        alt={imageAlt}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 50vw, 100vw"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center">
                       <div className="flex items-center gap-3">
-                        <span className="bw-marker">
+                        <span className="text-[14px] font-bold text-accent-text">
                           {String(index + 1).padStart(2, "0")}
                         </span>
-                        <span className="bw-chip">{step.stage[language]}</span>
+                        <span className={CHIP_CLASS}>
+                          {step.stage[language]}
+                        </span>
                       </div>
-                      <div className="space-y-2">
-                        <h3 className="bw-title text-[var(--bw-color-ink)]">
-                          {step.focus[language]}
-                        </h3>
-                        <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
-                          {step.summary[language]}
-                        </p>
+                      <h3 className="mt-4 text-[28px] font-semibold text-ink-strong">
+                        {step.focus[language]}
+                      </h3>
+                      <p className="mt-3 text-[17px] leading-[1.6]">
+                        {step.summary[language]}
+                      </p>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {step.modules[language].map((module) => (
+                          <span key={module} className={CHIP_CLASS}>
+                            {module}
+                          </span>
+                        ))}
                       </div>
-
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--bw-color-muted)]">
-                          {language === "ko"
-                            ? "주요 학습 영역"
-                            : "Key Components"}
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {step.modules[language].map((module) => (
-                            <span
-                              key={module}
-                              className="rounded-full border border-[var(--bw-color-line)] bg-white px-3 py-1 text-xs font-medium text-[var(--bw-color-muted)]"
-                            >
-                              {module}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <h4 className="text-xs font-semibold uppercase tracking-wide text-[var(--bw-color-muted)]">
-                          {language === "ko" ? "특장점" : "Highlights"}
-                        </h4>
-                        <ul className="space-y-2 text-sm text-[var(--bw-color-ink)]">
-                          {step.highlights[language].map((highlight) => (
-                            <li key={highlight} className="flex gap-2">
-                              <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                              <span>{highlight}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      <ul className="mt-6 space-y-3">
+                        {step.highlights[language].map((highlight) => (
+                          <li
+                            key={highlight}
+                            className="flex items-start gap-2 text-[15px]"
+                          >
+                            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-
-                    {hasImage && (
-                      <div className="bw-learning-step__image relative h-64 flex-1 overflow-hidden md:h-auto">
-                        <Image
-                          src={step.image.src}
-                          alt={imageAlt}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 1024px) 40vw, 100vw"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
+                  </article>
+                );
+              })}
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <div className="max-w-3xl">
-            <SectionHeader
+        <section>
+          <div className="inner">
+            <DetailSectionHead
               eyebrow="Generative AI"
               title={
                 language === "ko"
@@ -644,54 +628,46 @@ export default function Education() {
                   : "Level up practical GenAI skills for every team"
               }
             />
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               {generativeAIChips[language].map((chip) => (
-                <span
-                  key={chip}
-                  className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[var(--bw-color-muted)]"
-                >
+                <span key={chip} className={CHIP_CLASS}>
                   {chip}
                 </span>
               ))}
             </div>
-          </div>
-
-          <div className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {generativeAITracks.map((track, trackIndex) => (
-              <article
-                key={track.id}
-                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                style={{ transitionDelay: `${Math.min(trackIndex, 6) * 80}ms` }}
-                className="bw-reveal grid gap-6 px-6 py-8 md:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] md:gap-12 md:px-8"
-              >
-                <div>
-                  {/* 번호 마커 — 레퍼런스 실측(DeepLearning.AI)의 카테고리 칩 자리 */}
-                  <span className="bw-marker">
-                    {String(trackIndex + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="bw-title mt-4 text-[var(--bw-color-ink)]">
+            <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {generativeAITracks.map((track, index) => (
+                <article
+                  key={track.id}
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                  className="bw-reveal rounded-[24px] bg-tint p-8 lg:p-10"
+                >
+                  <h3 className="text-[24px] font-semibold text-ink-strong">
                     {track.title[language]}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--bw-color-muted)]">
+                  <p className="mt-3 text-[16px] leading-[1.6]">
                     {track.description[language]}
                   </p>
-                </div>
-                <ul className="grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
-                  {track.points[language].map((point) => (
-                    <li key={point} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            ))}
+                  <ul className="mt-6 space-y-3">
+                    {track.points[language].map((point) => (
+                      <li
+                        key={point}
+                        className="flex items-start gap-2 text-[15px]"
+                      >
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <div className="max-w-3xl">
-            <SectionHeader
+        <section>
+          <div className="inner">
+            <DetailSectionHead
               eyebrow="Education clients"
               title={language === "ko" ? "함께하는 주요 고객" : "Key Clients"}
               description={
@@ -700,65 +676,101 @@ export default function Education() {
                   : "Public, manufacturing, finance, and education leaders trust Brainworks as their AI training partner."
               }
             />
-          </div>
-          <div className="grid gap-0 border-y border-[var(--bw-color-line)] bg-white sm:grid-cols-3">
-            {educationClients.map((client, index) => (
-              <div
-                key={client.id}
-                /* 로고가 한 줄씩 채워지듯 들어오게 한다. 지연만 주고 나머지는 .bw-reveal이 맡는다. */
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal flex min-h-[140px] items-center justify-center border-b border-[var(--bw-color-line)] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element -- 협력기관 로고 6종은 svg/png/jpg가 섞여 있고 object-contain 박스에 담겨 최적화 이득이 적다. */}
-                <img
-                  src={client.logo}
-                  alt={client.name}
-                  className="h-20 w-full object-contain grayscale transition hover:grayscale-0"
-                />
-              </div>
-            ))}
+            <div className="grid grid-cols-3 gap-4 lg:grid-cols-6">
+              {educationClients.map((client, index) => (
+                <div
+                  key={client.id}
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal flex h-24 items-center justify-center rounded-2xl border border-line bg-white p-6"
+                >
+                  <Image
+                    src={client.logo}
+                    alt={client.name}
+                    height={40}
+                    width={160}
+                    className="h-10 w-auto object-contain"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="mx-auto mt-20 flex max-w-6xl flex-col gap-10 px-6">
-          <SectionHeader
-            eyebrow="Program support"
-            title={
-              language === "ko"
-                ? "교육 프로그램 특장점"
-                : "Program Support Pillars"
-            }
-            description={
-              language === "ko"
-                ? "학습·프로젝트·커리어 지원을 연결해 교육 성과가 채용으로 이어지는 교육 프로그램"
-                : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."
-            }
-          />
+        <section className="bg-tint">
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Program support"
+              title={
+                language === "ko"
+                  ? "교육 프로그램 특장점"
+                  : "Program Support Pillars"
+              }
+              description={
+                language === "ko"
+                  ? "학습, 프로젝트, 커리어 지원을 연결해 교육 성과가 채용으로 이어지는 교육 프로그램"
+                  : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."
+              }
+            />
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {supportPillars.map((pillar, index) => (
+                <article
+                  key={pillar.id}
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal rounded-[24px] bg-white p-8 lg:p-10"
+                >
+                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                    {pillar.title[language]}
+                  </h3>
+                  <p className="mt-3 text-[16px] leading-[1.6]">
+                    {pillar.description[language]}
+                  </p>
+                  <ul className="mt-6 space-y-3">
+                    {pillar.points[language].map((point) => (
+                      <li
+                        key={point}
+                        className="flex items-start gap-2 text-[15px]"
+                      >
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-          <div className="grid gap-6">
-            {supportPillars.map((pillar, index) => (
-              <div
-                key={pillar.id}
-                /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-line-strong)] bg-[var(--bw-color-surface-muted)] p-[var(--bw-space-6)] md:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] md:gap-12"
-              >
-                <h3 className="bw-title text-[var(--bw-color-ink)]">
-                  {pillar.title[language]}
-                </h3>
-                <p className="text-sm leading-relaxed text-[var(--bw-color-muted)]">
-                  {pillar.description[language]}
-                </p>
-                <ul className="grid gap-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
-                  {pillar.points[language].map((point) => (
-                    <li key={point} className="flex gap-2">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[var(--bw-color-brand)]" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+        <section>
+          <div className="inner">
+            <DetailSectionHead
+              title={
+                language === "ko"
+                  ? "자주 묻는 질문"
+                  : "Frequently Asked Questions"
+              }
+            />
+            <div className="mx-auto max-w-[860px]">
+              {faqItems.map((item, index) => (
+                <details
+                  key={[item.question[language], index].join("-")}
+                  className="group border-b border-line"
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[18px] font-semibold text-ink-strong">
+                    <span>{item.question[language]}</span>
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 transition-transform group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="pb-6 text-[16px] text-muted">
+                    {item.answer[language]}
+                  </p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -777,26 +789,6 @@ export default function Education() {
             href="/contact?topic=education"
             label={language === "ko" ? "상담 요청" : "Request a Consultation"}
           />
-
-          <div className="mt-6 overflow-hidden rounded-[var(--bw-radius-feature)] border border-[var(--bw-color-line)] bg-white shadow-[var(--bw-shadow-soft)]">
-            {faqItems.map((item, index) => (
-              <details
-                key={[item.question[language], index].join("-")}
-                className="group border-b border-[var(--bw-color-line)] px-6 py-5 last:border-b-0 md:px-8 md:py-6"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-[var(--bw-color-ink)] outline-none marker:hidden focus-visible:ring-2 focus-visible:ring-[var(--bw-color-brand)] focus-visible:ring-offset-4 [&::-webkit-details-marker]:hidden">
-                  <span>{item.question[language]}</span>
-                  <ChevronDown
-                    className="h-5 w-5 shrink-0 text-[var(--bw-color-muted)] transition-transform group-open:rotate-180"
-                    aria-hidden="true"
-                  />
-                </summary>
-                <p className="mt-4 max-w-3xl text-base leading-7 text-[var(--bw-color-muted)]">
-                  {item.answer[language]}
-                </p>
-              </details>
-            ))}
-          </div>
         </section>
       </main>
 
