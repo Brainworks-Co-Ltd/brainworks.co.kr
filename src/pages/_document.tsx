@@ -22,8 +22,14 @@ export default class BrainworksDocument extends Document {
     return (
       <Html lang={locale} data-design="industrial">
         <Head>
-          <link rel="icon" href="/favicon.ico" sizes="32x32" />
-          <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+          {/* 탭 아이콘은 로고의 심벌만 쓴다. 워드마크까지 넣으면 32px에서
+              글자가 뭉개져 무엇인지 읽히지 않는다. */}
+          <link
+            rel="icon"
+            href="/favicon-32.png"
+            type="image/png"
+            sizes="32x32"
+          />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           {/* 드러남 숨김 상태를 첫 페인트 전에 켠다. 훅(_app useReveal)이 붙이면 한 프레임 보였다가 사라진다. */}
           <script
