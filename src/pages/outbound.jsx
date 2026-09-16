@@ -12,12 +12,10 @@ import DetailSectionHead from "@/components/public/DetailSectionHead";
 const copy = {
   ko: {
     heroTitle: "글로벌 프로그램",
+    // 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정).
+    // heroTitle은 SeoMetadata와 화면 h1이 함께 쓴다.
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
-    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
-    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
-    heroAudience: "해외 진출과 국제 협력이 목적인 기업, 기관",
-    heroScope: "해외 진출, 국제 협력 프로그램을 설명하고 상담으로 연결합니다.",
     ctaPrimary: "상담 요청",
     sectionTitle: "주요 프로그램",
     aiSectionTitle: "글로벌 AI 전문 교육 프로그램",
@@ -32,10 +30,6 @@ const copy = {
     heroTitle: "Global Program",
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
-    heroAudience:
-      "Companies and institutions pursuing overseas expansion or international partnerships",
-    heroScope:
-      "Covers our overseas expansion and international partnership programmes.",
     ctaPrimary: "Request a Consultation",
     sectionTitle: "Programme Components",
     aiSectionTitle: "Global AI Professional Programmes",
@@ -230,15 +224,16 @@ export default function Outbound() {
             src: "/images/services/hero/smartcity.webp",
             alt: "",
           }}
-          eyebrow={t.heroTitle}
-          title={t.heroAudience}
-          description={t.heroScope}
+          eyebrow={language === "ko" ? "사업 영역" : "Business"}
+          title={t.heroTitle}
+          description={t.heroSubtitle}
+          chips={programs.map((item) => item.badge[language])}
           action={{
             href: "/contact?topic=global",
             label: t.ctaPrimary,
           }}
         />
-        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
+        {/* 대상 분기만 담당한다. 페이지 이름과 서비스 설명은 히어로가 맡는다. */}
         <PageAudience
           redirects={[
             {
