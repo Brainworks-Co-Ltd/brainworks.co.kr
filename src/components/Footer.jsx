@@ -57,7 +57,7 @@ export default function Footer() {
   return (
     <footer className="bw-footer bg-ink-strong text-white">
       <div className="inner flex flex-col gap-16 py-24 pb-14">
-        <div className="grid gap-16 lg:grid-cols-[1fr_auto]">
+        <div className="grid gap-16 lg:grid-cols-[minmax(360px,1fr)_2fr]">
           <div className="space-y-6">
             <div>
               <Image
@@ -119,7 +119,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="grid gap-x-16 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {offices.map((office) => (
               <div
                 key={office.label.en}
