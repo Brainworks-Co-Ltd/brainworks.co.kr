@@ -16,31 +16,34 @@ export default function AreasRail({ areas = [] }) {
       <div className="bw-reveal">
         <Rail>
           {areas.map((area) => (
-            <li
-              key={area.id}
-              className="group relative aspect-square w-[280px] overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-24px_rgba(16,25,27,.25)] lg:w-[409px]"
-            >
+            /* 그림을 앞세우는 카드라 옅은 면에 얹는다. 예전에는 사진을 카드
+               전체에 깔고 흰 글자를 올렸는데, 사진마다 밝은 부분이 달라
+               제목이 묻히는 자리가 생겼다. 그림은 안쪽에 두고 글은 면 위에서
+               읽게 한다. */
+            <li key={area.id} className="group w-[280px] lg:w-[409px]">
               <Link
                 href={`${listPath}?area=${encodeURIComponent(area.id)}#business-areas`}
-                className="relative block h-full w-full"
+                className="flex h-full flex-col rounded-[24px] bg-tint p-6 text-center transition-colors duration-200 hover:bg-[color-mix(in_oklab,var(--bw-accent)_10%,var(--bw-surface-muted))] lg:p-8"
               >
-                <Image
-                  src={area.heroImage}
-                  alt={area.title || area.name || ""}
-                  fill
-                  sizes="409px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                <span className="absolute left-8 top-8 text-[26px] font-semibold text-white lg:text-[30px]">
+                <span className="relative block aspect-[16/10] overflow-hidden rounded-2xl">
+                  <Image
+                    src={area.heroImage}
+                    alt={area.title || area.name || ""}
+                    fill
+                    sizes="409px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </span>
+                <span className="mt-6 block text-[22px] font-semibold text-ink-strong lg:text-[26px]">
                   {area.title || area.name}
                 </span>
-                <span className="absolute bottom-8 left-8 text-white">
-                  <span className="block text-[15px] font-semibold">
-                    {area.subtitle}
-                  </span>
-                  <span className="mt-4 inline-flex items-center gap-2 text-[15px] font-semibold">
-                    {language === "ko" ? "자세히 보기" : "Learn more"} <Arrow />
+                <span className="mt-3 block text-[15px] leading-[1.6] text-muted lg:text-[16px]">
+                  {area.subtitle}
+                </span>
+                <span className="mt-auto pt-7">
+                  <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
+                    {language === "ko" ? "자세히 보기" : "Learn more"}
+                    <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
                   </span>
                 </span>
               </Link>
