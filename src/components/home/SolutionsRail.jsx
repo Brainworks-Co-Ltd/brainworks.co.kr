@@ -24,7 +24,9 @@ export default function SolutionsRail({ areas = [] }) {
           {solutions.map((solution) => (
             <li
               key={solution.id}
-              className="flex h-full w-[300px] flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-24px_rgba(16,25,27,.25)] lg:w-[409px]"
+              /* 면이 없는 카드라 그림자를 얹으면 글자 둘레에 네모난 자국만
+                 남는다. 띄우는 대신 그림을 밀고 글자 색을 바꾼다. */
+              className="group flex h-full w-[300px] flex-col lg:w-[409px]"
             >
               <Link
                 href={`${listPath}?area=${encodeURIComponent(solution.areaId)}#business-areas`}
@@ -36,17 +38,18 @@ export default function SolutionsRail({ areas = [] }) {
                     alt={solution.imageAlt || solution.title || ""}
                     fill
                     sizes="409px"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <h3 className="mt-6 text-[18px] font-semibold text-ink-strong lg:text-[22px]">
+                <h3 className="mt-6 text-[18px] font-semibold text-ink-strong transition-colors group-hover:text-accent-text lg:text-[22px]">
                   {solution.title}
                 </h3>
                 <p className="mt-3 text-[15px] leading-[1.6] lg:text-[16px]">
                   {solution.description}
                 </p>
-                <p className="mt-auto inline-flex items-center gap-2 text-[15px] font-semibold text-ink">
-                  {language === "ko" ? "자세히 보기" : "Learn more"} <Arrow />
+                <p className="mt-auto inline-flex items-center gap-2 pt-4 text-[15px] font-semibold text-ink transition-colors group-hover:text-accent-text">
+                  {language === "ko" ? "자세히 보기" : "Learn more"}{" "}
+                  <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
                 </p>
               </Link>
             </li>

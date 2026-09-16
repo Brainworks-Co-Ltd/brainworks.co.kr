@@ -57,7 +57,11 @@ export default function Footer() {
   return (
     <footer className="bw-footer bg-ink-strong text-white">
       <div className="inner flex flex-col gap-16 py-24 pb-14">
-        <div className="grid gap-16 lg:grid-cols-[1fr_auto]">
+        {/* 예전에는 사업장 다섯을 오른쪽 auto 칸에 한 줄로 세웠다. auto는
+            주소가 필요한 만큼 폭을 가져가서 왼쪽 칸이 눌리고, 메뉴 글자가
+            한 글자씩 끊겼다. 브랜드와 메뉴를 한 줄로 두고 사업장은 아래
+            전체 폭에서 접히게 한다. */}
+        <div className="grid gap-16 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <div className="space-y-6">
             <div>
               <Image
@@ -67,73 +71,69 @@ export default function Footer() {
                 height={86}
                 className="h-[52px] w-auto brightness-0 invert"
               />
-              <p className="mt-6 text-[17px] font-semibold leading-[1.5] text-white">
-                {language === "ko"
-                  ? "브레인웍스 소식을 이메일로 받을 수 있습니다."
-                  : "Get Brainworks news and updates by email."}
-              </p>
             </div>
-            <nav
-              aria-label={language === "ko" ? "보조 메뉴" : "Footer navigation"}
-              className="grid gap-8 sm:grid-cols-3"
-            >
-              <h2 className="sr-only">
-                {language === "ko" ? "사이트 링크" : "Site links"}
-              </h2>
-              {groups.map((group) => (
-                <div key={group.id}>
-                  <h3 className="text-sm font-semibold text-white">
-                    {group.label}
-                  </h3>
-                  <ul className="mt-1">
-                    {group.children.map((child) => (
-                      <li key={child.id}>
-                        <Link
-                          href={child.href}
-                          className="inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
-                        >
-                          {child.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-              {contact ? (
-                <div>
-                  <h3 className="text-sm font-semibold text-white">
-                    {contact.label}
-                  </h3>
-                  <Link
-                    href={contact.href}
-                    className="mt-1 inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
-                  >
-                    {contact.label}
-                  </Link>
-                </div>
-              ) : null}
-            </nav>
             <div className="space-y-1 text-sm text-white/70">
-              <p>Email · austin@brainworks.co.kr</p>
-              <p>Tel · +82-10-6639-4084</p>
+              <p>Email austin@brainworks.co.kr</p>
+              <p>Tel +82-10-6639-4084</p>
             </div>
           </div>
 
-          <div className="grid gap-x-16 gap-y-10 sm:grid-cols-2 lg:grid-cols-5">
-            {offices.map((office) => (
-              <div
-                key={office.label.en}
-                className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 p-4 lg:border-0 lg:bg-transparent lg:p-0"
-              >
-                <p className="text-sm font-semibold text-white">
-                  {office.label[language]}
-                </p>
-                <p className="mt-2 text-xs leading-relaxed text-slate-400">
-                  {office.address[language]}
-                </p>
+          <nav
+            aria-label={language === "ko" ? "보조 메뉴" : "Footer navigation"}
+            className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            <h2 className="sr-only">
+              {language === "ko" ? "사이트 링크" : "Site links"}
+            </h2>
+            {groups.map((group) => (
+              <div key={group.id}>
+                <h3 className="text-sm font-semibold text-white">
+                  {group.label}
+                </h3>
+                <ul className="mt-1">
+                  {group.children.map((child) => (
+                    <li key={child.id}>
+                      <Link
+                        href={child.href}
+                        className="inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
-          </div>
+            {contact ? (
+              <div>
+                <h3 className="text-sm font-semibold text-white">
+                  {contact.label}
+                </h3>
+                <Link
+                  href={contact.href}
+                  className="mt-1 inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
+                >
+                  {contact.label}
+                </Link>
+              </div>
+            ) : null}
+          </nav>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+          {offices.map((office) => (
+            <div
+              key={office.label.en}
+              className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 p-4 lg:border-0 lg:bg-transparent lg:p-0"
+            >
+              <p className="text-sm font-semibold text-white">
+                {office.label[language]}
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-slate-400">
+                {office.address[language]}
+              </p>
+            </div>
+          ))}
         </div>
 
         {certificationsData.length > 0 && (

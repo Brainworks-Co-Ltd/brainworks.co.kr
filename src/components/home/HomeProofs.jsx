@@ -37,34 +37,47 @@ export default function HomeProofs() {
     <section className="py-[120px] lg:py-[250px]">
       <div className="inner">
         <SectionTitle>{homeCopy.proofSection.title[language]}</SectionTitle>
-        <ul className="grid grid-cols-2 gap-x-6 gap-y-14 text-center lg:grid-cols-4">
-          {homeCopy.proofs.map((proof, index) => (
-            <li key={proof.title.ko} className="lg:py-20">
-              <div
-                className="bw-reveal"
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  className="mx-auto text-accent"
-                  aria-hidden="true"
+        {/* 네 칸이 흰 바탕에 글자만 있어 구간이 비어 보였다. 면을 주고 첫 칸은
+            강조색으로 채운다. 첫 칸은 회사가 스스로를 소개하는 문장이라
+            나머지와 무게가 다르다. 링크가 아니므로 hover로 색을 바꾸지 않는다.
+            누를 수 없는 것이 눌릴 것처럼 보이면 그게 더 큰 문제다. */}
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {homeCopy.proofs.map((proof, index) => {
+            const filled = index === 0;
+            return (
+              <li key={proof.title.ko} className="h-full">
+                <div
+                  className={`bw-reveal flex h-full flex-col rounded-[24px] p-8 text-center ${filled ? "bg-accent text-white" : "bg-tint"}`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  {PROOF_ICONS[index]}
-                </svg>
-                <p className="mt-8 text-[15px] text-muted lg:text-[16px]">
-                  {proof.label[language]}
-                </p>
-                <h3 className="mt-3 text-[22px] font-semibold text-ink-strong [overflow-wrap:anywhere] lg:text-[24px]">
-                  {proof.title[language]}
-                </h3>
-                <p className="mt-4 text-[15px] leading-[1.6] lg:text-[17px]">
-                  {proof.desc[language]}
-                </p>
-              </div>
-            </li>
-          ))}
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    className={`mx-auto ${filled ? "text-white" : "text-accent"}`}
+                    aria-hidden="true"
+                  >
+                    {PROOF_ICONS[index]}
+                  </svg>
+                  <p
+                    className={`mt-8 text-[15px] lg:text-[16px] ${filled ? "text-white/75" : "text-muted"}`}
+                  >
+                    {proof.label[language]}
+                  </p>
+                  <h3
+                    className={`mt-3 text-[22px] font-semibold [overflow-wrap:anywhere] lg:text-[24px] ${filled ? "text-white" : "text-ink-strong"}`}
+                  >
+                    {proof.title[language]}
+                  </h3>
+                  <p
+                    className={`mt-4 text-[15px] leading-[1.6] lg:text-[17px] ${filled ? "text-white/85" : ""}`}
+                  >
+                    {proof.desc[language]}
+                  </p>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
