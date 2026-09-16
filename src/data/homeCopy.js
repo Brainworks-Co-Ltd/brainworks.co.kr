@@ -51,7 +51,7 @@ export const homeCopy = {
         ko: "비즈니스 목표와 조직 역량에 맞춘 AI 전략과 로드맵을 세우고, 파일럿 설계부터 MLOps 환경 구성까지 전주기를 지원합니다.",
         en: "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
       },
-      image: "/images/services/hero/consulting.webp",
+      image: "/images/services/hero/agent.webp",
     },
     {
       id: "solution",
@@ -72,7 +72,7 @@ export const homeCopy = {
         ko: "데이터, 엔지니어링, 보안, 로봇, IoT 응용 역량을 높이는 AI 전문 교육을 운영합니다.",
         en: "Practical AI and AX education programmes from Brainworks.",
       },
-      image: "/images/services/hero/education.webp",
+      image: "/images/education/AI전문교육.jpg",
     },
     {
       id: "global",

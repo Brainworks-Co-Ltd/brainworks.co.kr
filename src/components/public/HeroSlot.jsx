@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function HeroSlot({ slots }) {
+export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
   const [typed, setTyped] = useState(slots[0] ?? "");
 
   useEffect(() => {
@@ -55,12 +55,18 @@ export default function HeroSlot({ slots }) {
     };
   }, [slots]);
 
+  const Heading = as;
+  const [questionBefore, questionAfter = ""] = (
+    question || "{slot}의 일은 AI로 어떻게 달라질 수 있을까요?"
+  ).split("{slot}");
+
   return (
-    <h2 className="text-[32px] font-semibold leading-[1.3] text-ink lg:text-[45px]">
+    <Heading className="text-[32px] font-semibold leading-[1.3] text-ink lg:text-[45px]">
+      {questionBefore}
       <span className="text-ink shadow-[inset_0_-0.35em_0_var(--color-accent-strong)]">
         {typed}
       </span>
-      의 일은 AI로 어떻게 달라질 수 있을까요?
-    </h2>
+      {questionAfter}
+    </Heading>
   );
 }

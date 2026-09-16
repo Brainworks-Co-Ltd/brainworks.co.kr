@@ -1,42 +1,45 @@
-import React from "react";
 import Header from "@/components/Header";
-import IndustrialHero from "@/components/industrial/IndustrialHero";
-import DomainGrid from "@/components/industrial/DomainGrid";
-import LatestNews from "@/components/home/LatestNews";
-import Clients from "@/components/Clients";
-import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
+import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import HomeHero from "@/components/home/HomeHero";
+import HomeMedia from "@/components/home/HomeMedia";
+import HomeServices from "@/components/home/HomeServices";
+import HomeProofs from "@/components/home/HomeProofs";
+import AreasRail from "@/components/home/AreasRail";
+import SolutionsRail from "@/components/home/SolutionsRail";
+import NewsRail from "@/components/home/NewsRail";
 import { useLocale } from "@/shared/routing/useLocale";
+import { homeCopy } from "@/data/homeCopy";
+import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { getPublishedPopupNotices } from "@/server/modules/popup-notices/queries";
 
-export default function Home({ newsItems, popupNotices }) {
+export default function Home({ newsItems, popupNotices, areas }) {
   const { language } = useLocale();
+  const copy = homeCopy.contact;
   return (
     <div className="min-h-screen">
       <Header />
       <SeoMetadata
         title={language === "ko" ? "브레인웍스" : "Brainworks"}
-        description={
-          language === "ko"
-            ? "브레인웍스는 제조, 의료, 도시, 상담 현장에 AI 자동화를 구축합니다."
-            : "Brainworks builds AI automation for manufacturing, healthcare, city operations, and customer support."
-        }
+        description={homeCopy.identity[language]}
       />
-      <main id="main-content">
+      <main id="main-content" className="bw-home">
         <PopupNoticeRegion notices={popupNotices} />
-        {/*
-          순서는 승인 기획 07의 핵심 여정을 따른다.
-          정체성 → 사업 영역 → 신뢰 근거 → 다음 행동.
-          고객사 로고는 신뢰 근거이므로 사업 영역 뒤에 온다.
-        */}
-        <IndustrialHero />
-        <DomainGrid />
-        <Clients />
-        <LatestNews items={newsItems} />
-        <CTA />
+        <HomeHero />
+        <HomeMedia />
+        <HomeServices />
+        <HomeProofs />
+        <AreasRail areas={areas} />
+        <SolutionsRail areas={areas} />
+        <NewsRail items={newsItems} />
+        <ContactCtaBlock
+          className="home-contact-cta"
+          title={copy.title[language]}
+          label={copy.label[language]}
+        />
       </main>
       <Footer />
     </div>
@@ -45,15 +48,17 @@ export default function Home({ newsItems, popupNotices }) {
 
 export async function getServerSideProps({ locale }) {
   const currentLocale = locale === "en" ? "en" : "ko";
-  const [newsList, popupNotices] = await Promise.all([
+  const [newsList, popupNotices, areas] = await Promise.all([
     getPublishedNewsList({ locale: currentLocale }),
     getPublishedPopupNotices(currentLocale),
+    getPublishedBusinessAreas(currentLocale),
   ]);
 
   return {
     props: {
       newsItems: newsList.items,
       popupNotices,
+      areas,
     },
   };
 }
