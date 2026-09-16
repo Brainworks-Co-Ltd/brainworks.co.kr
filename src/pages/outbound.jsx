@@ -308,34 +308,38 @@ export default function Outbound() {
               eyebrow="Global programs"
               title={t.sectionTitle}
             />
-            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-2 lg:gap-y-16">
+            <div className="flex flex-col gap-y-12 lg:gap-y-16">
               {programs.map((program, index) => (
                 <article
                   key={program.id}
                   /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal border-t border-line pt-8"
+                  className="bw-reveal grid gap-6 border-t border-line pt-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16"
                 >
-                  <p className="text-[16px] font-bold text-accent-text">
-                    {program.badge[language]}
-                  </p>
-                  <h3 className="mt-3 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                    {program.title[language]}
-                  </h3>
-                  <p className="mt-3 text-[18px] leading-[1.75]">
-                    {program.description[language]}
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {program.bullets[language].map((bullet) => (
-                      <li
-                        key={[program.id, bullet].join("-")}
-                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
-                      >
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div>
+                    <p className="text-[16px] font-bold text-accent-text">
+                      {program.badge[language]}
+                    </p>
+                    <h3 className="mt-3 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
+                      {program.title[language]}
+                    </h3>
+                  </div>
+                  <div>
+                    <p className="text-[18px] leading-[1.75]">
+                      {program.description[language]}
+                    </p>
+                    <ul className="mt-6 space-y-3">
+                      {program.bullets[language].map((bullet) => (
+                        <li
+                          key={[program.id, bullet].join("-")}
+                          className="flex items-start gap-2 text-[17px] leading-[1.7]"
+                        >
+                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </article>
               ))}
             </div>

@@ -633,23 +633,30 @@ export default function Education() {
                 </span>
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-2 lg:gap-y-16">
+            <div className="mt-8 flex flex-col">
               {generativeAITracks.map((track, index) => (
-                <article
+                <details
                   key={track.id}
                   style={{ transitionDelay: `${index * 80}ms` }}
-                  className="bw-reveal border-t border-line pt-8"
+                  className="bw-reveal group border-t border-line"
                 >
-                  <p className="text-[16px] font-bold text-accent-text">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                    {track.title[language]}
-                  </h3>
-                  <p className="mt-3 text-[18px] leading-[1.75]">
-                    {track.description[language]}
-                  </p>
-                  <ul className="mt-6 space-y-3">
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-8 [&::-webkit-details-marker]:hidden">
+                    <div>
+                      <h3 className="text-[22px] font-semibold text-ink-strong lg:text-[28px]">
+                        {track.title[language]}
+                      </h3>
+                      <p className="mt-3 text-[18px] leading-[1.75] text-muted-foreground">
+                        {track.description[language]}
+                      </p>
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 transition-transform group-open:rotate-45"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <ul className="space-y-3 pb-8">
                     {track.points[language].map((point) => (
                       <li
                         key={point}
@@ -660,7 +667,7 @@ export default function Education() {
                       </li>
                     ))}
                   </ul>
-                </article>
+                </details>
               ))}
             </div>
           </div>
