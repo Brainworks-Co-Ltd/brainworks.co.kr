@@ -302,34 +302,34 @@ export default function Outbound() {
           </div>
         </section>
 
-        <section className="bg-tint">
+        <section>
           <div className="inner">
             <DetailSectionHead
               eyebrow="Global programs"
               title={t.sectionTitle}
             />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-2 lg:gap-y-16">
               {programs.map((program, index) => (
                 <article
                   key={program.id}
                   /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-white p-8 lg:p-10"
+                  className="bw-reveal border-t border-line pt-8"
                 >
-                  <p className="text-[14px] font-bold text-accent-text">
+                  <p className="text-[16px] font-bold text-accent-text">
                     {program.badge[language]}
                   </p>
-                  <h3 className="mt-3 text-[24px] font-semibold text-ink-strong">
+                  <h3 className="mt-3 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {program.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
+                  <p className="mt-3 text-[18px] leading-[1.75]">
                     {program.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {program.bullets[language].map((bullet) => (
                       <li
                         key={[program.id, bullet].join("-")}
-                        className="flex items-start gap-2 text-[15px]"
+                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
                       >
                         <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{bullet}</span>
@@ -349,25 +349,28 @@ export default function Outbound() {
               title={t.aiSectionTitle}
               description={t.aiSectionSubtitle}
             />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-3 lg:gap-y-16">
               {aiPrograms.map((program, index) => (
                 <article
                   key={program.id}
                   /* 순차 등장 지연. 전환과 저동작 대응은 industrial.css의 .bw-reveal이 맡는다. */
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-tint p-8 lg:p-10"
+                  className="bw-reveal border-t border-line pt-8"
                 >
-                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                  <p className="text-[16px] font-bold text-accent-text">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {program.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
+                  <p className="mt-3 text-[18px] leading-[1.75]">
                     {program.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {program.bullets[language].map((bullet) => (
                       <li
                         key={[program.id, bullet].join("-")}
-                        className="flex items-start gap-2 text-[15px]"
+                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
                       >
                         <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{bullet}</span>

@@ -572,17 +572,17 @@ export default function Education() {
                     </div>
                     <div className="flex flex-col justify-center">
                       <div className="flex items-center gap-3">
-                        <span className="text-[14px] font-bold text-accent-text">
+                        <span className="text-[16px] font-bold text-accent-text">
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <span className={CHIP_CLASS}>
                           {step.stage[language]}
                         </span>
                       </div>
-                      <h3 className="mt-4 text-[28px] font-semibold text-ink-strong">
+                      <h3 className="mt-4 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                         {step.focus[language]}
                       </h3>
-                      <p className="mt-3 text-[17px] leading-[1.6]">
+                      <p className="mt-3 text-[18px] leading-[1.75]">
                         {step.summary[language]}
                       </p>
                       <div className="mt-6 flex flex-wrap gap-2">
@@ -596,7 +596,7 @@ export default function Education() {
                         {step.highlights[language].map((highlight) => (
                           <li
                             key={highlight}
-                            className="flex items-start gap-2 text-[15px]"
+                            className="flex items-start gap-2 text-[17px] leading-[1.7]"
                           >
                             <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                             <span>{highlight}</span>
@@ -633,24 +633,27 @@ export default function Education() {
                 </span>
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="mt-8 grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-2 lg:gap-y-16">
               {generativeAITracks.map((track, index) => (
                 <article
                   key={track.id}
                   style={{ transitionDelay: `${index * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-tint p-8 lg:p-10"
+                  className="bw-reveal border-t border-line pt-8"
                 >
-                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                  <p className="text-[16px] font-bold text-accent-text">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {track.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
+                  <p className="mt-3 text-[18px] leading-[1.75]">
                     {track.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {track.points[language].map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2 text-[15px]"
+                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
                       >
                         <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{point}</span>
@@ -709,24 +712,27 @@ export default function Education() {
                   : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."
               }
             />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-3 lg:gap-y-16">
               {supportPillars.map((pillar, index) => (
                 <article
                   key={pillar.id}
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-white p-8 lg:p-10"
+                  className="bw-reveal border-t border-line pt-8"
                 >
-                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                  <p className="text-[16px] font-bold text-accent-text">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {pillar.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
+                  <p className="mt-3 text-[18px] leading-[1.75]">
                     {pillar.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {pillar.points[language].map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2 text-[15px]"
+                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
                       >
                         <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{point}</span>

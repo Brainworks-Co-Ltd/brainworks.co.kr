@@ -232,24 +232,27 @@ export default function Consulting() {
               eyebrow="Consulting value"
               title={t.valueTitle}
             />
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-3 lg:gap-y-16">
               {offerings.map((item, index) => (
                 <article
                   key={item.id}
                   style={{ transitionDelay: `${index * 80}ms` }}
-                  className="bw-reveal rounded-[24px] bg-tint p-8 lg:p-10"
+                  className="bw-reveal border-t border-line pt-8"
                 >
-                  <h3 className="text-[24px] font-semibold text-ink-strong">
+                  <p className="text-[16px] font-bold text-accent-text">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {item.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
+                  <p className="mt-3 text-[18px] leading-[1.75]">
                     {item.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {item.bullets[language].map((bullet) => (
                       <li
                         key={bullet}
-                        className="flex items-start gap-2 text-[15px]"
+                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
                       >
                         <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
                         <span>{bullet}</span>
