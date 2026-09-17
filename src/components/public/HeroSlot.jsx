@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { JetBrains_Mono } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 
 /*
- * 슬롯 단어에만 고정폭 영문 글꼴을 입혀 '지금 입력되는 글자'로 읽히게 한다.
+ * 슬롯 단어에만 대비가 크고 세리프가 긴 영문 글꼴을 입혀 본문 한글과 구분한다.
  * 슬롯이 전부 영문 솔루션 이름이라 라틴 글리프만 받는다.
  */
-const slotFont = JetBrains_Mono({
+const slotFont = Playfair_Display({
   subsets: ["latin"],
   weight: ["600"],
   display: "swap",
@@ -105,10 +105,10 @@ function useHeroTyping(slots) {
  * 질문 문자열의 줄바꿈 문자는 데스크톱에서만 줄을 나눈다. 모바일은 폭이
  * 좁아 슬롯과 조사 바로 뒤에서 한 번 끊고 나머지는 이어서 흐르게 둔다.
  *
- * 슬롯 칸은 가장 긴 이름만큼 폭을 잡고 글자를 칸의 오른쪽 끝에 붙여 찍는다.
+ * 슬롯 칸은 가장 긴 이름만큼 폭을 잡고 글자를 칸 가운데에 찍는다.
  * 조사와 뒤 문장("를 도입하면")은 칸 바깥에 늘 남아 있으므로, 단어가
  * 지워져 비어도 문장이 깨지지 않고 글자 수가 변해도 제자리에서 움직이지
- * 않는다. 단어는 조사 바로 앞에서 왼쪽으로 자라난다.
+ * 않는다. 단어는 빈칸 가운데에서 양쪽으로 자라난다.
  */
 /** @param {{ slots: string[], question?: string, as?: "h1" | "h2" | "h3" }} props */
 export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
@@ -145,12 +145,14 @@ export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
             {before}
             <span className="whitespace-nowrap">
               <span
-                className={`${slotFont.className} relative inline-block text-[22px] font-semibold text-ink lg:text-[45px]`}
+                className={`${slotFont.className} relative inline-block text-[28px] font-semibold text-ink lg:text-[45px]`}
               >
                 <span aria-hidden="true" className="invisible">
                   {longest}
+                  {/* 가장 긴 이름이 다 찍혔을 때 커서가 칸 밖 조사에 닿지 않게 폭을 더한다. */}
+                  {showCaret && <span className="bw-hero-caret" />}
                 </span>
-                <span className="bw-hero-live absolute inset-y-0 right-0 whitespace-nowrap text-right">
+                <span className="bw-hero-live absolute inset-0 whitespace-nowrap text-center">
                   {typed}
                   {showCaret && (
                     <span aria-hidden="true" className="bw-hero-caret" />
