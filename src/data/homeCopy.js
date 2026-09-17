@@ -4,7 +4,7 @@
 export const homeCopy = {
   // 슬롯은 사업 영역 이름(src/data/businessAreas.js)을 그대로 쓴다. 메인 히어로가 가져간다.
   heroQuestion: {
-    ko: "{slot}를\n도입하면 당신의 업무가 어떻게 달라질 수 있을까요?",
+    ko: "{slot}를 도입하면\n당신의 업무가 어떻게 달라질 수 있을까요?",
     // en 초안, 회사 확인
     en: "How could {slot}\nchange the way you work?",
   },

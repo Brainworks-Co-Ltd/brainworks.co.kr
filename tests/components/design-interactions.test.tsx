@@ -141,6 +141,21 @@ describe("디자인 개선의 탐색과 제목", () => {
     expect(reduced.querySelector(".bw-hero-caret")).toBeNull();
   });
 
+  it("HeroSlot은 슬롯이 비어 있어도 조사와 뒤 문장을 남긴다", () => {
+    vi.useFakeTimers();
+    const { container } = render(
+      <HeroSlot
+        slots={["Manufacturing AI", "Healthcare & Bio AI"]}
+        question={"{slot}를 도입하면\n업무가 달라질까요?"}
+      />,
+    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    // 마운트 직후 슬롯은 빈 문자열이지만 조사와 뒤 문장은 이미 보여야 한다.
+    expect(container.querySelector(".bw-hero-live")?.textContent).toBe("");
+    expect(heading).toHaveTextContent("를 도입하면");
+    expect(heading).toHaveTextContent("업무가 달라질까요?");
+  });
+
   it("카드가 모두 들어오면 Rail 이동 인디케이터를 숨긴다", () => {
     render(
       <Rail>
