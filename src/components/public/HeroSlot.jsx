@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Playfair_Display } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 
 /*
- * 슬롯 단어에만 대비가 크고 세리프가 긴 영문 글꼴을 입혀 본문 한글과 구분한다.
+ * 슬롯 단어에만 짧은 슬랩 세리프가 있는 고정폭 영문 글꼴을 입혀 입력되는 글자로 읽히게 한다.
  * 슬롯이 전부 영문 솔루션 이름이라 라틴 글리프만 받는다.
  */
-const slotFont = Playfair_Display({
+const slotFont = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["600"],
   display: "swap",
@@ -145,7 +145,7 @@ export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
             {before}
             <span className="whitespace-nowrap">
               <span
-                className={`${slotFont.className} relative inline-block text-[28px] font-semibold text-ink lg:text-[45px]`}
+                className={`${slotFont.className} relative inline-block text-[23px] font-semibold text-ink lg:text-[45px]`}
               >
                 <span aria-hidden="true" className="invisible">
                   {longest}
