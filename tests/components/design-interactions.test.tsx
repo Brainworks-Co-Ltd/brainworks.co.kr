@@ -65,9 +65,8 @@ describe("디자인 개선의 탐색과 제목", () => {
 
   it("새 HeroSlot은 빈 상태에서 시작해 타이핑하고 지운 뒤 다음 현장을 타이핑한다", () => {
     vi.useFakeTimers();
-    // 예약 폭을 잡는 invisible 사본이 항상 "제조 현장" 텍스트를 깔고 있어
-    // heading 전체의 textContent로는 실제 타이핑 상태를 구분할 수 없다.
-    // 실제로 움직이는 라이브 텍스트 레이어(.bw-hero-live)만 읽는다.
+    // heading 전체에는 슬롯 뒤 문장이 함께 들어 있어 타이핑 상태를 구분하기
+    // 어렵다. 실제로 움직이는 라이브 텍스트 레이어(.bw-hero-live)만 읽는다.
     const { container } = render(
       <HeroSlot slots={["제조 현장", "진료 현장"]} />,
     );

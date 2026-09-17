@@ -1,4 +1,15 @@
 import { useEffect, useState } from "react";
+import { JetBrains_Mono } from "next/font/google";
+
+/*
+ * 슬롯 단어에만 고정폭 영문 글꼴을 입혀 '지금 입력되는 글자'로 읽히게 한다.
+ * 슬롯이 전부 영문 솔루션 이름이라 라틴 글리프만 받는다.
+ */
+const slotFont = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["600"],
+  display: "swap",
+});
 
 /*
  * 네 단계를 명시적으로 도는 타이핑 루프. 60ms 인터벌로 경과 시간을 누적하던
@@ -90,32 +101,56 @@ function useHeroTyping(slots) {
   return { typed: display, showCaret: !reduced && slots.length >= 2 };
 }
 
+/*
+ * 질문은 줄바꿈(
+)으로 줄을 나눈다. 슬롯이 든 줄은 슬롯 바로 뒤에 붙은
+ * 조사(를, 의 같은 공백 없는 꼬리)를 슬롯과 한 덩어리로 묶어 줄이 갈라지지
+ * 않게 하고, 슬롯이 비었을 때는 조사를 감춰 "|를"처럼 보이지 않게 한다.
+ * 슬롯 이름 길이가 16~21자로 달라 같은 줄에 뒤 문장을 두면 매 글자마다
+ * 흔들리므로, 뒤 문장은 다음 줄로 보내는 것을 전제로 한다.
+ */
 export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
   const { typed, showCaret } = useHeroTyping(slots);
-  const longest = slots.reduce((a, b) => (b.length > a.length ? b : a), "");
-
   const Heading = as;
-  const [questionBefore, questionAfter = ""] = (
+  const lines = (
     question || "{slot}의 일은 AI로 어떻게 달라질 수 있을까요?"
-  ).split("{slot}");
+  ).split("\n");
 
   return (
-    <Heading className="text-[32px] font-semibold leading-[1.3] text-ink lg:text-[45px]">
-      {questionBefore}
-      <span className="relative inline-block">
-        <span aria-hidden="true" className="invisible whitespace-nowrap">
-          {longest}
-        </span>
-        <span className="bw-hero-live absolute left-0 top-0 whitespace-nowrap text-ink">
-          {typed}
-          {showCaret && <span aria-hidden="true" className="bw-hero-caret" />}
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute inset-x-0 bottom-[-0.15em] h-[3px] bg-[var(--color-accent-strong)]"
-        />
-      </span>
-      {questionAfter}
+    <Heading className="text-[28px] font-semibold leading-[1.35] text-ink lg:text-[45px] lg:leading-[1.3]">
+      {lines.map((line, index) => {
+        if (!line.includes("{slot}")) {
+          return (
+            <span key={index} className="block">
+              {line}
+            </span>
+          );
+        }
+        const [before, after = ""] = line.split("{slot}");
+        const attached = after.match(/^\S*/)[0];
+        const rest = after.slice(attached.length);
+        return (
+          <span key={index} className="block">
+            {before}
+            <span className="whitespace-nowrap">
+              <span
+                className={`${slotFont.className} bw-hero-live relative inline-block text-[22px] font-semibold text-ink lg:text-[45px]`}
+              >
+                {typed}
+                {showCaret && (
+                  <span aria-hidden="true" className="bw-hero-caret" />
+                )}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-[-0.12em] h-[3px] bg-[var(--color-accent-strong)]"
+                />
+              </span>
+              {typed ? attached : null}
+            </span>
+            {rest}
+          </span>
+        );
+      })}
     </Heading>
   );
 }

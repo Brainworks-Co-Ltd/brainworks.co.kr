@@ -2,16 +2,11 @@
 // 영문 초안은 회사 확인 전까지 초안 상태로 유지합니다.
 
 export const homeCopy = {
-  heroSlots: [
-    { ko: "제조 현장", en: "Manufacturing floor" },
-    { ko: "진료 현장", en: "Clinical floor" },
-    { ko: "도시 관제", en: "City operations" },
-    { ko: "고객 응대", en: "Customer service" },
-  ],
+  // 슬롯은 사업 영역 이름(src/data/businessAreas.js)을 그대로 쓴다. 메인 히어로가 가져간다.
   heroQuestion: {
-    ko: "{slot}의 어떤 문제부터 풀어야 할까요?",
+    ko: "{slot}를\n도입하면 당신의 업무가 어떻게 달라질 수 있을까요?",
     // en 초안, 회사 확인
-    en: "Which problem should we solve first in the {slot}?",
+    en: "How could {slot}\nchange the way you work?",
   },
   identity: {
     ko: "브레인웍스는 제조, 헬스케어, 스마트시티, AI 에이전트 영역의 AI를 직접 설계하고 구축합니다.",
