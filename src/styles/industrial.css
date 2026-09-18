@@ -1118,9 +1118,9 @@
   text-align: center;
 }
 
-/* 핵심 구절은 흰색으로 서 있고 나머지 어절은 옅게 깔린다. 옅은 어절은 포인터가
-   가까워지면 밝아진다(StatementBand). 옅은 쪽과 흰 쪽의 차이가 작으면 효과가
-   왜 있는지 읽히지 않으므로 34%까지 내린다. 어두운 면 위 대비는 6:1 남짓이다. */
+/* 평소에는 문장 전체가 흰색이다. 마우스를 문장에 올리면(마우스가 없는 기기는
+   화면 가운데에 들어오면) 핵심 구절만 남고 나머지가 30%로 흐려진다.
+   흐려진 쪽과 남은 쪽의 차이가 작으면 효과가 왜 있는지 읽히지 않는다. */
 :root[data-design="industrial"] .bw-statement__text {
   display: flex;
   flex-wrap: wrap;
@@ -1135,11 +1135,21 @@
 }
 
 :root[data-design="industrial"] .bw-statement__word {
-  transition: opacity 0.45s ease-out;
+  transition: opacity 0.5s ease-out;
 }
 
-:root[data-design="industrial"] .bw-statement__dim {
-  opacity: 0.34;
+:root[data-design="industrial"]
+  .bw-statement__text.is-focused
+  .bw-statement__dim {
+  opacity: 0.3;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :root[data-design="industrial"]
+    .bw-statement__text.has-emphasis:hover
+    .bw-statement__dim {
+    opacity: 0.3;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
