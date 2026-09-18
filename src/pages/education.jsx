@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
@@ -496,8 +495,7 @@ export default function Education() {
 
       <main id="main-content" data-accent="education" className="pb-16">
         {/* 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정)
-            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다.
-            대상 분기는 히어로 아래 PageAudience가 맡는다. */}
+            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다. */}
         <PageHero
           variant="media"
           media={{
@@ -519,25 +517,6 @@ export default function Education() {
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
           }}
-        />
-        {/* 대상 분기만 담당한다. 페이지 이름과 서비스 설명은 히어로가 맡는다. */}
-        <PageAudience
-          redirects={[
-            {
-              href: "/global-programs",
-              label:
-                language === "ko"
-                  ? "해외 인턴십과 국제 프로그램이라면 글로벌 프로그램"
-                  : "Looking for overseas internships or international programmes? See Global Program",
-            },
-            {
-              href: "/consulting",
-              label:
-                language === "ko"
-                  ? "도입 전략부터 필요하다면 AI 컨설팅"
-                  : "Need an adoption strategy first? See AI Consulting",
-            },
-          ]}
         />
 
         <section>

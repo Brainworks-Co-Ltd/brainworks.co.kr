@@ -3,7 +3,6 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { StatementBand } from "@/components/public/StatementBand";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
@@ -32,8 +31,7 @@ export default function Services({ areas }) {
       />
       <main id="main-content" data-accent="solution">
         {/* 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정)
-            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다.
-            대상 분기는 히어로 아래 PageAudience가 맡는다. */}
+            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다. */}
         <PageHero
           variant="media"
           media={{
@@ -55,24 +53,6 @@ export default function Services({ areas }) {
             href: "/contact?topic=solution",
             label: language === "ko" ? "솔루션 문의" : "Discuss a solution",
           }}
-        />
-        <PageAudience
-          redirects={[
-            {
-              href: "/consulting",
-              label:
-                language === "ko"
-                  ? "무엇을 도입할지부터 정해야 한다면 AI 컨설팅"
-                  : "Still deciding what to adopt? See AI Consulting",
-            },
-            {
-              href: "/education",
-              label:
-                language === "ko"
-                  ? "조직 역량부터 키워야 한다면 AI 전문교육"
-                  : "Need to build team capability first? See AI Professional Education",
-            },
-          ]}
         />
 
         <section>
@@ -125,6 +105,11 @@ export default function Services({ areas }) {
             language === "ko"
               ? "AI가 모든 산업과 조직에 보편적으로 적용될 수 있다고 믿지 않습니다. 산업마다 다른 해결책을 설계합니다."
               : "We do not believe one AI fits every industry. We design a different answer for each."
+          }
+          emphasis={
+            language === "ko"
+              ? ["믿지 않습니다", "산업마다 다른 해결책"]
+              : ["do not believe", "different answer for each"]
           }
         />
 

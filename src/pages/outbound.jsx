@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
@@ -249,25 +248,6 @@ export default function Outbound() {
             href: "/contact?topic=global",
             label: t.ctaPrimary,
           }}
-        />
-        {/* 대상 분기만 담당한다. 페이지 이름과 서비스 설명은 히어로가 맡는다. */}
-        <PageAudience
-          redirects={[
-            {
-              href: "/education",
-              label:
-                language === "ko"
-                  ? "국내 교육 과정이라면 AI 전문교육"
-                  : "Looking for domestic training? See AI Professional Education",
-            },
-            {
-              href: "/services",
-              label:
-                language === "ko"
-                  ? "AI 제품 도입이라면 AI 솔루션"
-                  : "Adopting an AI product? See AI Solutions",
-            },
-          ]}
         />
 
         {/* 파트너 망은 표가 아니라 이름으로 보여준다. 나라 이름을 크게 세우고

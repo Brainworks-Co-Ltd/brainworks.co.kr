@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 import ProcessSteps from "@/components/public/ProcessSteps";
@@ -205,25 +204,6 @@ export default function Consulting() {
             label:
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
-        />
-        {/* 대상 분기만 담당한다. 페이지 이름과 서비스 설명은 히어로가 맡는다. */}
-        <PageAudience
-          redirects={[
-            {
-              href: "/services",
-              label:
-                language === "ko"
-                  ? "도입할 제품이 정해졌다면 AI 솔루션"
-                  : "Already know which product you need? See AI Solutions",
-            },
-            {
-              href: "/education",
-              label:
-                language === "ko"
-                  ? "인력 양성이 목적이라면 AI 전문교육"
-                  : "Looking to train your people? See AI Professional Education",
-            },
-          ]}
         />
 
         <section>

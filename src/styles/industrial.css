@@ -696,167 +696,18 @@
 }
 
 /* ---------------------------------------------------------------
- * 진입 분기 (docs/designs/detail-page-roles.md)
- * 상세 페이지 맨 위에서 대상과 비대상을 밝힌다.
- * --------------------------------------------------------------- */
-
-/* 진입 분기. 이 페이지가 누구를 위한 것인지 말하는 구간이다.
- * 골드 전면으로 칠해봤다가 되돌렸다. 큰 겨자색 면은 디자인이 아니라
- * 색 덩어리로 읽힌다. 면은 조용히 두고 타입 크기로 위계를 만든다. */
-.bw-audience {
-  position: relative;
-  border-bottom: 1px solid var(--bw-line);
-  background: var(--bw-surface-muted);
-  color: var(--bw-ink);
-}
-
-.bw-audience::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 4px;
-  background: var(--bw-accent);
-}
-
-.bw-audience__inner {
-  display: grid;
-  gap: var(--bw-space-6);
-  max-width: 1152px;
-  margin-inline: auto;
-  padding: var(--bw-space-8) var(--bw-space-5);
-}
-
-@media (min-width: 900px) {
-  .bw-audience__inner {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: var(--bw-space-8);
-    align-items: start;
-  }
-}
-
-.bw-audience__label {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bw-accent-text);
-}
-
-.bw-audience__audience {
-  margin: var(--bw-space-3) 0 0;
-  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--bw-ink);
-}
-
-.bw-audience__scope {
-  margin: var(--bw-space-4) 0 0;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--bw-muted);
-}
-
-.bw-audience__links {
-  display: grid;
-  gap: var(--bw-space-2);
-  margin: var(--bw-space-3) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.bw-audience__link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--bw-space-4);
-  padding: var(--bw-space-3) var(--bw-space-4);
-  border: 1px solid var(--bw-line-strong);
-  border-radius: var(--bw-radius-control);
-  background: var(--bw-surface);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--bw-ink);
-  text-decoration: none;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-  transition:
-    border-color var(--bw-motion-press),
-    background var(--bw-motion-press);
-}
-
-.bw-audience__link:hover,
-.bw-audience__link:focus-visible {
-  border-color: var(--bw-ink);
-  background: var(--bw-surface-muted);
-}
-
-/* 분기 레일. 대상과 범위가 히어로로 올라간 상세 페이지에서는 분기만 남으므로
- * 2단 그리드 대신 접힘선 아래 얇은 가로 띠로 깐다. 라벨을 왼쪽에 붙이고
- * 링크를 가로로 펴 첫 화면 끝자락에서 "다른 데로 갈 수 있다"가 바로 읽히게 한다. */
-.bw-audience--rail .bw-audience__inner {
-  padding-block: var(--bw-space-6);
-}
-
-/* 칩은 글자 길이만큼만 차지하고 서로 붙어 있는다.
- * 앞서 1fr 두 칸으로 나눴더니 칸은 463px인데 링크는 345px이라 사이가 126px
- * 벌어졌다. 강제로 채우면 이번엔 칩 안에서 글자와 화살표가 갈라진다.
- * 라우팅 안내는 문장에 가깝지 표 칸이 아니므로 내용 크기로 둔다. */
-.bw-audience--rail .bw-audience__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--bw-space-3);
-  margin-top: 0;
-}
-
-/* 문구 길이가 달라 한쪽만 두 줄이 되면 칩 높이가 어긋난다.
-   li를 flex로 열어 링크가 행 높이까지 늘어나게 한다. */
-.bw-audience--rail .bw-audience__links > li {
-  display: flex;
-}
-
-/* 라벨은 링크를 소개하는 자리다. 링크가 16px/600 잉크인데 라벨이 14px/700
- * 강조색이면 소개가 본문보다 세진다. 굵기와 색을 한 단 내린다.
- * 강조색은 왼쪽 4px 띠가 이미 갖고 있다. */
-.bw-audience--rail .bw-audience__label {
-  font-weight: 600;
-  color: var(--bw-muted);
-  white-space: nowrap;
-}
-
-/* 0.14em 자간과 대문자 변환은 라틴 라벨 기준이다. 한글에 그대로 걸면
-   낱자가 흩어진다. 히어로 눈썹에서 고친 것과 같은 결함이다. */
-.bw-audience__label--ko {
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-@media (min-width: 900px) {
-  .bw-audience--rail .bw-audience__inner {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: var(--bw-space-6);
-  }
-}
-
-/* ---------------------------------------------------------------
- * 상세 페이지 공통 규칙 (docs/designs/detail-page-roles.md)
- *
+ * 섹션 여백
  * 섹션 간격이 py-20 md:py-28, mt-16, mt-20으로 흩어져 있어 페이지마다
- * 리듬이 달랐다. 하나로 모은다. 카드도 모서리·테두리·여백을 통일한다.
+ * 리듬이 달랐다. 하나로 모은다.
  * --------------------------------------------------------------- */
 
-/* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
+/* PageHero(data-variant)는 자체 여백을 쓴다. 제외하지 않으면
    히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다.
    메인(.bw-home)도 제외한다. 메인은 섹션마다 자기 여백을 들고 있는데
    이 규칙이 그것을 전부 96px로 눌러 히어로 위가 붙고 리듬이 사라졌다. */
 :root[data-design="industrial"]
   main:not(.bw-home)
-  > section:not([data-variant]):not(.bw-audience),
+  > section:not([data-variant]),
 :root[data-design="industrial"]
   main:not(.bw-home)
   > div
@@ -1199,8 +1050,7 @@
 :root[data-design="industrial"] .bw-display,
 :root[data-design="industrial"] .bw-h1,
 :root[data-design="industrial"] .bw-h2,
-:root[data-design="industrial"] .bw-title,
-:root[data-design="industrial"] .bw-audience__audience {
+:root[data-design="industrial"] .bw-title {
   word-break: keep-all;
   text-wrap: balance;
 }
@@ -1209,7 +1059,6 @@
    긴 문단에서는 pretty가 맞다 (고아 단어만 막는다) */
 :root[data-design="industrial"] .bw-body,
 :root[data-design="industrial"] .bw-body-sm,
-:root[data-design="industrial"] .bw-audience__scope,
 /* 메인은 유틸리티 클래스로 글을 짜서 위 .bw-body가 안 걸린다. 그대로 두면
    카드 설명이 "설비 진동 데이터를 실시간 분 / 석해"처럼 어절 안에서 끊긴다. */
 :root[data-design="industrial"] .bw-home p,
@@ -1269,28 +1118,23 @@
   text-align: center;
 }
 
+/* 문장 전체를 옅게 깔고 핵심 구절만 흰색으로 세운다. 옅은 글자와 흰 글자의
+   차이가 작으면 강조가 왜 있는지 읽히지 않으므로 옅은 쪽을 34%까지 내린다.
+   어두운 면 위 대비는 6:1 남짓이라 문장 전체도 읽힌다. */
 :root[data-design="industrial"] .bw-statement__text {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.12em 0.28em;
   margin: 0;
   font-size: clamp(30px, 4.6vw, 64px);
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.3;
   letter-spacing: -0.02em;
+  text-align: center;
   word-break: keep-all;
+  text-wrap: balance;
+  color: rgb(255 255 255 / 34%);
 }
 
-:root[data-design="industrial"] .bw-statement__word {
-  transition: opacity 0.45s ease-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root[data-design="industrial"] .bw-statement__word {
-    opacity: 1 !important;
-    transition: none;
-  }
+:root[data-design="industrial"] .bw-statement__lit {
+  color: #fff;
 }
 
 /* 승인된 색면과 내용별 구성. 의미가 다른 구간을 같은 카드로 반복하지 않는다. */
@@ -1329,17 +1173,6 @@ section[data-variant="media"] a:focus-visible {
 @media (max-width: 767px) {
   .bw-area-intro {
     padding: 24px;
-  }
-  .bw-audience--rail .bw-audience__links {
-    display: grid;
-  }
-  .bw-audience--rail .bw-audience__links > li,
-  .bw-audience__link {
-    min-width: 0;
-  }
-  .bw-audience__link {
-    width: 100%;
-    font-size: 14px;
   }
 }
 

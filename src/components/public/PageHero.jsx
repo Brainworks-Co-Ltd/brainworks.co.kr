@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, chips?: string[] | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, heading?: import("react").ReactNode, description?: string | null, chips?: string[] | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 /*
@@ -25,6 +25,7 @@ function hasHangul(value) {
 function HeroContent({
   eyebrow,
   title,
+  heading,
   description,
   chips,
   action,
@@ -41,8 +42,9 @@ function HeroContent({
           {eyebrow}
         </p>
       ) : null}
+      {/* heading은 굵기나 색을 나눠 그린 제목이다. 접근성 이름과 SEO는 title 문자열이 맡는다. */}
       <h1 className="bw-display mt-4 max-w-4xl [.text-center_&]:mx-auto">
-        {title}
+        {heading ?? title}
       </h1>
       {description ? (
         <p
@@ -98,6 +100,7 @@ export function PageHero({
   secondaryAction = null,
   dark = false,
   children = null,
+  heading = null,
   variant = "plain",
   media = null,
   overlayClassName = "",
@@ -107,6 +110,7 @@ export function PageHero({
     <HeroContent
       eyebrow={eyebrow}
       title={title}
+      heading={heading}
       description={description}
       chips={chips}
       action={action}

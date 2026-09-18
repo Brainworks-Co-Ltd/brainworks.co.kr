@@ -1,92 +1,45 @@
-import { useEffect, useRef } from "react";
 import { useLocale } from "@/shared/routing/useLocale";
 
 /*
- * 포인터와 가까운 어절을 밝히는 선언 구간이다. 어절의 실제 사각형까지
- * 거리를 계산하므로 여러 줄로 바뀌어도 포인터 주변 문구가 자연스럽게
- * 이어진다. 정밀 포인터가 없거나 동작 줄이기를 사용하면 서버 렌더
- * 상태인 완전한 불투명도를 유지한다.
+ * 선언 구간. 문장 전체를 옅게 깔고 핵심 구절만 흰색으로 세운다.
+ *
+ * 포인터를 따라 어절을 밝히던 방식은 어디에 눈을 둬야 하는지 말해 주지
+ * 못했고, 켜진 곳과 꺼진 곳의 차이도 작아 효과가 있는 이유가 읽히지 않았다.
+ * 강조 구절은 카피와 함께 정해 emphasis로 넘긴다. 강조가 없으면 문장
+ * 전체를 흰색으로 둔다.
  */
-
-// 강조 밖의 문장도 충분한 대비로 읽히게 유지한다.
-const DIM = 0.65;
-// 인접 어절까지 함께 밝아지는 포인터 주변 반경이다.
-const SPOTLIGHT_RADIUS = 280;
-
-function distanceToRect(x, y, rect) {
-  const dx = Math.max(rect.left - x, 0, x - rect.right);
-  const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-  return Math.hypot(dx, dy);
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function StatementBand({ eyebrow, text }) {
+function splitByEmphasis(text, emphasis) {
+  if (!emphasis.length) return [{ text, lit: true }];
+  const pattern = new RegExp(`(${emphasis.map(escapeRegExp).join("|")})`);
+  return text
+    .split(pattern)
+    .filter(Boolean)
+    .map((part) => ({ text: part, lit: emphasis.includes(part) }));
+}
+
+/** @param {{ eyebrow?: string | null, text: string, emphasis?: string[] }} props */
+export function StatementBand({ eyebrow, text, emphasis = [] }) {
   const { language } = useLocale();
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const root = ref.current;
-    if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
-    const words = Array.from(root.querySelectorAll("[data-word]"));
-    if (!words.length) return;
-
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    const paint = () => {
-      frame = 0;
-      const rectangles = words.map((word) => word.getBoundingClientRect());
-
-      for (let index = 0; index < words.length; index += 1) {
-        const distance = distanceToRect(
-          pointerX,
-          pointerY,
-          rectangles[index],
-        );
-        const lit = Math.max(0, 1 - distance / SPOTLIGHT_RADIUS);
-        words[index].style.opacity = String(DIM + (1 - DIM) * lit);
-      }
-    };
-
-    const onPointerMove = (event) => {
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-      if (frame) return;
-      frame = window.requestAnimationFrame(paint);
-    };
-
-    const restore = () => {
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      }
-      for (const word of words) word.style.opacity = "1";
-    };
-
-    root.addEventListener("pointermove", onPointerMove, { passive: true });
-    root.addEventListener("pointerleave", restore);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      root.removeEventListener("pointermove", onPointerMove);
-      root.removeEventListener("pointerleave", restore);
-    };
-  }, [text]);
+  const parts = splitByEmphasis(text, emphasis);
 
   return (
     <section
       className="bw-statement"
       aria-label={eyebrow || (language === "ko" ? "선언" : "Statement")}
     >
-      <div className="bw-statement__inner" ref={ref}>
+      <div className="bw-statement__inner">
         {eyebrow ? <p className="bw-statement__eyebrow">{eyebrow}</p> : null}
         <p className="bw-statement__text">
-          {text.split(" ").map((word, i) => (
-            <span data-word key={`${word}-${i}`} className="bw-statement__word">
-              {word}
+          {parts.map((part, index) => (
+            <span
+              key={`${part.text}-${index}`}
+              className={part.lit ? "bw-statement__lit" : "bw-statement__dim"}
+            >
+              {part.text}
             </span>
           ))}
         </p>
