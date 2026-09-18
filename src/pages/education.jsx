@@ -6,6 +6,7 @@ import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import FeatureRows from "@/components/public/FeatureRows";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 
 const processSteps = [
@@ -507,6 +508,12 @@ export default function Education() {
           title={
             language === "ko" ? "AI 전문교육" : "AI Professional Education"
           }
+          heading={
+            <>
+              <span className="font-normal text-white/60">AI</span>{" "}
+              {language === "ko" ? "전문교육" : "Professional Education"}
+            </>
+          }
           description={
             language === "ko"
               ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
@@ -533,11 +540,11 @@ export default function Education() {
                 return (
                   <article
                     key={step.id}
-                    className="bw-reveal grid grid-cols-1 gap-10 lg:grid-cols-2"
+                    className="bw-reveal grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-16"
                     style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
                   >
                     <div
-                      className={`relative aspect-[4/3] overflow-hidden rounded-2xl ${
+                      className={`relative aspect-[4/3] overflow-hidden rounded-[24px] ${
                         isEvenRow ? "lg:order-2" : ""
                       }`}
                     >
@@ -550,18 +557,16 @@ export default function Education() {
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[16px] font-bold text-accent-text">
+                      <h3 className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-[15px] font-bold text-accent-text lg:text-[16px]">
+                        <span className="tabular-nums">
                           {String(index + 1).padStart(2, "0")}
                         </span>
-                        <span className={CHIP_CLASS}>
+                        {step.focus[language]}
+                        <span className="font-medium text-muted-foreground">
                           {step.stage[language]}
                         </span>
-                      </div>
-                      <h3 className="mt-4 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                        {step.focus[language]}
                       </h3>
-                      <p className="mt-3 text-[18px] leading-[1.75]">
+                      <p className="mt-4 text-[24px] font-bold leading-[1.4] break-keep text-pretty text-ink-strong lg:text-[32px]">
                         {step.summary[language]}
                       </p>
                       <div className="mt-6 flex flex-wrap gap-2">
@@ -575,9 +580,9 @@ export default function Education() {
                         {step.highlights[language].map((highlight) => (
                           <li
                             key={highlight}
-                            className="flex items-start gap-2 text-[17px] leading-[1.7]"
+                            className="flex items-start gap-2 text-[17px] leading-[1.7] break-keep text-muted-foreground"
                           >
-                            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                            <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" />
                             <span>{highlight}</span>
                           </li>
                         ))}
@@ -698,36 +703,14 @@ export default function Education() {
                   : "Dedicated support connects learning, projects, and career services to turn outcomes into job offers."
               }
             />
-            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-3 lg:gap-y-16">
-              {supportPillars.map((pillar, index) => (
-                <article
-                  key={pillar.id}
-                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal border-t border-line pt-8"
-                >
-                  <p className="text-[16px] font-bold text-accent-text">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                    {pillar.title[language]}
-                  </h3>
-                  <p className="mt-3 text-[18px] leading-[1.75]">
-                    {pillar.description[language]}
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {pillar.points[language].map((point) => (
-                      <li
-                        key={point}
-                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
-                      >
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
+            <FeatureRows
+              items={supportPillars.map((pillar) => ({
+                id: pillar.id,
+                title: pillar.title[language],
+                description: pillar.description[language],
+                points: pillar.points[language],
+              }))}
+            />
           </div>
         </section>
 

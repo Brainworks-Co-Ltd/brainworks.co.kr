@@ -7,6 +7,7 @@ import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 import ProcessSteps from "@/components/public/ProcessSteps";
+import FeatureRows from "@/components/public/FeatureRows";
 
 const copy = {
   ko: {
@@ -193,6 +194,12 @@ export default function Consulting() {
           }}
           eyebrow={language === "ko" ? "사업 영역" : "Business"}
           title={t.heroTitle}
+          heading={
+            <>
+              <span className="font-normal text-white/60">AI</span>{" "}
+              {t.heroTitle.replace(/^AI /, "")}
+            </>
+          }
           description={t.heroSubtitle}
           chips={offerings.map((item) => item.title[language])}
           action={{
@@ -212,36 +219,14 @@ export default function Consulting() {
               eyebrow="Consulting value"
               title={t.valueTitle}
             />
-            <div className="grid grid-cols-1 gap-x-12 gap-y-12 lg:grid-cols-3 lg:gap-y-16">
-              {offerings.map((item, index) => (
-                <article
-                  key={item.id}
-                  style={{ transitionDelay: `${index * 80}ms` }}
-                  className="bw-reveal border-t border-line pt-8"
-                >
-                  <p className="text-[16px] font-bold text-accent-text">
-                    {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                    {item.title[language]}
-                  </h3>
-                  <p className="mt-3 text-[18px] leading-[1.75]">
-                    {item.description[language]}
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {item.bullets[language].map((bullet) => (
-                      <li
-                        key={bullet}
-                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
-                      >
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
-                        <span>{bullet}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
-            </div>
+            <FeatureRows
+              items={offerings.map((item) => ({
+                id: item.id,
+                title: item.title[language],
+                description: item.description[language],
+                points: item.bullets[language],
+              }))}
+            />
           </div>
         </section>
 
