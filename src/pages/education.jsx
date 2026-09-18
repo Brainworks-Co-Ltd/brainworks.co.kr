@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -472,8 +473,26 @@ const faqItems = [
   },
 ];
 
+// 원래 사이트 교육 페이지 히어로의 칩이다. 가운뎃점은 "와"로 바꿨다.
+const heroChips = {
+  ko: [
+    "AI 전문교육",
+    "생성형 AI 심화",
+    "해커톤 & 멘토링",
+    "국내와 글로벌 인턴십",
+    "커리어 포트폴리오와 면접",
+  ],
+  en: [
+    "AI Specialised Training",
+    "Generative AI Intensive",
+    "Hackathon & Mentoring",
+    "Domestic & Global Internships",
+    "Career Portfolio & Interviews",
+  ],
+};
+
 const CHIP_CLASS =
-  "inline-flex h-9 items-center rounded-full border border-line px-4 text-[14px] text-muted-foreground";
+  "inline-flex h-9 items-center rounded-full bg-accent/10 px-4 text-[14px] font-medium text-accent-text";
 
 export default function Education() {
   const { language } = useLocale();
@@ -519,7 +538,7 @@ export default function Education() {
               ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
               : "Practical AI and AX education programmes from Brainworks."
           }
-          chips={processSteps[0].modules[language]}
+          chips={heroChips[language]}
           action={{
             href: "/contact?topic=education",
             label: language === "ko" ? "상담 요청" : "Request a Consultation",
@@ -557,10 +576,14 @@ export default function Education() {
                       />
                     </div>
                     <div className="flex flex-col justify-center">
-                      <h3 className="flex flex-wrap items-baseline gap-x-3 gap-y-2 text-[15px] font-bold text-accent-text lg:text-[16px]">
-                        <span className="tabular-nums">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
+                      {/* 큰 번호는 다섯 단계의 순서를 강조색으로 짚는 장식이다. 읽는 순서는 라벨이 맡는다. */}
+                      <span
+                        aria-hidden="true"
+                        className="text-[48px] font-bold leading-none tabular-nums text-accent-strong lg:text-[64px]"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[15px] font-bold text-accent-text lg:text-[16px]">
                         {step.focus[language]}
                         <span className="font-medium text-muted-foreground">
                           {step.stage[language]}
@@ -582,7 +605,11 @@ export default function Education() {
                             key={highlight}
                             className="flex items-start gap-2 text-[17px] leading-[1.7] break-keep text-muted-foreground"
                           >
-                            <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-accent" />
+                            <Check
+                              aria-hidden="true"
+                              strokeWidth={2.5}
+                              className="mt-1.5 size-4 shrink-0 text-accent"
+                            />
                             <span>{highlight}</span>
                           </li>
                         ))}
