@@ -103,7 +103,7 @@ export default function BusinessAreaDetail({ area }) {
                           </span>
                           {solution.title}
                         </h3>
-                        <p className="mt-4 text-[26px] font-bold leading-[1.35] break-keep text-pretty text-ink-strong lg:text-[34px]">
+                        <p className="mt-4 text-[22px] font-semibold leading-[1.45] break-keep text-pretty text-ink-strong lg:text-[28px]">
                           {solution.description}
                         </p>
                         {detail ? (

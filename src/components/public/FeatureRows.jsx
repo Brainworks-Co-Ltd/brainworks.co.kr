@@ -22,7 +22,7 @@ export default function FeatureRows({ items }) {
               </span>
               {item.title}
             </h3>
-            <p className="mt-4 text-[24px] font-bold leading-[1.4] break-keep text-pretty text-ink-strong lg:text-[32px]">
+            <p className="mt-4 text-[22px] font-semibold leading-[1.45] break-keep text-pretty text-ink-strong lg:text-[28px]">
               {item.description}
             </p>
           </div>

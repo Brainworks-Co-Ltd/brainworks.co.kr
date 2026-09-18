@@ -924,6 +924,14 @@
   letter-spacing: -0.01em;
 }
 
+/* 히어로 설명은 제목 아래 읽히는 본문이다. 600으로 두면 제목과 설명이 같은
+   무게로 붙어 보인다. 레퍼런스 실측(400, 20px)에 맞춘다. */
+:root[data-design="industrial"] .bw-page-hero__description {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
 :root[data-design="industrial"] .bw-body {
   font-size: 16px;
   font-weight: 400;

@@ -566,7 +566,7 @@ export default function Education() {
                           {step.stage[language]}
                         </span>
                       </h3>
-                      <p className="mt-4 text-[24px] font-bold leading-[1.4] break-keep text-pretty text-ink-strong lg:text-[32px]">
+                      <p className="mt-4 text-[22px] font-semibold leading-[1.45] break-keep text-pretty text-ink-strong lg:text-[28px]">
                         {step.summary[language]}
                       </p>
                       <div className="mt-6 flex flex-wrap gap-2">
