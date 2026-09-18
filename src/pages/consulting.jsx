@@ -1,4 +1,5 @@
 import React from "react";
+import { Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
@@ -7,7 +8,6 @@ import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
 import ProcessSteps from "@/components/public/ProcessSteps";
-import FeatureRows from "@/components/public/FeatureRows";
 
 const copy = {
   ko: {
@@ -219,14 +219,47 @@ export default function Consulting() {
               eyebrow="Consulting value"
               title={t.valueTitle}
             />
-            <FeatureRows
-              items={offerings.map((item) => ({
-                id: item.id,
-                title: item.title[language],
-                description: item.description[language],
-                points: item.bullets[language],
-              }))}
-            />
+            <ol className="grid grid-cols-1 gap-x-10 gap-y-14 lg:grid-cols-3">
+              {offerings.map((item, index) => (
+                <li
+                  key={item.id}
+                  className="bw-reveal relative border-t border-line pt-8"
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-px left-0 h-[2px] w-12 bg-accent"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="block text-[56px] font-bold leading-none tabular-nums text-accent-strong lg:text-[64px]"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-6 text-[24px] font-semibold text-ink-strong">
+                    {item.title[language]}
+                  </h3>
+                  <p className="mt-3 text-[17px] leading-[1.65] break-keep text-ink">
+                    {item.description[language]}
+                  </p>
+                  <ul className="mt-6 space-y-3">
+                    {item.bullets[language].map((b) => (
+                      <li
+                        key={b}
+                        className="flex items-start gap-2 text-[15px] leading-[1.6] break-keep text-muted-foreground"
+                      >
+                        <Check
+                          aria-hidden="true"
+                          strokeWidth={2.5}
+                          className="mt-1 size-4 shrink-0 text-accent"
+                        />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
