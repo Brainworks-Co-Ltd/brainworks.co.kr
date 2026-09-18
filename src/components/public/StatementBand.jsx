@@ -2,13 +2,16 @@ import { useEffect, useRef } from "react";
 import { useLocale } from "@/shared/routing/useLocale";
 
 /*
- * 선언 구간. 평소에는 문장 전체가 흰색이다. 마우스를 문장 위에 올리면 핵심
- * 구절(emphasis)만 흰색으로 남고 나머지 어절이 흐려져 핵심 구절이 떠오른다.
- * 흐려지는 동작은 industrial.css의 :hover 규칙이 맡는다.
+ * 선언 구간. 처음에는 문장 전체가 흰색이다. 구간이 화면에 들어오면 잠시 뒤
+ * 핵심 구절(emphasis)을 뺀 어절이 앞에서부터 하나씩 30%로 흐려져 핵심 구절만
+ * 남는다. 한 번 흐려지면 그대로 둔다.
  *
- * 마우스가 없는 기기에서는 문장이 화면 가운데쯤 들어올 때 같은 상태가 된다.
- * 동작 줄이기에서도 상태는 바뀌되 전환 애니메이션만 없앤다.
+ * 타이밍은 레퍼런스를 실측한 값이다. 화면 진입 후 약 0.75초 뒤 시작하고,
+ * 어절 사이 간격은 0.15초, 어절 하나가 흐려지는 데 0.5초가 걸린다.
+ * 동작 줄이기에서는 애니메이션 없이 흐려진 상태로 바로 둔다.
  */
+const START_DELAY_MS = 750;
+const STAGGER_MS = 150;
 
 /*
  * 문장을 어절로 나누고, 핵심 구절의 글자 범위에 걸치는 어절을 lit으로 표시한다.
@@ -23,13 +26,12 @@ function splitWords(text, emphasis) {
     .filter(Boolean);
   const words = [];
   let offset = 0;
+  let dimOrder = 0;
   for (const word of text.split(" ")) {
     const start = offset;
     const end = offset + word.length;
-    words.push({
-      word,
-      lit: ranges.some(([from, to]) => start < to && end > from),
-    });
+    const lit = ranges.some(([from, to]) => start < to && end > from);
+    words.push({ word, lit, order: lit ? null : dimOrder++ });
     offset = end + 1;
   }
   return words;
@@ -44,15 +46,16 @@ export function StatementBand({ eyebrow, text, emphasis = [] }) {
   useEffect(() => {
     const root = ref.current;
     if (!root || !emphasis.length) return undefined;
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    if (typeof IntersectionObserver === "undefined") {
+      root.classList.add("is-dimmed");
       return undefined;
     }
-    if (typeof IntersectionObserver === "undefined") return undefined;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => root.classList.toggle("is-focused", entry.isIntersecting),
-      { rootMargin: "-35% 0px -35% 0px" },
-    );
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      root.classList.add("is-dimmed");
+      observer.disconnect();
+    });
     observer.observe(root);
     return () => observer.disconnect();
   }, [emphasis]);
@@ -64,14 +67,18 @@ export function StatementBand({ eyebrow, text, emphasis = [] }) {
     >
       <div className="bw-statement__inner">
         {eyebrow ? <p className="bw-statement__eyebrow">{eyebrow}</p> : null}
-        <p
-          ref={ref}
-          className={`bw-statement__text${emphasis.length ? " has-emphasis" : ""}`}
-        >
-          {words.map(({ word, lit }, index) => (
+        <p ref={ref} className="bw-statement__text">
+          {words.map(({ word, lit, order }, index) => (
             <span
               key={`${word}-${index}`}
               className={`bw-statement__word ${lit ? "bw-statement__lit" : "bw-statement__dim"}`}
+              style={
+                lit
+                  ? undefined
+                  : {
+                      transitionDelay: `${START_DELAY_MS + order * STAGGER_MS}ms`,
+                    }
+              }
             >
               {word}
             </span>

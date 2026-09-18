@@ -3,14 +3,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { StatementBand } from "@/components/public/StatementBand";
 
 let observed: ((entries: { isIntersecting: boolean }[]) => void) | undefined;
+const disconnect = vi.fn();
 
 beforeEach(() => {
   observed = undefined;
+  disconnect.mockClear();
   vi.stubGlobal(
     "IntersectionObserver",
     vi.fn(function (callback) {
       observed = callback;
-      return { observe: vi.fn(), disconnect: vi.fn() };
+      return { observe: vi.fn(), disconnect };
     }),
   );
 });
@@ -19,20 +21,8 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function stubPointer(fine: boolean) {
-  vi.stubGlobal(
-    "matchMedia",
-    vi.fn(() => ({
-      matches: fine,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-    })),
-  );
-}
-
 describe("선언 문구 강조", () => {
-  it("핵심 구절에 걸친 어절과 흐려질 어절을 나누고 평소에는 아무것도 흐리지 않는다", () => {
-    stubPointer(true);
+  it("처음에는 흐리지 않고, 화면에 들어오면 핵심 구절 밖 어절이 순서대로 흐려진다", () => {
     const { container } = render(
       <StatementBand
         eyebrow="선언"
@@ -42,43 +32,42 @@ describe("선언 문구 강조", () => {
     );
     const text = container.querySelector(".bw-statement__text");
     const lit = Array.from(container.querySelectorAll(".bw-statement__lit"));
+    const dim = Array.from(
+      container.querySelectorAll<HTMLElement>(".bw-statement__dim"),
+    );
+
     expect(lit.map((node) => node.textContent)).toEqual([
       "함께",
       "일하는",
       "기업을",
     ]);
-    expect(text?.classList.contains("has-emphasis")).toBe(true);
-    expect(text?.classList.contains("is-focused")).toBe(false);
-    // 마우스가 있는 기기는 CSS :hover가 맡으므로 관찰자를 걸지 않는다.
-    expect(observed).toBeUndefined();
-  });
+    // 흐려질 어절은 시작 0.75초 뒤부터 0.15초 간격이다.
+    expect(dim.map((node) => node.style.transitionDelay)).toEqual([
+      "750ms",
+      "900ms",
+      "1050ms",
+      "1200ms",
+      "1350ms",
+    ]);
+    expect(text?.classList.contains("is-dimmed")).toBe(false);
 
-  it("마우스가 없는 기기에서는 화면 가운데에 들어올 때 흐려지고 벗어나면 돌아온다", () => {
-    stubPointer(false);
-    const { container } = render(
-      <StatementBand
-        eyebrow="선언"
-        text="첫 번째 두 번째"
-        emphasis={["두 번째"]}
-      />,
-    );
-    const text = container.querySelector(".bw-statement__text");
-    observed?.([{ isIntersecting: true }]);
-    expect(text?.classList.contains("is-focused")).toBe(true);
     observed?.([{ isIntersecting: false }]);
-    expect(text?.classList.contains("is-focused")).toBe(false);
+    expect(text?.classList.contains("is-dimmed")).toBe(false);
+
+    observed?.([{ isIntersecting: true }]);
+    expect(text?.classList.contains("is-dimmed")).toBe(true);
+    expect(disconnect).toHaveBeenCalled();
   });
 
-  it("핵심 구절이 없으면 흐려질 대상이 없다", () => {
-    stubPointer(false);
+  it("핵심 구절이 없으면 흐려지지 않는다", () => {
     const { container } = render(
       <StatementBand eyebrow="선언" text="첫 번째 두 번째" />,
     );
+    expect(observed).toBeUndefined();
     expect(
       container
         .querySelector(".bw-statement__text")
-        ?.classList.contains("has-emphasis"),
+        ?.classList.contains("is-dimmed"),
     ).toBe(false);
-    expect(observed).toBeUndefined();
   });
 });

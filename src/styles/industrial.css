@@ -1118,9 +1118,9 @@
   text-align: center;
 }
 
-/* 평소에는 문장 전체가 흰색이다. 마우스를 문장에 올리면(마우스가 없는 기기는
-   화면 가운데에 들어오면) 핵심 구절만 남고 나머지가 30%로 흐려진다.
-   흐려진 쪽과 남은 쪽의 차이가 작으면 효과가 왜 있는지 읽히지 않는다. */
+/* 처음에는 문장 전체가 흰색이다. 구간이 화면에 들어오면(is-dimmed) 핵심 구절을
+   뺀 어절이 하나씩 0.5초에 걸쳐 30%로 흐려진다. 어절마다 시작 시점은
+   StatementBand가 인라인 transition-delay로 준다. */
 :root[data-design="industrial"] .bw-statement__text {
   display: flex;
   flex-wrap: wrap;
@@ -1134,26 +1134,18 @@
   word-break: keep-all;
 }
 
-:root[data-design="industrial"] .bw-statement__word {
+:root[data-design="industrial"] .bw-statement__dim {
   transition: opacity 0.5s ease-out;
 }
 
 :root[data-design="industrial"]
-  .bw-statement__text.is-focused
+  .bw-statement__text.is-dimmed
   .bw-statement__dim {
   opacity: 0.3;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  :root[data-design="industrial"]
-    .bw-statement__text.has-emphasis:hover
-    .bw-statement__dim {
-    opacity: 0.3;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  :root[data-design="industrial"] .bw-statement__word {
+  :root[data-design="industrial"] .bw-statement__dim {
     transition: none;
   }
 }
