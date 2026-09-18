@@ -149,7 +149,7 @@ const partnerGroups = [
       {
         id: "inje",
         name: { ko: "인제대학교", en: "Inje University" },
-        logo: "/images/partners/inje.png",
+        logo: "/images/partners/inje-ci.png",
       },
       {
         id: "daegu",
