@@ -95,21 +95,23 @@ export default function Services({ areas }) {
           </div>
         </section>
 
-        {/* 문구는 새로 짓지 않는다. 08 §1.1이 대표 메시지 원문[src:1]으로
-            인용한 문장을 §1.4의 합니다체로 옮긴 것이다. */}
+        {/* 문구는 대표 메시지(08 §1.1, src:1)의 긍정형 주장 둘을 합친 것이다.
+            "믿지 않는다"는 원문의 부정 문장은 강조하면 하지 않을 일을 세우는 꼴이라 뺐다.
+            강조 구절은 문구와 함께 정한다. */}
         <StatementBand
           eyebrow={
             language === "ko" ? "브레인웍스가 믿는 것" : "What we believe"
           }
           text={
             language === "ko"
-              ? "AI가 모든 산업과 조직에 보편적으로 적용될 수 있다고 믿지 않습니다. 산업마다 다른 해결책을 설계합니다."
-              : "We do not believe one AI fits every industry. We design a different answer for each."
+              ? "현장에서 곧바로 쓰이는 AI를 산업마다 다르게 설계합니다."
+              : "AI that works on the floor from day one, designed differently for each industry."
           }
           emphasis={
             language === "ko"
-              ? ["믿지 않습니다", "산업마다 다른 해결책"]
-              : ["do not believe", "different answer for each"]
+              ? ["곧바로 쓰이는", "산업마다 다르게"]
+              : // en 초안, 회사 확인
+                ["works on the floor", "differently for each industry"]
           }
         />
 
