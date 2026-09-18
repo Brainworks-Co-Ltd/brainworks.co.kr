@@ -44,6 +44,8 @@ const copy = {
 /*
  * 협력 기관. 메인 로고 띠와 교육 페이지 고객 로고를 합치고 중복(KOSME, IPA)을 뺐다.
  * 이름은 로고에 적힌 기관명이다. DMI는 로고에 약칭만 있어 약칭으로 둔다.
+ * public/images/partners의 로고는 각 기관 사이트와 위키미디어 공용에서 받았고,
+ * 어두운 배경용 흰 글자 로고(대구대, MGA, GITC)는 흰 부분을 잉크색으로 바꿨다.
  */
 const partnerGroups = [
   {
@@ -96,6 +98,22 @@ const partnerGroups = [
         name: { ko: "충남연구원", en: "ChungNam Institute" },
         logo: cni,
       },
+      {
+        id: "nipa",
+        name: {
+          ko: "정보통신산업진흥원",
+          en: "National IT Industry Promotion Agency",
+        },
+        logo: "/images/partners/nipa.png",
+      },
+      {
+        id: "gitc",
+        name: {
+          ko: "경북IT융합산업기술원",
+          en: "Gyeongbuk IT Convergence Industry Technology Institute",
+        },
+        logo: "/images/partners/gitc.png",
+      },
       { id: "dmi", name: { ko: "DMI", en: "DMI" }, logo: dmi },
     ],
   },
@@ -117,6 +135,34 @@ const partnerGroups = [
         id: "kongju",
         name: { ko: "국립공주대학교", en: "Kongju National University" },
         logo: "/images/education/공주대.png",
+      },
+      {
+        id: "jnu",
+        name: { ko: "전남대학교", en: "Chonnam National University" },
+        logo: "/images/partners/jnu.png",
+      },
+      {
+        id: "scnu",
+        name: { ko: "국립순천대학교", en: "Sunchon National University" },
+        logo: "/images/partners/scnu.png",
+      },
+      {
+        id: "inje",
+        name: { ko: "인제대학교", en: "Inje University" },
+        logo: "/images/partners/inje.png",
+      },
+      {
+        id: "daegu",
+        name: { ko: "대구대학교", en: "Daegu University" },
+        logo: "/images/partners/daegu.png",
+      },
+      {
+        id: "mga",
+        name: {
+          ko: "Middle Georgia State University",
+          en: "Middle Georgia State University",
+        },
+        logo: "/images/partners/mga.png",
       },
     ],
   },
