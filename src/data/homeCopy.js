@@ -32,7 +32,7 @@ export const homeCopy = {
       en: "Brainworks provides the services you need to adopt AI",
     },
     subtitle: {
-      ko: "AI 컨설팅, 솔루션 구축, 전문교육, 글로벌 프로그램",
+      ko: "AI/AX 컨설팅, 솔루션 구축, 전문교육, 글로벌 프로그램",
       // en 초안, 회사 확인
       en: "AI consulting, solution building, professional education, and global programmes",
     },
@@ -41,7 +41,7 @@ export const homeCopy = {
     {
       id: "consulting",
       routeKey: "consulting",
-      name: { ko: "AI 컨설팅", en: "AI Consulting" },
+      name: { ko: "AI/AX 컨설팅", en: "AI/AX Consulting" },
       desc: {
         ko: "비즈니스 목표와 조직 역량에 맞춘 AI 전략과 로드맵을 세우고, 파일럿 설계부터 MLOps 환경 구성까지 전주기를 지원합니다.",
         en: "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",

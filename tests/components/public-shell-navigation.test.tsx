@@ -26,7 +26,7 @@ describe("공개 셸 내비게이션", () => {
 
     const trigger = screen.getByRole("button", { name: "사업 영역" });
     await user.click(trigger);
-    expect(screen.getByRole("link", { name: /AI 컨설팅/ })).toBeVisible();
+    expect(screen.getByRole("link", { name: /AI\/AX 컨설팅/ })).toBeVisible();
     expect(
       screen.queryByText("전략부터 구축·확산까지"),
     ).not.toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("공개 셸 내비게이션", () => {
     await user.keyboard("{Escape}");
 
     expect(
-      screen.queryByRole("link", { name: /AI 컨설팅/ }),
+      screen.queryByRole("link", { name: /AI\/AX 컨설팅/ }),
     ).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();
   });
@@ -75,7 +75,7 @@ describe("공개 셸 내비게이션", () => {
       "href",
       "/services",
     );
-    expect(screen.getByRole("link", { name: "AI 컨설팅" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "AI/AX 컨설팅" })).toHaveAttribute(
       "href",
       "/consulting",
     );
@@ -178,7 +178,7 @@ describe("공개 셸 내비게이션", () => {
 
     await user.click(businessToggle);
 
-    expect(screen.getByRole("link", { name: "AI 컨설팅" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "AI/AX 컨설팅" })).toBeVisible();
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
   });
 });

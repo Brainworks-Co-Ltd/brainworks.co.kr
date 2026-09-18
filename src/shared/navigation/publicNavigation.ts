@@ -91,7 +91,7 @@ const definitions: NavigationDefinition[] = [
         id: "consulting",
         hrefRouteKey: "consulting",
         activeRouteKeys: ["consulting"],
-        label: { ko: "AI 컨설팅", en: "AI Consulting" },
+        label: { ko: "AI/AX 컨설팅", en: "AI/AX Consulting" },
       },
       {
         id: "education",

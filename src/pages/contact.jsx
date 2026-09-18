@@ -11,7 +11,7 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 
 const topics = [
   { value: "solution", ko: "AI 솔루션", en: "AI solutions" },
-  { value: "consulting", ko: "AI 컨설팅", en: "AI consulting" },
+  { value: "consulting", ko: "AI/AX 컨설팅", en: "AI/AX consulting" },
   { value: "education", ko: "AI 전문교육", en: "AI education" },
   { value: "global", ko: "글로벌 프로그램", en: "Global programs" },
   { value: "other", ko: "기타 문의", en: "Other" },

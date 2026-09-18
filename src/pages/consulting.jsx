@@ -11,10 +11,11 @@ import ProcessSteps from "@/components/public/ProcessSteps";
 
 const copy = {
   ko: {
-    heroTitle: "AI 컨설팅",
+    heroTitle: "AI/AX 컨설팅",
     // 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정).
     // heroTitle은 SeoMetadata와 화면 h1이 함께 쓴다.
-    heroSubtitle: "전략 수립과 구축, 고도화를 현장에 맞춰 지원하는 AI 컨설팅",
+    heroSubtitle:
+      "전략 수립과 구축, 고도화를 현장에 맞춰 지원하는 AI/AX 컨설팅",
     heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
@@ -24,7 +25,7 @@ const copy = {
       "팀에서 겪고 있는 과제를 알려주시면, 데이터 진단부터 파일럿 설계까지 맞춤 제안을 드립니다.",
   },
   en: {
-    heroTitle: "AI Consulting",
+    heroTitle: "AI/AX Consulting",
     heroSubtitle:
       "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
     heroCta: "Request a Consultation",
@@ -196,8 +197,8 @@ export default function Consulting() {
           title={t.heroTitle}
           heading={
             <>
-              <span className="font-normal text-white/60">AI</span>{" "}
-              {t.heroTitle.replace(/^AI /, "")}
+              <span className="font-normal text-white/60">AI/AX</span>{" "}
+              {t.heroTitle.replace(/^AI\/AX /, "")}
             </>
           }
           description={t.heroSubtitle}

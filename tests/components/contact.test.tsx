@@ -25,7 +25,7 @@ describe("문의 페이지 폼", () => {
       screen.getByRole("heading", { name: "문의 내용을 남겨주세요." }),
     ).toBeVisible();
     expect(screen.getByRole("radio", { name: "AI 솔루션" })).toBeVisible();
-    expect(screen.getByRole("radio", { name: "AI 컨설팅" })).toBeVisible();
+    expect(screen.getByRole("radio", { name: "AI/AX 컨설팅" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "연락처 정보" })).toBeVisible();
     expect(screen.getByRole("heading", { name: "문의 내용" })).toBeVisible();
   });
