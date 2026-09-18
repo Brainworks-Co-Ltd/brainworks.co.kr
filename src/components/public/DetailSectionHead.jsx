@@ -1,7 +1,7 @@
 import SectionTitle from "@/components/public/SectionTitle";
 
 /**
- * @typedef {{ eyebrow?: string | null, title: import("react").ReactNode, description?: string | null }} DetailSectionHeadProps
+ * @typedef {{ eyebrow?: string | null, title: import("react").ReactNode, description?: string | null, after?: import("react").ReactNode }} DetailSectionHeadProps
  */
 
 /** @param {DetailSectionHeadProps} props */
@@ -9,6 +9,7 @@ export default function DetailSectionHead({
   eyebrow = null,
   title,
   description = null,
+  after = null,
 }) {
   return (
     <div>
@@ -17,7 +18,9 @@ export default function DetailSectionHead({
           {eyebrow}
         </p>
       )}
-      <SectionTitle sub={description}>{title}</SectionTitle>
+      <SectionTitle sub={description} after={after}>
+        {title}
+      </SectionTitle>
     </div>
   );
 }

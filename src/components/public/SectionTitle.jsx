@@ -17,7 +17,11 @@ export const Arrow = ({ className = "" }) => (
   </svg>
 );
 
-export default function SectionTitle({ children, sub }) {
+/*
+ * after는 제목 묶음에 속하는 보조 정보(과정 형식 칩 등)다. 제목 묶음 안에 두어야
+ * 부제 바로 아래 붙고, 본문과는 표준 간격(mb-16/20) 하나만 벌어진다.
+ */
+export default function SectionTitle({ children, sub, after = null }) {
   return (
     <div className="bw-reveal mb-16 text-center lg:mb-20">
       <h2 className="text-[28px] font-semibold leading-[1.3] text-ink lg:text-[40px]">
@@ -28,6 +32,7 @@ export default function SectionTitle({ children, sub }) {
           {sub}
         </p>
       )}
+      {after ? <div className="mt-8">{after}</div> : null}
     </div>
   );
 }

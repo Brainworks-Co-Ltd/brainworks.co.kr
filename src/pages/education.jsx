@@ -636,17 +636,19 @@ export default function Education() {
                   ? "직무 중심 생성형 AI 활용 역량 강화"
                   : "Level up practical GenAI skills for every team"
               }
+              after={
+                <div className="flex flex-wrap justify-center gap-3">
+                  {generativeAIChips[language].map((chip) => (
+                    <span key={chip} className={CHIP_CLASS}>
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+              }
             />
-            <div className="flex flex-wrap justify-center gap-3">
-              {generativeAIChips[language].map((chip) => (
-                <span key={chip} className={CHIP_CLASS}>
-                  {chip}
-                </span>
-              ))}
-            </div>
             {/* 네 과정은 기초에서 프로젝트로 이어지는 순서라 접지 않고 한 줄로 펼친다.
                 예전 아코디언은 핵심 내용이 + 뒤에 숨어 있어 누를 수 있다는 것조차 읽히지 않았다. */}
-            <ol className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4">
+            <ol className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-4">
               {generativeAITracks.map((track, index) => (
                 <li
                   key={track.id}
