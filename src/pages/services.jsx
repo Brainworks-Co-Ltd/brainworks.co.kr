@@ -95,21 +95,21 @@ export default function Services({ areas }) {
           </div>
         </section>
 
-        {/* 결과를 말하는 한 문장이다. 앞줄은 네 사업 영역의 현장(제조, 헬스케어,
-            스마트시티, 에이전트)을 부르고, 뒷줄은 고객에게 생기는 상태를 말한다.
-            뒷줄이 늘 서 있고 앞줄은 포인터가 닿을 때 밝아진다. */}
+        {/* 결과를 말하는 한 문장이다. 앞줄은 무엇으로 일하는지, 뒷줄은 고객에게
+            생기는 상태를 말한다. 뒷줄이 늘 서 있고 앞줄은 포인터가 닿을 때 밝아진다.
+            영문의 "help build"는 "만듭니다"가 회사를 세운다는 뜻으로 읽히지 않게 한 것이다. */}
         <StatementBand
           eyebrow={language === "ko" ? "브레인웍스가 하는 일" : "What we do"}
           text={
             language === "ko"
-              ? "공장과 병원, 도시와 상담 창구까지 AI가 일하는 현장을 만듭니다."
-              : "In factories, hospitals, cities and service desks, we build workplaces where AI does the work."
+              ? "각 산업에 맞는 AI로, 사람과 AI가 함께 일하는 기업을 만듭니다."
+              : "With AI built for each industry, we help build companies where people and AI work together."
           }
           emphasis={
             language === "ko"
-              ? ["AI가 일하는 현장"]
+              ? ["사람과 AI가 함께 일하는 기업"]
               : // en 초안, 회사 확인
-                ["workplaces where AI does the work"]
+                ["companies where people and AI work together"]
           }
         />
 
