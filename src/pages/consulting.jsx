@@ -189,7 +189,7 @@ export default function Consulting() {
           variant="media"
           media={{
             kind: "image",
-            src: "/images/services/hero/agent.webp",
+            src: "/images/home/consulting.webp",
             alt: "",
           }}
           eyebrow={language === "ko" ? "사업 영역" : "Business"}

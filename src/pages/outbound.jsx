@@ -238,7 +238,7 @@ export default function Outbound() {
           variant="media"
           media={{
             kind: "image",
-            src: "/images/services/hero/smartcity.webp",
+            src: "/images/education/Global.webp",
             alt: "",
           }}
           eyebrow={language === "ko" ? "사업 영역" : "Business"}

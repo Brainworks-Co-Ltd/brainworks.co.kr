@@ -27,8 +27,9 @@ export default function BusinessAreaDetail({ area }) {
         <PageHero
           variant="media"
           media={{
-            kind: "image",
-            src: area.heroImage,
+            kind: "video",
+            src: `/videos/home/${area.id}.mp4`,
+            poster: area.heroImage,
             alt: "",
           }}
           eyebrow={language === "ko" ? "사업 영역" : "Business"}
