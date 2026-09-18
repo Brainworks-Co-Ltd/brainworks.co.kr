@@ -644,43 +644,46 @@ export default function Education() {
                 </span>
               ))}
             </div>
-            <div className="mt-8 flex flex-col">
+            {/* 네 과정은 기초에서 프로젝트로 이어지는 순서라 접지 않고 한 줄로 펼친다.
+                예전 아코디언은 핵심 내용이 + 뒤에 숨어 있어 누를 수 있다는 것조차 읽히지 않았다. */}
+            <ol className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2 lg:mt-16 lg:grid-cols-4">
               {generativeAITracks.map((track, index) => (
-                <details
+                <li
                   key={track.id}
                   style={{ transitionDelay: `${index * 80}ms` }}
-                  className="bw-reveal group border-t border-line"
+                  className="bw-reveal relative border-t border-line pt-8"
                 >
-                  <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-8 [&::-webkit-details-marker]:hidden">
-                    <div>
-                      <h3 className="text-[22px] font-semibold text-ink-strong lg:text-[28px]">
-                        {track.title[language]}
-                      </h3>
-                      <p className="mt-3 text-[18px] leading-[1.75] text-muted-foreground">
-                        {track.description[language]}
-                      </p>
-                    </div>
-                    <span
-                      aria-hidden="true"
-                      className="shrink-0 transition-transform group-open:rotate-45"
-                    >
-                      +
-                    </span>
-                  </summary>
-                  <ul className="space-y-3 pb-8">
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-px left-0 h-[2px] w-12 bg-accent"
+                  />
+                  <p className="text-[15px] font-bold tabular-nums text-accent-text">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3 className="mt-3 text-[22px] font-semibold leading-[1.35] break-keep text-ink-strong">
+                    {track.title[language]}
+                  </h3>
+                  <p className="mt-3 text-[16px] leading-[1.65] break-keep text-ink">
+                    {track.description[language]}
+                  </p>
+                  <ul className="mt-6 space-y-3">
                     {track.points[language].map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2 text-[17px] leading-[1.7]"
+                        className="flex items-start gap-2 text-[15px] leading-[1.6] break-keep text-muted-foreground"
                       >
-                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                        <Check
+                          aria-hidden="true"
+                          strokeWidth={2.5}
+                          className="mt-1 size-4 shrink-0 text-accent"
+                        />
                         <span>{point}</span>
                       </li>
                     ))}
                   </ul>
-                </details>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
