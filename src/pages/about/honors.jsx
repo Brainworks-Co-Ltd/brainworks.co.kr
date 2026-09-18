@@ -55,108 +55,109 @@ export default function HonorsPage({
       <Header />
       <SeoMetadata title={`${t.title} | Brainworks`} description={t.subtitle} />
       <main id="main-content">
-      <PageHero
-        variant="plain"
-        eyebrow="About Brainworks"
-        title={t.title}
-        description={t.subtitle}
-      />
+        <PageHero
+          variant="media"
+          media={{ kind: "image", src: "/images/about/hero.webp", alt: "" }}
+          eyebrow="About Brainworks"
+          title={t.title}
+          description={t.subtitle}
+        />
 
-      <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-col gap-12 lg:flex-row">
-            <AboutLocalNav active="honors" />
+        <section className="py-20">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="flex flex-col gap-12 lg:flex-row">
+              <AboutLocalNav active="honors" />
 
-            <div className="flex-1">
-              <div className="mt-12 space-y-16">
-                <section>
-                  <SectionHeader eyebrow="Awards" title={t.awardsLabel} />
-                  <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-                    {awards.map((award, index) => (
-                      <article
-                        key={[award.slug || award.title.ko, award.year].join(
-                          "-",
-                        )}
-                        className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
-                      >
-                        <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
-                          {award.image ? (
+              <div className="flex-1">
+                <div className="mt-12 space-y-16">
+                  <section>
+                    <SectionHeader eyebrow="Awards" title={t.awardsLabel} />
+                    <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+                      {awards.map((award, index) => (
+                        <article
+                          key={[award.slug || award.title.ko, award.year].join(
+                            "-",
+                          )}
+                          className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
+                        >
+                          <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
+                            {award.image ? (
+                              <Image
+                                src={award.image}
+                                alt={`${award.title[language]} ${t.awardAltSuffix}`}
+                                fill
+                                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+                                className="object-contain"
+                              />
+                            ) : (
+                              // 상장 사진을 아직 받지 못한 수상. 다른 해 이미지를 돌려쓰지 않는다.
+                              <span className="text-sm font-semibold text-[var(--bw-color-muted)]">
+                                {formatAwardPeriod(award.year, award.date)}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex flex-1 flex-col gap-2">
+                            <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
+                              <span>#{String(index + 1).padStart(2, "0")}</span>
+                              <span>
+                                {formatAwardPeriod(award.year, award.date)}
+                              </span>
+                            </div>
+                            <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
+                              {award.title[language]}
+                            </h3>
+                            <p className="text-sm text-[var(--bw-color-muted)]">
+                              {award.org[language]}
+                            </p>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section>
+                    <SectionHeader
+                      eyebrow="Certifications"
+                      title={t.certificationsLabel}
+                    />
+                    <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+                      {certifications.map((cert) => (
+                        <article
+                          key={[cert.slug || cert.title.ko, cert.org.ko].join(
+                            "-",
+                          )}
+                          className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
+                        >
+                          <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
                             <Image
-                              src={award.image}
-                              alt={`${award.title[language]} ${t.awardAltSuffix}`}
+                              src={cert.image}
+                              alt={`${cert.title[language]} ${t.certAltSuffix}`}
                               fill
                               sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
                               className="object-contain"
                             />
-                          ) : (
-                            // 상장 사진을 아직 받지 못한 수상. 다른 해 이미지를 돌려쓰지 않는다.
-                            <span className="text-sm font-semibold text-[var(--bw-color-muted)]">
-                              {formatAwardPeriod(award.year, award.date)}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex flex-1 flex-col gap-2">
-                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
-                            <span>#{String(index + 1).padStart(2, "0")}</span>
-                            <span>
-                              {formatAwardPeriod(award.year, award.date)}
-                            </span>
                           </div>
-                          <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
-                            {award.title[language]}
-                          </h3>
-                          <p className="text-sm text-[var(--bw-color-muted)]">
-                            {award.org[language]}
-                          </p>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-
-                <section>
-                  <SectionHeader
-                    eyebrow="Certifications"
-                    title={t.certificationsLabel}
-                  />
-                  <div className="mt-6 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-                    {certifications.map((cert) => (
-                      <article
-                        key={[cert.slug || cert.title.ko, cert.org.ko].join(
-                          "-",
-                        )}
-                        className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
-                      >
-                        <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
-                          <Image
-                            src={cert.image}
-                            alt={`${cert.title[language]} ${t.certAltSuffix}`}
-                            fill
-                            sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-                            className="object-contain"
-                          />
-                        </div>
-                        <div className="flex flex-1 flex-col gap-2">
-                          <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
-                            <span>{cert.org[language]}</span>
-                            <span>{cert.year}</span>
+                          <div className="flex flex-1 flex-col gap-2">
+                            <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
+                              <span>{cert.org[language]}</span>
+                              <span>{cert.year}</span>
+                            </div>
+                            <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
+                              {cert.title[language]}
+                            </h3>
+                            <p className="text-sm text-[var(--bw-color-muted)]">
+                              {cert.description[language]}
+                            </p>
                           </div>
-                          <h3 className="text-lg font-semibold text-[var(--bw-color-ink)]">
-                            {cert.title[language]}
-                          </h3>
-                          <p className="text-sm text-[var(--bw-color-muted)]">
-                            {cert.description[language]}
-                          </p>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       </main>
 
       <Footer />
