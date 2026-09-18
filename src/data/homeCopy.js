@@ -46,7 +46,7 @@ export const homeCopy = {
         ko: "비즈니스 목표와 조직 역량에 맞춘 AI 전략과 로드맵을 세우고, 파일럿 설계부터 MLOps 환경 구성까지 전주기를 지원합니다.",
         en: "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
       },
-      image: "/images/services/hero/agent.webp",
+      image: "/images/home/consulting.webp",
     },
     {
       id: "solution",
@@ -57,7 +57,7 @@ export const homeCopy = {
         // en 초안, 회사 확인
         en: "We build solutions from field data across manufacturing, agents, healthcare and bio, and smart city and safety.",
       },
-      image: "/images/services/hero/manufacturing.webp",
+      image: "/images/home/solution.webp",
     },
     {
       id: "education",
@@ -77,7 +77,7 @@ export const homeCopy = {
         ko: "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원합니다.",
         en: "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
       },
-      image: "/images/services/hero/smartcity.webp",
+      image: "/images/education/Global.webp",
     },
   ],
   proofSection: {

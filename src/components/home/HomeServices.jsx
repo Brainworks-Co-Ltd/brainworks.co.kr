@@ -24,26 +24,29 @@ export default function HomeServices() {
               >
                 <Link
                   href={getLocalizedPath(service.routeKey, language)}
-                  className="block h-full rounded-[24px] bg-tint p-8 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-24px_rgba(16,25,27,.25)]"
+                  className="group relative block aspect-square overflow-hidden rounded-[24px] lg:aspect-[16/11]"
                 >
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
-                    <Image
-                      src={service.image}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 612px, 100vw"
-                      className="object-cover"
-                    />
+                  <Image
+                    src={service.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 612px, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  {/* 밝은 사진 위에서도 흰 글자가 읽히도록 아래쪽을 충분히 어둡게 깐다. */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 text-white lg:p-10">
+                    <h3 className="text-[22px] font-semibold text-white lg:text-[26px]">
+                      {service.name[language]}
+                    </h3>
+                    <p className="mt-2 text-[15px] leading-[1.6] text-white/85 lg:mt-3 lg:text-[16px]">
+                      {service.desc[language]}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-[15px] font-semibold text-white lg:mt-6">
+                      {language === "ko" ? "자세히 보기" : "Learn more"}{" "}
+                      <Arrow />
+                    </span>
                   </div>
-                  <h3 className="mt-6 text-[24px] font-semibold text-ink-strong">
-                    {service.name[language]}
-                  </h3>
-                  <p className="mt-3 text-[16px] leading-[1.6]">
-                    {service.desc[language]}
-                  </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-[15px] font-semibold text-ink">
-                    {language === "ko" ? "자세히 보기" : "Learn more"} <Arrow />
-                  </span>
                 </Link>
               </div>
             </li>

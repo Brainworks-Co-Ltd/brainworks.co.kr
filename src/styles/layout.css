@@ -61,6 +61,20 @@
   animation: bw-caret-blink 1s steps(1) infinite;
 }
 
+/* 홈 영상 릴의 진행 막대. 컷이 바뀔 때 key로 새로 그려 처음부터 다시 찬다. */
+.bw-reel-fill {
+  animation: bw-reel-fill linear forwards;
+}
+
+@keyframes bw-reel-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .pill {
   display: inline-flex;
   align-items: center;

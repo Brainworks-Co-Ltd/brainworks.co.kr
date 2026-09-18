@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLocale } from "@/shared/routing/useLocale";
 import client1 from "@/assets/clients/client1.png";
@@ -8,6 +9,7 @@ import client5 from "@/assets/clients/client5.jpg";
 import client6 from "@/assets/clients/client6.jpg";
 import client7 from "@/assets/clients/client7.png";
 import client8 from "@/assets/clients/client8.png";
+import { businessAreas } from "@/data/businessAreas";
 import { homeCopy } from "@/data/homeCopy";
 
 const clients = [
@@ -21,30 +23,134 @@ const clients = [
   client8,
 ];
 
+/*
+ * 네 사업 영역을 무료 스톡 영상(Pexels 라이선스, 상업 사용 가능)으로 차례로 보여준다.
+ * 영상은 겹쳐 두고 지금 컷만 재생하며 투명도로 넘긴다. 컷마다 CLIP_MS만 보여주고
+ * 다음 컷으로 간다. 동작 줄이기에서는 첫 영역 사진만 보여준다.
+ */
+const CLIP_MS = 6000;
+const clips = businessAreas.map((area) => ({
+  id: area.id,
+  name: area.name,
+  src: `/videos/home/${area.id}.mp4`,
+  poster: area.heroImage,
+}));
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return reduced;
+}
+
+function MediaOverlay({ children }) {
+  return (
+    <>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <div className="absolute bottom-8 left-8 lg:bottom-12 lg:left-12">
+        {children}
+      </div>
+    </>
+  );
+}
+
+function ClipReel({ language, children }) {
+  const [current, setCurrent] = useState(0);
+  const videos = useRef([]);
+
+  useEffect(() => {
+    const video = videos.current[current];
+    if (video) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    }
+    const timer = setTimeout(
+      () => setCurrent((i) => (i + 1) % clips.length),
+      CLIP_MS,
+    );
+    return () => {
+      clearTimeout(timer);
+      video?.pause();
+    };
+  }, [current]);
+
+  const next = (current + 1) % clips.length;
+  return (
+    <>
+      {clips.map((clip, index) => (
+        <video
+          key={clip.id}
+          ref={(node) => {
+            videos.current[index] = node;
+          }}
+          src={clip.src}
+          poster={clip.poster}
+          muted
+          playsInline
+          preload={index === current || index === next ? "auto" : "none"}
+          aria-hidden="true"
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
+      <MediaOverlay>
+        <div className="mb-4 flex items-center gap-3 text-[13px] font-semibold text-white lg:mb-6 lg:gap-4 lg:text-[14px]">
+          <span>{String(current + 1).padStart(2, "0")}</span>
+          <span className="relative h-[2px] w-16 overflow-hidden bg-white/35 lg:w-[150px]">
+            <span
+              key={current}
+              className="bw-reel-fill absolute inset-0 origin-left bg-[var(--color-accent)]"
+              style={{ animationDuration: `${CLIP_MS}ms` }}
+            />
+          </span>
+          <span className="text-white/60">
+            {String(next + 1).padStart(2, "0")}
+          </span>
+          <span className="ml-2 lg:ml-4">{clips[current].name[language]}</span>
+        </div>
+        {children}
+      </MediaOverlay>
+    </>
+  );
+}
+
 export default function HomeMedia() {
   const { language } = useLocale();
   const copy = homeCopy.media;
+  const reduced = useReducedMotion();
+  const caption = (
+    <p className="text-[26px] font-semibold leading-[1.25] text-white lg:text-[44px]">
+      {copy.eyebrow[language]}
+      <br />
+      {copy.title[language]}
+    </p>
+  );
 
   return (
     <section>
       <div className="bw-reveal inner">
         <div className="relative aspect-[16/9] overflow-hidden rounded-[24px] bg-ink-strong lg:aspect-[1296/560]">
-          <Image
-            src="/images/services/hero/manufacturing.webp"
-            alt=""
-            fill
-            priority
-            loading="eager"
-            fetchPriority="high"
-            sizes="1296px"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-          <p className="absolute bottom-8 left-8 text-[26px] font-semibold leading-[1.25] text-white lg:bottom-12 lg:left-12 lg:text-[44px]">
-            {copy.eyebrow[language]}
-            <br />
-            {copy.title[language]}
-          </p>
+          {reduced ? (
+            <>
+              <Image
+                src={clips[0].poster}
+                alt=""
+                fill
+                priority
+                loading="eager"
+                fetchPriority="high"
+                sizes="1296px"
+                className="object-cover"
+              />
+              <MediaOverlay>{caption}</MediaOverlay>
+            </>
+          ) : (
+            <ClipReel language={language}>{caption}</ClipReel>
+          )}
         </div>
       </div>
       <div className="mt-16 overflow-hidden" aria-hidden="true">
