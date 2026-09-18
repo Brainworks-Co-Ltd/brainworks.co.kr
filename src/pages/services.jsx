@@ -95,23 +95,21 @@ export default function Services({ areas }) {
           </div>
         </section>
 
-        {/* 문구는 대표 메시지(08 §1.1, src:1)의 긍정형 주장 둘을 합친 것이다.
-            "믿지 않는다"는 원문의 부정 문장은 강조하면 하지 않을 일을 세우는 꼴이라 뺐다.
-            강조 구절은 문구와 함께 정한다. */}
+        {/* 결과를 말하는 한 문장이다. 앞줄은 네 사업 영역의 현장(제조, 헬스케어,
+            스마트시티, 에이전트)을 부르고, 뒷줄은 고객에게 생기는 상태를 말한다.
+            뒷줄이 늘 서 있고 앞줄은 포인터가 닿을 때 밝아진다. */}
         <StatementBand
-          eyebrow={
-            language === "ko" ? "브레인웍스가 믿는 것" : "What we believe"
-          }
+          eyebrow={language === "ko" ? "브레인웍스가 하는 일" : "What we do"}
           text={
             language === "ko"
-              ? "현장에서 곧바로 쓰이는 AI를 산업마다 다르게 설계합니다."
-              : "AI that works on the floor from day one, designed differently for each industry."
+              ? "공장과 병원, 도시와 상담 창구까지 AI가 일하는 현장을 만듭니다."
+              : "In factories, hospitals, cities and service desks, we build workplaces where AI does the work."
           }
           emphasis={
             language === "ko"
-              ? ["곧바로 쓰이는", "산업마다 다르게"]
+              ? ["AI가 일하는 현장"]
               : // en 초안, 회사 확인
-                ["works on the floor", "differently for each industry"]
+                ["workplaces where AI does the work"]
           }
         />
 
