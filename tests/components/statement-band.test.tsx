@@ -36,18 +36,28 @@ describe("선언 문구 강조", () => {
       container.querySelectorAll<HTMLElement>(".bw-statement__dim"),
     );
 
+    // 구절이 어절 중간에서 끝나면 조사("을")는 강조에서 빠진다.
     expect(lit.map((node) => node.textContent)).toEqual([
       "함께",
       "일하는",
-      "기업을",
+      "기업",
     ]);
-    // 흐려질 어절은 시작 0.75초 뒤부터 0.15초 간격이다.
+    expect(dim.map((node) => node.textContent)).toEqual([
+      "각",
+      "산업에",
+      "맞는",
+      "AI로",
+      "을",
+      "만듭니다.",
+    ]);
+    // 흐려질 조각은 시작 0.75초 뒤부터 0.15초 간격이다.
     expect(dim.map((node) => node.style.transitionDelay)).toEqual([
       "750ms",
       "900ms",
       "1050ms",
       "1200ms",
       "1350ms",
+      "1500ms",
     ]);
     expect(text?.classList.contains("is-dimmed")).toBe(false);
 

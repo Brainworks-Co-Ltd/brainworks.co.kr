@@ -14,8 +14,9 @@ const START_DELAY_MS = 750;
 const STAGGER_MS = 150;
 
 /*
- * 문장을 어절로 나누고, 핵심 구절의 글자 범위에 걸치는 어절을 lit으로 표시한다.
- * 구절이 어절 중간에서 끝나도 그 어절 전체가 남는다.
+ * 문장을 어절로 나누고, 어절 안을 핵심 구절 경계에서 다시 자른다. "기업을"처럼
+ * 구절이 어절 중간에서 끝나면 "기업"만 남기고 조사 "을"은 흐려진다.
+ * 어절은 줄바꿈 단위로 유지하고, 흐려질 조각마다 순서를 매긴다.
  */
 function splitWords(text, emphasis) {
   const ranges = emphasis
@@ -24,15 +25,25 @@ function splitWords(text, emphasis) {
       return start < 0 ? null : [start, start + phrase.length];
     })
     .filter(Boolean);
+  const isLit = (index) =>
+    ranges.some(([from, to]) => index >= from && index < to);
+
   const words = [];
   let offset = 0;
   let dimOrder = 0;
   for (const word of text.split(" ")) {
-    const start = offset;
-    const end = offset + word.length;
-    const lit = ranges.some(([from, to]) => start < to && end > from);
-    words.push({ word, lit, order: lit ? null : dimOrder++ });
-    offset = end + 1;
+    const parts = [];
+    for (let i = 0; i < word.length; i += 1) {
+      const lit = isLit(offset + i);
+      const last = parts.at(-1);
+      if (last && last.lit === lit) last.text += word[i];
+      else parts.push({ text: word[i], lit });
+    }
+    for (const part of parts) {
+      part.order = part.lit ? null : dimOrder++;
+    }
+    words.push({ word, parts });
+    offset += word.length + 1;
   }
   return words;
 }
@@ -68,19 +79,25 @@ export function StatementBand({ eyebrow, text, emphasis = [] }) {
       <div className="bw-statement__inner">
         {eyebrow ? <p className="bw-statement__eyebrow">{eyebrow}</p> : null}
         <p ref={ref} className="bw-statement__text">
-          {words.map(({ word, lit, order }, index) => (
-            <span
-              key={`${word}-${index}`}
-              className={`bw-statement__word ${lit ? "bw-statement__lit" : "bw-statement__dim"}`}
-              style={
-                lit
-                  ? undefined
-                  : {
-                      transitionDelay: `${START_DELAY_MS + order * STAGGER_MS}ms`,
-                    }
-              }
-            >
-              {word}
+          {words.map(({ word, parts }, index) => (
+            <span key={`${word}-${index}`} className="bw-statement__word">
+              {parts.map((part, partIndex) => (
+                <span
+                  key={partIndex}
+                  className={
+                    part.lit ? "bw-statement__lit" : "bw-statement__dim"
+                  }
+                  style={
+                    part.lit
+                      ? undefined
+                      : {
+                          transitionDelay: `${START_DELAY_MS + part.order * STAGGER_MS}ms`,
+                        }
+                  }
+                >
+                  {part.text}
+                </span>
+              ))}
             </span>
           ))}
         </p>
