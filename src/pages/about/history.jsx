@@ -56,7 +56,7 @@ export default function CompanyHistoryPage() {
                       className="grid gap-6 border-t border-line py-12 md:grid-cols-[180px_1fr] md:gap-12 lg:py-16"
                     >
                       <div>
-                        <p className="text-[44px] font-bold leading-none tabular-nums text-ink-strong md:sticky md:top-28 lg:text-[56px]">
+                        <p className="text-[44px] font-bold leading-none tabular-nums text-accent-strong md:sticky md:top-28 lg:text-[56px]">
                           {item.year}
                         </p>
                       </div>
