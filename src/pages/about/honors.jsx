@@ -188,7 +188,7 @@ export default function HonorsPage({
   const t = copy[language];
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)]">
+    <div className="min-h-screen bg-white">
       <Header />
       <SeoMetadata title={`${t.title} | Brainworks`} description={t.subtitle} />
       <main id="main-content">
@@ -215,9 +215,9 @@ export default function HonorsPage({
                           key={[award.slug || award.title.ko, award.year].join(
                             "-",
                           )}
-                          className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
+                          className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                         >
-                          <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
+                          <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-2xl bg-tint p-6 md:h-32">
                             {award.image ? (
                               <Image
                                 src={award.image}
@@ -235,7 +235,9 @@ export default function HonorsPage({
                           </div>
                           <div className="flex flex-1 flex-col gap-2">
                             <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">
-                              <span>#{String(index + 1).padStart(2, "0")}</span>
+                              <span className="font-bold text-accent-text">
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
                               <span>
                                 {formatAwardPeriod(award.year, award.date)}
                               </span>
@@ -263,9 +265,9 @@ export default function HonorsPage({
                           key={[cert.slug || cert.title.ko, cert.org.ko].join(
                             "-",
                           )}
-                          className="grid gap-6 bg-white px-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10 md:px-8"
+                          className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                         >
-                          <div className="relative flex h-40 w-full items-center justify-center bg-[var(--bw-color-surface-muted)] p-6 md:h-32">
+                          <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-2xl bg-tint p-6 md:h-32">
                             <Image
                               src={cert.image}
                               alt={`${cert.title[language]} ${t.certAltSuffix}`}

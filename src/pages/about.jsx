@@ -11,7 +11,7 @@ export default function About() {
   const { language } = useLocale();
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)]">
+    <div className="min-h-screen bg-white">
       <Header />
       <SeoMetadata
         title={
