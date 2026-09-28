@@ -21,7 +21,7 @@ const content = {
       },
       {
         heading: "3. 개인정보의 보유 및 이용 기간",
-        body: "문의 처리 완료 후 1년간 보유한 뒤 파기하는 방향으로 검토 중입니다. 정확한 보유 기간은 [확인 필요]. 서버 접속 기록은 14일 동안 보관한 뒤 자동으로 삭제합니다.",
+        body: "문의 내용은 문의 처리 완료 후 6개월 동안 보관한 뒤 파기합니다. 서버 접속 기록은 14일 동안 보관한 뒤 자동으로 삭제합니다.",
       },
       {
         heading: "4. 개인정보의 제3자 제공",
@@ -49,11 +49,11 @@ const content = {
       },
       {
         heading: "10. 개인정보 보호책임자",
-        body: "개인정보 보호책임자의 이름과 연락처는 [확인 필요].",
+        body: "개인정보 보호책임자는 강우현 대표입니다.\n전화: 010-6639-4084\n이메일: austin@brainworks.co.kr",
       },
       {
         heading: "11. 시행일",
-        body: "이 방침의 시행일은 [확인 필요].",
+        body: "이 방침은 2026년 10월 1일부터 시행합니다.",
       },
     ],
   },
@@ -73,7 +73,7 @@ const content = {
       },
       {
         heading: "3. Retention period",
-        body: "We are considering retaining information for one year after an inquiry is resolved, then destroying it. The exact retention period is [to be confirmed]. Server access logs are kept for 14 days and then deleted automatically.",
+        body: "Inquiry contents are kept for six months after an inquiry is resolved and then destroyed. Server access logs are kept for 14 days and then deleted automatically.",
       },
       {
         heading: "4. Provision to third parties",
@@ -101,11 +101,11 @@ const content = {
       },
       {
         heading: "10. Privacy officer",
-        body: "The name and contact details of the privacy officer are [to be confirmed].",
+        body: "The privacy officer is Austin Kang, CEO.\nPhone: +82-10-6639-4084\nEmail: austin@brainworks.co.kr",
       },
       {
         heading: "11. Effective date",
-        body: "The effective date of this policy is [to be confirmed].",
+        body: "This policy takes effect on October 1, 2026.",
       },
     ],
   },
