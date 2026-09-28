@@ -18,6 +18,7 @@ describe("공개 사업 영역 조회", () => {
   });
 
   it("DATABASE_URL이 없으면 고정 사업 영역 분류를 사용하고 DB를 호출하지 않는다", async () => {
+    delete process.env.DATABASE_URL;
     await expect(getPublishedBusinessAreas("ko")).resolves.toEqual(
       getLocalizedBusinessAreas("ko"),
     );
