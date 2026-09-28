@@ -41,12 +41,17 @@ export class SmtpPasswordResetMailPort implements MailPort {
   }
 }
 
-export function createPasswordResetMailPort() {
+export function createPasswordResetMailPort(): MailPort {
   const environment = process.env.APP_ENV || process.env.NODE_ENV || "local";
   if (["local", "test", "development"].includes(environment)) {
     return testMailPort;
   }
-  const from = process.env.SMTP_FROM;
-  if (!from) throw new HttpError("DEPENDENCY_UNAVAILABLE");
-  return new SmtpPasswordResetMailPort(from);
+  // 메일 설정이 비어도 로그인은 되어야 한다. 재설정 메일을 보낼 때만 실패시킨다.
+  return {
+    async sendPasswordReset(message) {
+      const from = process.env.SMTP_FROM;
+      if (!from) throw new HttpError("DEPENDENCY_UNAVAILABLE");
+      await new SmtpPasswordResetMailPort(from).sendPasswordReset(message);
+    },
+  };
 }
