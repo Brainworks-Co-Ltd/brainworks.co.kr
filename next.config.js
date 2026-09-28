@@ -34,6 +34,10 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    // 관리자가 올린 이미지는 빌드 뒤에 서버 디스크에 생기므로 public 대신 API가 읽어 준다.
+    return [{ source: "/media/:file", destination: "/api/media/:file" }];
+  },
   async headers() {
     return [
       {

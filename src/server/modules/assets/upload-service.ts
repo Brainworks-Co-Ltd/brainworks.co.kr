@@ -5,6 +5,7 @@ import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
 import { HttpError } from "@/server/http/errors";
 import { createWebImageVariant } from "@/server/infrastructure/sharp-image";
+import { LocalDiskStorage } from "@/server/infrastructure/local-disk-storage";
 import { S3ObjectStorage } from "@/server/infrastructure/s3-storage";
 import { assertImageUploadMetadata } from "@/server/modules/assets/upload-policy";
 
@@ -48,6 +49,8 @@ export function readMultipartImage(request: IncomingMessage) {
 }
 
 function getStorage() {
+  const localDir = process.env.ASSET_LOCAL_DIR;
+  if (localDir) return new LocalDiskStorage(localDir);
   const bucket = process.env.S3_BUCKET;
   const region = process.env.AWS_REGION;
   if (!bucket || !region) throw new HttpError("DEPENDENCY_UNAVAILABLE");
