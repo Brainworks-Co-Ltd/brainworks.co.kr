@@ -9,25 +9,28 @@
  */
 
 :root[data-design="industrial"] {
-  /* 2026-09-07 승인: 청록 면과 그래픽, 골드 주요 행동을 결합한다. */
+  /* 2026-09-16 결정: 보라빛 파랑 하나를 강조로 쓴다. 청록 면과 그래픽,
+     골드 주요 행동은 걷어냈다. 골드는 로고 파일에만 남는다.
+     globals.css의 --bw-color-* 와 같은 값이다. 여기서 var()로 참조하면
+     아래 매핑 블록과 순환 참조가 되므로 값을 그대로 적는다. */
   --bw-surface: #ffffff;
-  --bw-surface-muted: #f4f7f5;
-  --bw-surface-tinted: #e7f0ec;
+  --bw-surface-muted: #f1f2fb;
   --bw-surface-dark: #10191b;
-  --bw-surface-dark-deep: #18302f;
-  --bw-graphic: #71d6c7;
-  --bw-graphic-ink: #286c61;
+  --bw-surface-dark-deep: #262a48;
+  --bw-graphic: #8b93ea;
+  --bw-graphic-ink: #4a55c6;
 
   --bw-ink: #10191b;
-  --bw-muted: #53615d;
-  --bw-dim: #61736b;
+  --bw-muted: #5d6070;
+  --bw-dim: #6f7286;
   --bw-on-dark: #ffffff;
 
-  --bw-line: #d7e1dc;
-  --bw-line-strong: #b5c9c2;
+  --bw-line: #e1e3f0;
+  --bw-line-strong: #c6cade;
 
-  /* 골드 면에는 잉크 글자를 짝지어 주요 행동의 대비를 확보한다. */
-  --bw-brand: #d29b15;
+  /* 강조 면에는 흰 글자를 짝지어 주요 행동의 대비를 확보한다.
+     잉크 글자는 이 면 위에서 3.56이라 미달한다. */
+  --bw-brand: #5b63d3;
 
   /* 히어로 슬롯 강조색. 값은 각 슬롯 배경 사진에서 직접 뽑았다.
      사진의 지배 색상을 찾고, 채도는 사진의 평균 채도를 따르고, 명도만
@@ -47,7 +50,6 @@
   --bw-radius-feature: 45px;
 
   /* 2.6 간격 */
-  --bw-space-1: 4px;
   --bw-space-2: 8px;
   --bw-space-3: 12px;
   --bw-space-4: 16px;
@@ -486,7 +488,7 @@
 
 .ind-dark .ind-btn--solid {
   background: var(--bw-brand);
-  color: var(--bw-surface-dark);
+  color: var(--bw-on-dark);
 }
 
 .ind-dark .ind-btn--ghost {
@@ -694,166 +696,22 @@
 }
 
 /* ---------------------------------------------------------------
- * 진입 분기 (docs/designs/detail-page-roles.md)
- * 상세 페이지 맨 위에서 대상과 비대상을 밝힌다.
- * --------------------------------------------------------------- */
-
-/* 진입 분기. 이 페이지가 누구를 위한 것인지 말하는 구간이다.
- * 골드 전면으로 칠해봤다가 되돌렸다. 큰 겨자색 면은 디자인이 아니라
- * 색 덩어리로 읽힌다. 면은 조용히 두고 타입 크기로 위계를 만든다. */
-.bw-audience {
-  position: relative;
-  border-bottom: 1px solid var(--bw-line);
-  background: var(--bw-surface-muted);
-  color: var(--bw-ink);
-}
-
-.bw-audience::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 4px;
-  background: var(--bw-accent);
-}
-
-.bw-audience__inner {
-  display: grid;
-  gap: var(--bw-space-6);
-  max-width: 1152px;
-  margin-inline: auto;
-  padding: var(--bw-space-8) var(--bw-space-5);
-}
-
-@media (min-width: 900px) {
-  .bw-audience__inner {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    gap: var(--bw-space-8);
-    align-items: start;
-  }
-}
-
-.bw-audience__label {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bw-accent-text);
-}
-
-.bw-audience__audience {
-  margin: var(--bw-space-3) 0 0;
-  font-size: clamp(28px, 1.13vw + 23.8px, 40px);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--bw-ink);
-}
-
-.bw-audience__scope {
-  margin: var(--bw-space-4) 0 0;
-  font-size: 16px;
-  line-height: 1.7;
-  color: var(--bw-muted);
-}
-
-.bw-audience__links {
-  display: grid;
-  gap: var(--bw-space-2);
-  margin: var(--bw-space-3) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.bw-audience__link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--bw-space-4);
-  padding: var(--bw-space-3) var(--bw-space-4);
-  border: 1px solid var(--bw-line-strong);
-  border-radius: var(--bw-radius-control);
-  background: var(--bw-surface);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--bw-ink);
-  text-decoration: none;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-  transition:
-    border-color var(--bw-motion-press),
-    background var(--bw-motion-press);
-}
-
-.bw-audience__link:hover,
-.bw-audience__link:focus-visible {
-  border-color: var(--bw-ink);
-  background: var(--bw-surface-muted);
-}
-
-/* 분기 레일. 대상과 범위가 히어로로 올라간 상세 페이지에서는 분기만 남으므로
- * 2단 그리드 대신 접힘선 아래 얇은 가로 띠로 깐다. 라벨을 왼쪽에 붙이고
- * 링크를 가로로 펴 첫 화면 끝자락에서 "다른 데로 갈 수 있다"가 바로 읽히게 한다. */
-.bw-audience--rail .bw-audience__inner {
-  padding-block: var(--bw-space-6);
-}
-
-/* 칩은 글자 길이만큼만 차지하고 서로 붙어 있는다.
- * 앞서 1fr 두 칸으로 나눴더니 칸은 463px인데 링크는 345px이라 사이가 126px
- * 벌어졌다. 강제로 채우면 이번엔 칩 안에서 글자와 화살표가 갈라진다.
- * 라우팅 안내는 문장에 가깝지 표 칸이 아니므로 내용 크기로 둔다. */
-.bw-audience--rail .bw-audience__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--bw-space-3);
-  margin-top: 0;
-}
-
-/* 문구 길이가 달라 한쪽만 두 줄이 되면 칩 높이가 어긋난다.
-   li를 flex로 열어 링크가 행 높이까지 늘어나게 한다. */
-.bw-audience--rail .bw-audience__links > li {
-  display: flex;
-}
-
-/* 라벨은 링크를 소개하는 자리다. 링크가 16px/600 잉크인데 라벨이 14px/700
- * 강조색이면 소개가 본문보다 세진다. 굵기와 색을 한 단 내린다.
- * 강조색은 왼쪽 4px 띠가 이미 갖고 있다. */
-.bw-audience--rail .bw-audience__label {
-  font-weight: 600;
-  color: var(--bw-muted);
-  white-space: nowrap;
-}
-
-/* 0.14em 자간과 대문자 변환은 라틴 라벨 기준이다. 한글에 그대로 걸면
-   낱자가 흩어진다. 히어로 눈썹에서 고친 것과 같은 결함이다. */
-.bw-audience__label--ko {
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-@media (min-width: 900px) {
-  .bw-audience--rail .bw-audience__inner {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: var(--bw-space-6);
-  }
-}
-
-/* ---------------------------------------------------------------
- * 상세 페이지 공통 규칙 (docs/designs/detail-page-roles.md)
- *
+ * 섹션 여백
  * 섹션 간격이 py-20 md:py-28, mt-16, mt-20으로 흩어져 있어 페이지마다
- * 리듬이 달랐다. 하나로 모은다. 카드도 모서리·테두리·여백을 통일한다.
+ * 리듬이 달랐다. 하나로 모은다.
  * --------------------------------------------------------------- */
 
-/* PageHero(data-variant)와 진입 분기는 자체 여백을 쓴다. 제외하지 않으면
-   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다. */
+/* PageHero(data-variant)는 자체 여백을 쓴다. 제외하지 않으면
+   히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다.
+   메인(.bw-home)도 제외한다. 메인은 섹션마다 자기 여백을 들고 있는데
+   이 규칙이 그것을 전부 96px로 눌러 히어로 위가 붙고 리듬이 사라졌다. */
 :root[data-design="industrial"]
-  main
-  > section:not([data-variant]):not(.bw-audience),
-:root[data-design="industrial"] main > div > section:not([data-variant]) {
+  main:not(.bw-home)
+  > section:not([data-variant]),
+:root[data-design="industrial"]
+  main:not(.bw-home)
+  > div
+  > section:not([data-variant]) {
   padding-block: var(--bw-space-9);
 }
 
@@ -887,14 +745,13 @@
   --bw-color-muted: var(--bw-muted);
   --bw-color-line: var(--bw-line);
 
-  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 골드 면과 잉크 글자로 지정한다. */
+  /* 일반 본문 링크는 잉크로 읽히고, 주요 행동은 강조 면과 흰 글자로 지정한다. */
   --bw-color-brand: var(--bw-ink);
   --bw-color-black: var(--bw-ink);
   --bw-color-focus: var(--bw-ink);
 
-  /* 태그·눈썹 문구처럼 글자로 쓰는 골드만 남긴다.
-     기존 #9b700d는 흰 배경에서 4.45로 모자라 한 단 어둡게 잡았다 (5.37) */
-  --bw-color-brand-strong: #8a6408;
+  /* 태그와 눈썹 문구처럼 글자로 쓰는 강조색. 흰 배경에서 6.12 */
+  --bw-color-brand-strong: #4a55c6;
 
   --bw-radius-control: 9px;
   --bw-radius-card: 16px;
@@ -904,20 +761,18 @@
 /* ---------------------------------------------------------------
  * 강조색 (docs/planning/08-design-system.md 2.2.2)
  *
- * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 원인은 골드를
- * 흰 배경에서 글자로 못 쓴다는 것(2.49)이었고, 그래서 색을 아예
- * 안 쓰게 됐다.
+ * 화면이 와이어프레임처럼 밋밋하다는 지적을 받았다. 골드를 흰 배경에서
+ * 글자로 못 쓰는 탓(2.49)에 색을 아예 안 쓰게 된 것이 원인이었다.
  *
- * DeepLearning.AI가 딥레드 #620001을 큰 면으로 깔고 그 위에 글자를
- * 얹는 방식을 2026-09-01에 실측했다. 같은 방식을 쓰면 골드를 면으로
- * 깔고 잉크를 얹어 7.14를 확보할 수 있다. 남의 색을 빌리지 않는다.
+ * 2026-09-16에 골드 대신 보라빛 파랑을 강조로 쓰기로 했다. 면으로 깔 때는
+ * 흰 글자를 얹고, 흰 배경에 글자로 쓸 때는 한 단 어두운 값을 쓴다.
  * --------------------------------------------------------------- */
 
 :root[data-design="industrial"] {
-  --bw-accent: #d29b15; /* 강조 면. 잉크 글자와 7.14 */
-  --bw-accent-strong: #f0be4e; /* 밝은 골드. 잉크와 10.3 */
-  --bw-accent-soft: #fdf6e3; /* 칩 배경 */
-  --bw-accent-text: #8a6408; /* 칩·강조 글자. 흰 배경 5.37, soft 위 4.98 */
+  --bw-accent: #5b63d3; /* 강조 면. 흰 글자와 4.99 */
+  --bw-accent-strong: #8b93ea; /* 밝은 보라. 어두운 면 위에서 쓴다 */
+  --bw-accent-soft: #f1f2fb; /* 칩 배경 */
+  --bw-accent-text: #4a55c6; /* 칩과 강조 글자. 흰 배경 6.12, soft 위 5.78 */
 }
 
 /* 카테고리 칩 */
@@ -943,7 +798,7 @@
   padding-inline: 0.5rem;
   border-radius: var(--bw-radius-control);
   background: var(--bw-accent);
-  color: var(--bw-ink);
+  color: var(--bw-on-dark);
   font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -967,7 +822,7 @@
   main
   .rounded-full.bg-\[var\(--bw-color-brand\)\] {
   background-color: var(--bw-brand) !important;
-  color: var(--bw-ink) !important;
+  color: var(--bw-on-dark) !important;
   border-radius: var(--bw-radius-control);
 }
 
@@ -1069,6 +924,14 @@
   letter-spacing: -0.01em;
 }
 
+/* 히어로 설명은 제목 아래 읽히는 본문이다. 600으로 두면 제목과 설명이 같은
+   무게로 붙어 보인다. 레퍼런스 실측(400, 20px)에 맞춘다. */
+:root[data-design="industrial"] .bw-page-hero__description {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
 :root[data-design="industrial"] .bw-body {
   font-size: 16px;
   font-weight: 400;
@@ -1093,7 +956,7 @@
 /* ---------------------------------------------------------------
  * 어두운 히어로의 강조 글자
  *
- * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#8a6408)로 잡는데,
+ * 눈썹은 위의 강조색 규칙이 --bw-accent-text(#4a55c6)로 잡는데,
  * 그 값은 어두운 면에서 2.2라 읽히지 않는다. 08 §2.2.1이 정한
  * 어두운 구간용 밝은 골드로 바꾼다 (#0e1013 위에서 10.3).
  * --------------------------------------------------------------- */
@@ -1107,50 +970,13 @@
 }
 
 /* ---------------------------------------------------------------
- * 서비스별 강조색 (docs/planning/08-design-system.md 2.3)
+ * 서비스별 강조색은 걷어냈다 (2026-09-16 결정).
  *
- * 2.3의 원티드 hue ramp 4색은 홈 히어로 슬롯에만 묶여 있었고, 상세
- * 페이지는 전부 골드 하나였다. 골드만 반복하니 네 페이지가 같아 보이고
- * 강조가 남발됐다. 같은 램프에서 나온 값이라 넷이 서로 어울린다.
- *
- * -600은 어두운 면 위 값이다(대비는 2.3 표). 밝은 면에서 글자로 쓰면
- * 미달하므로 어두운 단계를 한 벌 더 둔다.
+ * 청록, 주황, 라임, 자주 넷을 페이지마다 갈아 끼우던 규칙이 있었다.
+ * 강조색을 보라빛 파랑 하나로 정하면서 넷 다 지운다. --bw-svc를 쓰는
+ * 세 자리는 var(--bw-svc, var(--bw-accent)) 꼴이라 그대로 강조색으로
+ * 떨어진다. data-accent 속성은 페이지 표시용으로 남는다.
  * --------------------------------------------------------------- */
-
-:root[data-design="industrial"] [data-accent] {
-  --bw-accent: var(--bw-svc);
-  --bw-accent-strong: var(--bw-svc-bright);
-  --bw-accent-text: var(--bw-svc-ink);
-  --bw-accent-soft: var(--bw-svc-soft);
-}
-
-:root[data-design="industrial"] [data-accent="solution"] {
-  --bw-svc: #00bdde; /* cyan-600 */
-  --bw-svc-bright: #4dd9f2; /* 어두운 면 위 강조 */
-  --bw-svc-ink: #00606f; /* 밝은 면 위 글자 */
-  --bw-svc-soft: #e6f8fc;
-}
-
-:root[data-design="industrial"] [data-accent="consulting"] {
-  --bw-svc: #fb8502; /* orange-600 */
-  --bw-svc-bright: #ffab4d;
-  --bw-svc-ink: #8a4700;
-  --bw-svc-soft: #fff2e3;
-}
-
-:root[data-design="industrial"] [data-accent="education"] {
-  --bw-svc: #57cf07; /* lime-600 */
-  --bw-svc-bright: #8ae64b;
-  --bw-svc-ink: #2f6b04;
-  --bw-svc-soft: #eefae1;
-}
-
-:root[data-design="industrial"] [data-accent="global"] {
-  --bw-svc: #ca59ff; /* purple-600 */
-  --bw-svc-bright: #dd91ff;
-  --bw-svc-ink: #7a1aa3;
-  --bw-svc-soft: #f9ecff;
-}
 
 /* ---------------------------------------------------------------
  * 히어로 표면 (faculty.ai 실측 2026-09-01)
@@ -1232,8 +1058,7 @@
 :root[data-design="industrial"] .bw-display,
 :root[data-design="industrial"] .bw-h1,
 :root[data-design="industrial"] .bw-h2,
-:root[data-design="industrial"] .bw-title,
-:root[data-design="industrial"] .bw-audience__audience {
+:root[data-design="industrial"] .bw-title {
   word-break: keep-all;
   text-wrap: balance;
 }
@@ -1242,7 +1067,11 @@
    긴 문단에서는 pretty가 맞다 (고아 단어만 막는다) */
 :root[data-design="industrial"] .bw-body,
 :root[data-design="industrial"] .bw-body-sm,
-:root[data-design="industrial"] .bw-audience__scope {
+/* 메인은 유틸리티 클래스로 글을 짜서 위 .bw-body가 안 걸린다. 그대로 두면
+   카드 설명이 "설비 진동 데이터를 실시간 분 / 석해"처럼 어절 안에서 끊긴다. */
+:root[data-design="industrial"] .bw-home p,
+:root[data-design="industrial"] .bw-footer p,
+:root[data-design="industrial"] .bw-footer a {
   word-break: keep-all;
   text-wrap: pretty;
 }
@@ -1297,6 +1126,9 @@
   text-align: center;
 }
 
+/* 처음에는 문장 전체가 흰색이다. 구간이 화면에 들어오면(is-dimmed) 핵심 구절을
+   뺀 어절이 하나씩 0.5초에 걸쳐 30%로 흐려진다. 어절마다 시작 시점은
+   StatementBand가 인라인 transition-delay로 준다. */
 :root[data-design="industrial"] .bw-statement__text {
   display: flex;
   flex-wrap: wrap;
@@ -1305,18 +1137,23 @@
   margin: 0;
   font-size: clamp(30px, 4.6vw, 64px);
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.3;
   letter-spacing: -0.02em;
   word-break: keep-all;
 }
 
-:root[data-design="industrial"] .bw-statement__word {
-  transition: opacity 0.45s ease-out;
+:root[data-design="industrial"] .bw-statement__dim {
+  transition: opacity 0.5s ease-out;
+}
+
+:root[data-design="industrial"]
+  .bw-statement__text.is-dimmed
+  .bw-statement__dim {
+  opacity: 0.3;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root[data-design="industrial"] .bw-statement__word {
-    opacity: 1 !important;
+  :root[data-design="industrial"] .bw-statement__dim {
     transition: none;
   }
 }
@@ -1333,111 +1170,10 @@
 .bw-area-intro__link {
   margin-top: 24px;
   background: var(--bw-brand);
-  color: var(--bw-ink);
+  color: var(--bw-on-dark);
 }
 .bw-area-intro__link:hover {
   filter: brightness(1.08);
-}
-.bw-offerings {
-  border-top: 1px solid var(--bw-line-strong);
-}
-.bw-offering {
-  display: grid;
-  gap: 24px;
-  padding: 40px 0;
-  border-bottom: 1px solid var(--bw-line);
-}
-.bw-consulting-process {
-  background: var(--bw-surface-tinted);
-}
-.bw-process-flow {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-.bw-process-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
-  gap: 12px 24px;
-  padding: 0 0 40px;
-}
-.bw-process-step:last-child {
-  padding-bottom: 0;
-}
-.bw-process-step::before {
-  content: "";
-  position: absolute;
-  left: 21px;
-  top: 44px;
-  bottom: 0;
-  width: 1px;
-  background: var(--bw-line-strong);
-}
-.bw-process-step:last-child::before {
-  display: none;
-}
-.bw-process-step .bw-marker {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--bw-surface-dark);
-  color: var(--bw-graphic);
-}
-.bw-process-step h3 {
-  align-self: center;
-}
-.bw-process-step p {
-  grid-column: 2;
-}
-.bw-education-process {
-  background: var(--bw-surface-tinted);
-  box-shadow: 0 0 0 100vmax var(--bw-surface-tinted);
-  clip-path: inset(0 -100vmax);
-}
-.bw-learning-flow {
-  position: relative;
-  display: grid;
-  gap: 48px;
-  padding-left: 64px;
-}
-.bw-learning-step {
-  position: relative;
-  padding: 0 0 48px;
-  border-bottom: 1px solid var(--bw-line-strong);
-}
-.bw-learning-step:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-.bw-learning-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  left: -46px;
-  top: 36px;
-  bottom: -48px;
-  width: 1px;
-  background: var(--bw-line-strong);
-}
-.bw-learning-step__inner {
-  display: grid;
-  gap: 32px;
-}
-.bw-learning-step__image {
-  min-height: 280px;
-  border-radius: var(--bw-radius-card);
-}
-.bw-learning-step .bw-marker {
-  position: absolute;
-  left: -64px;
-  top: 0;
-  background: var(--bw-surface-dark);
-  color: var(--bw-graphic);
-}
-.bw-learning-step .bw-chip {
-  background: transparent;
-  color: var(--bw-graphic-ink);
-  padding-left: 0;
 }
 .ind-btn:focus-visible {
   outline: 2px solid var(--bw-graphic-ink);
@@ -1454,54 +1190,10 @@ section[data-variant="media"] a:focus-visible {
     grid-template-columns: 1fr 1fr;
     gap: 48px;
   }
-  .bw-offering {
-    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-    gap: 48px;
-  }
-  .bw-process-step {
-    grid-template-columns: 44px minmax(0, 0.5fr) minmax(0, 1fr);
-    column-gap: 32px;
-    min-height: 128px;
-  }
-  .bw-process-step p {
-    grid-column: 3;
-    padding-top: 8px;
-  }
-  .bw-process-step h3 {
-    align-self: start;
-    padding-top: 8px;
-  }
-  .bw-learning-step__inner {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: 48px;
-  }
-  .bw-learning-step__image {
-    min-height: 320px;
-  }
 }
 @media (max-width: 767px) {
-  .bw-learning-flow {
-    padding-left: 48px;
-  }
-  .bw-learning-step .bw-marker {
-    left: -48px;
-  }
-  .bw-learning-step:not(:last-child)::after {
-    left: -30px;
-  }
   .bw-area-intro {
     padding: 24px;
-  }
-  .bw-audience--rail .bw-audience__links {
-    display: grid;
-  }
-  .bw-audience--rail .bw-audience__links > li,
-  .bw-audience__link {
-    min-width: 0;
-  }
-  .bw-audience__link {
-    width: 100%;
-    font-size: 14px;
   }
 }
 
@@ -1516,4 +1208,145 @@ section[data-variant="media"] a:focus-visible {
 .ind-dark :focus-visible,
 section[data-variant="cta"] :focus-visible {
   outline-color: var(--bw-accent-strong);
+}
+
+/* ---------------------------------------------------------------
+ * 이유 네 칸
+ *
+ * 레퍼런스처럼 채워진 칸이 마우스를 따라 옮겨 다닌다. 처음에는 첫 칸이
+ * 채워져 있어 구간에 색이 있고, 다른 칸을 가리키면 그쪽으로 넘어간다.
+ * 상태가 칸 사이를 오가므로 유틸리티 클래스로는 못 쓰고 여기서 정한다.
+ * 색은 변수 넷으로만 바꾼다. 켜고 끄는 규칙이 한 줄로 끝난다.
+ * --------------------------------------------------------------- */
+:root[data-design="industrial"] .bw-proof {
+  --proof-bg: var(--bw-surface-muted);
+  --proof-icon: var(--bw-accent);
+  --proof-label: var(--bw-muted);
+  --proof-title: var(--bw-ink);
+  --proof-desc: var(--bw-ink);
+
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  background: var(--proof-bg);
+  transition:
+    background-color var(--bw-motion-standard),
+    color var(--bw-motion-standard);
+}
+
+:root[data-design="industrial"] .bw-proof__icon {
+  margin-inline: auto;
+  color: var(--proof-icon);
+  transition: color var(--bw-motion-standard);
+}
+
+:root[data-design="industrial"] .bw-proof__label {
+  margin-top: 32px;
+  font-size: 15px;
+  color: var(--proof-label);
+  transition: color var(--bw-motion-standard);
+}
+
+:root[data-design="industrial"] .bw-proof__title {
+  margin-top: 12px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--proof-title);
+  overflow-wrap: anywhere;
+  transition: color var(--bw-motion-standard);
+}
+
+:root[data-design="industrial"] .bw-proof__desc {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--proof-desc);
+  transition: color var(--bw-motion-standard);
+}
+
+/* 가리킨 칸만 채운다. 처음에 한 칸을 채워 두면 마우스를 떼었을 때 그 칸이
+   계속 눌린 것처럼 보여서, 쉬는 상태에서는 넷 다 같은 면으로 둔다. */
+:root[data-design="industrial"] .bw-proofs > li:hover .bw-proof {
+  --proof-bg: var(--bw-accent);
+  --proof-icon: var(--bw-on-dark);
+  --proof-label: rgb(255 255 255 / 75%);
+  --proof-title: var(--bw-on-dark);
+  --proof-desc: rgb(255 255 255 / 85%);
+}
+
+@media (min-width: 1024px) {
+  :root[data-design="industrial"] .bw-proof__label,
+  :root[data-design="industrial"] .bw-proof__desc {
+    font-size: 16px;
+  }
+
+  :root[data-design="industrial"] .bw-proof__title {
+    font-size: 24px;
+  }
+}
+
+/* ---------------------------------------------------------------
+ * 문의 블록의 면
+ *
+ * 검은 사각형 하나로는 페이지 끝이 비어 보인다는 지적을 받았다. 강조색과
+ * 그보다 밝은 보라, 한 단 푸른 값을 큰 원으로 겹쳐 번지게 하고 그 위에
+ * 그레인을 얹는다. 색은 셋 다 팔레트 안에 있고 푸른 값만 이 면 전용이다.
+ *
+ * 메인은 이 블록이 화면 폭을 다 쓰므로 모서리를 깎으면 페이지 가장자리에
+ * 둥근 자국이 남는다. 메인에서만 각을 세우고 글을 가운데로 모은다.
+ * --------------------------------------------------------------- */
+:root[data-design="industrial"] {
+  --bw-cta-blue: #3f6fd8; /* 문의 면 전용. 강조색과 같은 계열의 푸른 쪽 */
+}
+
+section[data-variant="cta"] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--bw-surface-dark);
+  background-image:
+    radial-gradient(72% 125% at 4% 10%, var(--bw-cta-blue), transparent 66%),
+    radial-gradient(66% 115% at 96% 18%, var(--bw-accent), transparent 64%),
+    radial-gradient(
+      54% 95% at 74% 108%,
+      color-mix(in oklab, var(--bw-accent-strong) 78%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      62% 105% at 20% 112%,
+      color-mix(in oklab, var(--bw-cta-blue) 70%, transparent),
+      transparent 72%
+    ),
+    /* 바닥 깔개. 이게 없으면 원과 원 사이가 검게 남아 구간이 둘로 갈라진다 */
+    linear-gradient(
+        112deg,
+        color-mix(in oklab, var(--bw-cta-blue) 52%, var(--bw-surface-dark)) 0%,
+        color-mix(in oklab, var(--bw-accent) 46%, var(--bw-surface-dark)) 52%,
+        var(--bw-surface-dark-deep) 100%
+      );
+}
+
+/* 그레인. 히어로와 같은 한 장을 쓴다 */
+section[data-variant="cta"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+:root[data-design="industrial"] main .home-contact-cta {
+  border-radius: 0;
+  padding-block: var(--bw-space-9);
+  text-align: center;
+}
+
+:root[data-design="industrial"] main .home-contact-cta > * {
+  margin-inline: auto;
 }

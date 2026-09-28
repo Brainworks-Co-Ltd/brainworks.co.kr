@@ -26,7 +26,7 @@ function assertRateLimit(ipAddress: string) {
 function hashRequestId(requestId: string) { return createHash("sha256").update(requestId).digest("hex"); }
 
 function mailMessage(input: ContactInput, recipient: string): { to: string; subject: string; text: string; replyTo: string } {
-  const topicLabels = { solution: "AI 솔루션", consulting: "AI 컨설팅", education: "AI 전문교육", global: "글로벌 프로그램", other: "기타" };
+  const topicLabels = { solution: "AI 솔루션", consulting: "AI/AX 컨설팅", education: "AI 전문교육", global: "글로벌 프로그램", other: "기타" };
   return { to: recipient, subject: `[브레인웍스 문의] ${topicLabels[input.topic]}`, replyTo: input.email, text: [`문의 목적: ${topicLabels[input.topic]}`, `사업 영역: ${input.area || "없음"}`, `이름: ${input.name}`, `이메일: ${input.email}`, `회사명: ${input.company || "없음"}`, "", input.message].join("\n") };
 }
 

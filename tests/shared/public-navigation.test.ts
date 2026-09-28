@@ -63,8 +63,8 @@ describe("공개 내비게이션 계약", () => {
       "smartcity",
     ]);
     expect(business.megaMenu?.areas[0]).toMatchObject({
-      // 메뉴에서 영역을 누르면 사업 영역 구간까지 내려가야 한다.
-      href: "/services?area=manufacturing#business-areas",
+      // 메뉴에서 영역을 누르면 그 영역의 상세 페이지로 이동해야 한다.
+      href: "/services/manufacturing",
       label: "Manufacturing AI",
     });
     expect(business.megaMenu?.services.map((service) => service.href)).toEqual([

@@ -1,22 +1,21 @@
 import React from "react";
+import { Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
-import { EditorialSection } from "@/components/public/EditorialSection";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
+import DetailSectionHead from "@/components/public/DetailSectionHead";
+import ProcessSteps from "@/components/public/ProcessSteps";
 
 const copy = {
   ko: {
-    heroTitle: "AI 컨설팅",
-    heroSubtitle: "전략 수립부터 구축, 고도화까지 현장에 맞춘 AI 컨설팅 제공",
-    // 상단 계약 — docs/designs/detail-page-roles.md. heroTitle은 SeoMetadata가
-    // 계속 쓰므로 남겨두고, 화면 h1에는 대상을 올린다.
-    heroAudience: "무엇을 어떻게 도입할지부터 정해야 하는 담당자",
-    heroScope:
-      "대상 문제와 제공 가치, 진행 과정을 설명하고 상담으로 연결합니다.",
+    heroTitle: "AI/AX 컨설팅",
+    // 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정).
+    // heroTitle은 SeoMetadata와 화면 h1이 함께 쓴다.
+    heroSubtitle:
+      "전략 수립과 구축, 고도화를 현장에 맞춰 지원하는 AI/AX 컨설팅",
     heroCta: "상담 요청",
     valueTitle: "주요 컨설팅 가치",
     processTitle: "컨설팅 단계",
@@ -26,12 +25,9 @@ const copy = {
       "팀에서 겪고 있는 과제를 알려주시면, 데이터 진단부터 파일럿 설계까지 맞춤 제안을 드립니다.",
   },
   en: {
-    heroTitle: "AI Consulting",
+    heroTitle: "AI/AX Consulting",
     heroSubtitle:
       "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
-    heroAudience: "Teams that still need to decide what to adopt and how",
-    heroScope:
-      "Covers the problems we take on, the value we deliver, and how an engagement runs.",
     heroCta: "Request a Consultation",
     valueTitle: "How We Create Value",
     processTitle: "Consulting Methodology",
@@ -57,7 +53,7 @@ const offerings = [
       ko: [
         "현황 진단 및 성숙도 평가",
         "우선 과제 발굴 및 ROI 분석",
-        "데이터·기술 아키텍처 설계",
+        "데이터와 기술 아키텍처 설계",
         "거버넌스 및 운영 체계 수립",
       ],
       en: [
@@ -80,7 +76,7 @@ const offerings = [
     },
     bullets: {
       ko: [
-        "파일럿 및 PoC 설계·운영",
+        "파일럿 및 PoC 설계와 운영",
         "모델 개발 및 성능 개선",
         "MLOps/데이터 파이프라인 구축",
         "서비스 전환 및 운영 이관",
@@ -105,7 +101,7 @@ const offerings = [
     },
     bullets: {
       ko: [
-        "AI 교육·코칭 프로그램 운영",
+        "AI 교육과 코칭 프로그램 운영",
         "성과 관리 지표 체계화",
         "사내 거버넌스/CoE 구축",
         "지속적 고도화를 위한 체계 마련",
@@ -161,7 +157,7 @@ const processSteps = [
       en: "Deliver",
     },
     desc: {
-      ko: "모델을 개발·검증하고 MLOps 환경으로 연결",
+      ko: "모델을 개발, 검증하고 MLOps 환경으로 연결",
       en: "Build and validate the solution, connecting it to MLOps for deployment.",
     },
   },
@@ -194,12 +190,19 @@ export default function Consulting() {
           variant="media"
           media={{
             kind: "image",
-            src: "/images/services/hero/agent.webp",
+            src: "/images/home/consulting.webp",
             alt: "",
           }}
-          eyebrow={t.heroTitle}
-          title={t.heroAudience}
-          description={t.heroScope}
+          eyebrow={language === "ko" ? "사업 영역" : "Business"}
+          title={t.heroTitle}
+          heading={
+            <>
+              <span className="font-normal text-white/60">AI/AX</span>{" "}
+              {t.heroTitle.replace(/^AI\/AX /, "")}
+            </>
+          }
+          description={t.heroSubtitle}
+          chips={offerings.map((item) => item.title[language])}
           action={{
             href: "/contact?topic=consulting",
             label: t.heroCta,
@@ -210,91 +213,73 @@ export default function Consulting() {
               language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
           }}
         />
-        {/* 분기만 남는다. 대상과 범위는 히어로로 올라갔다. */}
-        <PageAudience
-          redirects={[
-            {
-              href: "/services",
-              label:
-                language === "ko"
-                  ? "도입할 제품이 정해졌다면 AI 솔루션"
-                  : "Already know which product you need? See AI Solutions",
-            },
-            {
-              href: "/education",
-              label:
-                language === "ko"
-                  ? "인력 양성이 목적이라면 AI 전문교육"
-                  : "Looking to train your people? See AI Professional Education",
-            },
-          ]}
-        />
 
-        <EditorialSection
-          eyebrow="Consulting value"
-          title={t.valueTitle}
-          surface="plain"
-          className="bw-consulting-value"
-        >
-          {/* 제공 가치는 열린 목록으로 읽고, 아래 과정은 연결된 단계로 구분한다. */}
-          <div className="bw-offerings">
-            {offerings.map((item, index) => (
-              <article
-                key={item.id}
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal bw-offering"
-              >
-                <h3 className="bw-h2 text-[var(--bw-color-ink)]">
-                  {item.title[language]}
-                </h3>
-                <div>
-                  <p className="bw-body max-w-2xl text-[var(--bw-color-muted)]">
+        <section>
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Consulting value"
+              title={t.valueTitle}
+            />
+            <ol className="grid grid-cols-1 gap-x-10 gap-y-14 lg:grid-cols-3">
+              {offerings.map((item, index) => (
+                <li
+                  key={item.id}
+                  className="bw-reveal relative border-t border-line pt-8"
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-px left-0 h-[2px] w-12 bg-accent"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="block text-[56px] font-bold leading-none tabular-nums text-accent-strong lg:text-[64px]"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-6 text-[24px] font-semibold text-ink-strong">
+                    {item.title[language]}
+                  </h3>
+                  <p className="mt-3 text-[17px] leading-[1.65] break-keep text-ink">
                     {item.description[language]}
                   </p>
-                  <ul className="mt-6 grid gap-x-8 gap-y-3 text-sm text-[var(--bw-color-ink)] sm:grid-cols-2">
-                    {item.bullets[language].map((bullet) => (
-                      <li key={bullet} className="flex items-start gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--bw-color-brand)]" />
-                        <span>{bullet}</span>
+                  <ul className="mt-6 space-y-3">
+                    {item.bullets[language].map((b) => (
+                      <li
+                        key={b}
+                        className="flex items-start gap-2 text-[15px] leading-[1.6] break-keep text-muted-foreground"
+                      >
+                        <Check
+                          aria-hidden="true"
+                          strokeWidth={2.5}
+                          className="mt-1 size-4 shrink-0 text-accent"
+                        />
+                        <span>{b}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              </article>
-            ))}
+                </li>
+              ))}
+            </ol>
           </div>
-        </EditorialSection>
+        </section>
 
-        <EditorialSection
-          eyebrow="Consulting process"
-          title={t.processTitle}
-          surface="muted"
-          className="bw-consulting-process"
-        >
-          {/* 단계 목록도 같은 규칙으로 순차 등장시킨다. 스크롤 위치에 진행도를 묶지 않고
-              뷰포트 진입 한 번으로 끝내므로 자동 재생이 아니다(명세 §23.3). */}
-          <ol className="bw-process-flow">
-            {processSteps.map((step, index) => (
-              <li
-                key={step.id}
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className="bw-reveal bw-process-step"
-              >
-                <div>
-                  <span className="bw-marker">0{step.id}</span>
-                </div>
-                <h3 className="bw-title text-[var(--bw-color-ink)]">
-                  {step.title[language]}
-                </h3>
-                <p className="bw-body text-[var(--bw-color-muted)]">
-                  {step.desc[language]}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </EditorialSection>
+        <section className="bg-tint">
+          <div className="inner">
+            <DetailSectionHead
+              eyebrow="Consulting process"
+              title={t.processTitle}
+            />
+            <ProcessSteps
+              steps={processSteps.map((step) => ({
+                title: step.title[language],
+                desc: step.desc[language],
+              }))}
+            />
+          </div>
+        </section>
 
-        <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <section className="inner">
           <ContactCtaBlock
             title={t.contactTitle}
             description={t.contactDesc}

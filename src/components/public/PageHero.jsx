@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, description?: string | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, heading?: import("react").ReactNode, description?: string | null, chips?: string[] | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 /*
@@ -25,7 +25,9 @@ function hasHangul(value) {
 function HeroContent({
   eyebrow,
   title,
+  heading,
   description,
+  chips,
   action,
   secondaryAction,
   dark,
@@ -40,8 +42,9 @@ function HeroContent({
           {eyebrow}
         </p>
       ) : null}
+      {/* heading은 굵기나 색을 나눠 그린 제목이다. 접근성 이름과 SEO는 title 문자열이 맡는다. */}
       <h1 className="bw-display mt-4 max-w-4xl [.text-center_&]:mx-auto">
-        {title}
+        {heading ?? title}
       </h1>
       {description ? (
         <p
@@ -49,6 +52,18 @@ function HeroContent({
         >
           {description}
         </p>
+      ) : null}
+      {chips && chips.length > 0 ? (
+        <ul className="mt-6 flex flex-wrap gap-2 [.text-center_&]:justify-center">
+          {chips.map((chip) => (
+            <li
+              key={chip}
+              className={`flex h-9 items-center justify-center rounded-full border px-4 text-[14px] ${dark ? "border-white/30 text-white/80" : "border-line text-muted-foreground"}`}
+            >
+              #{chip}
+            </li>
+          ))}
+        </ul>
       ) : null}
       {action || secondaryAction ? (
         <div className="mt-8 flex flex-wrap gap-3 [.text-center_&]:justify-center">
@@ -80,10 +95,12 @@ export function PageHero({
   eyebrow,
   title,
   description,
+  chips = null,
   action = null,
   secondaryAction = null,
   dark = false,
   children = null,
+  heading = null,
   variant = "plain",
   media = null,
   overlayClassName = "",
@@ -93,7 +110,9 @@ export function PageHero({
     <HeroContent
       eyebrow={eyebrow}
       title={title}
+      heading={heading}
       description={description}
+      chips={chips}
       action={action}
       secondaryAction={secondaryAction}
       dark={dark || effectiveVariant === "media"}

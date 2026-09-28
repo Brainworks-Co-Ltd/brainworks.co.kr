@@ -2,91 +2,102 @@ import { useEffect, useRef } from "react";
 import { useLocale } from "@/shared/routing/useLocale";
 
 /*
- * 포인터와 가까운 어절을 밝히는 선언 구간이다. 어절의 실제 사각형까지
- * 거리를 계산하므로 여러 줄로 바뀌어도 포인터 주변 문구가 자연스럽게
- * 이어진다. 정밀 포인터가 없거나 동작 줄이기를 사용하면 서버 렌더
- * 상태인 완전한 불투명도를 유지한다.
+ * 선언 구간. 처음에는 문장 전체가 흰색이다. 구간이 화면에 들어오면 잠시 뒤
+ * 핵심 구절(emphasis)을 뺀 어절이 앞에서부터 하나씩 30%로 흐려져 핵심 구절만
+ * 남는다. 한 번 흐려지면 그대로 둔다.
+ *
+ * 타이밍은 레퍼런스를 실측한 값이다. 화면 진입 후 약 0.75초 뒤 시작하고,
+ * 어절 사이 간격은 0.15초, 어절 하나가 흐려지는 데 0.5초가 걸린다.
+ * 동작 줄이기에서는 애니메이션 없이 흐려진 상태로 바로 둔다.
  */
+const START_DELAY_MS = 750;
+const STAGGER_MS = 150;
 
-// 강조 밖의 문장도 충분한 대비로 읽히게 유지한다.
-const DIM = 0.65;
-// 인접 어절까지 함께 밝아지는 포인터 주변 반경이다.
-const SPOTLIGHT_RADIUS = 280;
+/*
+ * 문장을 어절로 나누고, 어절 안을 핵심 구절 경계에서 다시 자른다. "기업을"처럼
+ * 구절이 어절 중간에서 끝나면 "기업"만 남기고 조사 "을"은 흐려진다.
+ * 어절은 줄바꿈 단위로 유지하고, 흐려질 조각마다 순서를 매긴다.
+ */
+function splitWords(text, emphasis) {
+  const ranges = emphasis
+    .map((phrase) => {
+      const start = text.indexOf(phrase);
+      return start < 0 ? null : [start, start + phrase.length];
+    })
+    .filter(Boolean);
+  const isLit = (index) =>
+    ranges.some(([from, to]) => index >= from && index < to);
 
-function distanceToRect(x, y, rect) {
-  const dx = Math.max(rect.left - x, 0, x - rect.right);
-  const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-  return Math.hypot(dx, dy);
+  const words = [];
+  let offset = 0;
+  let dimOrder = 0;
+  for (const word of text.split(" ")) {
+    const parts = [];
+    for (let i = 0; i < word.length; i += 1) {
+      const lit = isLit(offset + i);
+      const last = parts.at(-1);
+      if (last && last.lit === lit) last.text += word[i];
+      else parts.push({ text: word[i], lit });
+    }
+    for (const part of parts) {
+      part.order = part.lit ? null : dimOrder++;
+    }
+    words.push({ word, parts });
+    offset += word.length + 1;
+  }
+  return words;
 }
 
-export function StatementBand({ eyebrow, text }) {
+/** @param {{ eyebrow?: string | null, text: string, emphasis?: string[] }} props */
+export function StatementBand({ eyebrow, text, emphasis = [] }) {
   const { language } = useLocale();
   const ref = useRef(null);
+  const words = splitWords(text, emphasis);
 
   useEffect(() => {
     const root = ref.current;
-    if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (!root || !emphasis.length) return undefined;
+    if (typeof IntersectionObserver === "undefined") {
+      root.classList.add("is-dimmed");
+      return undefined;
+    }
 
-    const words = Array.from(root.querySelectorAll("[data-word]"));
-    if (!words.length) return;
-
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
-
-    const paint = () => {
-      frame = 0;
-      const rectangles = words.map((word) => word.getBoundingClientRect());
-
-      for (let index = 0; index < words.length; index += 1) {
-        const distance = distanceToRect(
-          pointerX,
-          pointerY,
-          rectangles[index],
-        );
-        const lit = Math.max(0, 1 - distance / SPOTLIGHT_RADIUS);
-        words[index].style.opacity = String(DIM + (1 - DIM) * lit);
-      }
-    };
-
-    const onPointerMove = (event) => {
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-      if (frame) return;
-      frame = window.requestAnimationFrame(paint);
-    };
-
-    const restore = () => {
-      if (frame) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      }
-      for (const word of words) word.style.opacity = "1";
-    };
-
-    root.addEventListener("pointermove", onPointerMove, { passive: true });
-    root.addEventListener("pointerleave", restore);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      root.removeEventListener("pointermove", onPointerMove);
-      root.removeEventListener("pointerleave", restore);
-    };
-  }, [text]);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      root.classList.add("is-dimmed");
+      observer.disconnect();
+    });
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [emphasis]);
 
   return (
     <section
       className="bw-statement"
       aria-label={eyebrow || (language === "ko" ? "선언" : "Statement")}
     >
-      <div className="bw-statement__inner" ref={ref}>
+      <div className="bw-statement__inner">
         {eyebrow ? <p className="bw-statement__eyebrow">{eyebrow}</p> : null}
-        <p className="bw-statement__text">
-          {text.split(" ").map((word, i) => (
-            <span data-word key={`${word}-${i}`} className="bw-statement__word">
-              {word}
+        <p ref={ref} className="bw-statement__text">
+          {words.map(({ word, parts }, index) => (
+            <span key={`${word}-${index}`} className="bw-statement__word">
+              {parts.map((part, partIndex) => (
+                <span
+                  key={partIndex}
+                  className={
+                    part.lit ? "bw-statement__lit" : "bw-statement__dim"
+                  }
+                  style={
+                    part.lit
+                      ? undefined
+                      : {
+                          transitionDelay: `${START_DELAY_MS + part.order * STAGGER_MS}ms`,
+                        }
+                  }
+                >
+                  {part.text}
+                </span>
+              ))}
             </span>
           ))}
         </p>

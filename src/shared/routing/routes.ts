@@ -12,6 +12,7 @@ const routeDefinitions: RouteDefinition[] = [
   { key: "about.history", path: "/about/history" },
   { key: "about.honors", path: "/about/honors" },
   { key: "solutions.list", path: "/services" },
+  { key: "solutions.detail", path: "/services/:area" },
   { key: "consulting", path: "/consulting" },
   { key: "education", path: "/education" },
   { key: "globalPrograms", path: "/global-programs" },

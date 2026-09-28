@@ -17,3 +17,6 @@ __pycache__/
 /docs/**
 /graphify-out/
 /reports/migration/
+
+# SDD 작업 흔적
+.superpowers/

@@ -32,10 +32,7 @@ type NavigationLinkDefinition = {
 type NavigationDefinition =
   NavigationGroupDefinition | NavigationLinkDefinition;
 
-export type PublicNavigationChild = Omit<
-  NavigationChildDefinition,
-  "label"
-> & {
+export type PublicNavigationChild = Omit<NavigationChildDefinition, "label"> & {
   label: string;
   href: string;
 };
@@ -87,14 +84,14 @@ const definitions: NavigationDefinition[] = [
       {
         id: "solutions",
         hrefRouteKey: "solutions.list",
-        activeRouteKeys: ["solutions.list"],
+        activeRouteKeys: ["solutions.list", "solutions.detail"],
         label: { ko: "AI 솔루션", en: "AI Solutions" },
       },
       {
         id: "consulting",
         hrefRouteKey: "consulting",
         activeRouteKeys: ["consulting"],
-        label: { ko: "AI 컨설팅", en: "AI Consulting" },
+        label: { ko: "AI/AX 컨설팅", en: "AI/AX Consulting" },
       },
       {
         id: "education",

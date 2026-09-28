@@ -1,12 +1,14 @@
+import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageHero } from "@/components/public/PageHero";
-import { PageAudience } from "@/components/public/PageAudience";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { StatementBand } from "@/components/public/StatementBand";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
-import BusinessAreaExplorer from "@/components/services/BusinessAreaExplorer";
+import { Arrow } from "@/components/public/SectionTitle";
 import { useLocale } from "@/shared/routing/useLocale";
+import { getLocalizedPath } from "@/shared/routing/routes";
 import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
 
 export default function Services({ areas }) {
@@ -28,64 +30,90 @@ export default function Services({ areas }) {
         }
       />
       <main id="main-content" data-accent="solution">
-        {/* 상단 계약 — docs/designs/detail-page-roles.md
-            눈썹이 페이지 이름, h1이 대상, 설명이 범위다. 대상 문장을 접힘선 위로
-            올려 첫 화면만 보고 "이 페이지가 나를 위한 것인가"를 판단할 수 있게 한다.
-            문구는 새로 짓지 않고 03-02와 03-03 원문을 그대로 옮겼다. */}
+        {/* 상단 계약 — docs/designs/detail-page-roles.md (2026-09-16 개정)
+            눈썹이 내비게이션 분류, h1이 페이지 이름, 설명이 한 줄 서비스 설명이다. */}
         <PageHero
           variant="media"
-          media={{ kind: "image", src: "/images/services/hero/manufacturing.webp", alt: "" }}
-          eyebrow={language === "ko" ? "AI 솔루션" : "AI Solutions"}
-          title={
-            language === "ko"
-              ? "특정 산업 현장의 문제를 풀 AI 제품을 찾는 담당자"
-              : "Teams looking for an AI product to solve a problem on the floor"
-          }
+          media={{
+            kind: "image",
+            src: "/images/home/solution.webp",
+            alt: "",
+          }}
+          eyebrow={language === "ko" ? "사업 영역" : "Business"}
+          title={language === "ko" ? "AI 솔루션" : "AI Solutions"}
           description={
             language === "ko"
-              ? "제조, 에이전트, 헬스케어·바이오, 스마트시티·안전 네 영역의 솔루션을 다룹니다."
+              ? "제조, 에이전트, 헬스케어와 바이오, 스마트시티와 안전 네 영역의 솔루션을 다룹니다."
               : "Covers solutions across four domains: manufacturing, agents, healthcare and bio, and smart city and safety."
+          }
+          chips={
+            areas && areas.length > 0 ? areas.map((area) => area.title) : null
           }
           action={{
             href: "/contact?topic=solution",
             label: language === "ko" ? "솔루션 문의" : "Discuss a solution",
           }}
         />
-        <PageAudience
-          redirects={[
-            {
-              href: "/consulting",
-              label:
-                language === "ko"
-                  ? "무엇을 도입할지부터 정해야 한다면 AI 컨설팅"
-                  : "Still deciding what to adopt? See AI Consulting",
-            },
-            {
-              href: "/education",
-              label:
-                language === "ko"
-                  ? "조직 역량부터 키워야 한다면 AI 전문교육"
-                  : "Need to build team capability first? See AI Professional Education",
-            },
-          ]}
-        />
 
-        <div className="mx-auto max-w-6xl px-6">
-          <BusinessAreaExplorer areas={areas} />
-        </div>
+        <section>
+          <div className="inner">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-14 lg:grid-cols-2">
+              {(areas || []).map((area, index) => (
+                <Link
+                  key={area.id}
+                  href={getLocalizedPath("solutions.detail", language, {
+                    area: area.id,
+                  })}
+                  style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                  className="bw-reveal group flex flex-col"
+                >
+                  <span className="relative block aspect-[16/10] overflow-hidden rounded-2xl">
+                    <Image
+                      src={area.heroImage}
+                      alt={area.title}
+                      fill
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </span>
+                  <p className="mt-6 text-[14px] font-bold text-accent-text">
+                    {area.subtitle}
+                  </p>
+                  <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
+                    {area.title}
+                  </h3>
+                  <p className="mt-3 text-[18px] leading-[1.75]">
+                    {area.description}
+                  </p>
+                  <span className="mt-6 inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
+                    {language === "ko" ? "자세히 보기" : "Learn more"}
+                    <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
-        {/* 문구는 새로 짓지 않는다. 08 §1.1이 대표 메시지 원문[src:1]으로
-            인용한 문장을 §1.4의 합니다체로 옮긴 것이다. */}
+        {/* 결과를 말하는 한 문장이다. 앞줄은 무엇으로 일하는지, 뒷줄은 고객에게
+            생기는 상태를 말한다. 뒷줄이 늘 서 있고 앞줄은 포인터가 닿을 때 밝아진다.
+            영문의 "help build"는 "만듭니다"가 회사를 세운다는 뜻으로 읽히지 않게 한 것이다. */}
         <StatementBand
-          eyebrow={language === "ko" ? "브레인웍스가 믿는 것" : "What we believe"}
+          eyebrow={language === "ko" ? "브레인웍스가 하는 일" : "What we do"}
           text={
             language === "ko"
-              ? "AI가 모든 산업과 조직에 보편적으로 적용될 수 있다고 믿지 않습니다. 산업마다 다른 해결책을 설계합니다."
-              : "We do not believe one AI fits every industry. We design a different answer for each."
+              ? "각 산업에 맞는 AI로, 사람과 AI가 함께 일하는 기업을 만듭니다."
+              : "With AI built for each industry, we help build companies where people and AI work together."
+          }
+          emphasis={
+            language === "ko"
+              ? ["사람과 AI가 함께 일하는 기업"]
+              : // en 초안, 회사 확인
+                ["companies where people and AI work together"]
           }
         />
 
-        <section className="mx-auto max-w-5xl px-6">
+        <section className="inner">
           <ContactCtaBlock
             title={
               language === "ko"
@@ -108,5 +136,9 @@ export default function Services({ areas }) {
 }
 
 export async function getServerSideProps({ locale }) {
-  return { props: { areas: await getPublishedBusinessAreas(locale === "en" ? "en" : "ko") } };
+  return {
+    props: {
+      areas: await getPublishedBusinessAreas(locale === "en" ? "en" : "ko"),
+    },
+  };
 }
