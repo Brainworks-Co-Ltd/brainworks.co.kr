@@ -8,7 +8,6 @@ import HomeMedia from "@/components/home/HomeMedia";
 import HomeServices from "@/components/home/HomeServices";
 import HomeProofs from "@/components/home/HomeProofs";
 import AreasRail from "@/components/home/AreasRail";
-import SolutionsRail from "@/components/home/SolutionsRail";
 import NewsRail from "@/components/home/NewsRail";
 import { useLocale } from "@/shared/routing/useLocale";
 import { homeCopy } from "@/data/homeCopy";
@@ -33,7 +32,6 @@ export default function Home({ newsItems, popupNotices, areas }) {
         <HomeServices />
         <HomeProofs />
         <AreasRail areas={areas} />
-        <SolutionsRail areas={areas} />
         <NewsRail items={newsItems} />
         <ContactCtaBlock
           className="home-contact-cta"

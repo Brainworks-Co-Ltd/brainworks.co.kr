@@ -2,9 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedPath } from "@/shared/routing/routes";
-import Rail from "@/components/public/Rail";
-import SectionTitle, { Arrow } from "@/components/public/SectionTitle";
+import HomeCard from "@/components/home/HomeCard";
+import SectionTitle from "@/components/public/SectionTitle";
 import { homeCopy } from "@/data/homeCopy";
+
+/*
+ * 사업 영역 넷을 한 줄에 고정하고, 각 영역 카드 아래에 그 영역의 솔루션을
+ * 매단다. 영역이 분류, 솔루션이 그 안의 제품이라는 관계를 한 섹션에서 보인다.
+ * 솔루션 줄은 기존 나타남 효과(.bw-reveal)에 순서 지연만 줘서 위에서부터
+ * 차례로 드러난다. 모션 시간과 곡선은 --bw-motion-move 하나를 그대로 쓴다.
+ */
+const STAGGER_MS = 90;
 
 export default function AreasRail({ areas = [] }) {
   const { language } = useLocale();
@@ -12,47 +20,52 @@ export default function AreasRail({ areas = [] }) {
 
   return (
     <section className="py-[120px] lg:py-[250px]">
-      <SectionTitle>{homeCopy.areasSection.title[language]}</SectionTitle>
-      <div className="bw-reveal">
-        <Rail>
-          {areas.map((area) => (
-            /* 그림을 앞세우는 카드라 옅은 면에 얹는다. 예전에는 사진을 카드
-               전체에 깔고 흰 글자를 올렸는데, 사진마다 밝은 부분이 달라
-               제목이 묻히는 자리가 생겼다. 그림은 안쪽에 두고 글은 면 위에서
-               읽게 한다. */
-            <li key={area.id} className="group w-[280px] lg:w-[409px]">
-              <Link
-                href={`${listPath}?area=${encodeURIComponent(area.id)}#business-areas`}
-                className="flex h-full flex-col rounded-[24px] bg-tint p-6 text-center transition-colors duration-200 hover:bg-[color-mix(in_oklab,var(--bw-accent)_10%,var(--bw-surface-muted))] lg:p-8"
-              >
-                <span className="relative block aspect-[16/10] overflow-hidden rounded-2xl">
-                  <Image
-                    src={area.heroImage}
-                    alt={area.title || area.name || ""}
-                    fill
-                    sizes="409px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </span>
-                {/* 제목은 heading으로 둔다. 의미도 맞고, 한글 줄바꿈 규칙
-                    (keep-all, balance)이 heading에 걸려 있어 어절이 안 쪼개진다. */}
-                <h3 className="mt-6 text-[22px] font-semibold text-ink-strong lg:text-[26px]">
-                  {area.title || area.name}
-                </h3>
-                <p className="mt-3 text-[15px] leading-[1.6] text-muted lg:text-[16px]">
-                  {area.subtitle}
-                </p>
-                <span className="mt-auto pt-7">
-                  <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
-                    {language === "ko" ? "자세히 보기" : "Learn more"}
-                    <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-                  </span>
-                </span>
-              </Link>
+      <SectionTitle sub={homeCopy.solutionsSection.title[language]}>
+        {homeCopy.areasSection.title[language]}
+      </SectionTitle>
+      <ul className="inner grid grid-cols-2 gap-x-6 gap-y-14 lg:grid-cols-4">
+        {areas.map((area) => {
+          const href = `${listPath}?area=${encodeURIComponent(area.id)}#business-areas`;
+          return (
+            <li key={area.id}>
+              <div className="bw-reveal">
+                <HomeCard
+                  href={href}
+                  image={area.heroImage}
+                  alt={area.title || area.name || ""}
+                  title={area.title || area.name}
+                  description={area.subtitle}
+                />
+              </div>
+              <ul className="mt-6 grid gap-4 border-t border-line pt-5">
+                {(area.solutions || []).map((solution, index) => (
+                  <li
+                    key={solution.id}
+                    className="bw-reveal"
+                    style={{ transitionDelay: `${(index + 1) * STAGGER_MS}ms` }}
+                  >
+                    <Link
+                      href={href}
+                      className="group flex items-center gap-3 text-[16px] font-semibold text-ink-strong transition-colors hover:text-accent-text"
+                    >
+                      <span className="relative block h-12 w-16 shrink-0 overflow-hidden rounded-lg">
+                        <Image
+                          src={solution.image}
+                          alt=""
+                          fill
+                          sizes="64px"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </span>
+                      <span className="leading-[1.4]">{solution.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </li>
-          ))}
-        </Rail>
-      </div>
+          );
+        })}
+      </ul>
     </section>
   );
 }
