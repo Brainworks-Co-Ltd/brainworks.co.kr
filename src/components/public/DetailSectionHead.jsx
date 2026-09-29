@@ -14,7 +14,7 @@ export default function DetailSectionHead({
   return (
     <div>
       {eyebrow && (
-        <p className="text-center text-[16px] font-bold text-accent-text mb-4">
+        <p className="text-center text-[17px] font-bold text-accent-text mb-4">
           {eyebrow}
         </p>
       )}

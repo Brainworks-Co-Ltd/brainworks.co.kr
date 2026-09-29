@@ -93,7 +93,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <Link
             href={getLocalizedPath("contact", language)}
-            className="pill pill-dark h-10 px-6 text-[15px] max-lg:hidden!"
+            className="pill pill-dark h-10 px-6 text-[16px] max-lg:hidden!"
           >
             {language === "ko" ? "문의하기" : "Contact"}
           </Link>

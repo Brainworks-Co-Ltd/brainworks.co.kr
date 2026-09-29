@@ -255,7 +255,7 @@ export default function Outbound() {
             면이 되도록 어두운 구간에 얹는다. 이 페이지의 유일한 어두운 구간이다. */}
         <section className="bg-ink-strong text-white">
           <div className="inner text-center">
-            <p className="text-[16px] font-semibold text-accent-strong">
+            <p className="text-[17px] font-semibold text-accent-strong">
               Global network
             </p>
             <h2 className="mt-4 text-[28px] font-semibold leading-[1.3] lg:text-[40px]">
@@ -273,7 +273,7 @@ export default function Outbound() {
                   <span className="text-[26px] font-semibold leading-none lg:text-[38px]">
                     {country.label[language]}
                   </span>
-                  <span className="text-[15px] font-semibold text-accent-strong lg:text-[17px]">
+                  <span className="text-[16px] font-semibold text-accent-strong lg:text-[17px]">
                     {country.count}
                   </span>
                 </li>
@@ -297,7 +297,7 @@ export default function Outbound() {
                   className="bw-reveal grid gap-6 border-t border-line pt-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16"
                 >
                   <div>
-                    <p className="text-[16px] font-bold text-accent-text">
+                    <p className="text-[17px] font-bold text-accent-text">
                       {program.badge[language]}
                     </p>
                     <h3 className="mt-3 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
@@ -341,7 +341,7 @@ export default function Outbound() {
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
                   className="bw-reveal border-t border-line pt-8"
                 >
-                  <p className="text-[16px] font-bold text-accent-text">
+                  <p className="text-[17px] font-bold text-accent-text">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                   <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">

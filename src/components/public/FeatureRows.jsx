@@ -16,7 +16,7 @@ export default function FeatureRows({ items }) {
           className="bw-reveal grid grid-cols-1 gap-6 border-t border-line py-10 lg:grid-cols-12 lg:gap-12 lg:py-14"
         >
           <div className="lg:col-span-7">
-            <h3 className="flex items-baseline gap-3 text-[15px] font-bold text-accent-text lg:text-[16px]">
+            <h3 className="flex items-baseline gap-3 text-[16px] font-bold text-accent-text lg:text-[17px]">
               <span className="tabular-nums">
                 {String(index + 1).padStart(2, "0")}
               </span>

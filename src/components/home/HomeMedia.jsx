@@ -151,7 +151,7 @@ function ClipReel({ language, children }) {
         />
       ))}
       <MediaOverlay>
-        <div className="mb-4 flex items-center gap-3 text-[13px] font-semibold text-white lg:mb-6 lg:gap-4 lg:text-[14px]">
+        <div className="mb-4 flex items-center gap-3 text-[14px] font-semibold text-white lg:mb-6 lg:gap-4 lg:text-[15px]">
           <span>{String(current + 1).padStart(2, "0")}</span>
           <span className="relative h-[2px] w-16 overflow-hidden bg-white/35 lg:w-[150px]">
             <span

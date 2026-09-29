@@ -58,7 +58,7 @@ function HeroContent({
           {chips.map((chip) => (
             <li
               key={chip}
-              className={`flex h-9 items-center justify-center rounded-full border px-4 text-[14px] ${dark ? "border-white/30 text-white/80" : "border-line text-muted-foreground"}`}
+              className={`flex h-9 items-center justify-center rounded-full border px-4 text-[15px] ${dark ? "border-white/30 text-white/80" : "border-line text-muted-foreground"}`}
             >
               #{chip}
             </li>

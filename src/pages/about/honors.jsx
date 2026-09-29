@@ -298,7 +298,7 @@ export default function HonorsPage({
                     <div className="mt-6 space-y-10">
                       {partnerGroups.map((group) => (
                         <div key={group.id}>
-                          <h3 className="text-[15px] font-bold text-accent-text">
+                          <h3 className="text-[16px] font-bold text-accent-text">
                             {group.label[language]}
                           </h3>
                           <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

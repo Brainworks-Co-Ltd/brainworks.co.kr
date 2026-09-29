@@ -61,7 +61,7 @@ export default function CompanyHistoryPage() {
                         </p>
                       </div>
                       <div>
-                        <h2 className="text-[15px] font-bold text-accent-text lg:text-[16px]">
+                        <h2 className="text-[16px] font-bold text-accent-text lg:text-[17px]">
                           {item.title[language]}
                         </h2>
                         <p className="mt-3 text-[20px] font-semibold leading-[1.5] break-keep text-ink-strong lg:text-[24px]">
@@ -75,7 +75,7 @@ export default function CompanyHistoryPage() {
                             return (
                               <li
                                 key={bullet}
-                                className="grid grid-cols-[72px_1fr] gap-4 text-[16px] leading-[1.65] break-keep lg:grid-cols-[88px_1fr]"
+                                className="grid grid-cols-[72px_1fr] gap-4 text-[17px] leading-[1.65] break-keep lg:grid-cols-[88px_1fr]"
                               >
                                 <span className="font-semibold tabular-nums text-accent-text">
                                   {date ? date.replace(/[.:]$/, "") : ""}

@@ -32,13 +32,13 @@ export default function NewsRail({ items = [] }) {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <p className="mt-8 text-[14px] font-bold text-accent-text">
+                <p className="mt-8 text-[15px] font-bold text-accent-text">
                   {item.category}
                 </p>
                 <h3 className="mt-3 line-clamp-2 text-[18px] font-semibold leading-[1.45] text-ink-strong transition-colors group-hover:text-accent-text lg:text-[22px]">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-[14px] text-muted-foreground">
+                <p className="mt-3 text-[15px] text-muted-foreground">
                   {item.date.replaceAll("-", ".")}
                 </p>
               </Link>

@@ -39,10 +39,10 @@ export default function HomeServices() {
                     <h3 className="text-[22px] font-semibold text-white lg:text-[26px]">
                       {service.name[language]}
                     </h3>
-                    <p className="mt-2 text-[15px] leading-[1.6] text-white/85 lg:mt-3 lg:text-[16px]">
+                    <p className="mt-2 text-[16px] leading-[1.6] text-white/85 lg:mt-3 lg:text-[17px]">
                       {service.desc[language]}
                     </p>
-                    <span className="mt-4 inline-flex items-center gap-2 text-[15px] font-semibold text-white lg:mt-6">
+                    <span className="mt-4 inline-flex items-center gap-2 text-[16px] font-semibold text-white lg:mt-6">
                       {language === "ko" ? "자세히 보기" : "Learn more"}{" "}
                       <Arrow />
                     </span>

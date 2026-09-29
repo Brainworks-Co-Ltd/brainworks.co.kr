@@ -20,7 +20,7 @@ export default function ProcessSteps({ steps }) {
             <span className="size-3 shrink-0 rounded-full bg-accent" />
             <span className="h-[2px] w-full bg-line" />
           </div>
-          <p className="mt-4 text-[16px] font-bold text-accent-text lg:mt-6">
+          <p className="mt-4 text-[17px] font-bold text-accent-text lg:mt-6">
             {`STEP ${String(index + 1).padStart(2, "0")}`}
           </p>
           <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">

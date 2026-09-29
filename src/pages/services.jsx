@@ -76,7 +76,7 @@ export default function Services({ areas }) {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </span>
-                  <p className="mt-6 text-[14px] font-bold text-accent-text">
+                  <p className="mt-6 text-[15px] font-bold text-accent-text">
                     {area.subtitle}
                   </p>
                   <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
@@ -85,7 +85,7 @@ export default function Services({ areas }) {
                   <p className="mt-3 text-[18px] leading-[1.75]">
                     {area.description}
                   </p>
-                  <span className="mt-6 inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[15px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
+                  <span className="mt-6 inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[16px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
                     {language === "ko" ? "자세히 보기" : "Learn more"}
                     <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
                   </span>

@@ -65,7 +65,7 @@ function NoticeCard({ notice, language, onDismiss }) {
           className={
             imageOnly
               ? "sr-only"
-              : "text-[16px] font-semibold leading-[1.45] text-ink-strong"
+              : "text-[17px] font-semibold leading-[1.45] text-ink-strong"
           }
         >
           {notice.title}
@@ -91,7 +91,7 @@ function NoticeCard({ notice, language, onDismiss }) {
             />
           ) : null}
           {notice.bodyMarkdown ? (
-            <p className="whitespace-pre-wrap text-[14px] leading-6 text-muted-foreground">
+            <p className="whitespace-pre-wrap text-[15px] leading-6 text-muted-foreground">
               {notice.bodyMarkdown}
             </p>
           ) : null}
@@ -107,7 +107,7 @@ function NoticeCard({ notice, language, onDismiss }) {
       ) : null}
 
       <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4">
-        <label className="flex items-center gap-2 text-[14px] text-muted-foreground">
+        <label className="flex items-center gap-2 text-[15px] text-muted-foreground">
           <input
             type="checkbox"
             checked={keepHiddenToday}

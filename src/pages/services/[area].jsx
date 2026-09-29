@@ -97,7 +97,7 @@ export default function BusinessAreaDetail({ area }) {
                         />
                       </div>
                       <div>
-                        <h3 className="flex items-baseline gap-3 text-[15px] font-bold text-accent-text lg:text-[16px]">
+                        <h3 className="flex items-baseline gap-3 text-[16px] font-bold text-accent-text lg:text-[17px]">
                           <span className="tabular-nums">
                             {String(index + 1).padStart(2, "0")}
                           </span>

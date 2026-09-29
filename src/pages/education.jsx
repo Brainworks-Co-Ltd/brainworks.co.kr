@@ -492,7 +492,7 @@ const heroChips = {
 };
 
 const CHIP_CLASS =
-  "inline-flex h-9 items-center rounded-full bg-accent/10 px-4 text-[14px] font-medium text-accent-text";
+  "inline-flex h-9 items-center rounded-full bg-accent/10 px-4 text-[15px] font-medium text-accent-text";
 
 export default function Education() {
   const { language } = useLocale();
@@ -583,7 +583,7 @@ export default function Education() {
                       >
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[15px] font-bold text-accent-text lg:text-[16px]">
+                      <h3 className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-[16px] font-bold text-accent-text lg:text-[17px]">
                         {step.focus[language]}
                         <span className="font-medium text-muted-foreground">
                           {step.stage[language]}
@@ -659,20 +659,20 @@ export default function Education() {
                     aria-hidden="true"
                     className="absolute -top-px left-0 h-[2px] w-12 bg-accent"
                   />
-                  <p className="text-[15px] font-bold tabular-nums text-accent-text">
+                  <p className="text-[16px] font-bold tabular-nums text-accent-text">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                   <h3 className="mt-3 text-[22px] font-semibold leading-[1.35] break-keep text-ink-strong">
                     {track.title[language]}
                   </h3>
-                  <p className="mt-3 text-[16px] leading-[1.65] break-keep text-ink">
+                  <p className="mt-3 text-[17px] leading-[1.65] break-keep text-ink">
                     {track.description[language]}
                   </p>
                   <ul className="mt-6 space-y-3">
                     {track.points[language].map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2 text-[15px] leading-[1.6] break-keep text-muted-foreground"
+                        className="flex items-start gap-2 text-[16px] leading-[1.6] break-keep text-muted-foreground"
                       >
                         <Check
                           aria-hidden="true"
@@ -770,7 +770,7 @@ export default function Education() {
                       +
                     </span>
                   </summary>
-                  <p className="pb-6 text-[16px] text-muted-foreground">
+                  <p className="pb-6 text-[17px] text-muted-foreground">
                     {item.answer[language]}
                   </p>
                 </details>
