@@ -17,7 +17,7 @@ export const historyItems = [
         'May 2026: Selected as the lead company for the MSIT and NIPA AI semiconductor overseas demonstration program.',
         'Jun 2026: Won the Korea Leading Company Startup Award in AI Solutions for the second consecutive year (MoneyToday).',
         'Jun 2026: Signed an AI and software industry-academia MOU with Sunchon National University.',
-        'Jul 2026: Co-ran an industrial AI specialist programme with Soonchunhyang University.',
+        'Jul 2026: Co-ran an industrial AI specialist program with Soonchunhyang University.',
       ],
     },
   },

@@ -47,8 +47,8 @@ const copy = {
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
     ctaPrimary: "Request a Consultation",
-    sectionTitle: "Programme Components",
-    aiSectionTitle: "Global AI Professional Programmes",
+    sectionTitle: "Program Components",
+    aiSectionTitle: "Global AI Professional Programs",
     aiSectionSubtitle:
       "Develop global-ready AI talent through hackathons, internships, and expert-led courses.",
     contactTitle: "Tell Us Your Global Plan",
@@ -136,11 +136,11 @@ const programs = [
     badge: { ko: "글로벌 연수", en: "Global Training" },
     title: {
       ko: "해외 연수로 글로벌 역량 강화",
-      en: "Executive Programmes & Immersion Trips",
+      en: "Executive Programs & Immersion Trips",
     },
     description: {
       ko: "미국과 베트남 주요 대학 및 기업과 연계한 연수 프로그램으로 글로벌 역량 강화",
-      en: "Strengthen global capability through immersion programmes with universities and companies across the US and Vietnam.",
+      en: "Strengthen global capability through immersion programs with universities and companies across the US and Vietnam.",
     },
     bullets: {
       ko: [
@@ -151,7 +151,7 @@ const programs = [
       en: [
         "Assess capability gaps and build tailored curricula",
         "Deliver seminars and workshops with partner universities and enterprises",
-        "Provide post-programme coaching to execute global strategies",
+        "Provide post-program coaching to execute global strategies",
       ],
     },
   },
@@ -194,7 +194,7 @@ const aiPrograms = [
       en: [
         "Tailored project matching and onboarding support",
         "Weekly performance reviews with on-site mentors",
-        "Post-programme portfolio and career coaching",
+        "Post-program portfolio and career coaching",
       ],
     },
   },
@@ -203,7 +203,7 @@ const aiPrograms = [
     title: { ko: "글로벌 AI 교육", en: "Global AI Education" },
     description: {
       ko: "대학과 기관 연계형 커리큘럼으로 최신 AI 기술과 글로벌 사례 학습",
-      en: "Modular courses for universities and organisations covering advanced AI and global best practices.",
+      en: "Modular courses for universities and organizations covering advanced AI and global best practices.",
     },
     bullets: {
       ko: [

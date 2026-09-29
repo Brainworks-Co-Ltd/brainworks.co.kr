@@ -44,7 +44,7 @@ export const homeCopy = {
       name: { ko: "AI/AX 컨설팅", en: "AI/AX Consulting" },
       desc: {
         ko: "비즈니스 목표와 조직 역량에 맞춘 AI 전략과 로드맵을 세우고, 파일럿 설계부터 MLOps 환경 구성까지 전주기를 지원합니다.",
-        en: "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
+        en: "We deliver AI consulting tailored to your operations—from strategy to deployment and optimization.",
       },
       image: "/images/home/consulting.webp",
     },
@@ -65,14 +65,14 @@ export const homeCopy = {
       name: { ko: "AI 전문교육", en: "AI Professional Education" },
       desc: {
         ko: "데이터, 엔지니어링, 보안, 로봇, IoT 응용 역량을 높이는 AI 전문 교육을 운영합니다.",
-        en: "Practical AI and AX education programmes from Brainworks.",
+        en: "Practical AI and AX education programs from Brainworks.",
       },
       image: "/images/education/AI전문교육.jpg",
     },
     {
       id: "global",
       routeKey: "globalPrograms",
-      name: { ko: "글로벌 프로그램", en: "Global Programmes" },
+      name: { ko: "글로벌 프로그램", en: "Global Programs" },
       desc: {
         ko: "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원합니다.",
         en: "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
@@ -101,12 +101,12 @@ export const homeCopy = {
       label: { ko: "국가 과제", en: "National projects" },
       title: {
         ko: "국가 과제 주관사",
-        en: "Lead organisation for national projects",
+        en: "Lead organization for national projects",
       },
       desc: {
         ko: "과학기술정보통신부와 NIPA의 AI 반도체 해외 실증 지원 사업을 주관합니다.",
         // en 초안, 회사 확인
-        en: "We lead an overseas demonstration programme for AI semiconductors with MSIT and NIPA.",
+        en: "We lead an overseas demonstration program for AI semiconductors with MSIT and NIPA.",
       },
     },
     {
@@ -166,7 +166,7 @@ export const homeCopy = {
     description: {
       ko: "문의 목적과 현재 상황을 알려주시면 담당자가 확인하겠습니다.",
       // en 초안, 회사 확인
-      en: "Tell us the purpose of your enquiry and your current situation, and our team will follow up.",
+      en: "Tell us the purpose of your inquiry and your current situation, and our team will follow up.",
     },
     label: { ko: "문의하기", en: "Contact us" },
   },

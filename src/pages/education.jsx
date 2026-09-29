@@ -12,10 +12,10 @@ import DetailSectionHead from "@/components/public/DetailSectionHead";
 
 const processSteps = [
   {
-    id: "specialised-training",
+    id: "specialized-training",
     stage: {
       ko: "전문 심화 교육",
-      en: "Specialised Training",
+      en: "Specialized Training",
     },
     focus: {
       ko: "AI/AX 전문 교육",
@@ -61,7 +61,7 @@ const processSteps = [
       src: "/images/education/AI전문교육.jpg",
       alt: {
         ko: "전문 교육 워크숍 사진",
-        en: "Specialised training workshop photo",
+        en: "Specialized training workshop photo",
       },
     },
   },
@@ -444,7 +444,7 @@ const faqItems = [
   {
     question: {
       ko: "교육은 어떤 방식으로 진행되나요?",
-      en: "How is the programme delivered?",
+      en: "How is the program delivered?",
     },
     answer: {
       ko: "집중 오프라인 워크숍과 실시간 온라인 세션을 병행하며 프로젝트와 코칭을 단계별로 제공합니다.",
@@ -464,11 +464,11 @@ const faqItems = [
   {
     question: {
       ko: "커리큘럼을 기관에 맞게 구성할 수 있나요?",
-      en: "Can the curriculum be customised?",
+      en: "Can the curriculum be customized?",
     },
     answer: {
       ko: "네. 모듈 조합, 기간, 프로젝트 범위를 조정해 기관 맞춤 트랙을 설계합니다.",
-      en: "Yes. We tailor module combinations, duration, and project scope to design a dedicated track for your organisation.",
+      en: "Yes. We tailor module combinations, duration, and project scope to design a dedicated track for your organization.",
     },
   },
 ];
@@ -483,7 +483,7 @@ const heroChips = {
     "커리어 포트폴리오와 면접",
   ],
   en: [
-    "AI Specialised Training",
+    "AI Specialized Training",
     "Generative AI Intensive",
     "Hackathon & Mentoring",
     "Domestic & Global Internships",
@@ -509,7 +509,7 @@ export default function Education() {
         description={
           language === "ko"
             ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
-            : "Practical AI and AX education programmes from Brainworks."
+            : "Practical AI and AX education programs from Brainworks."
         }
       />
 
@@ -536,7 +536,7 @@ export default function Education() {
           description={
             language === "ko"
               ? "현장 중심 AI와 AX 전문교육 프로그램을 소개합니다."
-              : "Practical AI and AX education programmes from Brainworks."
+              : "Practical AI and AX education programs from Brainworks."
           }
           chips={heroChips[language]}
           action={{
@@ -784,12 +784,12 @@ export default function Education() {
             title={
               language === "ko"
                 ? "교육 상담 및 제휴 문의"
-                : "Training Enquiries"
+                : "Training Inquiries"
             }
             description={
               language === "ko"
                 ? "기관 맞춤 트랙, 제휴, 인턴 연계가 필요하다면 아래 버튼으로 문의해주세요."
-                : "Need a customised track, institutional partnership, or internship linkage? Contact us using the button below."
+                : "Need a customized track, institutional partnership, or internship linkage? Contact us using the button below."
             }
             href="/contact?topic=education"
             label={language === "ko" ? "상담 요청" : "Request a Consultation"}

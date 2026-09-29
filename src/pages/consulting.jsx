@@ -27,7 +27,7 @@ const copy = {
   en: {
     heroTitle: "AI/AX Consulting",
     heroSubtitle:
-      "We deliver AI consulting tailored to your operations—from strategy to deployment and optimisation.",
+      "We deliver AI consulting tailored to your operations—from strategy to deployment and optimization.",
     heroCta: "Request a Consultation",
     valueTitle: "How We Create Value",
     processTitle: "Consulting Methodology",
@@ -58,7 +58,7 @@ const offerings = [
       ],
       en: [
         "Current-state assessment & maturity scoring",
-        "Priority use-case discovery with ROI modelling",
+        "Priority use-case discovery with ROI modeling",
         "Data & technology architecture design",
         "Governance and operating model definition",
       ],
@@ -83,7 +83,7 @@ const offerings = [
       ],
       en: [
         "Pilot and PoC planning & execution",
-        "Model engineering and performance optimisation",
+        "Model engineering and performance optimization",
         "MLOps and data pipeline build-out",
         "Transition to production and runbook handover",
       ],
@@ -97,7 +97,7 @@ const offerings = [
     },
     description: {
       ko: "교육과 거버넌스를 통해 조직 전체로 AI 활용 문화 확산",
-      en: "We help embed AI across the organisation through education programmes and governance.",
+      en: "We help embed AI across the organization through education programs and governance.",
     },
     bullets: {
       ko: [
@@ -147,7 +147,7 @@ const processSteps = [
     },
     desc: {
       ko: "파일럿 범위와 지표, 모델링 접근 방법 정의",
-      en: "Design pilot scope, success metrics, and modelling approach.",
+      en: "Design pilot scope, success metrics, and modeling approach.",
     },
   },
   {
