@@ -3,12 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { buildPublicNavigation } from "@/shared/navigation/publicNavigation";
 import { useLocale } from "@/shared/routing/useLocale";
-import certificationsData from "@/utils/certificationsData";
-
-const certLabel = {
-  ko: "인증 및 공급기업 자격",
-  en: "Certifications & Provider Status",
-};
 
 const offices = [
   {
@@ -73,7 +67,11 @@ export default function Footer() {
               />
             </div>
             <div className="space-y-1 text-sm text-white/70">
-              <p>{language === "ko" ? "대표 강우현" : "CEO Woohyun (Austin) Kang"}</p>
+              <p>
+                {language === "ko"
+                  ? "대표 강우현"
+                  : "CEO Woohyun (Austin) Kang"}
+              </p>
               <p>Email austin@brainworks.co.kr</p>
               <p>Tel (+82) 010-6639-4084</p>
             </div>
@@ -150,32 +148,6 @@ export default function Footer() {
             </div>
           ))}
         </div>
-
-        {certificationsData.length > 0 && (
-          <section
-            aria-label={certLabel[language]}
-            className="border-t border-white/15 pt-8"
-          >
-            <h3 className="text-sm font-semibold text-white">
-              {certLabel[language]}
-            </h3>
-            <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {certificationsData.map((cert) => (
-                <li
-                  key={cert.slug}
-                  className="rounded-[var(--bw-radius-card)] border border-white/10 bg-white/5 px-4 py-3"
-                >
-                  <p className="text-xs uppercase tracking-wide text-slate-500">
-                    {cert.org[language]}
-                  </p>
-                  <p className="mt-1.5 text-sm font-semibold leading-snug text-white">
-                    {cert.title[language]}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
 
         <p className="border-t border-white/15 pt-6 text-xs text-white/70">
           © {new Date().getFullYear()} Brainworks. All rights reserved.
