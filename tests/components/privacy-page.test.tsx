@@ -27,13 +27,10 @@ const sectionHeadings = [
 ];
 
 describe("개인정보 처리방침 페이지", () => {
-  it("초안 배너를 노출한다", () => {
+  it("확정본이라 초안 배너를 노출하지 않는다", () => {
     render(<PrivacyPolicy />);
-    expect(
-      screen.getByText(
-        "이 문서는 회사 검토 전 초안입니다. 시행일과 책임자 정보는 확인 후 확정합니다.",
-      ),
-    ).toBeVisible();
+    expect(screen.queryByRole("note")).toBeNull();
+    expect(screen.queryByText(/초안/)).toBeNull();
   });
 
   it("h1은 하나만 렌더한다", () => {

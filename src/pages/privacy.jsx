@@ -7,9 +7,7 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 const content = {
   ko: {
     title: "개인정보 처리방침",
-    description: "브레인웍스 개인정보 처리방침 초안입니다.",
-    banner:
-      "이 문서는 회사 검토 전 초안입니다. 시행일과 책임자 정보는 확인 후 확정합니다.",
+    description: "브레인웍스 개인정보 처리방침입니다.",
     sections: [
       {
         heading: "1. 개인정보의 처리 목적",
@@ -59,9 +57,7 @@ const content = {
   },
   en: {
     title: "Privacy Policy",
-    description: "Draft privacy policy for Brainworks.",
-    banner:
-      "This document is a draft pending internal company review. The effective date and officer contact will be finalized after confirmation.",
+    description: "Privacy policy for Brainworks.",
     sections: [
       {
         heading: "1. Purpose of processing",
@@ -122,12 +118,6 @@ export default function PrivacyPolicy() {
       <main id="main-content">
         <PageHero title={copy.title} description={copy.description} />
         <div className="mx-auto max-w-3xl px-6 py-16">
-          <p
-            role="note"
-            className="mb-10 rounded-[var(--bw-radius-card)] border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900"
-          >
-            {copy.banner}
-          </p>
           <div className="grid gap-10">
             {copy.sections.map((section) => (
               <section key={section.heading} className="grid gap-2">
