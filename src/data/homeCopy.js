@@ -27,9 +27,9 @@ export const homeCopy = {
   },
   serviceSection: {
     title: {
-      ko: "브레인웍스는 AI 도입에 필요한 서비스를 제공합니다",
+      ko: "서비스",
       // en 초안, 회사 확인
-      en: "Brainworks provides the services you need to adopt AI",
+      en: "Services",
     },
     subtitle: {
       ko: "AI/AX 컨설팅, 솔루션 구축, 전문교육, 글로벌 프로그램",
@@ -82,9 +82,9 @@ export const homeCopy = {
   ],
   proofSection: {
     title: {
-      ko: "많은 기업과 기관이 브레인웍스를 선택하는 데에는 이유가 있습니다",
+      ko: "주요 이력",
       // en 초안, 회사 확인
-      en: "There are reasons many companies and institutions choose Brainworks",
+      en: "Track record",
     },
   },
   proofs: [
@@ -112,56 +112,62 @@ export const homeCopy = {
     {
       label: { ko: "수상", en: "Awards" },
       title: {
-        ko: "리딩기업대상 2년 연속",
-        en: "Leading Enterprise Award for two consecutive years",
+        ko: "산업을 이끄는 AI 스타트업",
+        en: "An AI startup leading its industry",
       },
       desc: {
-        ko: "대한민국리딩기업대상 AI 솔루션 부문 스타트업대상을 2년 연속 받았습니다.",
+        ko: "대한민국리딩기업대상을 2년 연속 받으며 AI 솔루션 분야를 이끄는 기업으로 인정받았습니다.",
         // en 초안, 회사 확인
-        en: "We received the startup award in the AI solutions category for two consecutive years.",
+        en: "Brainworks won the Korea Leading Company Award two years in a row as a leader in AI solutions.",
       },
     },
     {
       label: { ko: "산학 협력", en: "Industry-academic partnership" },
       title: {
-        ko: "대학과 함께 키우는 인재",
-        en: "Growing talent with universities",
+        ko: "대학과 함께 키우는 AI 인재",
+        en: "Growing AI talent with universities",
       },
       desc: {
-        ko: "국립순천대, 순천향대와 AI 인재 양성 과정을 함께 운영합니다.",
+        ko: "국내외 대학 8곳과 손잡고 산업 현장에서 일할 AI 인재를 함께 키웁니다.",
         // en 초안, 회사 확인
-        en: "We run AI talent development programmes with universities.",
+        en: "We work with eight universities in Korea and abroad to develop AI talent for industry.",
       },
     },
   ],
   areasSection: {
     title: {
-      ko: "브레인웍스의 사업 영역을 소개합니다",
+      ko: "사업 영역",
       // en 초안, 회사 확인
-      en: "Explore Brainworks business areas",
+      en: "Business areas",
     },
   },
   solutionsSection: {
     title: {
-      ko: "현장에 적용한 솔루션을 보여드립니다",
+      ko: "AI 솔루션",
       // en 초안, 회사 확인
-      en: "See the solutions applied in the field",
+      en: "AI solutions",
     },
   },
   newsSection: {
     title: {
-      ko: "브레인웍스의 최근 소식을 전합니다",
+      ko: "브레인웍스 소식",
       // en 초안, 회사 확인
-      en: "The latest news from Brainworks",
+      en: "Brainworks News",
     },
     more: { ko: "더 보기", en: "View all" },
   },
   contact: {
     title: {
-      ko: "현장의 문제를 AI로 풀 준비가 되셨나요?",
+      ko: "AI 도입 문의",
       // en 초안, 회사 확인
-      en: "Are you ready to solve a problem in your operations with AI?",
+      en: "AI adoption enquiries",
     },
-    label: { ko: "브레인웍스에 문의하기", en: "Contact Brainworks" },
+    // 문의 페이지 안내 문장과 같은 문장을 쓴다.
+    description: {
+      ko: "문의 목적과 현재 상황을 알려주시면 적합한 담당자가 확인합니다.",
+      // en 초안, 회사 확인
+      en: "The right person at Brainworks reviews each enquiry by its purpose and current situation.",
+    },
+    label: { ko: "문의하기", en: "Contact us" },
   },
 };

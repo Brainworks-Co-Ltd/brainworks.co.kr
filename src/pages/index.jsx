@@ -38,6 +38,7 @@ export default function Home({ newsItems, popupNotices, areas }) {
         <ContactCtaBlock
           className="home-contact-cta"
           title={copy.title[language]}
+          description={copy.description[language]}
           label={copy.label[language]}
         />
       </main>
