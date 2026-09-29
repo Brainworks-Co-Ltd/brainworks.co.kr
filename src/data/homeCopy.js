@@ -164,9 +164,9 @@ export const homeCopy = {
     },
     // 문의 페이지 안내 문장과 같은 문장을 쓴다.
     description: {
-      ko: "문의 목적과 현재 상황을 알려주시면 적합한 담당자가 확인합니다.",
+      ko: "문의 목적과 현재 상황을 알려주시면 담당자가 확인하겠습니다.",
       // en 초안, 회사 확인
-      en: "The right person at Brainworks reviews each enquiry by its purpose and current situation.",
+      en: "Tell us the purpose of your enquiry and your current situation, and our team will follow up.",
     },
     label: { ko: "문의하기", en: "Contact us" },
   },

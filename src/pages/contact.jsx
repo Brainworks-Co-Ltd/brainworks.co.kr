@@ -208,7 +208,7 @@ export default function Contact() {
               </h2>
               <p className="max-w-xl text-sm leading-7 text-[var(--bw-color-muted)]">
                 {language === "ko"
-                  ? "문의 목적과 현재 상황을 알려주시면 적합한 담당자가 확인합니다."
+                  ? "문의 목적과 현재 상황을 알려주시면 담당자가 확인하겠습니다."
                   : "Share your goal and context so the right person can follow up."}
               </p>
             </header>
