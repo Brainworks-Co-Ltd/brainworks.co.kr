@@ -71,10 +71,18 @@ function ClipReel({ language, children }) {
   const remaining = useRef(CLIP_MS);
   const playing = !userPaused && !focused && !hidden;
 
+  // 첫 컷이 뜬 뒤에 나머지 컷을 미리 받아 둔다. 이전/다음을 눌렀을 때
+  // 그제야 받기 시작하면 2~3초 멈춘 것처럼 보인다.
+  const [warm, setWarm] = useState(false);
+
   useEffect(() => {
     const onVisibility = () => setHidden(document.hidden);
     document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
+    const warmTimer = setTimeout(() => setWarm(true), 1500);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      clearTimeout(warmTimer);
+    };
   }, []);
 
   useEffect(() => {
@@ -135,7 +143,9 @@ function ClipReel({ language, children }) {
           poster={clip.poster}
           muted
           playsInline
-          preload={index === current || index === next ? "auto" : "none"}
+          preload={
+            warm || index === current || index === next ? "auto" : "none"
+          }
           aria-hidden="true"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`}
         />
