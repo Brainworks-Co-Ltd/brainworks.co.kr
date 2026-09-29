@@ -11,6 +11,7 @@ import client7 from "@/assets/clients/client7.png";
 import client8 from "@/assets/clients/client8.png";
 import { businessAreas } from "@/data/businessAreas";
 import { homeCopy } from "@/data/homeCopy";
+import { CarouselControls } from "@/components/ui/carousel-controls";
 
 const clients = [
   client1,
@@ -61,27 +62,69 @@ function MediaOverlay({ children }) {
 
 function ClipReel({ language, children }) {
   const [current, setCurrent] = useState(0);
+  const [userPaused, setUserPaused] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [announced, setAnnounced] = useState("");
   const videos = useRef([]);
+  // 남은 시간을 들고 있다가 다시 재생할 때 이어 간다. 컷이 바뀌면 처음부터.
+  const remaining = useRef(CLIP_MS);
+  const playing = !userPaused && !focused && !hidden;
+
+  useEffect(() => {
+    const onVisibility = () => setHidden(document.hidden);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  useEffect(() => {
+    remaining.current = CLIP_MS;
+    const video = videos.current[current];
+    if (video) video.currentTime = 0;
+  }, [current]);
 
   useEffect(() => {
     const video = videos.current[current];
-    if (video) {
-      video.currentTime = 0;
-      video.play().catch(() => {});
+    if (!playing) {
+      video?.pause();
+      return undefined;
     }
+    video?.play()?.catch?.(() => {});
+    const startedAt = Date.now();
     const timer = setTimeout(
       () => setCurrent((i) => (i + 1) % clips.length),
-      CLIP_MS,
+      remaining.current,
     );
     return () => {
       clearTimeout(timer);
+      remaining.current = Math.max(
+        0,
+        remaining.current - (Date.now() - startedAt),
+      );
       video?.pause();
     };
-  }, [current]);
+  }, [current, playing]);
+
+  const go = (step) => {
+    const index = (current + step + clips.length) % clips.length;
+    setCurrent(index);
+    setAnnounced(clips[index].name[language]);
+  };
 
   const next = (current + 1) % clips.length;
+  const labels =
+    language === "en"
+      ? { previous: "Previous", next: "Next", pause: "Pause", play: "Play" }
+      : { previous: "이전", next: "다음", pause: "일시정지", play: "재생" };
   return (
-    <>
+    <div
+      className="absolute inset-0"
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget))
+          setFocused(false);
+      }}
+    >
       {clips.map((clip, index) => (
         <video
           key={clip.id}
@@ -104,7 +147,10 @@ function ClipReel({ language, children }) {
             <span
               key={current}
               className="bw-reel-fill absolute inset-0 origin-left bg-[var(--color-accent)]"
-              style={{ animationDuration: `${CLIP_MS}ms` }}
+              style={{
+                animationDuration: `${CLIP_MS}ms`,
+                animationPlayState: playing ? "running" : "paused",
+              }}
             />
           </span>
           <span className="text-white/60">
@@ -114,7 +160,18 @@ function ClipReel({ language, children }) {
         </div>
         {children}
       </MediaOverlay>
-    </>
+      <CarouselControls
+        className="absolute bottom-8 right-8 lg:bottom-12 lg:right-12"
+        isPlaying={!userPaused}
+        onPrevious={() => go(-1)}
+        onNext={() => go(1)}
+        onTogglePlay={() => setUserPaused((value) => !value)}
+        labels={labels}
+      />
+      <span className="sr-only" aria-live="polite">
+        {announced}
+      </span>
+    </div>
   );
 }
 
