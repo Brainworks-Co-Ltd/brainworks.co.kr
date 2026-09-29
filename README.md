@@ -1,5 +1,89 @@
 # brainworks.co.kr
 
+## 실행 방법
+
+### 공개 사이트만 볼 때 — 도커 필요 없음
+
+```bash
+npm install
+npm run dev            # http://localhost:3000
+npm run dev -- -p 3300 # 포트를 바꾸려면
+```
+
+`.env`의 `APP_ORIGIN`은 브라우저로 접속하는 주소(포트 포함)와 정확히 같아야
+한다. `-p 3300`으로 띄우면 `APP_ORIGIN=http://localhost:3300`으로 바꾸거나
+`APP_ORIGIN=http://localhost:3300 npm run dev -- -p 3300`처럼 덮어쓴다. 다르면
+로그인, 로그아웃, 비밀번호 변경이 전부 403으로 실패한다.
+
+`.env`의 `DATABASE_URL`이 주석 처리되어 있으면 공개 페이지 전체가 승인된 정적
+콘텐츠로 렌더링된다. PostgreSQL도 도커도 띄우지 않아도 된다. 디자인 확인이나
+시연은 이 상태로 한다.
+
+`DATABASE_URL`을 다시 켜면 DB가 떠 있어야 하고, 없으면 콘텐츠를 읽는 페이지가
+`DEPENDENCY_UNAVAILABLE`로 실패한다 (`src/server/env.ts`).
+
+### 관리자 화면까지 쓸 때 — 도커 필요
+
+관리자 로그인은 세션을 `admin_sessions` 테이블에 저장하므로 DB 없이는 안 된다.
+
+```bash
+docker compose -f compose.dev.yml up -d postgres-dev   # 5433 포트
+cp .env.example .env                                   # DATABASE_URL 포함본
+npm run db:migrate                                     # 마이그레이션 적용
+npm run admin:provision                                # 관리자 계정 생성
+npm run dev
+```
+
+`admin:provision`은 비밀번호를 직접 입력받으므로 **대화형 터미널에서** 실행한다.
+계정을 만든 뒤 `/auth/signin`으로 로그인하고 `/admin`으로 들어간다.
+
+DB를 끄고 다시 공개 사이트만 보려면 `.env`의 `DATABASE_URL`을 주석 처리한다.
+
+### 컨테이너 둘의 용도가 다르다
+
+| 서비스 | 포트 | 용도 |
+|---|---|---|
+| `postgres-dev` | 5433 | 개발용. `npm run dev`가 쓴다 |
+| `postgres-test` | 5434 | `npm run test:db`의 `*.db.test.ts`가 쓴다 |
+
+`npm test`(vitest)는 DB를 쓰지 않는다. `npm run test:db`는 두 종류를 함께 돌린다.
+`tests/db/*.test.ts`는 DB에 접속하지 않는 정책 테스트이고,
+`tests/db/*.db.test.ts`는 `DATABASE_TEST_URL`이 가리키는 실제 Postgres에 붙는다.
+
+`vitest.db.config.ts`가 Node 내장 `process.loadEnvFile(".env")`로 `.env`를 읽고
+(`dotenv` 의존성 없음), `tests/db/global-setup.ts`가 시작할 때 마이그레이션을 한 번
+적용한다. `tests/db/setup.ts`는 테스트 프로세스 안에서만 `DATABASE_URL`을
+`DATABASE_TEST_URL`로 덮어쓰고 파일마다 콘텐츠 테이블을 비운다. 개발 DB(5433)는
+건드리지 않는다.
+
+`DATABASE_TEST_URL`이 비어 있으면 `*.db.test.ts`는 전부 skip되고 종료 코드는 0이므로,
+컨테이너 없이도 `npm run test:db`가 돈다.
+
+### 서버 시간대는 Asia/Seoul로 고정한다
+
+예약 게시 시각 변환이 서버 프로세스 시간대를 기준으로 하므로 서버 프로세스의 `TZ`는 `Asia/Seoul`로 고정한다 (`ops/pm2/ecosystem.config.cjs` 참고).
+
+### 백엔드 서버는 따로 없다
+
+Next.js 한 프로세스가 화면과 API를 모두 처리한다. `npm run dev` 말고 띄울
+서버가 없다. `src/pages/api/` 아래가 백엔드다.
+
+## 자주 쓰는 명령
+
+| 명령 | 하는 일 |
+|---|---|
+| `npm run dev` | 개발 서버 |
+| `npm run build` | 프로덕션 빌드. **개발 서버가 떠 있을 때 실행하면 `.next`를 덮어써서 개발 서버가 깨진다** |
+| `npm start` | 빌드 결과 실행 |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | vitest. DB 불필요 |
+| `npm run test:db` | 정책 테스트 + 실제 Postgres 저장소 테스트. `DATABASE_TEST_URL`이 없으면 후자는 skip |
+| `npm run test:e2e` | Playwright |
+| `npm run db:generate` | 스키마 변경 후 마이그레이션 파일 생성 |
+| `npm run db:migrate` | 마이그레이션 적용 |
+| `npm run admin:provision` | 관리자 계정 생성 (대화형) |
+
 ## 파일 구조
 
 ```text
@@ -15,7 +99,6 @@ brainworks.co.kr/
 │   │   └── ui/               # 재사용 UI 컴포넌트
 │   ├── content/              # 마크다운/PDF 기반 콘텐츠
 │   │   └── news/             # 뉴스 게시글 및 원문 자료
-│   ├── contexts/             # React Context
 │   ├── data/                 # 회사 소개, 사업 영역, 팝업 등 정적 데이터
 │   ├── lib/                  # 메일, 마크다운, 뉴스 처리 유틸리티
 │   ├── models/               # 데이터 모델
@@ -24,15 +107,14 @@ brainworks.co.kr/
 │   │   ├── admin/            # 관리자 페이지
 │   │   ├── api/              # API 라우트
 │   │   ├── auth/             # 인증 페이지
-│   │   ├── bid-notice/       # 입찰 공고 상세 페이지
-│   │   ├── news/             # 뉴스 상세 페이지
-│   │   └── services/         # 서비스 하위 페이지
+│   │   ├── bid-notice/       # 입찰 공고 경로. 410 종료 안내 페이지만 남아 있다
+│   │   └── news/             # 뉴스 상세 페이지
+│   ├── server/               # 서버 전용 로직 (인증, DB, 인프라, 모듈)
+│   ├── shared/               # 클라이언트/서버 공용 네비게이션, 라우팅, 스키마
 │   ├── styles/               # 전역 스타일
 │   └── utils/                # 데이터 가공 및 보조 함수
 ├── tests/                    # Node.js 테스트
 ├── jsconfig.json             # 경로 별칭 설정
 ├── next.config.js            # Next.js 설정
-├── package.json              # 의존성 및 실행 스크립트
-├── postcss.config.js         # PostCSS 설정
-└── tailwind.config.js        # Tailwind CSS 설정
+└── package.json              # 의존성 및 실행 스크립트
 ```

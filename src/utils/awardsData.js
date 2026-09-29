@@ -1,5 +1,20 @@
 ﻿const awardsData = [
   {
+    slug: 'leading-company-2026',
+    year: 2026,
+    date: '2026-06-24',
+    title: {
+      ko: '대한민국 리딩기업대상 AI 솔루션 부문 스타트업대상 (2년 연속)',
+      en: 'Korea Leading Companies Awards, Startup Grand Prize in AI Solutions (2nd consecutive year)',
+    },
+    org: {
+      ko: '머니투데이',
+      en: 'Money Today',
+    },
+    highlight: true,
+  },
+
+  {
     slug: 'leading-company-2025',
     year: 2025,
     date: '2025-06-12',

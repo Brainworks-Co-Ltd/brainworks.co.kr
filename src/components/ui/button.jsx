@@ -1,24 +1,25 @@
-import React from 'react';
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
 
-export function Button({ children, className = '', variant = 'default', size = 'default', ...props }) {
-  const baseStyles = {
-    default: 'px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700',
-    outline: 'px-4 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50',
-    link: 'text-blue-600 hover:text-blue-700 underline',
-  };
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "./button-variants";
 
-  const sizeStyles = {
-    default: '',
-    sm: 'px-3 py-1 text-sm',
-    lg: 'px-6 py-3 text-lg',
-  };
-
+export function Button({
+  className = "",
+  variant = "default",
+  size = "default",
+  type = "button",
+  ...props
+}) {
   return (
-    <button
-      className={`${baseStyles[variant]} ${sizeStyles[size]} transition-colors ${className}`}
+    <ButtonPrimitive
+      type={type}
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    >
-      {children}
-    </button>
+    />
   );
-} 
+}
+
+export { buttonVariants };

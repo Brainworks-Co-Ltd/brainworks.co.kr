@@ -1,0 +1,36 @@
+services:
+  postgres-dev:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: brainworks_dev
+      POSTGRES_USER: brainworks
+      POSTGRES_PASSWORD: brainworks_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - brainworks_postgres_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brainworks -d brainworks_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres-test:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: brainworks_test
+      POSTGRES_USER: brainworks
+      POSTGRES_PASSWORD: brainworks_test
+    ports:
+      - "5434:5432"
+    volumes:
+      - brainworks_postgres_test:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U brainworks -d brainworks_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  brainworks_postgres_dev:
+  brainworks_postgres_test:

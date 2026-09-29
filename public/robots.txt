@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+Allow: /
+Sitemap: https://brainworks.co.kr/sitemap.xml

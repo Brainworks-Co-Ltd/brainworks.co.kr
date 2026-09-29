@@ -1,28 +1,69 @@
-// next.config.js
-const path = require('path');
+const assetOrigin = process.env.ASSET_PUBLIC_BASE_URL
+  ? new URL(process.env.ASSET_PUBLIC_BASE_URL)
+  : undefined;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-
-  // GitHub Pages용 정적 export
-  output: 'export',
-
-  // /about → /about/index.html 구조로 생성
+  output: "standalone",
   trailingSlash: true,
-
-  webpack(config) {
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      '@': path.resolve(__dirname, 'src'),
-    };
-
-    return config;
+  poweredByHeader: false,
+  i18n: {
+    locales: ["ko", "en"],
+    defaultLocale: "ko",
+    localeDetection: false,
   },
-
+  async redirects() {
+    return [
+      { source: "/Home", destination: "/", permanent: true },
+      { source: "/outbound", destination: "/global-programs", permanent: true },
+      {
+        source: "/services/consulting",
+        destination: "/consulting",
+        permanent: true,
+      },
+      {
+        source: "/services/education",
+        destination: "/education",
+        permanent: true,
+      },
+      {
+        source: "/services/development",
+        destination: "/services",
+        permanent: true,
+      },
+    ];
+  },
+  async rewrites() {
+    // 관리자가 올린 이미지는 빌드 뒤에 서버 디스크에 생기므로 public 대신 API가 읽어 준다.
+    return [{ source: "/media/:file", destination: "/api/media/:file" }];
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
+  },
   images: {
-    domains: [],
-    unoptimized: true,
+    remotePatterns: assetOrigin
+      ? [
+          {
+            protocol: assetOrigin.protocol.replace(":", ""),
+            hostname: assetOrigin.hostname,
+            pathname: "/**",
+          },
+        ]
+      : [],
   },
 };
 

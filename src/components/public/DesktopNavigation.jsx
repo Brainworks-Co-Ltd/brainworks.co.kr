@@ -1,0 +1,185 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { ChevronDown } from "lucide-react";
+import { BusinessMegaMenu } from "@/components/public/BusinessMegaMenu";
+import { useLocale } from "@/shared/routing/useLocale";
+
+export function DesktopNavigation({
+  items,
+  activeGroup,
+  routeKey,
+  navigationLabel,
+}) {
+  const { language } = useLocale();
+  const [openGroup, setOpenGroup] = useState(null);
+  const navigationRef = useRef(null);
+  const triggerRefs = useRef(new Map());
+  const closeTimerRef = useRef(null);
+  const openGroupRef = useRef(openGroup);
+
+  useLayoutEffect(() => {
+    openGroupRef.current = openGroup;
+  });
+
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  const openMenu = (id) => {
+    clearCloseTimer();
+    setOpenGroup(id);
+  };
+
+  const scheduleClose = () => {
+    clearCloseTimer();
+    closeTimerRef.current = window.setTimeout(() => {
+      setOpenGroup(null);
+      closeTimerRef.current = null;
+    }, 150);
+  };
+
+  useEffect(() => {
+    return () => clearCloseTimer();
+  }, []);
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      const previous = openGroupRef.current;
+      if (event.key !== "Escape" || !previous) return;
+
+      setOpenGroup(null);
+      requestAnimationFrame(() => triggerRefs.current.get(previous)?.focus());
+    };
+
+    const closeOnPointerDown = (event) => {
+      if (!navigationRef.current?.contains(event.target)) {
+        clearCloseTimer();
+        setOpenGroup(null);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOnPointerDown, {
+      passive: true,
+    });
+
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOnPointerDown);
+    };
+  }, []);
+
+  return (
+    <nav ref={navigationRef} aria-label={navigationLabel}>
+      <ul className="flex items-center gap-1">
+        {items.map((item) => {
+          if (item.type === "link") {
+            return (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  aria-current={activeGroup === item.id ? "page" : undefined}
+                  className="inline-flex items-center rounded-full px-3 py-3 text-[17px] font-medium text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)]"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          }
+
+          const isOpen = openGroup === item.id;
+
+          return (
+            <li
+              key={item.id}
+              className="relative"
+              onMouseEnter={() => openMenu(item.id)}
+              onMouseLeave={scheduleClose}
+              onFocusCapture={() => openMenu(item.id)}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  scheduleClose();
+                }
+              }}
+            >
+              <button
+                ref={(element) => {
+                  if (element) {
+                    triggerRefs.current.set(item.id, element);
+                  } else {
+                    triggerRefs.current.delete(item.id);
+                  }
+                }}
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`public-nav-panel-${item.id}`}
+                data-current={activeGroup === item.id ? "true" : undefined}
+                onClick={() => openMenu(item.id)}
+                className={`inline-flex items-center gap-1 rounded-full px-3 py-3 text-[17px] font-medium transition ${activeGroup === item.id || isOpen ? "bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]" : "text-[var(--bw-color-ink)] hover:bg-[var(--bw-color-surface-muted)]"}`}
+              >
+                {item.label}
+                <ChevronDown
+                  aria-hidden="true"
+                  className={`size-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {isOpen ? (
+                item.id === "business" && item.megaMenu ? (
+                  <BusinessMegaMenu
+                    menu={item.megaMenu}
+                    routeKey={routeKey}
+                    onClose={() => setOpenGroup(null)}
+                    onMouseEnter={() => openMenu(item.id)}
+                    onMouseLeave={scheduleClose}
+                    panelId={`public-nav-panel-${item.id}`}
+                    panelLabel={
+                      language === "ko"
+                        ? `${item.label} 하위 메뉴`
+                        : `${item.label} submenu`
+                    }
+                  />
+                ) : (
+                  <div
+                    id={`public-nav-panel-${item.id}`}
+                    role="region"
+                    aria-label={
+                      language === "ko"
+                        ? `${item.label} 하위 메뉴`
+                        : `${item.label} submenu`
+                    }
+                    onMouseEnter={() => openMenu(item.id)}
+                    onMouseLeave={scheduleClose}
+                    className="absolute right-0 top-[calc(100%+0.75rem)] z-50 min-w-72 rounded-[var(--bw-radius-card)] border border-slate-200 bg-white p-3 shadow-xl"
+                  >
+                    <ul className="grid gap-1">
+                      {item.children.map((child) => (
+                        <li key={child.id}>
+                          <Link
+                            href={child.href}
+                            aria-current={
+                              child.activeRouteKeys.includes(routeKey)
+                                ? "page"
+                                : undefined
+                            }
+                            onClick={() => setOpenGroup(null)}
+                            className="block rounded-xl px-4 py-3 text-sm font-semibold text-[var(--bw-color-ink)] transition hover:bg-[var(--bw-color-surface-muted)]"
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
