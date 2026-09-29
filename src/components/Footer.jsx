@@ -12,38 +12,38 @@ const certLabel = {
 
 const offices = [
   {
-    label: { ko: "본사", en: "HQ (Daegu)" },
+    label: { ko: "본사", en: "HQ (Gwangju)" },
+    address: {
+      ko: "광주 동구 금남로 193-22 광주AI창업캠프 1호, 4층 403호",
+      en: "403, 4F, Gwangju AI Startup Camp, 193-22 Geumnam-ro, Dong-gu, Gwangju",
+    },
+  },
+  {
+    label: { ko: "대구본사", en: "Daegu" },
     address: {
       ko: "대구광역시 동구 장등로 76, 대구콘텐츠기업지원센터 211호",
       en: "211, Daegu Contents Enterprise Support Center, 76 Jangdeung-ro, Dong-gu, Daegu",
     },
   },
   {
-    label: { ko: "경북본사", en: "North Gyeongsang" },
+    label: { ko: "경북본사", en: "Gyeongbuk" },
     address: {
       ko: "경북 경산시 진량읍 대구대로 230, C동 102호, C-13",
-      en: "C-13, 102 Bldg C, 230 Daegu-daero, Jinryang-eup, Gyeongsan-si, Gyeongbuk",
+      en: "C-13, 102 Bldg C, 230 Daegu-daero, Jinryang-eup, Gyeongsan-si, Gyeongsangbuk-do",
     },
   },
   {
-    label: { ko: "경남본사", en: "South Gyeongsang" },
+    label: { ko: "경남본사", en: "Gyeongnam" },
     address: {
       ko: "경남 창원시 의창구 차룡로48번길 44, 스마트업타워 2층 알204호",
-      en: "Smart-Up Tower 2F A204, 44 Charyong-ro 48-gil, Uichang-gu, Changwon-si, Gyeongnam",
+      en: "Smart-Up Tower 2F A204, 44 Charyong-ro 48-gil, Uichang-gu, Changwon-si, Gyeongsangnam-do",
     },
   },
   {
     label: { ko: "충남본사", en: "Chungnam" },
     address: {
       ko: "충남 아산시 배방읍 광장로 210, 202동 1층 a125호",
-      en: "a125, 1F, Bldg 202, 210 Gwangjang-ro, Baebang-eup, Asan-si, Chungnam",
-    },
-  },
-  {
-    label: { ko: "광주본사", en: "Gwangju" },
-    address: {
-      ko: "광주 동구 금남로 193-22 광주AI창업캠프 1호, 4층 403호",
-      en: "403, 4F, Gwangju AI Startup Camp, 193-22 Geumnam-ro, Dong-gu, Gwangju",
+      en: "a125, 1F, Bldg 202, 210 Gwangjang-ro, Baebang-eup, Asan-si, Chungcheongnam-do",
     },
   },
 ];
@@ -73,7 +73,7 @@ export default function Footer() {
               />
             </div>
             <div className="space-y-1 text-sm text-white/70">
-              <p>{language === "ko" ? "대표 강우현" : "CEO Austin Kang"}</p>
+              <p>{language === "ko" ? "대표 강우현" : "CEO Woohyun (Austin) Kang"}</p>
               <p>Email austin@brainworks.co.kr</p>
               <p>Tel (+82) 010-6639-4084</p>
             </div>

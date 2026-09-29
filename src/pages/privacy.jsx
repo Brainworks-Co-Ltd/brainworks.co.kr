@@ -97,7 +97,7 @@ const content = {
       },
       {
         heading: "10. Privacy officer",
-        body: "The privacy officer is Austin Kang, CEO.\nPhone: +82-10-6639-4084\nEmail: austin@brainworks.co.kr",
+        body: "The privacy officer is Woohyun (Austin) Kang, CEO.\nPhone: +82-10-6639-4084\nEmail: austin@brainworks.co.kr",
       },
       {
         heading: "11. Effective date",
