@@ -46,8 +46,8 @@ export default function NoticesPage({ data, categories, query }: NoticesProps) {
           title={language === "ko" ? "공지사항" : "Notices"}
           description={
             language === "ko"
-              ? "브레인웍스의 주요 안내와 소식을 확인하세요."
-              : "Find important updates and announcements from Brainworks."
+              ? "브레인웍스의 주요 안내를 모았습니다."
+              : "Important updates and announcements from Brainworks."
           }
         />
         <div className="mx-auto max-w-6xl px-6 py-12">

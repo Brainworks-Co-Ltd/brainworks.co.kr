@@ -195,8 +195,8 @@ export default function News({ newsItems }) {
           title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}
           description={
             language === "ko"
-              ? "회사 동향부터 파트너십, 수상 소식까지 한눈에 확인하세요."
-              : "Track company updates, partnerships, and awards in one place."
+              ? "회사 동향, 파트너십, 수상 소식을 모았습니다."
+              : "Company updates, partnerships, and awards in one place."
           }
         />
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pt-16 md:pt-20">

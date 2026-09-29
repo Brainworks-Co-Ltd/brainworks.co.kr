@@ -27,9 +27,9 @@ export const homeCopy = {
   },
   serviceSection: {
     title: {
-      ko: "서비스",
+      ko: "AI 도입의 모든 단계를 브레인웍스가 맡습니다",
       // en 초안, 회사 확인
-      en: "Services",
+      en: "Brainworks covers every stage of AI adoption",
     },
     subtitle: {
       ko: "AI/AX 컨설팅, 솔루션 구축, 전문교육, 글로벌 프로그램",
@@ -82,9 +82,9 @@ export const homeCopy = {
   ],
   proofSection: {
     title: {
-      ko: "주요 이력",
+      ko: "일을 맡기기 전에 확인할 수 있는 기록입니다",
       // en 초안, 회사 확인
-      en: "Track record",
+      en: "A record you can check before working with us",
     },
   },
   proofs: [
@@ -136,16 +136,16 @@ export const homeCopy = {
   ],
   areasSection: {
     title: {
-      ko: "사업 영역",
+      ko: "산업마다 다른 AI를 설계합니다",
       // en 초안, 회사 확인
-      en: "Business areas",
+      en: "We design a different AI for each industry",
     },
   },
   solutionsSection: {
     title: {
-      ko: "AI 솔루션",
+      ko: "현장에 적용한 솔루션입니다",
       // en 초안, 회사 확인
-      en: "AI solutions",
+      en: "Solutions applied in the field",
     },
   },
   newsSection: {
@@ -158,9 +158,9 @@ export const homeCopy = {
   },
   contact: {
     title: {
-      ko: "AI 도입 문의",
+      ko: "풀어야 할 문제를 함께 정합니다",
       // en 초안, 회사 확인
-      en: "AI adoption enquiries",
+      en: "We decide together which problem to solve",
     },
     // 문의 페이지 안내 문장과 같은 문장을 쓴다.
     description: {
