@@ -1252,6 +1252,9 @@ section[data-variant="cta"] :focus-visible {
 
 :root[data-design="industrial"] .bw-proof__title {
   margin-top: 12px;
+  /* 제목은 두 줄, 설명은 세 줄 높이를 잡아 둔다. 줄 수가 달라도 네 칸의
+     설명 시작 높이와 아래 여백이 같아진다. */
+  min-height: 2.7em;
   font-size: 22px;
   font-weight: 600;
   line-height: 1.35;
@@ -1262,6 +1265,7 @@ section[data-variant="cta"] :focus-visible {
 
 :root[data-design="industrial"] .bw-proof__desc {
   margin-top: 16px;
+  min-height: 4.8em;
   font-size: 15px;
   line-height: 1.6;
   color: var(--proof-desc);
