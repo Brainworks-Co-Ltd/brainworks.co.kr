@@ -177,15 +177,9 @@ export default function Footer() {
           </section>
         )}
 
-        <div className="flex flex-col gap-4 border-t border-white/15 pt-6 text-xs text-white/70 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
-          <Link
-            href="/privacy"
-            className="inline-flex min-h-11 items-center text-slate-400 underline underline-offset-4 transition hover:text-white"
-          >
-            {language === "ko" ? "개인정보처리방침" : "Privacy Policy"}
-          </Link>
-        </div>
+        <p className="border-t border-white/15 pt-6 text-xs text-white/70">
+          © {new Date().getFullYear()} Brainworks. All rights reserved.
+        </p>
       </div>
     </footer>
   );
