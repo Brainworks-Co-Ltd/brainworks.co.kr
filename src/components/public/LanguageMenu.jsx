@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDownIcon, GlobeIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, GlobeIcon } from "lucide-react";
 
 /*
- * 언어 선택. 지구본과 현재 언어 이름을 보여 주고 누르면 목록이 열린다.
+ * 언어 선택. 버튼은 어느 언어 화면에서든 알아보도록 "Language"로 고정하고,
+ * 현재 언어는 열린 목록의 체크 표시로 보여 준다.
  * 언어를 늘리려면 이 목록과 next.config.js의 locales에 같이 추가한다.
  */
 export const LANGUAGES = [
@@ -13,8 +14,6 @@ export const LANGUAGES = [
 export function LanguageMenu({ language, onSelect, className = "" }) {
   const [open, setOpen] = useState(false);
   const root = useRef(null);
-  const current =
-    LANGUAGES.find((item) => item.code === language) ?? LANGUAGES[0];
   const menuLabel = language === "ko" ? "언어 선택" : "Select language";
 
   useEffect(() => {
@@ -44,7 +43,7 @@ export function LanguageMenu({ language, onSelect, className = "" }) {
         className="inline-flex h-11 items-center gap-2 rounded-full border border-line px-4 text-[16px] font-semibold text-ink-strong transition hover:border-ink-strong"
       >
         <GlobeIcon aria-hidden="true" className="size-5" />
-        <span>{current.label}</span>
+        <span>Language</span>
         <ChevronDownIcon
           aria-hidden="true"
           className={`size-4 transition-transform ${open ? "rotate-180" : ""}`}
@@ -67,9 +66,12 @@ export function LanguageMenu({ language, onSelect, className = "" }) {
                   setOpen(false);
                   if (item.code !== language) onSelect(item.code);
                 }}
-                className={`flex w-full items-center rounded-xl px-4 py-2.5 text-left text-[16px] font-medium transition hover:bg-[var(--bw-color-surface-muted)] ${item.code === language ? "text-ink-strong" : "text-muted"}`}
+                className={`flex w-full items-center justify-between gap-4 rounded-xl px-4 py-2.5 text-left text-[16px] font-medium transition hover:bg-[var(--bw-color-surface-muted)] ${item.code === language ? "text-ink-strong" : "text-muted"}`}
               >
                 {item.label}
+                {item.code === language ? (
+                  <CheckIcon aria-hidden="true" className="size-4" />
+                ) : null}
               </button>
             </li>
           ))}
