@@ -27,9 +27,9 @@ export const homeCopy = {
   },
   serviceSection: {
     title: {
-      ko: "AI 도입의 모든 단계를 브레인웍스가 맡습니다",
+      ko: "AI 도입의 모든 단계를 브레인웍스가 책임집니다",
       // en 초안, 회사 확인
-      en: "Brainworks covers every stage of AI adoption",
+      en: "Brainworks takes responsibility for every stage of AI adoption",
     },
     // 기존 홈페이지 히어로 문장을 그대로 쓴다.
     subtitle: {
