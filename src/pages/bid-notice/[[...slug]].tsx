@@ -14,7 +14,7 @@ export default function BidNoticeGone() {
     : "입찰공고 서비스를 종료했습니다.";
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={title}

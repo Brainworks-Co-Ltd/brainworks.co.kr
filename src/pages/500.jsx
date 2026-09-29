@@ -15,7 +15,7 @@ export default function ServerErrorPage() {
     : "잠시 후 다시 시도해 주세요.";
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />

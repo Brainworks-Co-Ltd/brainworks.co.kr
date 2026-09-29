@@ -15,7 +15,7 @@ export default function NotFoundPage() {
     : "주소가 바뀌었거나 삭제된 페이지입니다.";
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />

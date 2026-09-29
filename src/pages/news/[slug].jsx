@@ -24,7 +24,7 @@ export default function NewsDetail({ news }) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={`${translate(news.title, language)} | Brainworks`}

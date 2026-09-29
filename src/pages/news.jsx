@@ -177,7 +177,7 @@ export default function News({ newsItems }) {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata
         title={language === "ko" ? "브레인웍스 소식" : "Brainworks News"}

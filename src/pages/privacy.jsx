@@ -112,7 +112,7 @@ export default function PrivacyPolicy() {
   const copy = locale === "en" ? content.en : content.ko;
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Header />
       <SeoMetadata title={copy.title} description={copy.description} />
       <main id="main-content">

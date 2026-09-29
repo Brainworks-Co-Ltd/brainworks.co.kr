@@ -109,7 +109,7 @@ body {
  * industrial.css의 눈썹 규칙에 덮여 화면에 나온 적이 없었다. */
 .bw-page-hero {
   border-bottom: 1px solid var(--bw-color-line);
-  background: var(--bw-color-surface-muted);
+  background: var(--bw-color-surface);
   color: var(--bw-color-ink);
 }
 
