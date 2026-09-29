@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { DesktopNavigation } from "@/components/public/DesktopNavigation";
+import { LanguageMenu } from "@/components/public/LanguageMenu";
 import { MobileNavigation } from "@/components/public/MobileNavigation";
 import {
   buildPublicNavigation,
@@ -44,15 +45,12 @@ export default function Header() {
   const items = buildPublicNavigation(language);
   const activeGroup = getActiveNavigationGroup(routeKey);
 
-  const toggleLanguage = () => {
-    void router.push(
-      getLocaleSwitchPath(router.asPath, targetLocale),
-      undefined,
-      {
-        locale: targetLocale,
-      },
-    );
+  const switchLanguage = (locale) => {
+    void router.push(getLocaleSwitchPath(router.asPath, locale), undefined, {
+      locale,
+    });
   };
+  const toggleLanguage = () => switchLanguage(targetLocale);
 
   return (
     <header
@@ -91,19 +89,11 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href={getLocalizedPath("contact", language)}
-            className="pill pill-dark h-10 px-6 text-[16px] max-lg:hidden!"
-          >
-            {language === "ko" ? "문의하기" : "Contact"}
-          </Link>
-          <button
-            type="button"
-            onClick={toggleLanguage}
-            className="hidden rounded-full border border-line px-3 py-3.5 text-xs font-semibold text-ink-strong transition hover:border-ink-strong lg:inline-flex"
-          >
-            {language === "ko" ? "EN" : "KO"}
-          </button>
+          <LanguageMenu
+            language={language}
+            onSelect={switchLanguage}
+            className="hidden lg:block"
+          />
           <div className="lg:hidden">
             <MobileNavigation
               items={items}
