@@ -82,9 +82,9 @@ export const homeCopy = {
   ],
   proofSection: {
     title: {
-      ko: "일을 맡기기 전에 확인할 수 있는 기록입니다",
+      ko: "왜 브레인웍스일까요?",
       // en 초안, 회사 확인
-      en: "A record you can check before working with us",
+      en: "Why Brainworks?",
     },
   },
   proofs: [
