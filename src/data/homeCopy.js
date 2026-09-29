@@ -143,9 +143,10 @@ export const homeCopy = {
   },
   solutionsSection: {
     title: {
-      ko: "현장에 적용한 솔루션입니다",
+      // 기존 홈페이지 CEO 메시지의 문장을 가져왔다.
+      ko: "각 산업 분야에서 축적된 데이터와 현장 경험을 바탕으로 고객의 문제를 깊이 이해하고, 가장 적합한 AI 솔루션을 제안합니다.",
       // en 초안, 회사 확인
-      en: "Solutions applied in the field",
+      en: "Drawing on the data and field experience built up in each industry, we understand each customer's problem in depth and propose the AI solution that fits best.",
     },
   },
   newsSection: {

@@ -6,23 +6,74 @@ import { PageHero } from "@/components/public/PageHero";
 import { ContactCtaBlock } from "@/components/public/ContactCtaBlock";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
 import DetailSectionHead from "@/components/public/DetailSectionHead";
+import GlobalNetworkMap from "@/components/public/GlobalNetworkMap";
 
 /* 국가명과 파트너 수는 원본 지도 이미지(public/images/outbound)에 적힌 그대로다.
    국내는 지도 아래 "Korea 10개사"로 따로 적혀 있던 값이다. */
 const partnerCountries = [
-  { key: "korea", label: { ko: "대한민국", en: "Korea" }, count: 10 },
+  {
+    key: "korea",
+    label: { ko: "대한민국", en: "Korea" },
+    count: 10,
+    lon: 127.8,
+    lat: 36.3,
+  },
   {
     key: "uzbekistan",
     label: { ko: "우즈베키스탄", en: "Uzbekistan" },
     count: 8,
+    lon: 64,
+    lat: 41.5,
   },
-  { key: "vietnam", label: { ko: "베트남", en: "Vietnam" }, count: 4 },
-  { key: "indonesia", label: { ko: "인도네시아", en: "Indonesia" }, count: 3 },
-  { key: "usa", label: { ko: "미국", en: "U.S.A." }, count: 1 },
-  { key: "qatar", label: { ko: "카타르", en: "Qatar" }, count: 1 },
-  { key: "poland", label: { ko: "폴란드", en: "Poland" }, count: 1 },
-  { key: "australia", label: { ko: "호주", en: "Australia" }, count: 1 },
-  { key: "singapore", label: { ko: "싱가포르", en: "Singapore" }, count: 1 },
+  {
+    key: "vietnam",
+    label: { ko: "베트남", en: "Vietnam" },
+    count: 4,
+    lon: 106.5,
+    lat: 16.5,
+  },
+  {
+    key: "indonesia",
+    label: { ko: "인도네시아", en: "Indonesia" },
+    count: 3,
+    lon: 113,
+    lat: -2.5,
+  },
+  {
+    key: "usa",
+    label: { ko: "미국", en: "U.S.A." },
+    count: 1,
+    lon: -98,
+    lat: 39,
+  },
+  {
+    key: "qatar",
+    label: { ko: "카타르", en: "Qatar" },
+    count: 1,
+    lon: 51.2,
+    lat: 25.3,
+  },
+  {
+    key: "poland",
+    label: { ko: "폴란드", en: "Poland" },
+    count: 1,
+    lon: 19.5,
+    lat: 52,
+  },
+  {
+    key: "australia",
+    label: { ko: "호주", en: "Australia" },
+    count: 1,
+    lon: 134,
+    lat: -25,
+  },
+  {
+    key: "singapore",
+    label: { ko: "싱가포르", en: "Singapore" },
+    count: 1,
+    lon: 103.8,
+    lat: 1.3,
+  },
 ];
 
 const copy = {
@@ -250,9 +301,8 @@ export default function Outbound() {
           }}
         />
 
-        {/* 파트너 망은 표가 아니라 이름으로 보여준다. 나라 이름을 크게 세우고
-            파트너 수는 곁의 작은 숫자로 붙인다. 읽을 표가 아니라 한눈에 지나가는
-            면이 되도록 어두운 구간에 얹는다. 이 페이지의 유일한 어두운 구간이다. */}
+        {/* 파트너 망은 점 지도 위에서 나라를 차례로 짚어 보여준다. 나라 목록은
+            지도 아래 항상 있다. 이 페이지의 유일한 어두운 구간이다. */}
         <section className="bg-ink-strong text-white">
           <div className="inner text-center">
             <p className="text-[17px] font-semibold text-accent-strong">
@@ -263,22 +313,12 @@ export default function Outbound() {
                 ? "전세계 12개국 이상의 파트너와 일합니다"
                 : "We work with partners across more than 12 countries"}
             </h2>
-            <ul className="mt-14 flex flex-wrap items-baseline justify-center gap-x-10 gap-y-6 lg:mt-20 lg:gap-x-14">
-              {partnerCountries.map((country, index) => (
-                <li
-                  key={country.key}
-                  style={{ transitionDelay: `${Math.min(index, 8) * 60}ms` }}
-                  className="bw-reveal flex items-baseline gap-2"
-                >
-                  <span className="text-[26px] font-semibold leading-none lg:text-[38px]">
-                    {country.label[language]}
-                  </span>
-                  <span className="text-[16px] font-semibold text-accent-strong lg:text-[17px]">
-                    {country.count}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="bw-reveal mt-12 lg:mt-16">
+              <GlobalNetworkMap
+                countries={partnerCountries}
+                language={language}
+              />
+            </div>
           </div>
         </section>
 
