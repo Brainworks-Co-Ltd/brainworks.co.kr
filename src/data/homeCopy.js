@@ -31,10 +31,10 @@ export const homeCopy = {
       // en 초안, 회사 확인
       en: "Brainworks covers every stage of AI adoption",
     },
+    // 기존 홈페이지 히어로 문장을 그대로 쓴다.
     subtitle: {
-      ko: "AI/AX 컨설팅, 솔루션 구축, 전문교육, 글로벌 프로그램",
-      // en 초안, 회사 확인
-      en: "AI consulting, solution building, professional education, and global programmes",
+      ko: "당신의 비즈니스를 다음 단계로 이끄는 AI 딥테크 솔루션",
+      en: "AI DeepTech Solutions to Elevate Your Business",
     },
   },
   services: [
