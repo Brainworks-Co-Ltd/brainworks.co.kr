@@ -158,9 +158,9 @@ export const homeCopy = {
   },
   contact: {
     title: {
-      ko: "풀어야 할 문제를 함께 정합니다",
+      ko: "브레인웍스와 함께 문제를 해결해볼까요?",
       // en 초안, 회사 확인
-      en: "We decide together which problem to solve",
+      en: "Shall we solve the problem together?",
     },
     // 문의 페이지 안내 문장과 같은 문장을 쓴다.
     description: {

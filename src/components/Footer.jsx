@@ -73,8 +73,9 @@ export default function Footer() {
               />
             </div>
             <div className="space-y-1 text-sm text-white/70">
+              <p>{language === "ko" ? "대표 강우현" : "CEO Austin Kang"}</p>
               <p>Email austin@brainworks.co.kr</p>
-              <p>Tel +82-10-6639-4084</p>
+              <p>Tel (+82) 010-6639-4084</p>
             </div>
           </div>
 
@@ -109,12 +110,26 @@ export default function Footer() {
                 <h3 className="text-sm font-semibold text-white">
                   {contact.label}
                 </h3>
-                <Link
-                  href={contact.href}
-                  className="mt-1 inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
-                >
-                  {contact.label}
-                </Link>
+                <ul className="mt-1">
+                  <li>
+                    <Link
+                      href={contact.href}
+                      className="inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
+                    >
+                      {contact.label}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/privacy"
+                      className="inline-flex min-h-11 items-center text-sm text-slate-400 transition hover:text-white"
+                    >
+                      {language === "ko"
+                        ? "개인정보처리방침"
+                        : "Privacy Policy"}
+                    </Link>
+                  </li>
+                </ul>
               </div>
             ) : null}
           </nav>
@@ -166,7 +181,7 @@ export default function Footer() {
           <p>© {new Date().getFullYear()} Brainworks. All rights reserved.</p>
           <Link
             href="/privacy"
-            className="inline-flex min-h-11 items-center text-slate-400 transition hover:text-white"
+            className="inline-flex min-h-11 items-center text-slate-400 underline underline-offset-4 transition hover:text-white"
           >
             {language === "ko" ? "개인정보처리방침" : "Privacy Policy"}
           </Link>
