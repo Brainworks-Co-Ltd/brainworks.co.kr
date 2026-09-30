@@ -74,7 +74,7 @@ export function DesktopNavigation({
 
   return (
     <nav ref={navigationRef} aria-label={navigationLabel}>
-      <ul className="flex items-center gap-1">
+      <ul className="flex items-center gap-4 xl:gap-8">
         {items.map((item) => {
           if (item.type === "link") {
             return (
