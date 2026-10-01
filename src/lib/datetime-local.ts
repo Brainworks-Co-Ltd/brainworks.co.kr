@@ -9,3 +9,8 @@ export function toDateTimeLocal(value: Date | string | null | undefined): string
   const shifted = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   return shifted.toISOString().slice(0, 16);
 }
+
+/** 새 글 표시일 기본값(YYYY-MM-DD). 한국은 서머타임이 없어 UTC+9로 계산한다. */
+export function todayInSeoul(now: Date = new Date()): string {
+  return new Date(now.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
