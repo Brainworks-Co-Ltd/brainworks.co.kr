@@ -221,7 +221,10 @@ export default function HonorsPage({
                             {award.image ? (
                               <Image
                                 src={award.image}
-                                alt={`${award.title[language]} ${t.awardAltSuffix}`}
+                                alt={
+                                  award.imageAlt?.[language] ||
+                                  `${award.title[language]} ${t.awardAltSuffix}`
+                                }
                                 fill
                                 sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
                                 className="object-contain"
@@ -268,13 +271,23 @@ export default function HonorsPage({
                           className="grid gap-6 py-8 md:grid-cols-[minmax(0,0.35fr)_minmax(0,1fr)] md:items-center md:gap-10"
                         >
                           <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-2xl bg-tint p-6 md:h-32">
-                            <Image
-                              src={cert.image}
-                              alt={`${cert.title[language]} ${t.certAltSuffix}`}
-                              fill
-                              sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
-                              className="object-contain"
-                            />
+                            {cert.image ? (
+                              <Image
+                                src={cert.image}
+                                alt={
+                                  cert.imageAlt?.[language] ||
+                                  `${cert.title[language]} ${t.certAltSuffix}`
+                                }
+                                fill
+                                sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 90vw"
+                                className="object-contain"
+                              />
+                            ) : (
+                              // 인증서 사진이 없는 항목은 수상과 같이 연도로 자리를 채운다.
+                              <span className="text-sm font-semibold text-[var(--bw-color-muted)]">
+                                {formatAwardPeriod(cert.year, cert.date)}
+                              </span>
+                            )}
                           </div>
                           <div className="flex flex-1 flex-col gap-2">
                             <div className="flex items-center justify-between text-xs uppercase tracking-wide text-[var(--bw-color-muted)]">

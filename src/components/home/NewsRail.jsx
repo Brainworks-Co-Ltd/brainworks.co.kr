@@ -24,14 +24,20 @@ export default function NewsRail({ items = [] }) {
                 })}
                 className="group block"
               >
-                <div className="relative aspect-[409/268] overflow-hidden rounded-2xl">
-                  <Image
-                    src={item.thumbnail}
-                    alt=""
-                    fill
-                    sizes="409px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                <div className="relative aspect-[409/268] overflow-hidden rounded-2xl bg-[var(--bw-color-surface-muted)]">
+                  {item.thumbnail ? (
+                    <Image
+                      src={item.thumbnail}
+                      alt=""
+                      fill
+                      sizes="409px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center px-6 text-sm text-[var(--bw-color-muted)]">
+                      {language === "ko" ? "이미지 없음" : "No image"}
+                    </div>
+                  )}
                 </div>
                 <p className="mt-8 text-[15px] font-bold text-accent-text">
                   {newsCategoryLabel(item.category, language)}

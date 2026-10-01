@@ -15,6 +15,8 @@ export type PublishedHonor = {
   org: Partial<Record<"ko" | "en", string>>;
   description?: Partial<Record<"ko" | "en", string>>;
   image: string;
+  /** 관리자가 입력한 언어별 이미지 대체 설명. 비면 화면이 자동 문구를 쓴다. */
+  imageAlt?: Partial<Record<"ko" | "en", string>>;
   displayOrder: number;
 };
 
@@ -30,14 +32,14 @@ function staticHonors(): PublishedHonors {
 export async function getPublishedHonors(locale: "ko" | "en"): Promise<PublishedHonors> {
   if (!process.env.DATABASE_URL) return staticHonors();
   const rows = await getDb()
-    .select({ id: honors.id, type: honors.honorType, year: honors.occurredYear, date: honors.occurredOn, displayOrder: honors.displayOrder, title: honorLocales.title, organization: honorLocales.organization, description: honorLocales.description, storageKey: assets.storageKey })
+    .select({ id: honors.id, type: honors.honorType, year: honors.occurredYear, date: honors.occurredOn, displayOrder: honors.displayOrder, title: honorLocales.title, organization: honorLocales.organization, description: honorLocales.description, imageAlt: honorLocales.imageAlt, storageKey: assets.storageKey })
     .from(honors)
     .innerJoin(honorLocales, eq(honorLocales.honorId, honors.id))
     .leftJoin(assets, and(eq(assets.id, honors.imageAssetId), eq(assets.status, "READY")))
     .where(and(eq(honors.itemStatus, "ACTIVE"), eq(honorLocales.locale, locale), eq(honorLocales.publicationStatus, "PUBLISHED")))
     .orderBy(asc(honors.honorType), asc(honors.displayOrder));
   return {
-    awards: rows.filter((row) => row.type === "AWARD").map((row) => ({ slug: row.id, year: row.year, date: row.date ? String(row.date) : "", title: { [locale]: row.title }, org: { [locale]: row.organization }, description: { [locale]: row.description }, image: (row.storageKey && resolvePublicAssetUrl(row.storageKey)) || "", displayOrder: row.displayOrder })),
-    certifications: rows.filter((row) => row.type === "CERTIFICATION").map((row) => ({ slug: row.id, year: row.year, title: { [locale]: row.title }, org: { [locale]: row.organization }, description: { [locale]: row.description }, image: (row.storageKey && resolvePublicAssetUrl(row.storageKey)) || "", displayOrder: row.displayOrder })),
+    awards: rows.filter((row) => row.type === "AWARD").map((row) => ({ slug: row.id, year: row.year, date: row.date ? String(row.date) : "", title: { [locale]: row.title }, org: { [locale]: row.organization }, description: { [locale]: row.description }, image: (row.storageKey && resolvePublicAssetUrl(row.storageKey)) || "", imageAlt: { [locale]: row.imageAlt ?? "" }, displayOrder: row.displayOrder })),
+    certifications: rows.filter((row) => row.type === "CERTIFICATION").map((row) => ({ slug: row.id, year: row.year, title: { [locale]: row.title }, org: { [locale]: row.organization }, description: { [locale]: row.description }, image: (row.storageKey && resolvePublicAssetUrl(row.storageKey)) || "", imageAlt: { [locale]: row.imageAlt ?? "" }, displayOrder: row.displayOrder })),
   };
 }

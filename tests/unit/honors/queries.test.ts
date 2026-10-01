@@ -109,6 +109,29 @@ describe("DB 수상 및 인증 조회", () => {
     expect(result.certifications[0].title.en).toBe("Cert title");
     expect(result.certifications[0].title.ko).toBeUndefined();
   });
+
+  it("관리자가 입력한 언어별 대체 설명을 imageAlt로 넘긴다", async () => {
+    process.env.DATABASE_URL = "postgres://test";
+    const chain = makeChain([
+      {
+        id: "cert-2",
+        type: "CERTIFICATION",
+        year: 2025,
+        date: null,
+        displayOrder: 1,
+        title: "인증",
+        organization: "기관",
+        description: "설명",
+        imageAlt: "인증서 사진",
+        storageKey: "honors/cert.webp",
+      },
+    ]);
+    getDbMock.mockReturnValue(chain);
+
+    const result = await getPublishedHonors("ko");
+
+    expect(result.certifications[0].imageAlt).toEqual({ ko: "인증서 사진" });
+  });
 });
 
 describe("정적 수상 및 인증 조회", () => {

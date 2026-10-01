@@ -114,8 +114,12 @@ export async function getServerSideProps({ params, locale }) {
   });
 
   if (result?.redirect) {
+    // gSSP 리다이렉트에는 Next가 로케일 접두사를 붙이지 않으므로 직접 붙인다.
     return {
-      redirect: { destination: `/news/${result.redirect}`, permanent: true },
+      redirect: {
+        destination: `${locale === "en" ? "/en" : ""}/news/${result.redirect}`,
+        permanent: true,
+      },
     };
   }
 
