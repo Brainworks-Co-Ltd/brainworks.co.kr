@@ -30,27 +30,23 @@ const content = {
         body: "회사는 홈페이지 운영을 위해 다음 업무를 위탁합니다.\n카페24 주식회사: 홈페이지 서버 운영과 접속 기록 보관\n주식회사 가비아(하이웍스): 문의 메일 발송과 수신",
       },
       {
-        heading: "6. 개인정보의 국외 이전",
-        body: "회사는 홈페이지 운영을 위해 다음과 같이 개인정보를 국외에서 처리합니다.\n이전받는 자: 카페24 주식회사 (1588-3284)\n이전 국가: 일본 (오사카 데이터센터)\n이전 항목: 접속 기록(접속 IP 주소, 접속 일시, 요청한 페이지 주소, 브라우저 정보), 문의 폼 입력 항목\n이전 시기와 방법: 홈페이지에 접속하거나 문의를 제출할 때 암호화된 네트워크(HTTPS)로 전송\n보유 기간: 접속 기록은 14일 보관한 뒤 삭제하고, 문의 폼 입력 항목은 메일로 전달한 뒤 서버에 남기지 않습니다.\n국외 이전을 원하지 않으면 문의 폼 대신 이메일(austin@brainworks.co.kr)로 문의할 수 있습니다.",
+        heading: "6. 정보주체의 권리와 행사 방법",
+        body: "정보주체는 언제든지 자신의 개인정보에 대한 열람, 정정, 삭제, 처리정지를 요구할 수 있습니다. 권리 행사는 아래 9. 개인정보 보호책임자에게 문의하는 방법으로 할 수 있습니다.",
       },
       {
-        heading: "7. 정보주체의 권리와 행사 방법",
-        body: "정보주체는 언제든지 자신의 개인정보에 대한 열람, 정정, 삭제, 처리정지를 요구할 수 있습니다. 권리 행사는 아래 10. 개인정보 보호책임자에게 문의하는 방법으로 할 수 있습니다.",
-      },
-      {
-        heading: "8. 개인정보의 파기 절차 및 방법",
+        heading: "7. 개인정보의 파기 절차 및 방법",
         body: "회사는 보유 기간이 지나거나 처리 목적을 달성한 개인정보를 지체 없이 파기합니다. 전자 파일 형태의 정보는 복구할 수 없는 방법으로 영구 삭제하고, 종이 문서는 분쇄하거나 소각합니다.",
       },
       {
-        heading: "9. 개인정보의 안전성 확보 조치",
+        heading: "8. 개인정보의 안전성 확보 조치",
         body: "회사는 관리자 시스템에 접근할 때 인증 절차를 적용하고, 홈페이지와 서버 사이의 전송 구간을 HTTPS로 암호화합니다. 문의 폼으로 받은 개인정보는 서버 데이터베이스에 저장하지 않고 메일로 전달하는 데만 사용합니다.",
       },
       {
-        heading: "10. 개인정보 보호책임자",
+        heading: "9. 개인정보 보호책임자",
         body: "개인정보 보호책임자는 강우현 대표입니다.\n전화: 010-6639-4084\n이메일: austin@brainworks.co.kr",
       },
       {
-        heading: "11. 시행일",
+        heading: "10. 시행일",
         body: "이 방침은 2026년 10월 1일부터 시행합니다.",
       },
     ],
@@ -80,27 +76,23 @@ const content = {
         body: "The Company entrusts the following tasks to operate the website.\nCafe24 Corp.: website server operation and access log storage\nGabia Inc. (Hiworks): sending and receiving inquiry emails",
       },
       {
-        heading: "6. Transfer of personal information abroad",
-        body: "The Company processes personal information abroad to operate the website, as follows.\nRecipient: Cafe24 Corp. (+82-1588-3284)\nCountry: Japan (Osaka data center)\nItems: access logs (IP address, access time, requested page address, browser information) and contact form entries\nTiming and method: sent over an encrypted connection (HTTPS) when you visit the website or submit an inquiry\nRetention: access logs are deleted after 14 days, and contact form entries are forwarded by email and not kept on the server.\nIf you do not want your information transferred abroad, you can send your inquiry by email to austin@brainworks.co.kr instead of using the contact form.",
+        heading: "6. Rights of data subjects and how to exercise them",
+        body: "Data subjects may at any time request access to, correction of, deletion of, or suspension of processing of their personal information, by contacting the privacy officer listed in section 9 below.",
       },
       {
-        heading: "7. Rights of data subjects and how to exercise them",
-        body: "Data subjects may at any time request access to, correction of, deletion of, or suspension of processing of their personal information, by contacting the privacy officer listed in section 10 below.",
-      },
-      {
-        heading: "8. Destruction procedure and method",
+        heading: "7. Destruction procedure and method",
         body: "The Company destroys personal information without delay once the retention period has passed or the processing purpose has been achieved. Electronic files are permanently deleted using a method that prevents recovery, and paper documents are shredded or incinerated.",
       },
       {
-        heading: "9. Measures to secure safety",
+        heading: "8. Measures to secure safety",
         body: "The Company applies an authentication procedure for access to its administrator system and encrypts traffic between the website and the server with HTTPS. Personal information received through the contact form is not stored in the server database; it is used only to forward the inquiry by email.",
       },
       {
-        heading: "10. Privacy officer",
+        heading: "9. Privacy officer",
         body: "The privacy officer is Woohyun (Austin) Kang, CEO.\nPhone: +82-10-6639-4084\nEmail: austin@brainworks.co.kr",
       },
       {
-        heading: "11. Effective date",
+        heading: "10. Effective date",
         body: "This policy takes effect on October 1, 2026.",
       },
     ],
