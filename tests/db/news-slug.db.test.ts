@@ -15,7 +15,7 @@ const duplicateMessage = "이미 사용 중인 공개 주소 이름입니다.";
 function newsInput(slug: string): NewsCommandInput {
   return {
     slug,
-    category: "회사 소식",
+    category: "COMPANY",
     displayDate: "2025-06-16",
     locales: {
       ko: {

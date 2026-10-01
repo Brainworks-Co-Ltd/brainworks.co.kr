@@ -141,7 +141,7 @@ async function seedNews(actorId) {
     if (newsId) {
       await sql`
         update news
-           set category = ${meta.category.ko},
+           set category = ${meta.category},
                display_date = ${meta.date},
                cover_asset_id = ${coverId},
                item_status = 'ACTIVE',
@@ -153,7 +153,7 @@ async function seedNews(actorId) {
         insert into news
           (category, display_date, cover_asset_id, created_by_actor_id, updated_by_actor_id)
         values
-          (${meta.category.ko}, ${meta.date}, ${coverId}, ${actorId}, ${actorId})
+          (${meta.category}, ${meta.date}, ${coverId}, ${actorId}, ${actorId})
         returning id`;
       newsId = created.id;
       await sql`

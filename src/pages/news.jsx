@@ -6,15 +6,16 @@ import Footer from "../components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
-import { getPublishedNewsList } from "@/server/modules/news/query-service";
+import { getAllPublishedNews } from "@/server/modules/news/query-service";
 import { formatDate } from "@/lib/format-date";
 import { translate, filterNewsItems } from "@/lib/news-filter";
+import { NEWS_CATEGORIES, newsCategoryLabel } from "@/lib/news-categories";
 
 function NewsMeta({ item, language }) {
   return (
     <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--bw-color-muted)]">
       <span className="text-[var(--bw-color-brand-strong)]">
-        {translate(item.category, language) ||
+        {newsCategoryLabel(item.category, language) ||
           (language === "ko" ? "뉴스" : "News")}
       </span>
       <span aria-hidden="true">·</span>
@@ -160,13 +161,10 @@ export default function News({ newsItems }) {
   const filterOptions = useMemo(
     () => [
       { value: "all", label: language === "ko" ? "전체" : "All" },
-      { value: "company", label: language === "ko" ? "회사소식" : "Company" },
-      { value: "business", label: language === "ko" ? "사업" : "Business" },
-      {
-        value: "partnership",
-        label: language === "ko" ? "업무협약" : "Partnerships",
-      },
-      { value: "awards", label: language === "ko" ? "수상" : "Awards" },
+      ...NEWS_CATEGORIES.map(({ code, label }) => ({
+        value: code,
+        label: label[language],
+      })),
     ],
     [language],
   );
@@ -301,12 +299,10 @@ export default function News({ newsItems }) {
 }
 
 export async function getServerSideProps({ locale, query }) {
-  const newsItems = (
-    await getPublishedNewsList({
-      locale: locale === "en" ? "en" : "ko",
-      query,
-    })
-  ).items;
+  const newsItems = await getAllPublishedNews({
+    locale: locale === "en" ? "en" : "ko",
+    query,
+  });
 
   return {
     props: {

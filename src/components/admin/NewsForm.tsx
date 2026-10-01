@@ -15,6 +15,7 @@ import {
   requestAdminApi,
 } from "@/lib/admin-api";
 import { suggestSlug } from "@/lib/news-slug";
+import { NEWS_CATEGORIES } from "@/lib/news-categories";
 import { flushSync } from "react-dom";
 
 type NewsLocaleValue = {
@@ -35,12 +36,9 @@ export type NewsFormValue = {
   locales: Record<"ko" | "en", NewsLocaleValue>;
 };
 
-const categoryOptions = [
-  ["COMPANY", "회사 소식"],
-  ["BUSINESS", "사업"],
-  ["PARTNERSHIP", "업무협약"],
-  ["AWARD", "수상 및 인증"],
-] as const;
+const categoryOptions = NEWS_CATEGORIES.map(
+  ({ code, label }) => [code, label.ko] as const,
+);
 
 const emptyLocale = (): NewsLocaleValue => ({
   title: "",

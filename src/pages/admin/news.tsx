@@ -4,6 +4,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminPage } from "@/server/auth/require-admin";
 import { getAdminNewsList } from "@/server/modules/news/admin-queries";
+import { newsCategoryLabel } from "@/lib/news-categories";
 
 const publicationStatusLabel: Record<string, string> = {
   DRAFT: "초안",
@@ -85,7 +86,7 @@ export default function AdminNews({
               >
                 <div>
                   <p className="text-xs text-slate-500">
-                    {item.category} · {item.displayDate} · {item.itemStatus === "ARCHIVED" ? "보관" : "활성"}
+                    {newsCategoryLabel(item.category)} · {item.displayDate} · {item.itemStatus === "ARCHIVED" ? "보관" : "활성"}
                   </p>
                   <h2 className="mt-1 font-semibold">
                     {item.locales.ko?.title || item.locales.en?.title || "제목 없음"}

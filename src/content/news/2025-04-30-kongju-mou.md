@@ -3,10 +3,7 @@
   "slug": "kongju-future-mobility-mou-2025",
   "date": "2025-04-30",
   "thumbnail": "/images/news/250430.jpg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "PARTNERSHIP",
   "title": {
     "ko": "공주대·브레인웍스, AI 기반 미래차 전문인력 양성 협력",
     "en": "Kongju National University and Brainworks Partner on AI Mobility Talent"

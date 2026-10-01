@@ -3,10 +3,7 @@
   "slug": "daegu-legend50-tech-exchange",
   "date": "2024-09-04",
   "thumbnail": "/images/news/240904.jpg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "COMPANY",
   "title": {
     "ko": "브레인웍스, 대구 레전드 50+ 기술교류회에서 ABB 적용 전략 발표",
     "en": "Brainworks Presents ABB Adoption Strategies at Daegu Legend 50+ Exchange"

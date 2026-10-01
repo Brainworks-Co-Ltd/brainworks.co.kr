@@ -3,10 +3,7 @@
   "slug": "chungnam-research-ai-workshop",
   "date": "2024-10-17",
   "thumbnail": "/images/news/241017.jpeg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "BUSINESS",
   "title": {
     "ko": "브레인웍스, 충남연구원 직원 대상 생성AI 활용 교육 진행",
     "en": "Brainworks Leads Generative AI Workshop for Chungnam Institute Staff"

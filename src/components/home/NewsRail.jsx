@@ -5,6 +5,7 @@ import { getLocalizedPath } from "@/shared/routing/routes";
 import Rail from "@/components/public/Rail";
 import SectionTitle, { Arrow } from "@/components/public/SectionTitle";
 import { homeCopy } from "@/data/homeCopy";
+import { newsCategoryLabel } from "@/lib/news-categories";
 
 export default function NewsRail({ items = [] }) {
   const { language } = useLocale();
@@ -33,7 +34,7 @@ export default function NewsRail({ items = [] }) {
                   />
                 </div>
                 <p className="mt-8 text-[15px] font-bold text-accent-text">
-                  {item.category}
+                  {newsCategoryLabel(item.category, language)}
                 </p>
                 <h3 className="mt-3 line-clamp-2 text-[18px] font-semibold leading-[1.45] text-ink-strong transition-colors group-hover:text-accent-text lg:text-[22px]">
                   {item.title}

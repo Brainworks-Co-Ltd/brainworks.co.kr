@@ -3,10 +3,7 @@
   "slug": "global-partnership-2025-youstation-jinsystem",
   "date": "2025-07-07",
   "thumbnail": "/images/news/250707.jpg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "PARTNERSHIP",
   "title": {
     "ko": "브레인웍스, 유스테이션·제이아이엔시스템과 글로벌 협력 체계 구축",
     "en": "Brainworks Forms Global Partnership with Youstation and JINSystem"

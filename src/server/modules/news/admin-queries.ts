@@ -1,6 +1,7 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { news, newsLocales, newsSlugs } from "@/server/db/schema/news";
+import { newsCategoryLabel } from "@/lib/news-categories";
 
 export type AdminNewsQuery = {
   q?: string;
@@ -80,7 +81,7 @@ export async function getAdminNewsList(query: AdminNewsQuery = {}) {
     const matchesQuery =
       !q ||
       item.slug.toLocaleLowerCase().includes(q) ||
-      item.category.toLocaleLowerCase().includes(q) ||
+      newsCategoryLabel(item.category).toLocaleLowerCase().includes(q) ||
       Object.values(item.locales).some(
         (locale) =>
           locale.title.toLocaleLowerCase().includes(q) ||

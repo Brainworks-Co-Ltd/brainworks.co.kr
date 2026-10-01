@@ -36,6 +36,18 @@ export async function getPublishedNewsList({ locale = "ko", query = {} } = {}) {
   };
 }
 
+/** 소식 목록 페이지는 탭과 검색을 화면에서 거르므로 공개 기사 전부가 필요하다. */
+// ponytail: 페이지마다 다시 조회한다. 기사가 수백 건이 되면 화면 페이지 나눔으로 바꿀 것.
+export async function getAllPublishedNews({ locale = "ko", query = {} } = {}) {
+  const first = await getPublishedNewsList({ locale, query });
+  const rest = await Promise.all(
+    Array.from({ length: first.totalPages - 1 }, (_, index) =>
+      getPublishedNewsList({ locale, query: { ...query, page: String(index + 2) } }),
+    ),
+  );
+  return [first, ...rest].flatMap((result) => result.items);
+}
+
 export async function getPublishedNewsDetail({ slug, locale = "ko" }) {
   if (process.env.DATABASE_URL) {
     return readDatabaseNewsDetail(slug, locale);

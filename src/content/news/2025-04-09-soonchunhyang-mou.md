@@ -3,10 +3,7 @@
   "slug": "soonchunhyang-mou-2025",
   "date": "2025-04-09",
   "thumbnail": "/images/news/250409.avif",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "PARTNERSHIP",
   "title": {
     "ko": "브레인웍스-순천향대 SW중심대학사업단, AI 인재 양성 협력 MOU 체결",
     "en": "Brainworks and SCH SW Centered University Sign AI Talent Partnership"

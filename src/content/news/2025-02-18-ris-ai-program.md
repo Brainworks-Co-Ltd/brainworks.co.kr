@@ -3,10 +3,7 @@
   "slug": "ris-ai-talent-program-2025",
   "date": "2025-02-18",
   "thumbnail": "/images/news/250218.jpeg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "BUSINESS",
   "title": {
     "ko": "브레인웍스, 대전·세종·충남 AI·빅데이터 인재 양성 프로그램 참여",
     "en": "Brainworks Joins Daejeon-Sejong-Chungnam AI & Big Data Talent Program"

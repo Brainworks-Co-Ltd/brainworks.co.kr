@@ -3,10 +3,7 @@
   "slug": "gyeongbuk-meister-mou-2025",
   "date": "2025-04-21",
   "thumbnail": "/images/news/250418.avif",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "PARTNERSHIP",
   "title": {
     "ko": "브레인웍스-경북SW마이스터고, 소프트웨어 인재 양성 MOU 체결",
     "en": "Brainworks Signs MOU with Gyeongbuk SW Meister High School"

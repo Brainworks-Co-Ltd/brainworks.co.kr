@@ -144,7 +144,7 @@ function buildNewsEntry(fileRecord) {
   const content = extractLanguageContent(body);
 
   const title = ensureLanguageValue(metadata.title, { ko: slug, en: slug });
-  const category = ensureLanguageValue(metadata.category, { ko: '뉴스', en: 'News' });
+  const category = metadata.category || 'COMPANY';
   const summaryFallback = {
     ko: createSummaryText(content.ko),
     en: createSummaryText(content.en),

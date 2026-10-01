@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { NEWS_CATEGORY_CODES } from "@/lib/news-categories";
 import {
   dateOnlySchema,
   expectedVersionSchema,
@@ -15,7 +16,7 @@ const newsLocaleSchema = z.object({
 
 export const newsCommandSchema = z.object({
   slug: z.string(),
-  category: z.string().min(1),
+  category: z.enum(NEWS_CATEGORY_CODES),
   displayDate: dateOnlySchema,
   locales: z.object({ ko: newsLocaleSchema, en: newsLocaleSchema }),
 });

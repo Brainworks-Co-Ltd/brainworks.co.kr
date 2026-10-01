@@ -3,10 +3,7 @@
   "slug": "jeonnam-technopark-ai-training-2025",
   "date": "2025-08-07",
   "thumbnail": "/images/news/250807.webp",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "BUSINESS",
   "title": {
     "ko": "브레인웍스, 전남테크노파크 임직원 대상 AI 실습 교육 마무리",
     "en": "Brainworks Completes AI Training Program for Jeonnam Technopark"

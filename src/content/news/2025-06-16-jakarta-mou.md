@@ -3,10 +3,7 @@
   "slug": "jakarta-digital-bridge-mou-2025",
   "date": "2025-06-16",
   "thumbnail": "/images/news/250616.jpg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "PARTNERSHIP",
   "title": {
     "ko": "브레인웍스, 인도네시아 기업과 진동 AI 솔루션 MOU 체결",
     "en": "Brainworks Signs Vibration AI Solution MOUs in Indonesia"

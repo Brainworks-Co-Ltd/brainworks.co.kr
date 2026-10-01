@@ -3,10 +3,7 @@
   "slug": "legend50-generative-ai",
   "date": "2024-09-30",
   "thumbnail": "/images/news/240930.png",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "BUSINESS",
   "title": {
     "ko": "브레인웍스, 대구 레전드 50+ 프로젝트서 생성AI 활용 전략 공유",
     "en": "Brainworks Shares Generative AI Strategies at Daegu Legend 50+ Project"

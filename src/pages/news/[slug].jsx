@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import { getPublishedNewsDetail } from "@/server/modules/news/query-service";
 import { formatDate } from "@/lib/format-date";
 import { translate } from "@/lib/news-filter";
+import { newsCategoryLabel } from "@/lib/news-categories";
 
 export default function NewsDetail({ news }) {
   const { language } = useLocale();
@@ -34,7 +35,7 @@ export default function NewsDetail({ news }) {
       <main id="main-content">
         <PageHero
           variant="plain"
-          eyebrow={translate(news.category, language)}
+          eyebrow={newsCategoryLabel(news.category, language)}
           title={translate(news.title, language)}
           description={`${formatDate(news.date, language)}, ${translate(news.summary, language)}`}
         />

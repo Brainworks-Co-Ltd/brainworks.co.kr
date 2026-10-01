@@ -3,10 +3,7 @@
   "slug": "dsc-bigdata-ai-hackathon-2024",
   "date": "2024-12-12",
   "thumbnail": "/images/news/241211.jpg",
-  "category": {
-    "ko": "회사 소식",
-    "en": "Company"
-  },
+  "category": "BUSINESS",
   "title": {
     "ko": "브레인웍스, DSC 공유대학 빅데이터·AI 해커톤 성료 지원",
     "en": "Brainworks Supports DSC Shared University Big Data & AI Hackathon"

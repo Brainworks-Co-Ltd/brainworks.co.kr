@@ -24,7 +24,7 @@ const day = 24 * 60 * 60 * 1000;
 function newsInput(slug: string, title: string): NewsCommandInput {
   return {
     slug,
-    category: "회사 소식",
+    category: "COMPANY",
     displayDate: "2025-06-16",
     locales: {
       ko: { title, summary: "요약", bodyMarkdown: "본문" },
