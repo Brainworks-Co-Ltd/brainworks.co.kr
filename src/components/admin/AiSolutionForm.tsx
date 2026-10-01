@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
+import { AdminImageField } from "@/components/admin/AdminImageField";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import {
@@ -37,6 +38,7 @@ export type AiSolutionFormValue = {
   businessAreaId: string;
   displayOrder: number;
   imageAssetId: string;
+  imageUrl: string;
   locales: Record<"ko" | "en", AiSolutionLocaleValue>;
 };
 
@@ -58,6 +60,7 @@ export function createEmptyAiSolution(
     businessAreaId,
     displayOrder,
     imageAssetId: "",
+    imageUrl: "",
     locales: { ko: emptyLocale(), en: emptyLocale() },
   };
 }
@@ -167,30 +170,6 @@ export function AiSolutionForm({
       setVersion(result.version);
       setBaseline(JSON.stringify(form));
       setMessage("AI 솔루션 내용을 저장했습니다.");
-    } catch (caught) {
-      if (handleUnauthorized(caught)) return;
-      setError(adminApiErrorMessage(caught));
-    } finally {
-      inFlight.current = false;
-      setBusy(false);
-    }
-  }
-
-  async function uploadImage(file?: File) {
-    if (!file) return;
-    if (inFlight.current) return;
-    inFlight.current = true;
-    setBusy(true);
-    setError("");
-    try {
-      const body = new FormData();
-      body.append("file", file);
-      const asset = await requestAdminApi<{ id: string }>("/api/admin/assets", {
-        method: "POST",
-        body,
-      });
-      setForm((current) => ({ ...current, imageAssetId: asset.id }));
-      setMessage("대표 이미지를 연결했습니다. 변경 저장을 눌러 완료해 주세요.");
     } catch (caught) {
       if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
@@ -323,24 +302,30 @@ export function AiSolutionForm({
             className="min-h-11 rounded-xl border border-slate-300 px-3"
           />
         </label>
-        <label className="grid gap-2 text-sm font-medium md:col-span-2">
-          대표 이미지
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
+        <div className="grid gap-2 md:col-span-2">
+          <AdminImageField
+            label="대표 이미지"
+            value={{
+              assetId: form.imageAssetId || null,
+              url: form.imageUrl || null,
+            }}
             disabled={busy}
-            onChange={(event) => uploadImage(event.target.files?.[0])}
+            onBusyChange={setBusy}
+            onError={setError}
+            onUnauthorized={handleUnauthorized}
+            onChange={(next) =>
+              setForm((current) => ({
+                ...current,
+                imageAssetId: next.assetId ?? "",
+                imageUrl: next.url ?? "",
+              }))
+            }
           />
           <span className="text-xs font-normal text-slate-500">
             게시하려면 검사를 마친 대표 이미지와 해당 언어의 대체 설명이
             필요합니다.
           </span>
-          {form.imageAssetId ? (
-            <span className="text-xs font-normal text-emerald-700">
-              대표 이미지가 연결되어 있습니다.
-            </span>
-          ) : null}
-        </label>
+        </div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">

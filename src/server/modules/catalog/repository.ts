@@ -11,11 +11,15 @@ import {
   assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
+import { mapUniqueViolation } from "@/server/db/unique-violation";
 import { HttpError } from "@/server/http/errors";
 
 import type { AiSolutionInput } from "@/server/modules/catalog/schema";
 
 export type { AiSolutionInput };
+
+/** 영역 내 순서 고유 인덱스. 보관한 항목도 번호를 차지한다. */
+const aiSolutionOrderConstraints = ["ai_solutions_area_order_uk"];
 
 type Transaction = Parameters<
   Parameters<ReturnType<typeof getDb>["transaction"]>[0]
@@ -155,7 +159,8 @@ export async function createAiSolution(input: AiSolutionInput, actorId: string) 
         createdByActorId: actorId,
         updatedByActorId: actorId,
       })
-      .returning({ id: aiSolutions.id, version: aiSolutions.version });
+      .returning({ id: aiSolutions.id, version: aiSolutions.version })
+      .catch((error: unknown) => mapUniqueViolation(error, aiSolutionOrderConstraints));
     await tx.insert(aiSolutionLocales).values(
       (Object.keys(input.locales) as ("ko" | "en")[]).map((locale) => ({
         aiSolutionId: created.id,
@@ -181,6 +186,24 @@ export async function saveAiSolution(
     });
     if (!current) throw new HttpError("NOT_FOUND");
     assertExpectedVersion(current.version, expectedVersion);
+    if (!input.imageAssetId) {
+      const published = await tx
+        .select({ id: aiSolutionLocales.id })
+        .from(aiSolutionLocales)
+        .where(
+          and(
+            eq(aiSolutionLocales.aiSolutionId, id),
+            eq(aiSolutionLocales.publicationStatus, "PUBLISHED"),
+          ),
+        )
+        .limit(1);
+      if (published[0]) {
+        throw new HttpError(
+          "PUBLICATION_INVALID",
+          "게시 중인 솔루션은 대표 이미지를 뺄 수 없습니다. 먼저 숨김으로 바꿔 주세요.",
+        );
+      }
+    }
     await bump(tx, id, expectedVersion, actorId);
     await tx
       .update(aiSolutions)
@@ -189,7 +212,8 @@ export async function saveAiSolution(
         displayOrder: input.displayOrder,
         imageAssetId: input.imageAssetId ?? null,
       })
-      .where(eq(aiSolutions.id, id));
+      .where(eq(aiSolutions.id, id))
+      .catch((error: unknown) => mapUniqueViolation(error, aiSolutionOrderConstraints));
     for (const locale of ["ko", "en"] as const) {
       await tx
         .update(aiSolutionLocales)
@@ -225,6 +249,7 @@ export async function publishAiSolution(
         eq(aiSolutionLocales.locale, locale),
       ),
     });
+    const missing = `${locale === "ko" ? "국문" : "영문"} 이름, 요약, 상세 설명, 이미지 대체 설명과 대표 이미지가 있어야 게시할 수 있습니다.`;
     if (
       !parent ||
       !current ||
@@ -234,14 +259,14 @@ export async function publishAiSolution(
       !current.imageAlt?.trim() ||
       !parent.imageAssetId
     ) {
-      throw new HttpError("PUBLICATION_INVALID");
+      throw new HttpError("PUBLICATION_INVALID", missing);
     }
     const image = await tx
       .select({ id: assets.id })
       .from(assets)
       .where(and(eq(assets.id, parent.imageAssetId), eq(assets.status, "READY")))
       .limit(1);
-    if (!image[0]) throw new HttpError("PUBLICATION_INVALID");
+    if (!image[0]) throw new HttpError("PUBLICATION_INVALID", missing);
     await bump(tx, id, expectedVersion, actorId);
     const now = new Date();
     await tx

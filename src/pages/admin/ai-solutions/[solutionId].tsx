@@ -8,6 +8,7 @@ import {
 import { AdminShell } from "@/components/admin/AdminShell";
 import { businessAreas as publicBusinessAreas } from "@/data/businessAreas";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { getReadyAssetUrl } from "@/server/modules/assets/asset-url";
 import {
   getAdminAiSolution,
   listAdminBusinessAreaOptions,
@@ -46,6 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       getAdminAiSolution(id),
       listAdminBusinessAreaOptions(),
     ]);
+    const imageUrl = await getReadyAssetUrl(item.imageAssetId);
     const publicLabels = new Map(
       publicBusinessAreas.map((area) => [area.id, area.name.ko]),
     );
@@ -76,6 +78,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           businessAreaId: item.businessAreaId,
           displayOrder: item.displayOrder,
           imageAssetId: item.imageAssetId || "",
+          imageUrl: imageUrl || "",
           locales,
         },
       },
