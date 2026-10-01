@@ -3,6 +3,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { HonorForm, type HonorFormValue } from "@/components/admin/HonorForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { getReadyAssetUrl } from "@/server/modules/assets/asset-url";
 import { getAdminHonor } from "@/server/modules/honors/repository";
 import { HttpError } from "@/server/http/errors";
 
@@ -26,6 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = typeof context.params?.honorId === "string" ? context.params.honorId : "";
   try {
     const item = await getAdminHonor(id);
+    const imageUrl = await getReadyAssetUrl(item.imageAssetId);
     const locales = Object.fromEntries(
       item.locales.map((locale) => [
         locale.locale,
@@ -49,6 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           occurredOn: item.occurredOn ? String(item.occurredOn) : "",
           displayOrder: item.displayOrder,
           imageAssetId: item.imageAssetId || "",
+          imageUrl: imageUrl || "",
           locales,
         },
       },

@@ -6,12 +6,16 @@ import {
   assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
+import { mapUniqueViolation } from "@/server/db/unique-violation";
 import { HttpError } from "@/server/http/errors";
 import type { HonorType } from "@/server/modules/honors/types";
 
 import type { HonorInput } from "@/server/modules/honors/schema";
 
 export type { HonorInput };
+
+/** 유형 내 순서 고유 인덱스. 보관한 항목도 번호를 차지한다. */
+const honorOrderConstraints = ["honors_type_order_uk"];
 
 type Transaction = Parameters<
   Parameters<ReturnType<typeof getDb>["transaction"]>[0]
@@ -133,7 +137,8 @@ export async function createHonor(input: HonorInput, actorId: string) {
         createdByActorId: actorId,
         updatedByActorId: actorId,
       })
-      .returning({ id: honors.id, version: honors.version });
+      .returning({ id: honors.id, version: honors.version })
+      .catch((error: unknown) => mapUniqueViolation(error, honorOrderConstraints));
     await tx.insert(honorLocales).values(
       (Object.keys(input.locales) as ("ko" | "en")[]).map((locale) => ({
         honorId: created.id,
@@ -167,7 +172,8 @@ export async function saveHonor(
         displayOrder: input.displayOrder,
         imageAssetId: input.imageAssetId ?? null,
       })
-      .where(eq(honors.id, id));
+      .where(eq(honors.id, id))
+      .catch((error: unknown) => mapUniqueViolation(error, honorOrderConstraints));
     for (const locale of ["ko", "en"] as const) {
       await tx
         .update(honorLocales)
@@ -200,7 +206,10 @@ export async function publishHonor(
       !current.organization.trim() ||
       !current.description.trim()
     )
-      throw new HttpError("PUBLICATION_INVALID");
+      throw new HttpError(
+        "PUBLICATION_INVALID",
+        `${locale === "ko" ? "국문" : "영문"} 제목, 기관, 설명이 있어야 게시할 수 있습니다.`,
+      );
     await bump(tx, id, expectedVersion, actorId);
     const now = new Date();
     await tx

@@ -22,6 +22,7 @@ function editingHonor(): HonorFormValue {
     occurredOn: "2024-01-01",
     displayOrder: 1,
     imageAssetId: "asset-1",
+    imageUrl: "/media/asset-1.webp",
     locales: {
       ko: {
         title: "정보보호 우수기업 인증",
@@ -146,5 +147,50 @@ describe("HonorForm 저장 및 게시 검증", () => {
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent("새로고침");
     expect(koTitle).toHaveValue("충돌 테스트 제목");
+  });
+
+  it("이미지 빼기를 누르면 썸네일이 사라지고 저장 요청의 imageAssetId가 null이다", async () => {
+    const { container } = render(<HonorForm initial={editingHonor()} />);
+    expect(container.querySelector('img[src="/media/asset-1.webp"]')).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "이미지 빼기" }));
+    expect(container.querySelector("img")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "변경 저장" }));
+
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
+    expect(body.imageAssetId).toBeNull();
+  });
+
+  it("증빙 이미지를 올리는 동안에는 변경 저장과 게시 버튼이 잠긴다", async () => {
+    let finishUpload: (response: unknown) => void = () => undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockReturnValue(
+        new Promise((resolve) => {
+          finishUpload = resolve;
+        }),
+      ),
+    );
+    render(<HonorForm initial={editingHonor()} />);
+
+    fireEvent.change(screen.getByLabelText("증빙 이미지(선택)"), {
+      target: { files: [new File(["png"], "proof.png", { type: "image/png" })] },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByText("이미지를 올리는 중입니다.")).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("button", { name: "처리 중…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "보관" })).toBeDisabled();
+    const koGroup = within(screen.getByRole("group", { name: "국문 게시 관리" }));
+    expect(koGroup.getByRole("button", { name: "국문 게시" })).toBeDisabled();
+
+    finishUpload({
+      ok: true,
+      status: 201,
+      json: async () => ({ data: { id: "asset-9", url: "/media/asset-9.webp" } }),
+    });
+    expect(await screen.findByRole("button", { name: "변경 저장" })).not.toBeDisabled();
   });
 });
