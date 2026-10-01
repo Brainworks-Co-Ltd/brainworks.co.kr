@@ -3,7 +3,6 @@ import { HttpError } from "@/server/http/errors";
 import {
   localeCommandSchema,
   parseBody,
-  publishCommandSchema,
   versionCommandSchema,
 } from "@/server/http/validate";
 import { newsCommandSchema, newsSaveSchema } from "@/server/modules/news/schema";
@@ -52,6 +51,8 @@ const bodies = {
         imageAssetId: null,
         imageAlt: null,
         displayOrder: 0,
+        publishStartsAt: null,
+        publishEndsAt: null,
       },
       en: {
         title: "Popup",
@@ -59,6 +60,8 @@ const bodies = {
         imageAssetId: null,
         imageAlt: null,
         displayOrder: 0,
+        publishStartsAt: null,
+        publishEndsAt: null,
       },
     },
   },
@@ -192,22 +195,29 @@ describe("관리자 명령 스키마", () => {
     expect(localeCommandSchema.safeParse({ expectedVersion: 1 }).success).toBe(false);
   });
 
-  it("게시 명령은 ISO 시각 또는 null을 받는다", () => {
+  it("게시 명령은 기간을 받지 않고, 예전 화면이 보낸 기간은 버린다", () => {
     expect(
-      publishCommandSchema.safeParse({
+      localeCommandSchema.parse({
         locale: "ko",
         expectedVersion: 1,
         startsAt: "2026-09-14T00:00:00.000Z",
         endsAt: null,
-      }).success,
-    ).toBe(true);
-    expect(
-      publishCommandSchema.safeParse({
-        locale: "ko",
-        expectedVersion: 1,
-        startsAt: "2026-09-14",
-      }).success,
-    ).toBe(false);
+      }),
+    ).toEqual({ locale: "ko", expectedVersion: 1 });
+  });
+
+  it("팝업 언어별 노출 기간은 ISO 시각을 Date로 바꾼다", () => {
+    const parsed = popupCommandSchema.parse({
+      ...bodies.popup,
+      locales: {
+        ko: { ...bodies.popup.locales.ko, publishEndsAt: "2026-10-09T09:00:00.000Z" },
+        en: bodies.popup.locales.en,
+      },
+    });
+    expect(parsed.locales.ko.publishEndsAt).toEqual(
+      new Date("2026-10-09T09:00:00.000Z"),
+    );
+    expect(parsed.locales.en.publishStartsAt).toBeNull();
   });
 
   it("뉴스 저장은 expectedVersion과 input을 함께 받는다", () => {

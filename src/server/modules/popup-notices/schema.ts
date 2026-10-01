@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { expectedVersionSchema } from "@/server/http/validate";
+import { expectedVersionSchema, publicationDateTimeSchema } from "@/server/http/validate";
 
 const popupLocaleSchema = z.object({
   title: z.string(),
@@ -7,6 +7,8 @@ const popupLocaleSchema = z.object({
   imageAssetId: z.string().nullable().optional(),
   imageAlt: z.string().nullable().optional(),
   displayOrder: z.number().int().optional(),
+  publishStartsAt: publicationDateTimeSchema,
+  publishEndsAt: publicationDateTimeSchema,
 });
 
 export const popupCommandSchema = z.object({

@@ -35,9 +35,3 @@ export const versionCommandSchema = z.object({
 export const localeCommandSchema = versionCommandSchema.extend({
   locale: localeSchema,
 });
-
-/** 게시 기간을 함께 받는 언어별 명령 본문. */
-export const publishCommandSchema = localeCommandSchema.extend({
-  startsAt: isoDateTimeSchema.nullable().optional(),
-  endsAt: isoDateTimeSchema.nullable().optional(),
-});

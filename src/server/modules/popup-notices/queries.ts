@@ -7,6 +7,7 @@ import { noticeLocales, notices } from "@/server/db/schema/notices";
 import { effectiveNoticeVisibility, resolvePopupDetailUrl } from "@/server/modules/notices/domain";
 import type { PopupLocale } from "@/server/modules/popup-notices/contracts";
 import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
+import { displayPublicationState, type DisplayPublicationState } from "@/lib/publication-state";
 
 export type PublishedPopupNotice = { id: string; title: string; bodyMarkdown: string | null; imageUrl: string | null; imageAlt: string | null; dismissalRevision: number; displayOrder: number; detailUrl: string | null };
 
@@ -59,6 +60,8 @@ export async function getAdminPopupNoticeList() {
       locale: popupNoticeLocales.locale,
       title: popupNoticeLocales.title,
       publicationStatus: popupNoticeLocales.publicationStatus,
+      publishStartsAt: popupNoticeLocales.publishStartsAt,
+      publishEndsAt: popupNoticeLocales.publishEndsAt,
       displayOrder: popupNoticeLocales.displayOrder,
       updatedAt: popupNoticeLocales.updatedAt,
     })
@@ -70,7 +73,7 @@ export async function getAdminPopupNoticeList() {
     itemStatus: typeof rows[number]["itemStatus"];
     version: number;
     dismissalRevision: number;
-    locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"]; displayOrder: number }>;
+    locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"]; displayState: DisplayPublicationState; displayOrder: number }>;
   }>();
   for (const row of rows) {
     const item = grouped.get(row.id) ?? {
@@ -83,6 +86,7 @@ export async function getAdminPopupNoticeList() {
     item.locales[row.locale] = {
       title: row.title,
       publicationStatus: row.publicationStatus,
+      displayState: displayPublicationState(row.publicationStatus, row.publishStartsAt, row.publishEndsAt),
       displayOrder: row.displayOrder,
     };
     grouped.set(row.id, item);

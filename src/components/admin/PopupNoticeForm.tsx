@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
+import { AdminImageField } from "@/components/admin/AdminImageField";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import PopupNoticeRegion from "@/components/popup-notices/PopupNoticeRegion";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
@@ -16,6 +17,7 @@ import {
   isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
+import { displayPublicationState, type StoredPublicationStatus } from "@/lib/publication-state";
 
 type PopupLocaleValue = {
   title: string;
@@ -134,6 +136,8 @@ export function PopupNoticeForm({
           imageAssetId: form.locales.ko.imageAssetId || null,
           imageAlt: form.locales.ko.imageAlt || null,
           displayOrder: form.locales.ko.displayOrder,
+          publishStartsAt: toIso(form.locales.ko.publishStartsAt),
+          publishEndsAt: toIso(form.locales.ko.publishEndsAt),
         },
         en: {
           title: form.locales.en.title,
@@ -141,6 +145,8 @@ export function PopupNoticeForm({
           imageAssetId: form.locales.en.imageAssetId || null,
           imageAlt: form.locales.en.imageAlt || null,
           displayOrder: form.locales.en.displayOrder,
+          publishStartsAt: toIso(form.locales.en.publishStartsAt),
+          publishEndsAt: toIso(form.locales.en.publishEndsAt),
         },
       },
     };
@@ -189,34 +195,6 @@ export function PopupNoticeForm({
     }
   }
 
-  async function uploadImage(locale: "ko" | "en", file?: File) {
-    if (!file) return;
-    if (inFlight.current) return;
-    inFlight.current = true;
-    setBusy(true);
-    setError("");
-    setMessage("");
-    try {
-      const body = new FormData();
-      body.append("file", file);
-      const asset = await requestAdminApi<{ id: string }>(
-        "/api/admin/assets",
-        { method: "POST", body },
-      );
-      updateLocale(locale, "imageAssetId", asset.id);
-      updateLocale(locale, "imageUrl", URL.createObjectURL(file));
-      setMessage(
-        `${locale === "ko" ? "국문" : "영문"} 팝업 이미지를 연결했습니다. 변경 저장을 눌러 완료해 주세요.`,
-      );
-    } catch (caught) {
-      if (handleUnauthorized(caught)) return;
-      setError(adminApiErrorMessage(caught));
-    } finally {
-      inFlight.current = false;
-      setBusy(false);
-    }
-  }
-
   async function localeCommand(
     locale: "ko" | "en",
     action: "publish" | "unpublish",
@@ -237,18 +215,7 @@ export function PopupNoticeForm({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            locale,
-            expectedVersion: version,
-            startsAt:
-              action === "publish"
-                ? toIso(form.locales[locale].publishStartsAt)
-                : undefined,
-            endsAt:
-              action === "publish"
-                ? toIso(form.locales[locale].publishEndsAt)
-                : undefined,
-          }),
+          body: JSON.stringify({ locale, expectedVersion: version }),
         },
       );
       const publicationStatus =
@@ -423,21 +390,21 @@ export function PopupNoticeForm({
                 className="rounded-xl border border-slate-300 px-3 py-2"
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium">
-              이미지
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                disabled={busy}
-                onChange={(event) => uploadImage(locale, event.target.files?.[0])}
-                className="block text-sm"
-              />
-              {form.locales[locale].imageAssetId ? (
-                <span className="text-xs font-normal text-emerald-700">
-                  이미지가 연결되어 있습니다.
-                </span>
-              ) : null}
-            </label>
+            <AdminImageField
+              label="이미지"
+              value={{
+                assetId: form.locales[locale].imageAssetId || null,
+                url: form.locales[locale].imageUrl || null,
+              }}
+              disabled={busy}
+              onBusyChange={setBusy}
+              onError={setError}
+              onUnauthorized={handleUnauthorized}
+              onChange={(next) => {
+                updateLocale(locale, "imageAssetId", next.assetId ?? "");
+                updateLocale(locale, "imageUrl", next.url ?? "");
+              }}
+            />
             <label className="grid gap-2 text-sm font-medium">
               이미지 대체 설명
               <input
@@ -463,7 +430,11 @@ export function PopupNoticeForm({
             {form.id ? (
               <LocalePublicationPanel
                 locale={locale}
-                status={form.locales[locale].publicationStatus}
+                status={displayPublicationState(
+                  form.locales[locale].publicationStatus as StoredPublicationStatus,
+                  form.locales[locale].publishStartsAt || null,
+                  form.locales[locale].publishEndsAt || null,
+                )}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "unpublish")}
