@@ -12,13 +12,14 @@ export function assertImageUploadMetadata(input: {
   mimeType: string;
   bytes: number;
 }) {
-  if (
-    !allowedImageTypes.has(input.mimeType) ||
-    !Number.isInteger(input.bytes) ||
-    input.bytes <= 0 ||
-    input.bytes > MAX_IMAGE_BYTES
-  ) {
+  if (!allowedImageTypes.has(input.mimeType)) {
+    throw new HttpError("IMAGE_TYPE_NOT_ALLOWED");
+  }
+  if (!Number.isInteger(input.bytes) || input.bytes <= 0) {
     throw new HttpError("BAD_REQUEST");
+  }
+  if (input.bytes > MAX_IMAGE_BYTES) {
+    throw new HttpError("IMAGE_TOO_LARGE");
   }
 }
 

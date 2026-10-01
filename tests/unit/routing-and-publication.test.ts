@@ -68,12 +68,15 @@ describe("뉴스 공개·라우팅 정책", () => {
     ).not.toThrow();
     expect(() =>
       assertImageUploadMetadata({ mimeType: "application/pdf", bytes: 1024 }),
-    ).toThrow("BAD_REQUEST");
+    ).toThrow("IMAGE_TYPE_NOT_ALLOWED");
     expect(() =>
       assertImageUploadMetadata({
         mimeType: "image/png",
         bytes: 11 * 1024 * 1024,
       }),
+    ).toThrow("IMAGE_TOO_LARGE");
+    expect(() =>
+      assertImageUploadMetadata({ mimeType: "image/png", bytes: 0 }),
     ).toThrow("BAD_REQUEST");
   });
 });

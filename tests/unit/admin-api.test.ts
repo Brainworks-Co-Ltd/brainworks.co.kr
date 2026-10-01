@@ -14,6 +14,41 @@ describe("관리자 API 안내", () => {
     expect(adminApiErrorMessage(code)).not.toContain(code);
   });
 
+  it.each([
+    ["POPUP_TITLE_REQUIRED", "게시하려면 이 언어의 팝업 제목이 필요합니다."],
+    ["POPUP_IMAGE_ALT_REQUIRED", "이미지를 넣었다면 이미지 대체 설명을 입력해 주세요."],
+    [
+      "NOTICE_CATEGORY_LOCALE_REQUIRED",
+      "사용 중인 카테고리를 선택해 주세요. 비활성 카테고리로는 게시할 수 없습니다.",
+    ],
+    ["IMAGE_TYPE_NOT_ALLOWED", "JPEG, PNG, WebP 이미지만 올릴 수 있습니다."],
+    ["IMAGE_TOO_LARGE", "이미지는 10MB 이하만 올릴 수 있습니다."],
+    [
+      "ORDER_CONFLICT",
+      "같은 순서 번호를 쓰는 항목이 있습니다. 보관한 항목도 번호를 차지합니다.",
+    ],
+    ["PUBLICATION_WINDOW_INVALID", "게시 종료 시각은 시작 시각보다 늦어야 합니다."],
+  ])("%s 코드는 정해진 문구를 보여 준다", (code, message) => {
+    expect(adminApiErrorMessage(new AdminApiError(code))).toBe(message);
+    expect(adminApiErrorMessage(code)).toBe(message);
+  });
+
+  it("PUBLICATION_INVALID는 서버가 보낸 빠진 항목 안내를 먼저 보여 준다", () => {
+    expect(
+      adminApiErrorMessage(
+        new AdminApiError(
+          "PUBLICATION_INVALID",
+          "국문 제목과 본문이 있어야 게시할 수 있습니다.",
+        ),
+      ),
+    ).toBe("국문 제목과 본문이 있어야 게시할 수 있습니다.");
+    expect(
+      adminApiErrorMessage(
+        new AdminApiError("PUBLICATION_INVALID", "PUBLICATION_INVALID"),
+      ),
+    ).toBe("게시할 언어의 필수 내용을 확인한 뒤 다시 시도해 주세요.");
+  });
+
   it("고정 문구가 없는 코드는 서버가 보낸 구체적인 메시지를 그대로 보여준다", () => {
     expect(
       adminApiErrorMessage(

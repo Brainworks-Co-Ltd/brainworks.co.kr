@@ -27,7 +27,7 @@ export function readMultipartImage(request: IncomingMessage) {
         filename = info.filename || filename;
         mimeType = info.mimeType || "";
         file.on("data", (chunk: Buffer) => chunks.push(chunk));
-        file.on("limit", () => reject(new HttpError("BAD_REQUEST")));
+        file.on("limit", () => reject(new HttpError("IMAGE_TOO_LARGE")));
       });
       parser.on("error", () => reject(new HttpError("BAD_REQUEST")));
       parser.on("finish", () => {
