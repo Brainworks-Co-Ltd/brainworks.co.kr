@@ -1,12 +1,14 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import Busboy from "busboy";
+import { and, eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
 import { HttpError } from "@/server/http/errors";
 import { createWebImageVariant } from "@/server/infrastructure/sharp-image";
 import { LocalDiskStorage } from "@/server/infrastructure/local-disk-storage";
 import { S3ObjectStorage } from "@/server/infrastructure/s3-storage";
+import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
 import { assertImageUploadMetadata } from "@/server/modules/assets/upload-policy";
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
@@ -61,17 +63,46 @@ function getStorage() {
   });
 }
 
-export async function uploadImageAsset(
-  request: IncomingMessage,
+export type StoredImageAsset = {
+  id: string;
+  width: number | null;
+  height: number | null;
+  url: string | null;
+};
+
+/**
+ * 원본 SHA-256이 같은 READY 이미지가 있으면 새로 변환하거나 저장하지 않고 그 이미지를 돌려준다.
+ * 같은 그림을 국문과 영문 팝업에 함께 쓸 수 있게 된다.
+ */
+export async function storeImageAsset(
+  upload: { buffer: Buffer; filename: string; mimeType: string },
   actorId: string,
-) {
-  const upload = await readMultipartImage(request);
+): Promise<StoredImageAsset> {
+  const checksum = createHash("sha256").update(upload.buffer).digest("hex");
+  const [existing] = await getDb()
+    .select({
+      id: assets.id,
+      width: assets.width,
+      height: assets.height,
+      storageKey: assets.storageKey,
+    })
+    .from(assets)
+    .where(and(eq(assets.checksum, checksum), eq(assets.status, "READY")))
+    .limit(1);
+  if (existing) {
+    return {
+      id: existing.id,
+      width: existing.width,
+      height: existing.height,
+      url: resolvePublicAssetUrl(existing.storageKey),
+    };
+  }
+
   const variant = await createWebImageVariant(upload.buffer);
   const key = `media/${randomUUID()}.webp`;
   const storage = getStorage();
   await storage.put(key, variant.buffer, variant.mimeType);
   try {
-    const checksum = createHash("sha256").update(upload.buffer).digest("hex");
     const [asset] = await getDb()
       .insert(assets)
       .values({
@@ -93,9 +124,16 @@ export async function uploadImageAsset(
         width: assets.width,
         height: assets.height,
       });
-    return asset;
+    return { ...asset, url: resolvePublicAssetUrl(key) };
   } catch (error) {
     await storage.remove(key).catch(() => undefined);
     throw error;
   }
+}
+
+export async function uploadImageAsset(
+  request: IncomingMessage,
+  actorId: string,
+) {
+  return storeImageAsset(await readMultipartImage(request), actorId);
 }
