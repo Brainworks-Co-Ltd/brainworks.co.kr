@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/server/auth/require-admin";
 import { withApiErrorBoundary } from "@/server/http/api-handler";
-import { parseBody, publishCommandSchema } from "@/server/http/validate";
+import { localeCommandSchema, parseBody } from "@/server/http/validate";
 import { ensureNoticeAdminActor, publishNotice } from "@/server/modules/notices/repository";
 
 async function handler(request: NextApiRequest, response: NextApiResponse) {
@@ -12,16 +12,13 @@ async function handler(request: NextApiRequest, response: NextApiResponse) {
     return;
   }
   const id = typeof request.query.id === "string" ? request.query.id : "";
-  const command = parseBody(publishCommandSchema, request.body);
+  // 게시 기간은 "변경 저장"으로 저장된 값을 쓴다.
+  const command = parseBody(localeCommandSchema, request.body);
   const data = await publishNotice(
     id,
     command.locale,
     command.expectedVersion,
     await ensureNoticeAdminActor(session.user.id),
-    {
-      startsAt: command.startsAt ? new Date(command.startsAt) : null,
-      endsAt: command.endsAt ? new Date(command.endsAt) : null,
-    },
   );
   response.status(200).json({ data });
 }

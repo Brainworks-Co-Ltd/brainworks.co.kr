@@ -1,3 +1,4 @@
+import { HttpError } from "@/server/http/errors";
 export function effectiveNoticeVisibility(
   input: { status: "DRAFT" | "SCHEDULED" | "PUBLISHED" | "UNPUBLISHED"; startsAt?: string | Date | null; endsAt?: string | Date | null },
   now = new Date(),
@@ -24,4 +25,11 @@ export function validatePopupLocale(input: { title?: string; imageAssetId?: stri
 
 export function renotify(input: { revision: number; expectedVersion: number }) {
   return { revision: input.revision + 1, version: input.expectedVersion + 1 };
+}
+
+/** 게시 종료는 시작보다 늦어야 한다. 시작이 비면 비교할 기준이 없으므로 통과시킨다. */
+export function assertPublicationWindow(startsAt: Date | null, endsAt: Date | null) {
+  if (startsAt && endsAt && endsAt.getTime() <= startsAt.getTime()) {
+    throw new HttpError("PUBLICATION_WINDOW_INVALID");
+  }
 }

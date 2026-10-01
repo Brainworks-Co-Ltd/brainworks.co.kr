@@ -35,8 +35,8 @@ const bodies = {
     isPinned: false,
     pinOrder: null,
     locales: {
-      ko: { title: "공지", bodyMarkdown: "본문" },
-      en: { title: "Notice", bodyMarkdown: "Body" },
+      ko: { title: "공지", bodyMarkdown: "본문", publishStartsAt: null, publishEndsAt: null },
+      en: { title: "Notice", bodyMarkdown: "Body", publishStartsAt: null, publishEndsAt: null },
     },
   },
   noticeCategory: {
@@ -145,6 +145,34 @@ describe("관리자 저장 스키마", () => {
         expectedVersion: 1,
       }).success,
     ).toBe(true);
+  });
+
+  it("공지 언어별 게시 기간은 ISO 시각이나 null을 받아 Date로 바꾼다", () => {
+    const parsed = noticeCommandSchema.parse({
+      ...bodies.notice,
+      locales: {
+        ko: {
+          ...bodies.notice.locales.ko,
+          publishStartsAt: "2026-10-01T00:00:00.000Z",
+          publishEndsAt: null,
+        },
+        en: { title: "Notice", bodyMarkdown: "Body" },
+      },
+    });
+    expect(parsed.locales.ko.publishStartsAt).toEqual(
+      new Date("2026-10-01T00:00:00.000Z"),
+    );
+    expect(parsed.locales.ko.publishEndsAt).toBeNull();
+    expect(parsed.locales.en).not.toHaveProperty("publishStartsAt");
+    expect(
+      noticeCommandSchema.safeParse({
+        ...bodies.notice,
+        locales: {
+          ko: { ...bodies.notice.locales.ko, publishStartsAt: "2026-10-01" },
+          en: bodies.notice.locales.en,
+        },
+      }).success,
+    ).toBe(false);
   });
 });
 

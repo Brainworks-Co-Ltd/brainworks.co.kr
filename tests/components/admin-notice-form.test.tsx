@@ -117,4 +117,70 @@ describe("NoticeForm 저장 및 게시 검증", () => {
     expect(alert).toHaveTextContent("새로고침");
     expect(koTitle).toHaveValue("충돌 테스트 제목");
   });
+
+  it("변경 저장 요청에 언어별 게시 기간이 실리고 게시 요청에는 기간이 없다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ data: { version: 3 } }),
+      }),
+    );
+    const initial = editingNotice();
+    initial.locales.ko.publishStartsAt = "2026-10-02T09:00";
+    initial.locales.ko.publishEndsAt = "2026-10-09T18:00";
+    render(<NoticeForm initial={initial} categories={categories} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "변경 저장" }));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    const saveBody = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
+    expect(saveBody.locales.ko.publishStartsAt).toBe(
+      new Date("2026-10-02T09:00").toISOString(),
+    );
+    expect(saveBody.locales.ko.publishEndsAt).toBe(
+      new Date("2026-10-09T18:00").toISOString(),
+    );
+    expect(saveBody.locales.en.publishStartsAt).toBeNull();
+
+    const koGroup = within(screen.getByRole("group", { name: "국문 게시 관리" }));
+    const publish = koGroup.getByRole("button", { name: "국문 게시" });
+    await waitFor(() => expect(publish).not.toBeDisabled());
+    fireEvent.click(publish);
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    const [publishUrl, publishInit] = vi.mocked(fetch).mock.calls[1];
+    expect(publishUrl).toBe("/api/admin/notices/notice-1/publish");
+    expect(Object.keys(JSON.parse(publishInit?.body as string)).sort()).toEqual([
+      "expectedVersion",
+      "locale",
+    ]);
+  });
+
+  it("언어별 상태는 게시 기간을 반영해 보여 준다", () => {
+    const initial = editingNotice();
+    initial.locales.ko.publicationStatus = "SCHEDULED";
+    initial.locales.ko.publishStartsAt = "2020-01-01T09:00";
+    initial.locales.en.publicationStatus = "PUBLISHED";
+    initial.locales.en.publishEndsAt = "2020-01-02T09:00";
+    render(<NoticeForm initial={initial} categories={categories} />);
+
+    expect(
+      within(screen.getByRole("group", { name: "국문 게시 관리" })).getByText("게시 중"),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole("group", { name: "영문 게시 관리" })).getByText("게시 종료", {
+        selector: "span",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("새 공지 표시일 기본값은 서울 날짜다", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-30T15:30:00.000Z"));
+    try {
+      expect(createEmptyNotice().displayDate).toBe("2026-10-01");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

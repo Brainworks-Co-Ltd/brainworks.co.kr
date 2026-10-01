@@ -2,12 +2,15 @@ import { z } from "zod";
 import {
   dateOnlySchema,
   expectedVersionSchema,
+  publicationDateTimeSchema,
   versionCommandSchema,
 } from "@/server/http/validate";
 
 const noticeLocaleSchema = z.object({
   title: z.string(),
   bodyMarkdown: z.string(),
+  publishStartsAt: publicationDateTimeSchema,
+  publishEndsAt: publicationDateTimeSchema,
 });
 
 export const noticeCommandSchema = z.object({

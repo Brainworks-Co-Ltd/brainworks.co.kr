@@ -16,6 +16,8 @@ import {
   isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
+import { todayInSeoul } from "@/lib/datetime-local";
+import { displayPublicationState, type StoredPublicationStatus } from "@/lib/publication-state";
 
 type NoticeLocaleValue = {
   title: string;
@@ -50,7 +52,7 @@ export function createEmptyNotice(): NoticeFormValue {
     version: 1,
     itemStatus: "ACTIVE",
     categoryId: "",
-    displayDate: new Date().toISOString().slice(0, 10),
+    displayDate: todayInSeoul(),
     isPinned: false,
     pinOrder: 1,
     locales: { ko: emptyLocale(), en: emptyLocale() },
@@ -126,10 +128,14 @@ export function NoticeForm({
           ko: {
             title: form.locales.ko.title,
             bodyMarkdown: form.locales.ko.bodyMarkdown,
+            publishStartsAt: toIso(form.locales.ko.publishStartsAt),
+            publishEndsAt: toIso(form.locales.ko.publishEndsAt),
           },
           en: {
             title: form.locales.en.title,
             bodyMarkdown: form.locales.en.bodyMarkdown,
+            publishStartsAt: toIso(form.locales.en.publishStartsAt),
+            publishEndsAt: toIso(form.locales.en.publishEndsAt),
           },
         },
       };
@@ -187,18 +193,7 @@ export function NoticeForm({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            locale,
-            expectedVersion: version,
-            startsAt:
-              action === "publish"
-                ? toIso(form.locales[locale].publishStartsAt)
-                : undefined,
-            endsAt:
-              action === "publish"
-                ? toIso(form.locales[locale].publishEndsAt)
-                : undefined,
-          }),
+          body: JSON.stringify({ locale, expectedVersion: version }),
         },
       );
       const publicationStatus =
@@ -385,7 +380,11 @@ export function NoticeForm({
             {form.id ? (
               <LocalePublicationPanel
                 locale={locale}
-                status={form.locales[locale].publicationStatus}
+                status={displayPublicationState(
+                  form.locales[locale].publicationStatus as StoredPublicationStatus,
+                  form.locales[locale].publishStartsAt || null,
+                  form.locales[locale].publishEndsAt || null,
+                )}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "unpublish")}

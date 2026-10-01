@@ -2,6 +2,7 @@ import { and, asc, desc, eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
 import { noticeAttachments, noticeCategories, noticeCategoryLocales, noticeLocales, noticeSlugs, notices } from "@/server/db/schema/notices";
+import { displayPublicationState, type DisplayPublicationState } from "@/lib/publication-state";
 import { effectiveNoticeVisibility } from "@/server/modules/notices/domain";
 import type { NoticeLocale } from "@/server/modules/notices/contracts";
 
@@ -145,6 +146,8 @@ export async function getAdminNoticeList() {
       locale: noticeLocales.locale,
       title: noticeLocales.title,
       publicationStatus: noticeLocales.publicationStatus,
+      publishStartsAt: noticeLocales.publishStartsAt,
+      publishEndsAt: noticeLocales.publishEndsAt,
       updatedAt: noticeLocales.updatedAt,
     })
     .from(notices)
@@ -158,7 +161,7 @@ export async function getAdminNoticeList() {
     displayDate: string;
     isPinned: boolean;
     pinOrder: number | null;
-    locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"] }>;
+    locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"]; displayState: DisplayPublicationState }>;
   }>();
   for (const row of rows) {
     const item = grouped.get(row.id) ?? {
@@ -171,7 +174,11 @@ export async function getAdminNoticeList() {
       pinOrder: row.pinOrder,
       locales: {},
     };
-    item.locales[row.locale] = { title: row.title, publicationStatus: row.publicationStatus };
+    item.locales[row.locale] = {
+      title: row.title,
+      publicationStatus: row.publicationStatus,
+      displayState: displayPublicationState(row.publicationStatus, row.publishStartsAt, row.publishEndsAt),
+    };
     grouped.set(row.id, item);
   }
   return Array.from(grouped.values());

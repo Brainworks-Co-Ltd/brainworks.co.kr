@@ -18,6 +18,12 @@ export const dateOnlySchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
 export const isoDateTimeSchema = z.string().datetime({ offset: true });
 
+/** 언어별 게시 기간. 빈 칸은 null로 비우고, 키가 빠지면 저장된 값을 그대로 둔다. */
+export const publicationDateTimeSchema = isoDateTimeSchema
+  .nullable()
+  .optional()
+  .transform((value) => (value == null ? value : new Date(value)));
+
 export const expectedVersionSchema = z.number().int().nonnegative();
 
 /** 낙관적 잠금 버전만 받는 명령 본문. */

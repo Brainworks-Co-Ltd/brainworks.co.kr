@@ -14,6 +14,7 @@ import {
 } from "@/server/db/integrity";
 import { HttpError } from "@/server/http/errors";
 import type { NoticeCommandInput, NoticeLocale, NoticePublicationWindow } from "@/server/modules/notices/contracts";
+import { assertPublicationWindow } from "@/server/modules/notices/domain";
 
 async function bumpNoticeVersion(
   tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0],
@@ -86,15 +87,30 @@ export async function saveNotice(id: string, input: NoticeCommandInput, expected
     const current = await tx.query.notices.findFirst({ where: eq(notices.id, id) });
     if (!current) throw new HttpError("NOT_FOUND");
     assertExpectedVersion(current.version, expectedVersion);
+    const storedLocales = await tx.select().from(noticeLocales).where(eq(noticeLocales.noticeId, id));
     await bumpNoticeVersion(tx, id, expectedVersion, actorId);
     await tx
       .update(notices)
       .set({ categoryId: input.categoryId ?? null, displayDate: input.displayDate, isPinned: input.isPinned ?? false, pinOrder: input.isPinned ? input.pinOrder ?? 1 : null })
       .where(eq(notices.id, id));
+    const now = new Date();
     for (const locale of ["ko", "en"] as const) {
+      const localeInput = input.locales[locale];
+      const stored = storedLocales.find((row) => row.locale === locale);
+      // 기간 키가 빠진 요청은 저장된 기간을 그대로 둔다.
+      const startsAt = localeInput.publishStartsAt !== undefined ? localeInput.publishStartsAt : (stored?.publishStartsAt ?? null);
+      const endsAt = localeInput.publishEndsAt !== undefined ? localeInput.publishEndsAt : (stored?.publishEndsAt ?? null);
+      assertPublicationWindow(startsAt, endsAt);
+      // 이미 예약이나 게시 중인 언어는 저장한 시작 시각에 맞춰 상태를 다시 정한다.
+      const isPublished = stored?.publicationStatus === "SCHEDULED" || stored?.publicationStatus === "PUBLISHED";
       await tx
         .update(noticeLocales)
-        .set({ ...input.locales[locale], updatedAt: new Date(), updatedByActorId: actorId })
+        .set({
+          ...localeInput,
+          publicationStatus: isPublished ? (startsAt && startsAt > now ? "SCHEDULED" : "PUBLISHED") : undefined,
+          updatedAt: now,
+          updatedByActorId: actorId,
+        })
         .where(and(eq(noticeLocales.noticeId, id), eq(noticeLocales.locale, locale)));
     }
     return { id, version: expectedVersion + 1 };
@@ -127,17 +143,22 @@ export async function publishNotice(
     const parent = await tx.query.notices.findFirst({ where: eq(notices.id, id) });
     const current = await tx.query.noticeLocales.findFirst({ where: and(eq(noticeLocales.noticeId, id), eq(noticeLocales.locale, locale)) });
     if (!parent || !current) throw new HttpError("NOT_FOUND");
-    if (!current.title.trim() || !current.bodyMarkdown.trim()) throw new HttpError("PUBLICATION_INVALID");
+    if (!current.title.trim() || !current.bodyMarkdown.trim()) {
+      throw new HttpError("PUBLICATION_INVALID", `${locale === "ko" ? "국문" : "영문"} 제목과 본문이 있어야 게시할 수 있습니다.`);
+    }
     await assertCategoryLocale(tx, parent.categoryId, locale);
-    await bumpNoticeVersion(tx, id, expectedVersion, actorId);
     const now = new Date();
-    const startsAt = window.startsAt ?? now;
+    // 게시 요청은 기간을 따로 받지 않는다. 인자가 없으면 저장된 기간을 쓰고, 시작이 비면 지금 게시한다.
+    const startsAt = (window.startsAt !== undefined ? window.startsAt : current.publishStartsAt) ?? now;
+    const endsAt = window.endsAt !== undefined ? window.endsAt : current.publishEndsAt;
+    assertPublicationWindow(startsAt, endsAt);
+    await bumpNoticeVersion(tx, id, expectedVersion, actorId);
     await tx
       .update(noticeLocales)
       .set({
         publicationStatus: startsAt > now ? "SCHEDULED" : "PUBLISHED",
         publishStartsAt: startsAt,
-        publishEndsAt: window.endsAt ?? null,
+        publishEndsAt: endsAt,
         firstPublishedAt: current.firstPublishedAt ?? now,
         lastPublishedAt: now,
         lastPublishedByActorId: actorId,

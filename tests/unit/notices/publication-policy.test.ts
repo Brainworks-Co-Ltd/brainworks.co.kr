@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  assertPublicationWindow,
   effectiveNoticeVisibility,
   renotify,
   resolvePopupDetailUrl,
@@ -29,5 +30,20 @@ describe("공지·팝업 공개 정책", () => {
 
   it("수정 내용을 다시 알리면 방문자 제외 리비전이 증가한다", () => {
     expect(renotify({ revision: 2, expectedVersion: 4 })).toEqual({ revision: 3, version: 5 });
+  });
+
+  it("게시 종료는 시작보다 늦어야 한다", () => {
+    const start = new Date("2026-10-01T00:00:00Z");
+    expect(() =>
+      assertPublicationWindow(start, new Date("2026-10-02T00:00:00Z")),
+    ).not.toThrow();
+    expect(() => assertPublicationWindow(null, start)).not.toThrow();
+    expect(() => assertPublicationWindow(start, null)).not.toThrow();
+    expect(() => assertPublicationWindow(start, start)).toThrow(
+      "PUBLICATION_WINDOW_INVALID",
+    );
+    expect(() =>
+      assertPublicationWindow(start, new Date("2026-09-30T00:00:00Z")),
+    ).toThrow("PUBLICATION_WINDOW_INVALID");
   });
 });

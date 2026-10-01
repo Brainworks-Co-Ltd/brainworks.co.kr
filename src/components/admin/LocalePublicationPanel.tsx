@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { displayPublicationLabel } from "@/lib/publication-state";
 
 type LocalePublicationPanelProps = {
   locale: "ko" | "en";
@@ -11,11 +12,9 @@ type LocalePublicationPanelProps = {
 };
 
 const statusLabel: Record<string, string> = {
-  DRAFT: "초안",
-  SCHEDULED: "게시 예약",
+  ...displayPublicationLabel,
   PUBLISHED: "게시 중",
   HIDDEN: "숨김",
-  UNPUBLISHED: "게시 중단",
 };
 
 export function LocalePublicationPanel({
