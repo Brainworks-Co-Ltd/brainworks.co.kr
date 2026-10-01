@@ -88,6 +88,7 @@ export function PopupNoticeForm({
   const [preview, setPreview] = useState<{
     locale: "ko" | "en";
     revision: number;
+    html: string;
   } | null>(null);
   const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
   const dirty = JSON.stringify(form) !== baseline;
@@ -331,6 +332,34 @@ export function PopupNoticeForm({
     }
   }
 
+  async function showPreview(locale: "ko" | "en") {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await requestAdminApi<{ html: string }>(
+        "/api/admin/previews/popup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ markdown: form.locales[locale].bodyMarkdown }),
+        },
+      );
+      setPreview((current) => ({
+        locale,
+        revision: (current?.revision || 0) + 1,
+        html: result.html,
+      }));
+    } catch (caught) {
+      if (handleUnauthorized(caught)) return;
+      setError(adminApiErrorMessage(caught));
+    } finally {
+      inFlight.current = false;
+      setBusy(false);
+    }
+  }
+
   return (
     <form onSubmit={save} className="grid gap-6">
       <section className="rounded-2xl border border-slate-200 bg-white p-6">
@@ -491,13 +520,9 @@ export function PopupNoticeForm({
           <button
             key={locale}
             type="button"
-            onClick={() =>
-              setPreview((current) => ({
-                locale,
-                revision: (current?.revision || 0) + 1,
-              }))
-            }
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold"
+            disabled={busy}
+            onClick={() => showPreview(locale)}
+            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
           >
             {locale === "ko" ? "국문" : "영문"} 미리보기
           </button>
@@ -534,7 +559,7 @@ export function PopupNoticeForm({
             {
               id: `admin-preview-${preview.locale}-${preview.revision}`,
               title: form.locales[preview.locale].title || "제목 없음",
-              bodyMarkdown: form.locales[preview.locale].bodyMarkdown || null,
+              bodyHtml: preview.html || null,
               imageUrl: form.locales[preview.locale].imageUrl || null,
               imageAlt: form.locales[preview.locale].imageAlt || null,
               detailUrl: form.noticeId ? "#" : null,

@@ -4,6 +4,7 @@ import { describe, expect, it, beforeEach, vi } from "vitest";
 import PopupNoticeRegion, {
   nextPopup,
 } from "@/components/popup-notices/PopupNoticeRegion";
+import { markdownToHtml } from "@/lib/markdown";
 
 vi.mock("next/link", () => ({
   default: ({
@@ -25,7 +26,7 @@ const notices = [
   {
     id: "a",
     title: "첫 번째 공지",
-    bodyMarkdown: "본문 A",
+    bodyHtml: "<p>본문 A</p>",
     dismissalRevision: 1,
     displayOrder: 0,
     imageUrl: null,
@@ -35,7 +36,7 @@ const notices = [
   {
     id: "b",
     title: "두 번째 공지",
-    bodyMarkdown: null,
+    bodyHtml: null,
     dismissalRevision: 1,
     displayOrder: 1,
     imageUrl: null,
@@ -122,5 +123,37 @@ describe("PopupNoticeRegion", () => {
     expect(window.localStorage.getItem("brainworks:popup:day:a")).toContain(
       '"revision":1',
     );
+  });
+
+  it("서버가 바꾼 Markdown 본문을 HTML로 그린다", async () => {
+    render(
+      <PopupNoticeRegion
+        notices={[{ ...notices[0], id: "bold", bodyHtml: markdownToHtml("**굵게**") }]}
+      />,
+    );
+    const region = await screen.findByRole("region", { name: "팝업 공지" });
+    expect(region.querySelector("strong")).toHaveTextContent("굵게");
+    expect(region).not.toHaveTextContent("**");
+  });
+
+  it("마크다운에 섞인 스크립트와 이벤트 속성은 화면에 남지 않는다", async () => {
+    render(
+      <PopupNoticeRegion
+        notices={[
+          {
+            ...notices[0],
+            id: "unsafe",
+            bodyHtml: markdownToHtml(
+              "**굵게**<script>window.__popupXss = 1</script><img src=x onerror=\"window.__popupXss = 2\">",
+            ),
+          },
+        ]}
+      />,
+    );
+    const region = await screen.findByRole("region", { name: "팝업 공지" });
+    expect(region.querySelector("strong")).toHaveTextContent("굵게");
+    expect(region.querySelector("script")).toBeNull();
+    expect(region.querySelector("[onerror]")).toBeNull();
+    expect(region.querySelector("img")).toBeNull();
   });
 });

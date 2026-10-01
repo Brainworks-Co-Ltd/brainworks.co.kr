@@ -183,4 +183,25 @@ describe("NoticeForm 저장 및 게시 검증", () => {
       vi.useRealTimers();
     }
   });
+
+  it("미리보기는 서버가 그린 HTML을 보여 준다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ data: { html: "<p><strong>굵게</strong></p>" } }),
+      }),
+    );
+    const { container } = render(
+      <NoticeForm initial={editingNotice()} categories={categories} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "국문 미리보기" }));
+
+    await waitFor(() =>
+      expect(container.querySelector("article strong")).toHaveTextContent("굵게"),
+    );
+    expect(vi.mocked(fetch).mock.calls[0][0]).toBe("/api/admin/previews/notice");
+  });
 });

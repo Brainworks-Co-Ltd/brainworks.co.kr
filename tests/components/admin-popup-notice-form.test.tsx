@@ -234,4 +234,22 @@ describe("PopupNoticeForm 저장 및 게시 검증", () => {
     });
     expect(await screen.findByRole("button", { name: "변경 저장" })).not.toBeDisabled();
   });
+
+  it("미리보기는 서버가 그린 본문 HTML을 공개 팝업에 넣는다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ data: { html: "<p><strong>굵게</strong></p>" } }),
+      }),
+    );
+    render(<PopupNoticeForm initial={editingPopup()} notices={notices} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "국문 미리보기" }));
+
+    const region = await screen.findByRole("region", { name: "팝업 공지" });
+    expect(region.querySelector("strong")).toHaveTextContent("굵게");
+    expect(vi.mocked(fetch).mock.calls[0][0]).toBe("/api/admin/previews/popup");
+  });
 });

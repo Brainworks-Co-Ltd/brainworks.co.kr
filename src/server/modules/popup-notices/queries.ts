@@ -1,5 +1,6 @@
 import { and, asc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { markdownToHtml } from "@/lib/markdown";
 import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
 import { popupNoticeLocales, popupNotices } from "@/server/db/schema/popup-notices";
@@ -9,7 +10,7 @@ import type { PopupLocale } from "@/server/modules/popup-notices/contracts";
 import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
 import { displayPublicationState, type DisplayPublicationState } from "@/lib/publication-state";
 
-export type PublishedPopupNotice = { id: string; title: string; bodyMarkdown: string | null; imageUrl: string | null; imageAlt: string | null; dismissalRevision: number; displayOrder: number; detailUrl: string | null };
+export type PublishedPopupNotice = { id: string; title: string; bodyHtml: string | null; imageUrl: string | null; imageAlt: string | null; dismissalRevision: number; displayOrder: number; detailUrl: string | null };
 
 const popupStatusOrder = { PUBLISHED: 0, SCHEDULED: 1, DRAFT: 2, UNPUBLISHED: 3 } as const;
 const linkedNotices = alias(notices, "linked_notices");
@@ -32,7 +33,8 @@ export async function getPublishedPopupNotices(locale: PopupLocale, now = new Da
     .map((row) => ({
       id: row.id,
       title: row.title,
-      bodyMarkdown: row.bodyMarkdown,
+      // markdownToHtml은 원시 HTML을 버리고 rehype-sanitize로 정화한다.
+      bodyHtml: markdownToHtml(row.bodyMarkdown ?? "") || null,
       imageUrl:
         row.imageStatus === "READY" && row.imageStorageKey
           ? resolvePublicAssetUrl(row.imageStorageKey)

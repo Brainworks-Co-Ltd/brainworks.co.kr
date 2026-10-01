@@ -76,7 +76,10 @@ export function NoticeForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [previewLocale, setPreviewLocale] = useState<"ko" | "en" | null>(null);
+  const [preview, setPreview] = useState<{
+    locale: "ko" | "en";
+    html: string;
+  } | null>(null);
   const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
@@ -271,6 +274,30 @@ export function NoticeForm({
     }
   }
 
+  async function showPreview(locale: "ko" | "en") {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      const result = await requestAdminApi<{ html: string }>(
+        "/api/admin/previews/notice",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ markdown: form.locales[locale].bodyMarkdown }),
+        },
+      );
+      setPreview({ locale, html: result.html });
+    } catch (caught) {
+      if (handleUnauthorized(caught)) return;
+      setError(adminApiErrorMessage(caught));
+    } finally {
+      inFlight.current = false;
+      setBusy(false);
+    }
+  }
+
   return (
     <form onSubmit={save} className="grid gap-6">
       <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-2">
@@ -427,18 +454,19 @@ export function NoticeForm({
         </p>
       </section>
 
-      {previewLocale ? (
+      {preview ? (
         <section className="rounded-2xl border border-slate-300 bg-white p-6">
           <p className="text-xs font-semibold text-slate-500">
-            {previewLocale === "ko" ? "국문" : "영문"} 미리보기 · 공개 상태는
+            {preview.locale === "ko" ? "국문" : "영문"} 미리보기 · 공개 상태는
             변경되지 않습니다
           </p>
           <h2 className="mt-4 text-2xl font-semibold">
-            {form.locales[previewLocale].title || "제목 없음"}
+            {form.locales[preview.locale].title || "제목 없음"}
           </h2>
-          <div className="mt-4 whitespace-pre-wrap leading-7 text-slate-700">
-            {form.locales[previewLocale].bodyMarkdown || "본문 없음"}
-          </div>
+          <article
+            className="prose mt-6 max-w-none"
+            dangerouslySetInnerHTML={{ __html: preview.html }}
+          />
         </section>
       ) : null}
 
@@ -460,20 +488,17 @@ export function NoticeForm({
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
-        <button
-          type="button"
-          onClick={() => setPreviewLocale("ko")}
-          className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold"
-        >
-          국문 미리보기
-        </button>
-        <button
-          type="button"
-          onClick={() => setPreviewLocale("en")}
-          className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold"
-        >
-          영문 미리보기
-        </button>
+        {(["ko", "en"] as const).map((locale) => (
+          <button
+            key={locale}
+            type="button"
+            disabled={busy}
+            onClick={() => showPreview(locale)}
+            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+          >
+            {locale === "ko" ? "국문" : "영문"} 미리보기
+          </button>
+        ))}
         {form.id ? (
           <button
             type="button"

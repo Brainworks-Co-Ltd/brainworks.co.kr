@@ -27,7 +27,7 @@ import {
  * dismissForSession — 두 함수와 dismissalRevision 인자는 그대로 재사용한다.
  * 큐 동작(한 번에 하나, 닫으면 다음 것, 이미 제외된 건 건너뜀)도 그대로다.
  */
-/** @typedef {{ id: string, title: string, bodyMarkdown?: string | null, imageUrl?: string | null, imageAlt?: string | null, detailUrl?: string | null, dismissalRevision: number, displayOrder?: number }} PopupNotice */
+/** @typedef {{ id: string, title: string, bodyHtml?: string | null, imageUrl?: string | null, imageAlt?: string | null, detailUrl?: string | null, dismissalRevision: number, displayOrder?: number }} PopupNotice */
 
 /**
  * @param {PopupNotice[]} notices
@@ -44,7 +44,7 @@ function NoticeCard({ notice, language, onDismiss }) {
   const [keepHiddenToday, setKeepHiddenToday] = useState(false);
   const ko = language === "ko";
   /* 이미지 전용(§5.1)은 본문 텍스트를 화면에 그리지 않는다. 제목은 보조 기술용으로만 남긴다. */
-  const imageOnly = Boolean(notice.imageUrl) && !notice.bodyMarkdown;
+  const imageOnly = Boolean(notice.imageUrl) && !notice.bodyHtml;
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -80,7 +80,7 @@ function NoticeCard({ notice, language, onDismiss }) {
         </button>
       </div>
 
-      {notice.imageUrl || notice.bodyMarkdown || notice.detailUrl ? (
+      {notice.imageUrl || notice.bodyHtml || notice.detailUrl ? (
         <div className="max-h-[60vh] space-y-4 overflow-y-auto p-5">
           {notice.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- 관리자가 업로드한 팝업 이미지라 실제 크기를 미리 알 수 없다.
@@ -90,10 +90,12 @@ function NoticeCard({ notice, language, onDismiss }) {
               className="block w-full"
             />
           ) : null}
-          {notice.bodyMarkdown ? (
-            <p className="whitespace-pre-wrap text-[15px] leading-6 text-muted-foreground">
-              {notice.bodyMarkdown}
-            </p>
+          {notice.bodyHtml ? (
+            // 서버(getPublishedPopupNotices)와 관리자 미리보기 API가 markdownToHtml로 정화한 HTML이다.
+            <div
+              className="space-y-3 text-[15px] leading-6 text-muted-foreground [&_a]:underline"
+              dangerouslySetInnerHTML={{ __html: notice.bodyHtml }}
+            />
           ) : null}
           {notice.detailUrl ? (
             <Link
