@@ -7,12 +7,17 @@ import {
   type AdminDashboardData,
   type DashboardContentType,
 } from "@/server/modules/admin/dashboard";
+import {
+  displayPublicationLabel,
+  type DisplayPublicationState,
+} from "@/lib/publication-state";
 
 const contentLabels: Record<DashboardContentType, string> = {
   news: "뉴스",
   notices: "공지사항",
   "popup-notices": "팝업 공지",
   honors: "수상 및 인증",
+  "ai-solutions": "AI 솔루션",
 };
 
 const statusLabels: Record<string, string> = {
@@ -22,6 +27,14 @@ const statusLabels: Record<string, string> = {
   HIDDEN: "숨김",
   UNPUBLISHED: "게시 중단",
 };
+
+function statusLabel(contentType: DashboardContentType, status: string) {
+  // 공지와 팝업은 게시 기간을 반영한 표시 상태로 집계된다.
+  if (contentType === "notices" || contentType === "popup-notices") {
+    return displayPublicationLabel[status as DisplayPublicationState] ?? status;
+  }
+  return statusLabels[status] ?? status;
+}
 
 const quickActions = [
   { label: "새 뉴스", href: "/admin/news/new", detail: "뉴스 작성" },
@@ -34,6 +47,11 @@ const quickActions = [
     label: "새 팝업 공지",
     href: "/admin/popup-notices/new",
     detail: "홈 노출 공지 작성",
+  },
+  {
+    label: "새 AI 솔루션",
+    href: "/admin/ai-solutions/new",
+    detail: "솔루션 작성",
   },
   {
     label: "수상 및 인증 관리",
@@ -50,7 +68,13 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-function StatusCounts({ counts }: { counts: Record<string, number> }) {
+function StatusCounts({
+  contentType,
+  counts,
+}: {
+  contentType: DashboardContentType;
+  counts: Record<string, number>;
+}) {
   const visible = Object.entries(counts).filter(([, count]) => count > 0);
   if (!visible.length) {
     return <span className="text-sm text-[var(--bw-color-muted)]">없음</span>;
@@ -63,7 +87,7 @@ function StatusCounts({ counts }: { counts: Record<string, number> }) {
           className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1 text-xs"
         >
           <span className="text-[var(--bw-color-muted)]">
-            {statusLabels[status] ?? status}
+            {statusLabel(contentType, status)}
           </span>
           <strong>{count}</strong>
         </span>
@@ -80,7 +104,7 @@ function WorkItem({ item }: { item: AdminDashboardData["attention"][number] }) {
           <span>{contentLabels[item.contentType]}</span>
           <span>{item.locale === "ko" ? "한국어" : "English"}</span>
           <span className="rounded-full bg-[var(--bw-color-surface-muted)] px-2 py-0.5 text-[var(--bw-color-ink)]">
-            {statusLabels[item.publicationStatus] ?? item.publicationStatus}
+            {statusLabel(item.contentType, item.publicationStatus)}
           </span>
         </div>
         <p className="mt-1 truncate font-semibold">{item.title}</p>
@@ -151,10 +175,10 @@ export default function AdminHome({
                     활성 {item.activeCount}, 보관 {item.archivedCount}
                   </td>
                   <td className="px-5 py-4">
-                    <StatusCounts counts={item.locales.ko} />
+                    <StatusCounts contentType={item.contentType} counts={item.locales.ko} />
                   </td>
                   <td className="px-5 py-4">
-                    <StatusCounts counts={item.locales.en} />
+                    <StatusCounts contentType={item.contentType} counts={item.locales.en} />
                   </td>
                 </tr>
               ))}
@@ -173,7 +197,7 @@ export default function AdminHome({
               처리할 항목
             </h2>
             <p className="mt-1 text-sm text-[var(--bw-color-muted)]">
-              임시저장 또는 게시 중단 상태인 콘텐츠입니다.
+              임시저장, 숨김 또는 게시 중단 상태인 콘텐츠입니다.
             </p>
           </div>
           {dashboard.attention.length ? (
