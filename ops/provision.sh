@@ -42,6 +42,7 @@ NODE_ENV=production
 APP_ENV=production
 APP_ORIGIN=https://brainworks.co.kr
 DATABASE_URL=postgresql://brainworks:${db_password}@127.0.0.1:5432/brainworks
+BETTER_AUTH_SECRET=$(openssl rand -hex 32)
 CONTACT_RECIPIENT=austin@brainworks.co.kr
 SMTP_HOST=smtps.hiworks.com
 SMTP_PORT=465
