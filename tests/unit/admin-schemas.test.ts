@@ -23,6 +23,7 @@ const bodies = {
     slug: "ai-news",
     category: "COMPANY",
     displayDate: "2026-09-14",
+    coverAssetId: null,
     locales: {
       ko: { title: "제목", summary: "요약", bodyMarkdown: "본문", coverAlt: null },
       en: { title: "Title", summary: "Summary", bodyMarkdown: "Body", coverAlt: null },

@@ -3,6 +3,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { NewsForm, type NewsFormValue } from "@/components/admin/NewsForm";
 import { requireAdminPage } from "@/server/auth/require-admin";
+import { getReadyAssetUrl } from "@/server/modules/assets/asset-url";
 import { getAdminNews } from "@/server/modules/news/repository";
 import { HttpError } from "@/server/http/errors";
 
@@ -26,6 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const id = typeof context.params?.newsId === "string" ? context.params.newsId : "";
   try {
     const item = await getAdminNews(id);
+    const coverUrl = await getReadyAssetUrl(item.coverAssetId);
     const locales = Object.fromEntries(
       item.locales.map((locale) => [
         locale.locale,
@@ -47,6 +49,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           slug: item.slug,
           category: item.category,
           displayDate: String(item.displayDate),
+          coverAssetId: item.coverAssetId || "",
+          coverUrl: coverUrl || "",
           locales,
         },
       },

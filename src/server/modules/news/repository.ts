@@ -61,6 +61,7 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         category: input.category,
         displayDate: input.displayDate,
         bodyFormat: "MARKDOWN_V1",
+        coverAssetId: input.coverAssetId ?? null,
         createdByActorId: actorId,
         updatedByActorId: actorId,
       })
@@ -122,7 +123,11 @@ export async function saveNews(
     await bumpNewsVersion(tx, id, expectedVersion, actorId);
     await tx
       .update(news)
-      .set({ category: input.category, displayDate: input.displayDate })
+      .set({
+        category: input.category,
+        displayDate: input.displayDate,
+        coverAssetId: input.coverAssetId,
+      })
       .where(eq(news.id, id));
     for (const locale of ["ko", "en"] as const) {
       await tx
@@ -146,11 +151,24 @@ export async function publishNewsLocale(
 ) {
   const db = getDb();
   return db.transaction(async (tx) => {
+    const parent = await tx.query.news.findFirst({ where: eq(news.id, id) });
     const current = await tx.query.newsLocales.findFirst({
       where: and(eq(newsLocales.newsId, id), eq(newsLocales.locale, locale)),
     });
-    if (!current || !current.title.trim() || !current.bodyMarkdown.trim())
-      throw new HttpError("PUBLICATION_INVALID");
+    if (!parent || !current) throw new HttpError("NOT_FOUND");
+    const language = locale === "ko" ? "국문" : "영문";
+    if (!current.title.trim() || !current.bodyMarkdown.trim()) {
+      throw new HttpError(
+        "PUBLICATION_INVALID",
+        `${language} 제목과 본문이 있어야 게시할 수 있습니다.`,
+      );
+    }
+    if (parent.coverAssetId && !current.coverAlt?.trim()) {
+      throw new HttpError(
+        "PUBLICATION_INVALID",
+        `${language} 대표 이미지 대체 설명을 입력해 주세요.`,
+      );
+    }
     await bumpNewsVersion(tx, id, expectedVersion, actorId);
     await tx
       .update(newsLocales)
@@ -240,6 +258,7 @@ export async function changeNewsSlug(
   expectedVersion: number,
   actorId: string,
 ) {
+  assertValidNewsSlug(newSlug);
   const db = getDb();
   return db.transaction(async (tx) => {
     const current = await tx.query.newsSlugs.findFirst({

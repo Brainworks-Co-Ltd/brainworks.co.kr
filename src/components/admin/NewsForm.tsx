@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
+import { AdminImageField } from "@/components/admin/AdminImageField";
 import { LocalePublicationPanel } from "@/components/admin/LocalePublicationPanel";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 import {
@@ -14,6 +15,7 @@ import {
   isUnauthorized,
   requestAdminApi,
 } from "@/lib/admin-api";
+import { todayInSeoul } from "@/lib/datetime-local";
 import { suggestSlug } from "@/lib/news-slug";
 import { NEWS_CATEGORIES } from "@/lib/news-categories";
 import { flushSync } from "react-dom";
@@ -33,6 +35,8 @@ export type NewsFormValue = {
   slug: string;
   category: string;
   displayDate: string;
+  coverAssetId: string;
+  coverUrl: string;
   locales: Record<"ko" | "en", NewsLocaleValue>;
 };
 
@@ -54,7 +58,9 @@ export function createEmptyNews(): NewsFormValue {
     itemStatus: "ACTIVE",
     slug: "",
     category: "COMPANY",
-    displayDate: new Date().toISOString().slice(0, 10),
+    displayDate: todayInSeoul(),
+    coverAssetId: "",
+    coverUrl: "",
     locales: { ko: emptyLocale(), en: emptyLocale() },
   };
 }
@@ -118,6 +124,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       slug: form.slug,
       category: form.category,
       displayDate: form.displayDate,
+      coverAssetId: form.coverAssetId || null,
       locales: {
         ko: {
           title: form.locales.ko.title,
@@ -406,6 +413,26 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             className="min-h-11 rounded-xl border border-slate-300 px-3"
           />
         </label>
+        <div className="md:col-span-3">
+          <AdminImageField
+            label="대표 이미지"
+            value={{
+              assetId: form.coverAssetId || null,
+              url: form.coverUrl || null,
+            }}
+            disabled={busy}
+            onBusyChange={setBusy}
+            onError={setError}
+            onUnauthorized={handleUnauthorized}
+            onChange={(next) =>
+              setForm((current) => ({
+                ...current,
+                coverAssetId: next.assetId ?? "",
+                coverUrl: next.url ?? "",
+              }))
+            }
+          />
+        </div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
@@ -440,6 +467,16 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                 )}
               </label>
             ))}
+            <label className="grid gap-2 text-sm font-medium">
+              대표 이미지 대체 설명
+              <input
+                value={form.locales[locale].coverAlt}
+                onChange={(event) =>
+                  updateLocale(locale, "coverAlt", event.target.value)
+                }
+                className="min-h-11 rounded-xl border border-slate-300 px-3"
+              />
+            </label>
             {form.id ? (
               <LocalePublicationPanel
                 locale={locale}

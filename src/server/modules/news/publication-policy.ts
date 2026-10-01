@@ -4,7 +4,10 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function assertValidNewsSlug(slug: string) {
   if (!slugPattern.test(slug)) {
-    throw new HttpError("PUBLICATION_INVALID");
+    throw new HttpError(
+      "PUBLICATION_INVALID",
+      "공개 주소 이름은 영문 소문자, 숫자, 하이픈만 쓸 수 있습니다.",
+    );
   }
 }
 

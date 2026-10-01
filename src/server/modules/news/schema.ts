@@ -18,6 +18,8 @@ export const newsCommandSchema = z.object({
   slug: z.string(),
   category: z.enum(NEWS_CATEGORY_CODES),
   displayDate: dateOnlySchema,
+  /** 두 언어가 같이 쓰는 대표 이미지. 빠지면 저장된 값을 그대로 둔다. */
+  coverAssetId: z.string().nullable().optional(),
   locales: z.object({ ko: newsLocaleSchema, en: newsLocaleSchema }),
 });
 

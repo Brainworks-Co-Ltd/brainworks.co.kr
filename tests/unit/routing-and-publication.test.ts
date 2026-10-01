@@ -24,7 +24,7 @@ describe("뉴스 공개·라우팅 정책", () => {
         slug: "잘못된 슬러그",
         locales: { ko: { title: "제목", bodyMarkdown: "본문" } },
       }),
-    ).toThrow("PUBLICATION_INVALID");
+    ).toThrow("공개 주소 이름은 영문 소문자, 숫자, 하이픈만 쓸 수 있습니다.");
   });
 
   it("공개 조건은 활성 부모와 게시 로케일을 모두 확인한다", () => {

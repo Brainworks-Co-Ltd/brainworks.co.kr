@@ -20,6 +20,8 @@ function editingNews(): NewsFormValue {
     slug: "ai-news",
     category: "COMPANY",
     displayDate: "2024-01-01",
+    coverAssetId: "",
+    coverUrl: "",
     locales: {
       ko: {
         title: "국문 제목",
@@ -79,7 +81,7 @@ describe("NewsForm 저장 및 게시 검증", () => {
 
     const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
     expect(Object.keys(body).sort()).toEqual(
-      ["category", "displayDate", "locales", "slug"].sort(),
+      ["category", "coverAssetId", "displayDate", "locales", "slug"].sort(),
     );
   });
 
@@ -111,5 +113,80 @@ describe("NewsForm 저장 및 게시 검증", () => {
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent("새로고침");
     expect(koTitle).toHaveValue("충돌 테스트 제목");
+  });
+
+  it("대표 이미지와 언어별 대체 설명을 저장 요청에 싣는다", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 201,
+        json: async () => ({
+          data: { id: "cover-1", url: "/media/cover-1.webp", version: 3 },
+        }),
+      }),
+    );
+    const { container } = render(<NewsForm initial={editingNews()} />);
+
+    fireEvent.change(screen.getByLabelText("대표 이미지"), {
+      target: { files: [new File(["png"], "cover.png", { type: "image/png" })] },
+    });
+    await waitFor(() =>
+      expect(container.querySelector('img[src="/media/cover-1.webp"]')).not.toBeNull(),
+    );
+    const [koAlt] = screen.getAllByLabelText("대표 이미지 대체 설명");
+    fireEvent.change(koAlt, { target: { value: "협약식 사진" } });
+
+    fireEvent.click(await screen.findByRole("button", { name: "변경 저장" }));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[1][1]?.body as string);
+    expect(body.input.coverAssetId).toBe("cover-1");
+    expect(body.input.locales.ko.coverAlt).toBe("협약식 사진");
+  });
+
+  it("새 뉴스 표시일 기본값은 서울 날짜다", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-30T15:30:00.000Z"));
+    try {
+      expect(createEmptyNews().displayDate).toBe("2026-10-01");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("대표 이미지를 올리는 동안에는 변경 저장과 게시 버튼이 잠긴다", async () => {
+    let finishUpload: (response: unknown) => void = () => undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockReturnValue(
+        new Promise((resolve) => {
+          finishUpload = resolve;
+        }),
+      ),
+    );
+    render(<NewsForm initial={editingNews()} />);
+
+    fireEvent.change(screen.getByLabelText("공개 주소 이름"), {
+      target: { value: "ai-news-2" },
+    });
+    expect(screen.getByRole("button", { name: "주소 변경" })).not.toBeDisabled();
+    fireEvent.change(screen.getByLabelText("대표 이미지"), {
+      target: { files: [new File(["png"], "cover.png", { type: "image/png" })] },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByText("이미지를 올리는 중입니다.")).toBeInTheDocument(),
+    );
+    expect(screen.getByRole("button", { name: "처리 중…" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "주소 변경" })).toBeDisabled();
+    const koGroup = within(screen.getByRole("group", { name: "국문 게시 관리" }));
+    expect(koGroup.getByRole("button", { name: "국문 게시" })).toBeDisabled();
+
+    finishUpload({
+      ok: true,
+      status: 201,
+      json: async () => ({ data: { id: "cover-9", url: "/media/cover-9.webp" } }),
+    });
+    expect(await screen.findByRole("button", { name: "변경 저장" })).not.toBeDisabled();
   });
 });
