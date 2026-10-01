@@ -1,53 +1,63 @@
-# 브레인웍스 스테이징·프로덕션 전환 런북
+# 브레인웍스 서버 배포 런북
 
-이 문서는 실제 계정·서버·DNS 권한이 확인된 뒤 운영 담당자가 실행합니다. 계정 소유자, 비용 승인, 운영 담당자, 발신·수신 메일 주소가 비어 있으면 기존 GitHub Pages를 유지합니다.
+운영 서버는 카페24 SSD 가상서버 비즈니스(Ubuntu 24.04, 서울 IDC)입니다. IP는 180.70.116.103이고, 접속은 root 키 전용입니다(PC의 `~\.ssh\brainworks_vm`). 2026-10-01에 이전 서버(개발언어 VPS DEV B, 오사카)에서 옮겼습니다.
 
-## 스테이징 승인 전
+## 서버 구성
 
-- [ ] 카페24 Node.js VPS와 PostgreSQL 17 연결을 시험 환경에서 확인
-- [ ] AWS S3 서울 리전 비공개 버킷·CloudFront·문서 검사 제공자 연결
-- [ ] SES SMTP 발신 도메인·수신 주소·STARTTLS 연결 확인
-- [ ] `/etc/brainworks/*.env`를 서버 외부 비밀로 만들고 `APP_ORIGIN`을 실제 스테이징 주소로 설정
-- [ ] `npm ci`, 타입 검사, 린트, 단위·DB 테스트, 빌드, migration 실행
-- [ ] `scripts/migration` 추출·dry-run·대조를 같은 입력으로 두 번 실행
-- [ ] 원본 수·로케일·순서·부모 관계·체크섬·자산 참조가 일치하고 미해결 파일이 0인지 확인
-- [ ] 국문·영문 공개 경로, 관리자 비로그인 이동, 공지·팝업·문의·첨부 다운로드 smoke 실행
-- [ ] `pg_dump -Fc` 백업을 만들고 격리 DB에 복원한 뒤 readiness와 공개 경로 확인
-
-## 스테이징 승인 기록
-
-| 항목 | 값 |
+| 항목 | 위치 |
 |---|---|
-| 승인자 | |
-| 승인 시각(UTC) | |
-| 릴리스 SHA | |
-| DB 대조 run ID | |
-| 백업 파일·체크섬 | |
-| 검사·메일 수신 확인 | |
-| 롤백 담당자·연락처 | |
+| 앱 프로세스 | systemd `brainworks-web` (`ops/systemd/brainworks-web.service`), 127.0.0.1:3000, `TZ=Asia/Seoul` |
+| 환경 변수 | `/etc/brainworks/app.env` (root:brainworks 640, 저장소에 두지 않음) |
+| 릴리스 | `/srv/brainworks/releases/{sha}`, 운영 중인 것은 `/srv/brainworks/current` 링크 |
+| 업로드 이미지 | `/var/lib/brainworks/uploads` |
+| DB | PostgreSQL 17, DB와 계정 이름 `brainworks` |
+| 웹 서버 | nginx (`ops/nginx/brainworks.conf` + certbot이 붙인 HTTPS, www는 apex로 301) |
+| DB 백업 | `/etc/cron.d/brainworks-backup`, 6시간마다 `/var/lib/brainworks/backups`, 14일 보관 |
 
-## 프로덕션 전환
+## 배포
 
-1. 최종 백업과 체크섬을 생성하고 복구 가능한지 확인합니다.
-2. 검증된 immutable release를 `/srv/brainworks/releases/{gitSha}`에 배치합니다.
-3. 운영 환경 변수와 외부 의존성 연결을 확인합니다. 실제 값은 저장소에 기록하지 않습니다.
-4. migration을 먼저 실행합니다. 실패하면 트래픽을 전환하지 않습니다.
-5. 임시 포트에서 PM2 대상 standalone 서버를 기동하고 `/api/health/ready`, `/`, `/en`, `/notices`, `/en/notices`, `/contact`를 확인합니다.
-6. 검증이 끝난 뒤에만 `/srv/brainworks/current` 링크를 원자적으로 바꾸고 PM2를 재시작합니다.
-7. Nginx를 통해 TLS, 원본 호스트, canonical·hreflang, 언어 전환, sitemap, 관리자 보호, 문의 메일, 팝업 최대 3건을 확인합니다.
-8. DNS를 전환하고 전파 중에는 기존 GitHub Pages를 롤백 대상으로 유지합니다.
+PC의 PowerShell에서 저장소 폴더로 이동한 뒤 두 줄을 차례로 실행합니다. 같은 창에서 실행해야 `$sha`가 이어집니다.
+
+```powershell
+git fetch origin; $sha = git rev-parse --short origin/main; git -c core.autocrlf=false archive -o "$env:TEMP\bw-$sha.tar" origin/main; scp -i "$env:USERPROFILE\.ssh\brainworks_vm" "$env:TEMP\bw-$sha.tar" root@180.70.116.103:/tmp/
+```
+
+```powershell
+ssh -i "$env:USERPROFILE\.ssh\brainworks_vm" root@180.70.116.103 "mkdir -p /srv/brainworks/build/$sha && tar -xf /tmp/bw-$sha.tar -C /srv/brainworks/build/$sha && SHA=$sha bash /srv/brainworks/build/$sha/scripts/deploy.sh"
+```
+
+`scripts/deploy.sh`는 서버에서 빌드하고 migration을 적용한 뒤 릴리스를 바꿉니다. 준비 확인(`/api/health/ready/`)에 실패하면 직전 릴리스로 되돌리고 멈춥니다. 마지막 `== 결과`에 200과 `active`가 나오면 끝입니다.
+
+- `core.autocrlf=false`를 빼면 이 PC에서는 스크립트가 CRLF로 묶여 서버에서 `bash\r` 오류가 납니다.
+- 빌드는 서버(RAM 2G, 스왑 4G)에서 5~10분 걸립니다.
 
 ## 롤백
 
-- 애플리케이션 오류: `current` 링크를 직전 릴리스로 되돌리고 PM2를 재시작합니다.
-- migration 오류: 트래픽을 새 릴리스로 보내지 않고 원인과 호환성 상태를 확인합니다. 파괴적 수동 SQL을 실행하지 않습니다.
-- 데이터 오류: 승인된 백업을 격리 DB에 먼저 복원·검증한 뒤 운영 복구를 승인합니다.
-- DNS·TLS 오류: DNS를 즉시 되돌리기보다 TTL과 캐시를 기록하고 기존 Pages 상태와 비교합니다.
-- 문의 메일 장애: 공개 페이지 조회는 유지하고 폼에는 일반 실패와 대체 연락처만 표시합니다. SMTP 상세를 공개하지 않습니다.
+```bash
+ln -sfn /srv/brainworks/releases/{이전 sha} /srv/brainworks/current && systemctl restart brainworks-web
+```
 
-## 전환 후 확인
+migration은 되돌리지 않습니다. 스키마가 이전 앱과 맞지 않으면 백업을 격리 DB에 먼저 복원해 확인한 뒤 결정합니다.
 
-- [ ] 24시간 오류율·ready 상태·디스크·메모리 확인
-- [ ] DB 백업 6시간 주기와 S3 업로드 확인
-- [ ] 공지·팝업·수상·사업 영역의 승인된 로케일만 공개되는지 확인
-- [ ] 담당자·전환 시각·릴리스 SHA·롤백 여부를 기록
+## 서버를 처음부터 세울 때
+
+1. 카페24에서 root 비밀번호로 한 번 접속해 키를 등록합니다.
+   ```powershell
+   $key = (Get-Content "$env:USERPROFILE\.ssh\brainworks_vm.pub" -Raw).Trim(); ssh root@{새 IP} "mkdir -p ~/.ssh && chmod 700 ~/.ssh && echo '$key' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+   ```
+2. 위 배포 첫 줄로 소스를 올리고 서버에서 풉니다. 백업 파일도 서버에 올립니다.
+3. `DUMP=/경로/백업.dump bash ops/provision.sh`: Node 24, PostgreSQL 17, nginx, 방화벽, 키 전용 접속, 앱 계정, DB, `app.env`를 만들고 백업을 복원합니다.
+4. `nano /etc/brainworks/app.env`로 `SMTP_PASSWORD='...'`(하이웍스 메일 전용 비밀번호)를 넣습니다.
+5. `SHA={sha} bash scripts/deploy.sh`
+6. 카페24 DNS에서 A 레코드 `brainworks.co.kr`만 새 IP로 바꿉니다. www CNAME(`brainworks.co.kr`), MX, TXT는 건드리지 않습니다. MX와 TXT가 바뀌면 회사 메일이 끊깁니다.
+7. DNS가 퍼진 뒤 `bash ops/enable-https.sh`: 인증서 발급, www 리다이렉트, DB 백업 cron을 설정합니다.
+
+카페24 이미지는 `/usr/bin/perl`이 root 전용이라 `sudo -u postgres psql`이 실패합니다. 스크립트는 `/usr/lib/postgresql/17/bin`을 직접 씁니다.
+
+## 백업과 복원
+
+- 서버: 6시간마다 DB 덤프, 14일 보관
+- 서버 밖: PC 작업 스케줄러 `brainworks-backup`이 2주마다 최신 덤프와 업로드 이미지를 구글 드라이브 `brainworks-backup\날짜`로 받습니다.
+- 복원: `scripts/restore-postgres.sh` (`BACKUP_FILE`, `RESTORE_DATABASE_URL`, `CONFIRM_RESTORE=yes`)
+
+업로드 이미지는 DB 덤프에 들어 있지 않습니다. 서버가 사라지면 마지막 PC 백업 이후 올린 이미지는 복구할 수 없습니다.

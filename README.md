@@ -61,7 +61,7 @@ DB를 끄고 다시 공개 사이트만 보려면 `.env`의 `DATABASE_URL`을 �
 
 ### 서버 시간대는 Asia/Seoul로 고정한다
 
-예약 게시 시각 변환이 서버 프로세스 시간대를 기준으로 하므로 서버 프로세스의 `TZ`는 `Asia/Seoul`로 고정한다 (`ops/pm2/ecosystem.config.cjs` 참고).
+예약 게시 시각 변환이 서버 프로세스 시간대를 기준으로 하므로 서버 프로세스의 `TZ`는 `Asia/Seoul`로 고정한다 (`ops/systemd/brainworks-web.service` 참고).
 
 ### 백엔드 서버는 따로 없다
 
