@@ -1,4 +1,6 @@
+import { sql } from "drizzle-orm";
 import { beforeAll, describe, expect, it } from "vitest";
+import { getDb } from "@/server/db/client";
 import type { PopupCommandInput } from "@/server/modules/popup-notices/contracts";
 import { getAdminPopupNoticeList } from "@/server/modules/popup-notices/queries";
 import {
@@ -114,5 +116,29 @@ describe.skipIf(!hasTestDatabase)("팝업 게시 기간 저장", () => {
     await expect(
       publishPopupNotice(created.id, "ko", created.version, actorId, { startsAt, endsAt }),
     ).rejects.toMatchObject({ code: "PUBLICATION_WINDOW_INVALID" });
+  });
+
+  it("같은 팝업을 저장과 게시가 동시에 해도 교착 없이 한쪽만 성공하고 다른 쪽은 VERSION_CONFLICT가 된다", async () => {
+    // 앞 테스트가 지금 노출되는 팝업 3개를 남겨 두므로, 겹치지 않는 먼 기간으로 예약해 둔다.
+    const live = await liveKoPopup(
+      "동시 저장 게시",
+      new Date(Date.now() + 30 * day),
+      new Date(Date.now() + 35 * day),
+    );
+
+    // 연결이 하나뿐이면 새 연결을 여는 동안 한쪽이 먼저 끝나 버리므로, 연결 두 개를 미리 열어 둔다.
+    await Promise.all([
+      getDb().execute(sql`select pg_sleep(0.1)`),
+      getDb().execute(sql`select pg_sleep(0.1)`),
+    ]);
+
+    const results = await Promise.allSettled([
+      savePopupNotice(live.id, popupInput("동시 저장 게시"), live.version, actorId),
+      publishPopupNotice(live.id, "ko", live.version, actorId),
+    ]);
+
+    expect(results.filter((result) => result.status === "fulfilled")).toHaveLength(1);
+    const rejected = results.find((result) => result.status === "rejected");
+    expect(rejected).toMatchObject({ reason: { code: "VERSION_CONFLICT" } });
   });
 });

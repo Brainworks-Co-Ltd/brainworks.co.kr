@@ -151,8 +151,9 @@ export async function publishPopupNotice(id: string, locale: PopupLocale, expect
     const startsAt = (window.startsAt !== undefined ? window.startsAt : current.publishStartsAt) ?? now;
     const endsAt = window.endsAt !== undefined ? window.endsAt : current.publishEndsAt;
     assertPublicationWindow(startsAt, endsAt);
-    await assertPopupWindowCapacity(tx, id, locale, startsAt, endsAt);
+    // 저장과 같은 순서로 잠근다(팝업 행, 그다음 언어별 어드바이저리 락). 반대로 잠그면 동시 요청이 교착한다.
     await bumpPopupVersion(tx, id, expectedVersion, actorId);
+    await assertPopupWindowCapacity(tx, id, locale, startsAt, endsAt);
     await tx.update(popupNoticeLocales).set({ publicationStatus: startsAt > now ? "SCHEDULED" : "PUBLISHED", publishStartsAt: startsAt, publishEndsAt: endsAt, firstPublishedAt: current.firstPublishedAt ?? now, lastPublishedAt: now, lastPublishedByActorId: actorId, updatedAt: now, updatedByActorId: actorId }).where(and(eq(popupNoticeLocales.popupNoticeId, id), eq(popupNoticeLocales.locale, locale)));
     return { id, locale, version: expectedVersion + 1 };
   });
