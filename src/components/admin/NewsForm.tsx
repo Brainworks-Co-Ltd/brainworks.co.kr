@@ -1,4 +1,5 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
+import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -338,7 +339,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-3">
+      <section className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-3">
         <div className="grid gap-2">
           <label htmlFor="news-slug" className="text-sm font-medium">
             공개 주소 이름
@@ -358,14 +359,14 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                   }));
               }}
               pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              className="min-h-11 min-w-0 flex-1 rounded-xl border border-slate-300 px-3"
+              className={`${inputClass} min-w-0 flex-1`}
             />
             {form.id ? (
               <button
                 type="button"
                 disabled={busy || slugDraft === form.slug}
                 onClick={changeSlug}
-                className="rounded-xl border border-slate-300 px-3 text-sm font-semibold disabled:opacity-60"
+                className={secondaryButtonClass}
               >
                 주소 변경
               </button>
@@ -376,7 +377,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             제안합니다.
           </span>
         </div>
-        <label className="grid gap-2 text-sm font-medium">
+        <label className="grid content-start gap-2 text-sm font-medium">
           분류
           <select
             value={form.category}
@@ -386,7 +387,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                 category: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
             {hasUnknownCategory ? (
               <option value={form.category}>{form.category}</option>
@@ -398,7 +399,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             ))}
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-medium">
+        <label className="grid content-start gap-2 text-sm font-medium">
           표시일
           <input
             type="date"
@@ -410,7 +411,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                 displayDate: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           />
         </label>
         <div className="md:col-span-3">
@@ -439,13 +440,13 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         {(["ko", "en"] as const).map((locale) => (
           <section
             key={locale}
-            className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6"
+            className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6"
           >
             <h2 className="text-lg font-semibold">
               {locale === "ko" ? "한국어" : "English"}
             </h2>
             {(["title", "summary", "bodyMarkdown"] as const).map((key) => (
-              <label key={key} className="grid gap-2 text-sm font-medium">
+              <label key={key} className="grid content-start gap-2 text-sm font-medium">
                 {key === "title" ? "제목" : key === "summary" ? "요약" : "Markdown 본문"}
                 {key === "title" ? (
                   <input
@@ -453,7 +454,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                     onChange={(event) =>
                       updateLocale(locale, key, event.target.value)
                     }
-                    className="min-h-11 rounded-xl border border-slate-300 px-3"
+                    className={inputClass}
                   />
                 ) : (
                   <textarea
@@ -462,19 +463,19 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                     onChange={(event) =>
                       updateLocale(locale, key, event.target.value)
                     }
-                    className={`rounded-xl border border-slate-300 px-3 py-2 ${key === "bodyMarkdown" ? "font-mono text-sm" : ""}`}
+                    className={`${textareaClass} ${key === "bodyMarkdown" ? "font-mono text-sm" : ""}`}
                   />
                 )}
               </label>
             ))}
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               대표 이미지 대체 설명
               <input
                 value={form.locales[locale].coverAlt}
                 onChange={(event) =>
                   updateLocale(locale, "coverAlt", event.target.value)
                 }
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
             {form.id ? (
@@ -482,6 +483,13 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                 locale={locale}
                 status={form.locales[locale].publicationStatus}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
+                missing={[
+                  !form.locales[locale].title.trim() && "제목",
+                  !form.locales[locale].bodyMarkdown.trim() && "본문",
+                  form.coverAssetId &&
+                    !form.locales[locale].coverAlt.trim() &&
+                    "대표 이미지 대체 설명",
+                ].filter((item): item is string => Boolean(item))}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "hide")}
                 unpublishLabel="숨김"
@@ -492,9 +500,9 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       </section>
 
       {preview ? (
-        <section className="rounded-2xl border border-slate-300 bg-white p-6">
+        <section className="rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
           <p className="text-xs font-semibold text-slate-500">
-            {preview.locale === "ko" ? "국문" : "영문"} 미리보기 · 공개 상태는
+            {preview.locale === "ko" ? "국문" : "영문"} 미리보기입니다. 공개 상태는
             변경되지 않습니다
           </p>
           <h2 className="mt-4 text-2xl font-semibold">
@@ -517,14 +525,14 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
           onClick={(event) => {
             if (!confirmNavigation()) event.preventDefault();
           }}
-          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+          className={secondaryButtonClass}
         >
           목록으로
         </Link>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+          className={primaryButtonClass}
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
@@ -534,7 +542,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             type="button"
             disabled={busy}
             onClick={() => showPreview(locale)}
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {locale === "ko" ? "국문" : "영문"} 미리보기
           </button>
@@ -548,7 +556,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
                 form.itemStatus === "ARCHIVED" ? "restore" : "archive",
               )
             }
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {form.itemStatus === "ARCHIVED" ? "복원" : "보관"}
           </button>
@@ -558,7 +566,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             href={`/news/${form.slug}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+            className={secondaryButtonClass}
           >
             공개 페이지 열기
           </Link>

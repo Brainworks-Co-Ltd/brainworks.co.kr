@@ -12,7 +12,8 @@ export const honorCommandSchema = z.object({
   honorType: z.enum(["AWARD", "CERTIFICATION"]),
   occurredYear: z.number().int(),
   occurredOn: dateOnlySchema.nullable().optional(),
-  displayOrder: z.number().int(),
+  /** 비우면 서버가 유형 안 맨 뒤 순서를 매긴다. */
+  displayOrder: z.number().int().optional(),
   imageAssetId: z.string().nullable().optional(),
   locales: z.object({ ko: honorLocaleSchema, en: honorLocaleSchema }),
 });

@@ -1,4 +1,5 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
+import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -362,8 +363,8 @@ export function PopupNoticeForm({
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
-        <label className="grid gap-2 text-sm font-medium">
+      <section className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <label className="grid content-start gap-2 text-sm font-medium">
           연결 공지사항
           <select
             value={form.noticeId}
@@ -373,7 +374,7 @@ export function PopupNoticeForm({
                 noticeId: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
             <option value="">연결하지 않음</option>
             {notices.map((notice) => (
@@ -387,28 +388,50 @@ export function PopupNoticeForm({
             표시됩니다.
           </span>
         </label>
+        <label className="grid content-start gap-2 text-sm font-medium">
+          노출 순서
+          <input
+            type="number"
+            min="0"
+            value={form.locales.ko.displayOrder}
+            onChange={(event) => {
+              const displayOrder = Number(event.target.value);
+              setForm((current) => ({
+                ...current,
+                locales: {
+                  ko: { ...current.locales.ko, displayOrder },
+                  en: { ...current.locales.en, displayOrder },
+                },
+              }));
+            }}
+            className={inputClass}
+          />
+          <span className="text-xs font-normal text-slate-500">
+            팝업이 여러 개 동시에 열릴 때 숫자가 작은 팝업이 먼저 보입니다. 하나만 쓰면 그대로 두면 됩니다.
+          </span>
+        </label>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
         {(["ko", "en"] as const).map((locale) => (
           <section
             key={locale}
-            className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6"
+            className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6"
           >
             <h2 className="text-lg font-semibold">
               {locale === "ko" ? "한국어" : "English"}
             </h2>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               제목
               <input
                 value={form.locales[locale].title}
                 onChange={(event) =>
                   updateLocale(locale, "title", event.target.value)
                 }
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               본문
               <textarea
                 rows={7}
@@ -416,7 +439,7 @@ export function PopupNoticeForm({
                 onChange={(event) =>
                   updateLocale(locale, "bodyMarkdown", event.target.value)
                 }
-                className="rounded-xl border border-slate-300 px-3 py-2"
+                className={textareaClass}
               />
             </label>
             <AdminImageField
@@ -434,26 +457,14 @@ export function PopupNoticeForm({
                 updateLocale(locale, "imageUrl", next.url ?? "");
               }}
             />
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               이미지 대체 설명
               <input
                 value={form.locales[locale].imageAlt}
                 onChange={(event) =>
                   updateLocale(locale, "imageAlt", event.target.value)
                 }
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
-              />
-            </label>
-            <label className="grid gap-2 text-sm font-medium">
-              표시 순서
-              <input
-                type="number"
-                min="0"
-                value={form.locales[locale].displayOrder}
-                onChange={(event) =>
-                  updateLocale(locale, "displayOrder", Number(event.target.value))
-                }
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
             {form.id ? (
@@ -465,11 +476,17 @@ export function PopupNoticeForm({
                   form.locales[locale].publishEndsAt || null,
                 )}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
+                missing={[
+                  !form.locales[locale].title.trim() && "제목",
+                  form.locales[locale].imageAssetId &&
+                    !form.locales[locale].imageAlt.trim() &&
+                    "이미지 대체 설명",
+                ].filter((item): item is string => Boolean(item))}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "unpublish")}
               >
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="grid gap-1 text-xs font-medium">
+                  <label className="grid content-start gap-1 text-xs font-medium">
                     노출 시작
                     <input
                       type="datetime-local"
@@ -477,10 +494,10 @@ export function PopupNoticeForm({
                       onChange={(event) =>
                         updateLocale(locale, "publishStartsAt", event.target.value)
                       }
-                      className="min-h-10 rounded-lg border border-slate-300 px-2"
+                      className={`${inputClass} min-h-10`}
                     />
                   </label>
-                  <label className="grid gap-1 text-xs font-medium">
+                  <label className="grid content-start gap-1 text-xs font-medium">
                     노출 종료
                     <input
                       type="datetime-local"
@@ -488,7 +505,7 @@ export function PopupNoticeForm({
                       onChange={(event) =>
                         updateLocale(locale, "publishEndsAt", event.target.value)
                       }
-                      className="min-h-10 rounded-lg border border-slate-300 px-2"
+                      className={`${inputClass} min-h-10`}
                     />
                   </label>
                 </div>
@@ -505,14 +522,14 @@ export function PopupNoticeForm({
           onClick={(event) => {
             if (!confirmNavigation()) event.preventDefault();
           }}
-          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+          className={secondaryButtonClass}
         >
           목록으로
         </Link>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+          className={primaryButtonClass}
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
@@ -522,7 +539,7 @@ export function PopupNoticeForm({
             type="button"
             disabled={busy}
             onClick={() => showPreview(locale)}
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {locale === "ko" ? "국문" : "영문"} 미리보기
           </button>
@@ -533,7 +550,7 @@ export function PopupNoticeForm({
               type="button"
               disabled={busy || dirty}
               onClick={renotify}
-              className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+              className={secondaryButtonClass}
             >
               수정 내용을 다시 알림
             </button>
@@ -545,7 +562,7 @@ export function PopupNoticeForm({
                   form.itemStatus === "ARCHIVED" ? "restore" : "archive",
                 )
               }
-              className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+              className={secondaryButtonClass}
             >
               {form.itemStatus === "ARCHIVED" ? "복원" : "보관"}
             </button>

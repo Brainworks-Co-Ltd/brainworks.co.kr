@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from "react";
+import { primaryButtonClass, inputClass } from "@/components/admin/fields";
 import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -71,7 +72,7 @@ export default function AdminAccount({ account }: { account: Account }) {
         description="현재 로그인한 관리자 정보를 확인하고 비밀번호를 변경합니다."
       />
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
           <h2 className="text-lg font-semibold">계정 정보</h2>
           <dl className="mt-5 grid gap-4 text-sm">
             <div>
@@ -98,10 +99,10 @@ export default function AdminAccount({ account }: { account: Account }) {
             </div>
           </dl>
         </section>
-        <section className="rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
           <h2 className="text-lg font-semibold">비밀번호 변경</h2>
           <form className="mt-5 grid gap-4" onSubmit={changePassword}>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               현재 비밀번호
               <input
                 type="password"
@@ -109,10 +110,10 @@ export default function AdminAccount({ account }: { account: Account }) {
                 required
                 value={currentPassword}
                 onChange={(event) => setCurrentPassword(event.target.value)}
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               새 비밀번호
               <input
                 type="password"
@@ -121,10 +122,10 @@ export default function AdminAccount({ account }: { account: Account }) {
                 required
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               새 비밀번호 확인
               <input
                 type="password"
@@ -133,7 +134,7 @@ export default function AdminAccount({ account }: { account: Account }) {
                 required
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
             {error ? (
@@ -149,7 +150,7 @@ export default function AdminAccount({ account }: { account: Account }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+              className={primaryButtonClass}
             >
               {isSubmitting ? "변경 중…" : "비밀번호 변경"}
             </button>

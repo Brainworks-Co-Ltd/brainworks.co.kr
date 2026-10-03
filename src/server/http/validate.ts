@@ -35,3 +35,8 @@ export const versionCommandSchema = z.object({
 export const localeCommandSchema = versionCommandSchema.extend({
   locale: localeSchema,
 });
+
+/** 목록 안에서 한 칸 옮기는 명령 본문. */
+export const moveCommandSchema = versionCommandSchema.extend({
+  direction: z.enum(["up", "down"]),
+});

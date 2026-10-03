@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { inputClass, primaryButtonClass } from "@/components/admin/fields";
 import Head from "next/head";
 import Link from "next/link";
 import { isOriginMismatch } from "@/lib/admin-api";
@@ -44,7 +45,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--bw-color-surface-muted)] px-6 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
@@ -56,13 +57,13 @@ export default function ForgotPassword() {
           비밀번호 재설정
         </h1>
         {submitted ? (
-          <p className="mt-5 rounded-xl bg-[var(--bw-color-surface-muted)] p-4 text-sm leading-7 text-[var(--bw-color-muted)]">
+          <p className="mt-5 rounded-[var(--bw-radius-control)] bg-slate-50 p-4 text-sm leading-7 text-[var(--bw-color-muted)]">
             계정이 존재하는 경우 재설정 안내를 보냈습니다. 메일함을 확인해
             주세요.
           </p>
         ) : (
           <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>
-            <label className="grid gap-2 text-sm font-medium" htmlFor="email">
+            <label className="grid content-start gap-2 text-sm font-medium" htmlFor="email">
               관리자 이메일
               <input
                 id="email"
@@ -70,7 +71,7 @@ export default function ForgotPassword() {
                 required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="min-h-11 rounded-xl border border-slate-300 px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+                className={inputClass}
               />
             </label>
             {error ? (
@@ -81,7 +82,7 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+              className={primaryButtonClass}
             >
               {isSubmitting ? "전송 중…" : "재설정 메일 보내기"}
             </button>

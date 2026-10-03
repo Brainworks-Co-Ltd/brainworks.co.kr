@@ -141,6 +141,7 @@ export async function getAdminNoticeList() {
       version: notices.version,
       publicNumber: notices.publicNumber,
       displayDate: notices.displayDate,
+      categoryId: notices.categoryId,
       isPinned: notices.isPinned,
       pinOrder: notices.pinOrder,
       locale: noticeLocales.locale,
@@ -159,6 +160,7 @@ export async function getAdminNoticeList() {
     version: number;
     publicNumber: number;
     displayDate: string;
+    categoryId: string | null;
     isPinned: boolean;
     pinOrder: number | null;
     locales: Record<string, { title: string; publicationStatus: typeof rows[number]["publicationStatus"]; displayState: DisplayPublicationState }>;
@@ -170,6 +172,7 @@ export async function getAdminNoticeList() {
       version: row.version,
       publicNumber: row.publicNumber,
       displayDate: String(row.displayDate),
+      categoryId: row.categoryId,
       isPinned: row.isPinned,
       pinOrder: row.pinOrder,
       locales: {},

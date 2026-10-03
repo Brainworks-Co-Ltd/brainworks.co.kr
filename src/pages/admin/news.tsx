@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { inputClass, primaryButtonClass, secondaryButtonClass, StatusBadge } from "@/components/admin/fields";
 import type { GetServerSidePropsContext } from "next";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -37,7 +38,7 @@ export default function AdminNews({
         action={
           <Link
             href="/admin/news/new"
-            className="inline-flex min-h-10 items-center rounded-full bg-[var(--bw-color-ink)] px-4 text-sm font-semibold text-white"
+            className={primaryButtonClass}
           >
             새 뉴스
           </Link>
@@ -45,23 +46,23 @@ export default function AdminNews({
       />
       <form
         method="get"
-        className="mt-8 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:grid-cols-[1fr_12rem_auto]"
+        className="mt-8 grid gap-3 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-4 md:grid-cols-[1fr_12rem_auto]"
       >
-        <label className="grid gap-1 text-sm font-medium">
+        <label className="grid content-start gap-1 text-sm font-medium">
           검색
           <input
             name="q"
             defaultValue={query.q}
             placeholder="제목, 요약, 분류, 공개 주소"
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           />
         </label>
-        <label className="grid gap-1 text-sm font-medium">
+        <label className="grid content-start gap-1 text-sm font-medium">
           상태
           <select
             name="status"
             defaultValue={query.status}
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
             <option value="ALL">전체</option>
             <option value="DRAFT">초안</option>
@@ -70,11 +71,11 @@ export default function AdminNews({
             <option value="ARCHIVED">보관</option>
           </select>
         </label>
-        <button className="self-end min-h-11 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white">
+        <button className={`${primaryButtonClass} self-end`}>
           검색
         </button>
       </form>
-      <section className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      <section className="mt-5 overflow-hidden rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white">
         {data.items.length === 0 ? (
           <p className="p-6 text-sm text-slate-500">조건에 맞는 뉴스가 없습니다.</p>
         ) : (
@@ -85,16 +86,20 @@ export default function AdminNews({
                 className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between"
               >
                 <div>
-                  <p className="text-xs text-slate-500">
-                    {newsCategoryLabel(item.category)} · {item.displayDate} · {item.itemStatus === "ARCHIVED" ? "보관" : "활성"}
+                  <p className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                    <span className="rounded-[var(--bw-radius-control)] bg-slate-100 px-2 py-0.5 font-semibold text-[var(--bw-color-ink)]">
+                      {newsCategoryLabel(item.category)}
+                    </span>
+                    <span>{item.displayDate}</span>
+                    {item.itemStatus === "ARCHIVED" ? <StatusBadge status="ARCHIVED" label="보관" /> : null}
                   </p>
                   <h2 className="mt-1 font-semibold">
                     {item.locales.ko?.title || item.locales.en?.title || "제목 없음"}
                   </h2>
-                  <p className="mt-2 text-xs text-slate-500">
-                    국문 {publicationStatusLabel[item.locales.ko?.publicationStatus] || "없음"}
-                    {" · "}영문 {publicationStatusLabel[item.locales.en?.publicationStatus] || "없음"}
-                  </p>
+                  <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
+                    <span className="inline-flex items-center gap-1.5">국문 <StatusBadge status={item.locales.ko?.publicationStatus || "NONE"} label={publicationStatusLabel[item.locales.ko?.publicationStatus] || "없음"} /></span>
+                    <span className="inline-flex items-center gap-1.5">영문 <StatusBadge status={item.locales.en?.publicationStatus || "NONE"} label={publicationStatusLabel[item.locales.en?.publicationStatus] || "없음"} /></span>
+                  </div>
                 </div>
                 <div className="flex gap-4 text-sm">
                   <Link
@@ -128,7 +133,7 @@ export default function AdminNews({
           {data.page > 1 ? (
             <Link
               href={pageHref(query, data.page - 1)}
-              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold"
+              className={secondaryButtonClass}
             >
               이전
             </Link>
@@ -136,7 +141,7 @@ export default function AdminNews({
           {data.page < data.totalPages ? (
             <Link
               href={pageHref(query, data.page + 1)}
-              className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold"
+              className={secondaryButtonClass}
             >
               다음
             </Link>

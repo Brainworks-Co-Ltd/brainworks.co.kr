@@ -1,4 +1,5 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
+import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -300,9 +301,17 @@ export function NoticeForm({
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-2">
-        <label className="grid gap-2 text-sm font-medium">
-          카테고리
+      <section className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-2">
+        <label className="grid content-start gap-2 text-sm font-medium">
+          <span className="flex items-center justify-between gap-3">
+            카테고리 (선택)
+            <Link
+              href="/admin/notices/categories"
+              className="text-xs font-semibold text-[var(--bw-color-brand-strong)] underline-offset-4 hover:underline"
+            >
+              카테고리 관리
+            </Link>
+          </span>
           <select
             value={form.categoryId}
             onChange={(event) =>
@@ -311,9 +320,9 @@ export function NoticeForm({
                 categoryId: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
-            <option value="">카테고리를 선택해 주세요</option>
+            <option value="">분류 없음</option>
             {categories
               .filter(
                 (category) =>
@@ -326,8 +335,11 @@ export function NoticeForm({
                 </option>
               ))}
           </select>
+          <span className="text-xs font-normal leading-5 text-slate-500">
+            공개 공지 목록의 분류 필터에만 쓰입니다. 없어도 게시할 수 있습니다.
+          </span>
         </label>
-        <label className="grid gap-2 text-sm font-medium">
+        <label className="grid content-start gap-2 text-sm font-medium">
           표시일
           <input
             type="date"
@@ -339,7 +351,7 @@ export function NoticeForm({
                 displayDate: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           />
         </label>
         <label className="flex min-h-11 items-center gap-3 text-sm font-medium">
@@ -356,7 +368,7 @@ export function NoticeForm({
           목록 상단에 고정
         </label>
         {form.isPinned ? (
-          <label className="grid gap-2 text-sm font-medium">
+          <label className="grid content-start gap-2 text-sm font-medium">
             고정 순서
             <input
               type="number"
@@ -368,7 +380,7 @@ export function NoticeForm({
                   pinOrder: Number(event.target.value),
                 }))
               }
-              className="min-h-11 rounded-xl border border-slate-300 px-3"
+              className={inputClass}
             />
           </label>
         ) : null}
@@ -378,22 +390,22 @@ export function NoticeForm({
         {(["ko", "en"] as const).map((locale) => (
           <section
             key={locale}
-            className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6"
+            className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6"
           >
             <h2 className="text-lg font-semibold">
               {locale === "ko" ? "한국어" : "English"}
             </h2>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               제목
               <input
                 value={form.locales[locale].title}
                 onChange={(event) =>
                   updateLocale(locale, "title", event.target.value)
                 }
-                className="min-h-11 rounded-xl border border-slate-300 px-3"
+                className={inputClass}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium">
+            <label className="grid content-start gap-2 text-sm font-medium">
               Markdown 본문
               <textarea
                 rows={12}
@@ -401,7 +413,7 @@ export function NoticeForm({
                 onChange={(event) =>
                   updateLocale(locale, "bodyMarkdown", event.target.value)
                 }
-                className="rounded-xl border border-slate-300 px-3 py-2 font-mono text-sm"
+                className={`${textareaClass} font-mono text-sm`}
               />
             </label>
             {form.id ? (
@@ -413,11 +425,15 @@ export function NoticeForm({
                   form.locales[locale].publishEndsAt || null,
                 )}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
+                missing={[
+                  !form.locales[locale].title.trim() && "제목",
+                  !form.locales[locale].bodyMarkdown.trim() && "본문",
+                ].filter((item): item is string => Boolean(item))}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "unpublish")}
               >
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <label className="grid gap-1 text-xs font-medium">
+                  <label className="grid content-start gap-1 text-xs font-medium">
                     게시 시작
                     <input
                       type="datetime-local"
@@ -425,10 +441,10 @@ export function NoticeForm({
                       onChange={(event) =>
                         updateLocale(locale, "publishStartsAt", event.target.value)
                       }
-                      className="min-h-10 rounded-lg border border-slate-300 px-2"
+                      className={`${inputClass} min-h-10`}
                     />
                   </label>
-                  <label className="grid gap-1 text-xs font-medium">
+                  <label className="grid content-start gap-1 text-xs font-medium">
                     게시 종료
                     <input
                       type="datetime-local"
@@ -436,7 +452,7 @@ export function NoticeForm({
                       onChange={(event) =>
                         updateLocale(locale, "publishEndsAt", event.target.value)
                       }
-                      className="min-h-10 rounded-lg border border-slate-300 px-2"
+                      className={`${inputClass} min-h-10`}
                     />
                   </label>
                 </div>
@@ -446,7 +462,7 @@ export function NoticeForm({
         ))}
       </section>
 
-      <section className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-5">
+      <section className="rounded-[var(--bw-radius-card)] border border-dashed border-slate-300 p-5">
         <h2 className="font-semibold">첨부파일</h2>
         <p className="mt-2 text-sm leading-6 text-slate-600">
           문서 악성코드 검사 제공자와 운영 정책이 확정되기 전까지 첨부파일
@@ -455,9 +471,9 @@ export function NoticeForm({
       </section>
 
       {preview ? (
-        <section className="rounded-2xl border border-slate-300 bg-white p-6">
+        <section className="rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
           <p className="text-xs font-semibold text-slate-500">
-            {preview.locale === "ko" ? "국문" : "영문"} 미리보기 · 공개 상태는
+            {preview.locale === "ko" ? "국문" : "영문"} 미리보기입니다. 공개 상태는
             변경되지 않습니다
           </p>
           <h2 className="mt-4 text-2xl font-semibold">
@@ -477,14 +493,14 @@ export function NoticeForm({
           onClick={(event) => {
             if (!confirmNavigation()) event.preventDefault();
           }}
-          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+          className={secondaryButtonClass}
         >
           목록으로
         </Link>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+          className={primaryButtonClass}
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
@@ -494,7 +510,7 @@ export function NoticeForm({
             type="button"
             disabled={busy}
             onClick={() => showPreview(locale)}
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {locale === "ko" ? "국문" : "영문"} 미리보기
           </button>
@@ -508,7 +524,7 @@ export function NoticeForm({
                 form.itemStatus === "ARCHIVED" ? "restore" : "archive",
               )
             }
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {form.itemStatus === "ARCHIVED" ? "복원" : "보관"}
           </button>
@@ -518,7 +534,7 @@ export function NoticeForm({
             href={`/notices/${form.publicNumber}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+            className={secondaryButtonClass}
           >
             공개 페이지 열기
           </Link>

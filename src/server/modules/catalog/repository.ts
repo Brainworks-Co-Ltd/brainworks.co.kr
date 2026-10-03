@@ -11,6 +11,11 @@ import {
   assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
+import {
+  nextDisplayOrder,
+  swapDisplayOrder,
+  type MoveDirection,
+} from "@/server/db/display-order";
 import { mapUniqueViolation } from "@/server/db/unique-violation";
 import { HttpError } from "@/server/http/errors";
 
@@ -52,12 +57,15 @@ function validateDraft(input: AiSolutionInput) {
   });
   if (
     !input.businessAreaId ||
-    !Number.isInteger(input.displayOrder) ||
-    input.displayOrder < 1
+    (input.displayOrder !== undefined &&
+      (!Number.isInteger(input.displayOrder) || input.displayOrder < 1))
   ) {
     throw new HttpError("PUBLICATION_INVALID");
   }
 }
+
+const areaScope = (businessAreaId: string) =>
+  sql`business_area_id = ${businessAreaId}`;
 
 export async function listAdminBusinessAreaOptions() {
   if (!process.env.DATABASE_URL) return [];
@@ -150,11 +158,15 @@ export async function getAdminAiSolution(id: string) {
 export async function createAiSolution(input: AiSolutionInput, actorId: string) {
   validateDraft(input);
   return getDb().transaction(async (tx) => {
+    // 순서를 고르지 않았으면 같은 영역의 맨 뒤에 붙인다.
+    const displayOrder =
+      input.displayOrder ??
+      (await nextDisplayOrder(tx, aiSolutions, areaScope(input.businessAreaId)));
     const [created] = await tx
       .insert(aiSolutions)
       .values({
         businessAreaId: input.businessAreaId,
-        displayOrder: input.displayOrder,
+        displayOrder,
         imageAssetId: input.imageAssetId ?? null,
         createdByActorId: actorId,
         updatedByActorId: actorId,
@@ -205,11 +217,17 @@ export async function saveAiSolution(
       }
     }
     await bump(tx, id, expectedVersion, actorId);
+    // 순서를 따로 보내지 않으면 지금 순서를 지키고, 영역이 바뀌면 새 영역의 맨 뒤로 간다.
+    const displayOrder =
+      input.displayOrder ??
+      (input.businessAreaId === current.businessAreaId
+        ? current.displayOrder
+        : await nextDisplayOrder(tx, aiSolutions, areaScope(input.businessAreaId)));
     await tx
       .update(aiSolutions)
       .set({
         businessAreaId: input.businessAreaId,
-        displayOrder: input.displayOrder,
+        displayOrder,
         imageAssetId: input.imageAssetId ?? null,
       })
       .where(eq(aiSolutions.id, id))
@@ -355,5 +373,30 @@ export async function restoreAiSolution(
       })
       .where(eq(aiSolutionLocales.aiSolutionId, id));
     return { id, version: expectedVersion + 1 };
+  });
+}
+
+/** 같은 사업 영역의 활성 이웃과 순서를 맞바꾼다. 맨 앞이나 맨 끝이면 그대로 둔다. */
+export async function moveAiSolution(
+  id: string,
+  direction: MoveDirection,
+  expectedVersion: number,
+  actorId: string,
+) {
+  return getDb().transaction(async (tx) => {
+    const current = await tx.query.aiSolutions.findFirst({
+      where: eq(aiSolutions.id, id),
+    });
+    if (!current) throw new HttpError("NOT_FOUND");
+    assertExpectedVersion(current.version, expectedVersion);
+    await bump(tx, id, expectedVersion, actorId);
+    const swapped = await swapDisplayOrder(
+      tx,
+      aiSolutions,
+      current,
+      areaScope(current.businessAreaId),
+      direction,
+    );
+    return { id, version: expectedVersion + 1, moved: Boolean(swapped) };
   });
 }

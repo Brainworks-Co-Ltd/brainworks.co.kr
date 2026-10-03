@@ -45,19 +45,23 @@ export function AdminShell({ children, activePath = "/admin" }) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bw-color-surface-muted)] text-[var(--bw-color-ink)]">
+    <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
-      <div className="mx-auto grid min-h-screen max-w-[1600px] lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="border-b border-slate-200 bg-white px-6 py-6 lg:border-b-0 lg:border-r">
+      <div className="grid min-h-screen lg:grid-cols-[232px_minmax(0,1fr)]">
+        <aside className="flex flex-col border-b border-[var(--bw-color-line)] bg-[var(--bw-color-ink)] px-5 py-6 text-white lg:border-b-0">
           <Link
             href="/admin"
-            className="text-lg font-semibold tracking-[-0.025em]"
+            className="flex items-center gap-2 px-3 text-base font-semibold tracking-[-0.02em]"
           >
+            <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[var(--bw-accent-strong,#8b93ea)]" />
             Brainworks Admin
           </Link>
-          <nav aria-label="관리자 메뉴" className="mt-8 grid gap-2">
+          <nav
+            aria-label="관리자 메뉴"
+            className="mt-4 flex gap-1 overflow-x-auto pb-1 lg:mt-8 lg:grid lg:overflow-visible lg:pb-0"
+          >
             {navigation.map((item) => {
               const active = activePath === item.href;
               return (
@@ -65,23 +69,28 @@ export function AdminShell({ children, activePath = "/admin" }) {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`rounded-xl px-3 py-2.5 text-sm font-medium transition ${active ? "bg-[var(--bw-color-ink)] text-white" : "text-[var(--bw-color-muted)] hover:bg-[var(--bw-color-surface-muted)] hover:text-[var(--bw-color-ink)]"}`}
+                  className={`flex shrink-0 items-center gap-3 rounded-[var(--bw-radius-control)] px-3 py-2.5 text-sm font-medium transition ${active ? "bg-white/10 text-white" : "text-white/65 hover:bg-white/5 hover:text-white"}`}
                 >
+                  <span
+                    aria-hidden
+                    className={`h-5 w-0.5 rounded-full ${active ? "bg-[var(--bw-accent-strong,#8b93ea)]" : "bg-transparent"}`}
+                  />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
-          <div className="mt-10 border-t border-slate-200 pt-5">
+          <div className="mt-4 flex flex-wrap gap-1 border-t border-white/10 pt-4 text-sm lg:mt-auto lg:grid lg:pt-5">
             <Link
               href="/"
-              className="text-sm text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"
+              className="rounded-[var(--bw-radius-control)] px-3 py-2 text-white/65 hover:bg-white/5 hover:text-white"
             >
               홈페이지 바로가기
             </Link>
             <Link
               href="/admin/account"
-              className="mt-3 block text-sm text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)]"
+              aria-current={activePath === "/admin/account" ? "page" : undefined}
+              className={`rounded-[var(--bw-radius-control)] px-3 py-2 hover:bg-white/5 hover:text-white ${activePath === "/admin/account" ? "text-white" : "text-white/65"}`}
             >
               계정 설정
             </Link>
@@ -89,19 +98,19 @@ export function AdminShell({ children, activePath = "/admin" }) {
               type="button"
               disabled={isSigningOut}
               onClick={signOut}
-              className="mt-3 block min-h-10 text-sm text-[var(--bw-color-muted)] hover:text-[var(--bw-color-ink)] disabled:opacity-60"
+              className="rounded-[var(--bw-radius-control)] px-3 py-2 text-left text-white/65 hover:bg-white/5 hover:text-white disabled:opacity-60"
             >
               {isSigningOut ? "로그아웃 중…" : "로그아웃"}
             </button>
             {signOutError ? (
-              <p role="alert" className="mt-2 text-xs leading-5 text-red-700">
+              <p role="alert" className="px-3 text-xs leading-5 text-amber-300">
                 {signOutError}
               </p>
             ) : null}
           </div>
         </aside>
-        <main id="main-content" className="px-6 py-8 md:px-10 md:py-12">
-          {children}
+        <main id="main-content" className="min-w-0 px-6 py-8 md:px-10 md:py-10">
+          <div className="mx-auto max-w-[1200px]">{children}</div>
         </main>
       </div>
     </div>

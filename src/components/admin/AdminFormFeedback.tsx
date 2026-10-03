@@ -12,7 +12,7 @@ export function AdminFormFeedback({
       {message ? (
         <p
           role="status"
-          className="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800"
+          className="rounded-[var(--bw-radius-control)] border-l-4 border-emerald-600 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-900"
         >
           {message}
         </p>
@@ -20,7 +20,7 @@ export function AdminFormFeedback({
       {error ? (
         <p
           role="alert"
-          className="rounded-xl bg-red-50 p-4 text-sm text-red-700"
+          className="rounded-[var(--bw-radius-control)] border-l-4 border-red-600 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
         >
           {error}
         </p>

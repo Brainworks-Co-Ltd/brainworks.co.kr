@@ -10,7 +10,8 @@ const aiSolutionLocaleSchema = z.object({
 
 export const aiSolutionCommandSchema = z.object({
   businessAreaId: z.string(),
-  displayOrder: z.number().int(),
+  /** 비우면 서버가 영역 안 맨 뒤 순서를 매긴다. */
+  displayOrder: z.number().int().optional(),
   imageAssetId: z.string().nullable().optional(),
   locales: z.object({ ko: aiSolutionLocaleSchema, en: aiSolutionLocaleSchema }),
 });

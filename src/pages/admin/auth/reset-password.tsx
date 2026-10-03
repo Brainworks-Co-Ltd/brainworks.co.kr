@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { inputClass, primaryButtonClass } from "@/components/admin/fields";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,7 +34,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--bw-color-surface-muted)] px-6 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
@@ -45,7 +46,7 @@ export default function ResetPassword() {
           새 비밀번호 설정
         </h1>
         <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>
-          <label className="grid gap-2 text-sm font-medium" htmlFor="password">
+          <label className="grid content-start gap-2 text-sm font-medium" htmlFor="password">
             새 비밀번호
             <input
               id="password"
@@ -54,13 +55,13 @@ export default function ResetPassword() {
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="min-h-11 rounded-xl border border-slate-300 px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+              className={inputClass}
             />
           </label>
           {message ? (
             <p
               role="status"
-              className="rounded-xl bg-[var(--bw-color-surface-muted)] p-4 text-sm leading-7 text-[var(--bw-color-muted)]"
+              className="rounded-[var(--bw-radius-control)] bg-slate-50 p-4 text-sm leading-7 text-[var(--bw-color-muted)]"
             >
               {message}
             </p>
@@ -68,7 +69,7 @@ export default function ResetPassword() {
           <button
             type="submit"
             disabled={isSubmitting || !token}
-            className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+            className={primaryButtonClass}
           >
             {isSubmitting ? "저장 중…" : "비밀번호 저장"}
           </button>

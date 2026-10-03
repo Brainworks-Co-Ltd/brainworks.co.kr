@@ -84,7 +84,7 @@ function StatusCounts({
       {visible.map(([status, count]) => (
         <span
           key={status}
-          className="inline-flex items-center gap-1 rounded-full border border-slate-200 px-2.5 py-1 text-xs"
+          className="inline-flex items-center gap-1 rounded-[var(--bw-radius-control)] border border-[var(--bw-color-line)] px-2.5 py-1 text-xs"
         >
           <span className="text-[var(--bw-color-muted)]">
             {statusLabel(contentType, status)}
@@ -103,7 +103,7 @@ function WorkItem({ item }: { item: AdminDashboardData["attention"][number] }) {
         <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--bw-color-muted)]">
           <span>{contentLabels[item.contentType]}</span>
           <span>{item.locale === "ko" ? "한국어" : "English"}</span>
-          <span className="rounded-full bg-[var(--bw-color-surface-muted)] px-2 py-0.5 text-[var(--bw-color-ink)]">
+          <span className="rounded-[var(--bw-radius-control)] bg-slate-100 px-2 py-0.5 font-semibold text-[var(--bw-color-ink)]">
             {statusLabel(item.contentType, item.publicationStatus)}
           </span>
         </div>
@@ -146,10 +146,10 @@ export default function AdminHome({
             </p>
           </div>
         </div>
-        <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+        <div className="mt-4 overflow-x-auto rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white">
           <table className="min-w-[760px] w-full text-left text-sm">
             <caption className="sr-only">콘텐츠 유형별 운영 상태</caption>
-            <thead className="border-b border-slate-200 bg-[var(--bw-color-surface-muted)] text-xs text-[var(--bw-color-muted)]">
+            <thead className="border-b border-[var(--bw-color-line)] bg-slate-50 text-xs text-[var(--bw-color-muted)]">
               <tr>
                 <th scope="col" className="px-5 py-3 font-medium">
                   콘텐츠
@@ -189,7 +189,7 @@ export default function AdminHome({
 
       <div className="mt-10 grid gap-8 xl:grid-cols-2">
         <section
-          className="rounded-2xl border border-slate-200 bg-white px-5 md:px-6"
+          className="min-w-0 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white px-5 md:px-6"
           aria-labelledby="attention-heading"
         >
           <div className="border-b border-slate-200 py-5">
@@ -214,7 +214,7 @@ export default function AdminHome({
         </section>
 
         <section
-          className="rounded-2xl border border-slate-200 bg-white px-5 md:px-6"
+          className="min-w-0 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white px-5 md:px-6"
           aria-labelledby="recent-heading"
         >
           <div className="border-b border-slate-200 py-5">
@@ -253,7 +253,7 @@ export default function AdminHome({
             <a
               key={action.href + action.label}
               href={action.href}
-              className="group rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-[var(--bw-color-ink)]"
+              className="group rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-5 transition hover:border-[var(--bw-color-ink)]"
             >
               <span className="font-semibold group-hover:underline group-hover:underline-offset-4">
                 {action.label}

@@ -1,4 +1,5 @@
 import { FormEvent, useState } from "react";
+import { primaryButtonClass, inputClass } from "@/components/admin/fields";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -43,7 +44,7 @@ export default function AdminSignIn() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--bw-color-surface-muted)] px-6 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
@@ -58,7 +59,7 @@ export default function AdminSignIn() {
           승인된 관리자 계정으로 로그인해 주세요.
         </p>
         <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>
-          <label className="grid gap-2 text-sm font-medium" htmlFor="email">
+          <label className="grid content-start gap-2 text-sm font-medium" htmlFor="email">
             이메일
             <input
               id="email"
@@ -68,10 +69,10 @@ export default function AdminSignIn() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="min-h-11 rounded-xl border border-slate-300 px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+              className={inputClass}
             />
           </label>
-          <label className="grid gap-2 text-sm font-medium" htmlFor="password">
+          <label className="grid content-start gap-2 text-sm font-medium" htmlFor="password">
             비밀번호
             <input
               id="password"
@@ -81,13 +82,13 @@ export default function AdminSignIn() {
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="min-h-11 rounded-xl border border-slate-300 px-3 outline-none focus:border-[var(--bw-color-brand)] focus:ring-2 focus:ring-[var(--bw-color-brand)]/30"
+              className={inputClass}
             />
           </label>
           {error ? (
             <p
               role="alert"
-              className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700"
+              className="rounded-[var(--bw-radius-control)] border-l-4 border-red-600 bg-red-50 px-3 py-2 text-sm text-red-800"
             >
               {error}
             </p>
@@ -95,7 +96,7 @@ export default function AdminSignIn() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white hover:bg-black disabled:cursor-wait disabled:opacity-60"
+            className={`${primaryButtonClass} w-full`}
           >
             {isSubmitting ? "확인 중…" : "로그인"}
           </button>

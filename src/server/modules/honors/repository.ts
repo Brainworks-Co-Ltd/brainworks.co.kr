@@ -6,6 +6,11 @@ import {
   assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
+import {
+  nextDisplayOrder,
+  swapDisplayOrder,
+  type MoveDirection,
+} from "@/server/db/display-order";
 import { mapUniqueViolation } from "@/server/db/unique-violation";
 import { HttpError } from "@/server/http/errors";
 import type { HonorType } from "@/server/modules/honors/types";
@@ -46,12 +51,14 @@ function validateDraft(input: HonorInput) {
   if (
     !Number.isInteger(input.occurredYear) ||
     input.occurredYear < 1 ||
-    !Number.isInteger(input.displayOrder) ||
-    input.displayOrder < 1
+    (input.displayOrder !== undefined &&
+      (!Number.isInteger(input.displayOrder) || input.displayOrder < 1))
   ) {
     throw new HttpError("PUBLICATION_INVALID");
   }
 }
+
+const typeScope = (honorType: HonorType) => sql`honor_type = ${honorType}`;
 
 export async function listAdminHonors() {
   if (!process.env.DATABASE_URL) return [];
@@ -126,13 +133,17 @@ export async function getAdminHonor(id: string) {
 export async function createHonor(input: HonorInput, actorId: string) {
   validateDraft(input);
   return getDb().transaction(async (tx) => {
+    // 순서를 고르지 않았으면 같은 유형의 맨 뒤에 붙인다.
+    const displayOrder =
+      input.displayOrder ??
+      (await nextDisplayOrder(tx, honors, typeScope(input.honorType)));
     const [created] = await tx
       .insert(honors)
       .values({
         honorType: input.honorType,
         occurredYear: input.occurredYear,
         occurredOn: input.occurredOn ?? null,
-        displayOrder: input.displayOrder,
+        displayOrder,
         imageAssetId: input.imageAssetId ?? null,
         createdByActorId: actorId,
         updatedByActorId: actorId,
@@ -163,13 +174,19 @@ export async function saveHonor(
     if (!current) throw new HttpError("NOT_FOUND");
     assertExpectedVersion(current.version, expectedVersion);
     await bump(tx, id, expectedVersion, actorId);
+    // 순서를 따로 보내지 않으면 지금 순서를 지키고, 유형이 바뀌면 새 유형의 맨 뒤로 간다.
+    const displayOrder =
+      input.displayOrder ??
+      (input.honorType === current.honorType
+        ? current.displayOrder
+        : await nextDisplayOrder(tx, honors, typeScope(input.honorType)));
     await tx
       .update(honors)
       .set({
         honorType: input.honorType,
         occurredYear: input.occurredYear,
         occurredOn: input.occurredOn ?? null,
-        displayOrder: input.displayOrder,
+        displayOrder,
         imageAssetId: input.imageAssetId ?? null,
       })
       .where(eq(honors.id, id))
@@ -288,5 +305,28 @@ export async function restoreHonor(
       })
       .where(eq(honorLocales.honorId, id));
     return { id, version: expectedVersion + 1 };
+  });
+}
+
+/** 같은 유형의 활성 이웃과 순서를 맞바꾼다. 맨 앞이나 맨 끝이면 그대로 둔다. */
+export async function moveHonor(
+  id: string,
+  direction: MoveDirection,
+  expectedVersion: number,
+  actorId: string,
+) {
+  return getDb().transaction(async (tx) => {
+    const current = await tx.query.honors.findFirst({ where: eq(honors.id, id) });
+    if (!current) throw new HttpError("NOT_FOUND");
+    assertExpectedVersion(current.version, expectedVersion);
+    await bump(tx, id, expectedVersion, actorId);
+    const swapped = await swapDisplayOrder(
+      tx,
+      honors,
+      current,
+      typeScope(current.honorType),
+      direction,
+    );
+    return { id, version: expectedVersion + 1, moved: Boolean(swapped) };
   });
 }

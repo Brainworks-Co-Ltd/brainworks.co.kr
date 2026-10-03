@@ -1,4 +1,5 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
+import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -115,10 +116,21 @@ export function AiSolutionForm({
     }));
   }
 
+  /** 서버의 게시 조건(publishAiSolution)과 같은 항목을 화면에서 미리 알려 준다. */
+  function missingForPublish(locale: "ko" | "en") {
+    const value = form.locales[locale];
+    const missing: string[] = [];
+    if (!value.name.trim()) missing.push("솔루션 이름");
+    if (!value.summary.trim()) missing.push("요약");
+    if (!value.description.trim()) missing.push("상세 설명");
+    if (!value.imageAlt.trim()) missing.push("이미지 대체 설명");
+    if (!form.imageAssetId) missing.push("대표 이미지");
+    return missing;
+  }
+
   function payload() {
     return {
       businessAreaId: form.businessAreaId,
-      displayOrder: form.displayOrder,
       imageAssetId: form.imageAssetId || null,
       locales: {
         ko: {
@@ -263,8 +275,8 @@ export function AiSolutionForm({
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-2">
-        <label className="grid gap-2 text-sm font-medium">
+      <section className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-2">
+        <label className="grid content-start gap-2 text-sm font-medium">
           사업 영역
           <select
             required
@@ -275,7 +287,7 @@ export function AiSolutionForm({
                 businessAreaId: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
             {areas.map((area) => (
               <option key={area.id} value={area.id}>
@@ -283,28 +295,15 @@ export function AiSolutionForm({
               </option>
             ))}
           </select>
-          <span className="text-xs font-normal text-slate-500">
-            사업 영역은 고정 분류이며 이 화면에서는 솔루션만 관리합니다.
+          <span className="text-xs font-normal leading-5 text-slate-500">
+            새 솔루션은 고른 영역의 맨 뒤에 들어갑니다. 영역 안 순서는 AI 솔루션
+            목록의 화살표로 바꿉니다.
           </span>
-        </label>
-        <label className="grid gap-2 text-sm font-medium">
-          영역 내 순서
-          <input
-            type="number"
-            min="1"
-            value={form.displayOrder}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                displayOrder: Number(event.target.value),
-              }))
-            }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
-          />
         </label>
         <div className="grid gap-2 md:col-span-2">
           <AdminImageField
             label="대표 이미지"
+            hint="두 언어가 함께 씁니다. 게시하려면 대표 이미지와 해당 언어의 이미지 대체 설명이 필요합니다."
             value={{
               assetId: form.imageAssetId || null,
               url: form.imageUrl || null,
@@ -321,32 +320,28 @@ export function AiSolutionForm({
               }))
             }
           />
-          <span className="text-xs font-normal text-slate-500">
-            게시하려면 검사를 마친 대표 이미지와 해당 언어의 대체 설명이
-            필요합니다.
-          </span>
         </div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2">
         {(["ko", "en"] as const).map((locale) => (
-          <section key={locale} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6">
+          <section key={locale} className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
             <h2 className="text-lg font-semibold">{locale === "ko" ? "한국어" : "English"}</h2>
             {(["name", "summary", "description", "imageAlt"] as const).map((key) => (
-              <label key={key} className="grid gap-2 text-sm font-medium">
+              <label key={key} className="grid content-start gap-2 text-sm font-medium">
                 {key === "name" ? "솔루션 이름" : key === "summary" ? "요약" : key === "description" ? "상세 설명" : "이미지 대체 설명"}
                 {key === "summary" || key === "description" ? (
                   <textarea
                     rows={key === "summary" ? 3 : 7}
                     value={form.locales[locale][key]}
                     onChange={(event) => updateLocale(locale, key, event.target.value)}
-                    className="rounded-xl border border-slate-300 px-3 py-2"
+                    className={textareaClass}
                   />
                 ) : (
                   <input
                     value={form.locales[locale][key]}
                     onChange={(event) => updateLocale(locale, key, event.target.value)}
-                    className="min-h-11 rounded-xl border border-slate-300 px-3"
+                    className={inputClass}
                   />
                 )}
               </label>
@@ -356,6 +351,7 @@ export function AiSolutionForm({
                 locale={locale}
                 status={form.locales[locale].publicationStatus}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
+                missing={missingForPublish(locale)}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "hide")}
                 unpublishLabel="숨김"
@@ -372,14 +368,14 @@ export function AiSolutionForm({
           onClick={(event) => {
             if (!confirmNavigation()) event.preventDefault();
           }}
-          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+          className={secondaryButtonClass}
         >
           목록으로
         </Link>
         <button
           type="submit"
           disabled={busy || areas.length === 0}
-          className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+          className={primaryButtonClass}
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
@@ -388,7 +384,7 @@ export function AiSolutionForm({
             type="button"
             disabled={busy || dirty}
             onClick={() => itemCommand(form.itemStatus === "ARCHIVED" ? "restore" : "archive")}
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {form.itemStatus === "ARCHIVED" ? "복원" : "보관"}
           </button>

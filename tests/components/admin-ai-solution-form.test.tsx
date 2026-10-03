@@ -85,7 +85,7 @@ describe("AiSolutionForm 저장 및 게시 검증", () => {
 
     const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
     expect(Object.keys(body).sort()).toEqual(
-      ["businessAreaId", "displayOrder", "imageAssetId", "locales"].sort(),
+      ["businessAreaId", "imageAssetId", "locales"].sort(),
     );
   });
 

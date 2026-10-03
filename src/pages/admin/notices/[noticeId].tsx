@@ -20,7 +20,7 @@ export default function EditNotice({
     <AdminShell activePath="/admin/notices">
       <AdminPageHeader
         title={notice.locales.ko.title || notice.locales.en.title || "공지사항 편집"}
-        description={`공지 번호 ${notice.publicNumber} · 내용을 저장한 뒤 언어별로 게시할 수 있습니다.`}
+        description={`공지 번호 ${notice.publicNumber}. 내용을 저장한 뒤 언어별로 게시할 수 있습니다.`}
       />
       <div className="mt-8">
         <NoticeForm initial={notice} categories={categories} />

@@ -1,4 +1,5 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
+import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -101,12 +102,21 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
     }));
   }
 
+  /** 서버의 게시 조건(publishHonor)과 같은 항목을 화면에서 미리 알려 준다. */
+  function missingForPublish(locale: "ko" | "en") {
+    const value = form.locales[locale];
+    const missing: string[] = [];
+    if (!value.title.trim()) missing.push("제목");
+    if (!value.organization.trim()) missing.push("기관");
+    if (!value.description.trim()) missing.push("설명");
+    return missing;
+  }
+
   function payload() {
     return {
       honorType: form.honorType,
       occurredYear: form.occurredYear,
       occurredOn: form.occurredOn || null,
-      displayOrder: form.displayOrder,
       imageAssetId: form.imageAssetId || null,
       locales: {
         ko: {
@@ -248,8 +258,8 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 md:grid-cols-4">
-        <label className="grid gap-2 text-sm font-medium">
+      <section className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-3">
+        <label className="grid content-start gap-2 text-sm font-medium">
           유형
           <select
             value={form.honorType}
@@ -259,13 +269,13 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
                 honorType: event.target.value as "AWARD" | "CERTIFICATION",
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           >
             <option value="AWARD">수상</option>
             <option value="CERTIFICATION">인증</option>
           </select>
         </label>
-        <label className="grid gap-2 text-sm font-medium">
+        <label className="grid content-start gap-2 text-sm font-medium">
           연도
           <input
             type="number"
@@ -277,10 +287,10 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
                 occurredYear: Number(event.target.value),
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           />
         </label>
-        <label className="grid gap-2 text-sm font-medium">
+        <label className="grid content-start gap-2 text-sm font-medium">
           날짜
           <input
             type="date"
@@ -291,27 +301,17 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
                 occurredOn: event.target.value,
               }))
             }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
+            className={inputClass}
           />
         </label>
-        <label className="grid gap-2 text-sm font-medium">
-          유형 내 순서
-          <input
-            type="number"
-            min="1"
-            value={form.displayOrder}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                displayOrder: Number(event.target.value),
-              }))
-            }
-            className="min-h-11 rounded-xl border border-slate-300 px-3"
-          />
-        </label>
-        <div className="md:col-span-4">
+        <p className="text-xs font-normal leading-5 text-slate-500 md:col-span-3">
+          새 항목은 고른 유형의 맨 뒤에 들어갑니다. 수상과 인증 각각의 순서는 목록의
+          화살표로 바꿉니다.
+        </p>
+        <div className="md:col-span-3">
           <AdminImageField
             label="증빙 이미지(선택)"
+            hint="두 언어가 함께 씁니다. 상장이나 인증서 사진을 올리면 공개 화면에 보입니다."
             value={{
               assetId: form.imageAssetId || null,
               url: form.imageUrl || null,
@@ -333,23 +333,23 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
 
       <section className="grid gap-6 lg:grid-cols-2">
         {(["ko", "en"] as const).map((locale) => (
-          <section key={locale} className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6">
+          <section key={locale} className="grid gap-4 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
             <h2 className="text-lg font-semibold">{locale === "ko" ? "한국어" : "English"}</h2>
             {(["title", "organization", "description", "imageAlt"] as const).map((key) => (
-              <label key={key} className="grid gap-2 text-sm font-medium">
+              <label key={key} className="grid content-start gap-2 text-sm font-medium">
                 {key === "title" ? "제목" : key === "organization" ? "기관" : key === "description" ? "설명" : "이미지 대체 설명"}
                 {key === "description" ? (
                   <textarea
                     rows={5}
                     value={form.locales[locale][key]}
                     onChange={(event) => updateLocale(locale, key, event.target.value)}
-                    className="rounded-xl border border-slate-300 px-3 py-2"
+                    className={textareaClass}
                   />
                 ) : (
                   <input
                     value={form.locales[locale][key]}
                     onChange={(event) => updateLocale(locale, key, event.target.value)}
-                    className="min-h-11 rounded-xl border border-slate-300 px-3"
+                    className={inputClass}
                   />
                 )}
               </label>
@@ -359,6 +359,7 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
                 locale={locale}
                 status={form.locales[locale].publicationStatus}
                 busy={busy || dirty || form.itemStatus === "ARCHIVED"}
+                missing={missingForPublish(locale)}
                 onPublish={() => localeCommand(locale, "publish")}
                 onUnpublish={() => localeCommand(locale, "hide")}
                 unpublishLabel="숨김"
@@ -375,14 +376,14 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
           onClick={(event) => {
             if (!confirmNavigation()) event.preventDefault();
           }}
-          className="inline-flex min-h-11 items-center rounded-full border border-slate-300 px-5 text-sm font-semibold"
+          className={secondaryButtonClass}
         >
           목록으로
         </Link>
         <button
           type="submit"
           disabled={busy}
-          className="min-h-11 rounded-full bg-[var(--bw-color-ink)] px-5 text-sm font-semibold text-white disabled:opacity-60"
+          className={primaryButtonClass}
         >
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
@@ -391,7 +392,7 @@ export function HonorForm({ initial }: { initial: HonorFormValue }) {
             type="button"
             disabled={busy || dirty}
             onClick={() => itemCommand(form.itemStatus === "ARCHIVED" ? "restore" : "archive")}
-            className="min-h-11 rounded-full border border-slate-300 px-5 text-sm font-semibold disabled:opacity-60"
+            className={secondaryButtonClass}
           >
             {form.itemStatus === "ARCHIVED" ? "복원" : "보관"}
           </button>

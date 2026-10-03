@@ -122,7 +122,8 @@ async function assertCategoryLocale(
   categoryId: string | null,
   locale: NoticeLocale,
 ) {
-  if (!categoryId) throw new HttpError("NOTICE_CATEGORY_LOCALE_REQUIRED");
+  // 카테고리는 선택 사항이다. 골랐을 때만 활성 상태와 같은 언어 이름을 확인한다.
+  if (!categoryId) return;
   const category = await tx
     .select({ id: noticeCategoryLocales.id })
     .from(noticeCategoryLocales)
