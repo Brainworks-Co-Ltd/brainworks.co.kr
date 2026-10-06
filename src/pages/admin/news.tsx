@@ -34,7 +34,7 @@ export default function AdminNews({
     <AdminShell activePath="/admin/news">
       <AdminPageHeader
         title="뉴스"
-        description="초안, 게시, 숨김, 보관 상태와 국문·영문 내용을 모두 확인합니다."
+        description="초안, 게시, 숨김, 보관 상태와 국문, 영문 내용을 모두 확인합니다."
         action={
           <Link
             href="/admin/news/new"

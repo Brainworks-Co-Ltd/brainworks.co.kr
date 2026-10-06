@@ -52,9 +52,9 @@ export function Field({
 }
 
 const badgeTone: Record<string, string> = {
-  LIVE: "bg-emerald-600 text-white",
-  PUBLISHED: "bg-emerald-600 text-white",
-  SCHEDULED: "bg-sky-600 text-white",
+  LIVE: "bg-emerald-700 text-white",
+  PUBLISHED: "bg-emerald-700 text-white",
+  SCHEDULED: "bg-sky-700 text-white",
   DRAFT: "bg-amber-100 text-amber-900",
   ENDED: "bg-slate-200 text-slate-700",
   HIDDEN: "bg-slate-200 text-slate-700",
