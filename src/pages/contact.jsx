@@ -135,6 +135,15 @@ export default function Contact() {
         body: JSON.stringify({ ...form, locale: language }),
       });
       if (!response.ok) {
+        if (response.status === 429) {
+          setStatus("error");
+          setError(
+            language === "ko"
+              ? "짧은 시간에 여러 번 보내 지금은 접수할 수 없습니다. 입력 내용은 그대로 있으니 한 시간 뒤에 다시 보내 주세요."
+              : "Too many attempts in a short time. Your input is preserved; please try again in an hour.",
+          );
+          return;
+        }
         if (response.status >= 400 && response.status < 500) {
           setStatus("error");
           setError(
