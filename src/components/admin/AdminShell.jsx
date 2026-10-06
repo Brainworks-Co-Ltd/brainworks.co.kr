@@ -49,7 +49,7 @@ export function AdminShell({ children, activePath = "/admin" }) {
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
-      <div className="grid min-h-screen lg:grid-cols-[232px_minmax(0,1fr)]">
+      <div className="grid min-h-screen grid-rows-[auto_1fr] lg:grid-cols-[232px_minmax(0,1fr)] lg:grid-rows-1">
         <aside className="flex flex-col border-b border-[var(--bw-color-line)] bg-[var(--bw-color-ink)] px-5 py-6 text-white lg:border-b-0">
           <Link
             href="/admin"
@@ -109,7 +109,7 @@ export function AdminShell({ children, activePath = "/admin" }) {
             ) : null}
           </div>
         </aside>
-        <main id="main-content" className="min-w-0 px-6 py-8 md:px-10 md:py-10">
+        <main id="main-content" className="bw-admin min-w-0 px-6 py-8 md:px-10 md:py-10">
           <div className="mx-auto max-w-[1200px]">{children}</div>
         </main>
       </div>

@@ -704,12 +704,14 @@
 /* PageHero(data-variant)는 자체 여백을 쓴다. 제외하지 않으면
    히어로의 pt-28 위에 96px이 덧붙어 첫 화면이 텅 빈다.
    메인(.bw-home)도 제외한다. 메인은 섹션마다 자기 여백을 들고 있는데
-   이 규칙이 그것을 전부 96px로 눌러 히어로 위가 붙고 리듬이 사라졌다. */
+   이 규칙이 그것을 전부 96px로 눌러 히어로 위가 붙고 리듬이 사라졌다.
+   관리자 화면(.bw-admin)도 제외한다. 목록 카드와 운영 현황 섹션 위아래에
+   96px씩 빈칸이 생겼다. */
 :root[data-design="industrial"]
-  main:not(.bw-home)
+  main:not(.bw-home):not(.bw-admin)
   > section:not([data-variant]),
 :root[data-design="industrial"]
-  main:not(.bw-home)
+  main:not(.bw-home):not(.bw-admin)
   > div
   > section:not([data-variant]) {
   padding-block: var(--bw-space-9);

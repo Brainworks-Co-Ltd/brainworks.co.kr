@@ -34,7 +34,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white px-6 py-12">
+    <main className="bw-admin flex min-h-screen items-center justify-center bg-white px-6 py-12">
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
