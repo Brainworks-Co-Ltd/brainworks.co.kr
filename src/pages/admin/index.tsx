@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import type { ReactNode } from "react";
+import { CircleCheck, Inbox, TriangleAlert } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
@@ -49,7 +50,6 @@ const dateTimeFormat = new Intl.DateTimeFormat("ko-KR", {
 });
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
   timeZone: "Asia/Seoul",
-  year: "numeric",
   month: "long",
   day: "numeric",
 });
@@ -68,46 +68,120 @@ function dayText(daysLeft: number) {
   return `${daysLeft}일 뒤`;
 }
 
+/** 받침이 있으면 "과", 없으면 "와". 한글이 아니면 "와"로 둔다. */
+function withAnd(word: string) {
+  const code = word.charCodeAt(word.length - 1) - 0xac00;
+  return `${word}${code >= 0 && code < 11172 && code % 28 !== 0 ? "과" : "와"}`;
+}
+
+/** ["영문 팝업", "상단 고정 공지"] → "영문 팝업과 상단 고정 공지" */
+function joinKorean(words: string[]) {
+  if (words.length <= 1) return words.join("");
+  return `${words.slice(0, -2).map((word) => `${word}, `).join("")}${withAnd(words[words.length - 2])} ${words[words.length - 1]}`;
+}
+
+/*
+ * 위계. 페이지 제목 > 열 제목(굵은 글자와 잉크 선) > 패널 제목(18px) >
+ * 항목 제목(15px 잉크) > 보조 정보(13px 회색). 안내 문장은 13px 회색으로만 쓰고,
+ * 비어 있다는 상태는 패널마다 콜아웃 하나로만 말한다.
+ * 색은 이유가 있을 때만 쓴다. 할 일 건수는 잉크, 할 일이 없으면 초록, 경고는 빨강.
+ */
+
+/** 패널 제목 옆 건수. 0건이면 그리지 않는다(콜아웃이 말한다). */
+function Count({ value, strong = false }: { value: number; strong?: boolean }) {
+  if (!value) return null;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-semibold tabular-nums ${strong ? "bg-[var(--bw-color-ink)] text-white" : "bg-slate-100 text-[var(--bw-color-ink)]"}`}
+    >
+      {value}건
+    </span>
+  );
+}
+
 function Panel({
   id,
   title,
-  description,
+  count,
+  note,
   children,
-  className = "",
 }: {
   id: string;
   title: string;
-  description?: string;
+  count?: ReactNode;
+  note?: string;
   children: ReactNode;
-  className?: string;
 }) {
   return (
-    <section aria-labelledby={id} className={`${cardClass} min-w-0 ${className}`}>
-      <h2 id={id} className="text-lg font-semibold tracking-[-0.02em]">
-        {title}
-      </h2>
-      {description ? (
-        <p className="mt-1 text-sm text-slate-600">{description}</p>
-      ) : null}
+    <section aria-labelledby={id} className={`${cardClass} min-w-0`}>
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 id={id} className="text-lg font-semibold tracking-[-0.02em]">
+          {title}
+        </h3>
+        {count}
+      </div>
+      {note ? <p className="mt-1 text-xs leading-5 text-slate-500">{note}</p> : null}
       <div className="mt-4">{children}</div>
     </section>
   );
 }
 
-function Empty({ children }: { children: ReactNode }) {
-  return <p className="text-sm text-slate-500">{children}</p>;
-}
-
-function ItemLink({ href, children }: { href: string; children: ReactNode }) {
+/** 비어 있음, 할 일 없음 같은 상태 문장. 노션 콜아웃처럼 면과 아이콘으로 안내 문장과 구분한다. */
+function Callout({
+  tone = "empty",
+  children,
+}: {
+  tone?: "empty" | "ok";
+  children: ReactNode;
+}) {
+  const ok = tone === "ok";
+  const Icon = ok ? CircleCheck : Inbox;
   return (
-    <Link
-      href={href}
-      className="block min-w-0 truncate font-semibold underline-offset-4 hover:underline"
+    <p
+      className={`flex items-center gap-3 rounded-[var(--bw-radius-control)] px-4 py-3.5 text-[15px] font-semibold ${ok ? "bg-emerald-50 text-emerald-900" : "bg-slate-100 text-[var(--bw-color-ink)]"}`}
     >
+      <Icon
+        aria-hidden
+        className={`size-5 shrink-0 ${ok ? "text-emerald-700" : "text-slate-500"}`}
+      />
       {children}
-    </Link>
+    </p>
   );
 }
+
+/** 목록 한 줄. 보조 정보를 제목 바로 위에 붙여서 둘이 멀어지지 않게 한다. */
+function Row({
+  meta,
+  href,
+  title,
+  badge,
+}: {
+  meta: ReactNode;
+  href: string;
+  title: string;
+  badge?: ReactNode;
+}) {
+  return (
+    <li className="grid gap-1 py-3">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-500">
+        {meta}
+      </div>
+      <div className="flex min-w-0 items-center gap-2">
+        <Link
+          href={href}
+          title={title}
+          className="block min-w-0 truncate text-[15px] font-medium text-[var(--bw-color-ink)] underline-offset-4 hover:underline"
+        >
+          {title}
+        </Link>
+        {badge ? <span className="shrink-0">{badge}</span> : null}
+      </div>
+    </li>
+  );
+}
+
+const listClass =
+  "divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]";
 
 function Warnings({ warnings }: { warnings: AdminDashboardData["warnings"] }) {
   if (!warnings.length) return null;
@@ -116,7 +190,11 @@ function Warnings({ warnings }: { warnings: AdminDashboardData["warnings"] }) {
       aria-labelledby="warnings-heading"
       className="mt-8 rounded-[var(--bw-radius-card)] border-2 border-red-600 bg-red-50 p-5"
     >
-      <h2 id="warnings-heading" className="font-semibold text-red-800">
+      <h2
+        id="warnings-heading"
+        className="flex items-center gap-2 font-semibold text-red-800"
+      >
+        <TriangleAlert aria-hidden className="size-5" />
         바로 확인해야 할 문제
       </h2>
       <ul className="mt-2 grid gap-2 text-sm leading-6 text-red-900">
@@ -128,77 +206,127 @@ function Warnings({ warnings }: { warnings: AdminDashboardData["warnings"] }) {
   );
 }
 
-function LiveNow({ live }: { live: AdminDashboardData["live"] }) {
+/** 팝업 자리. 칸 수가 곧 동시 노출 한도라서 숫자와 붙여 보여 준다. */
+function Slots({ used, limit }: { used: number; limit: number }) {
+  const full = used >= limit;
   return (
-    <Panel
-      id="live-heading"
-      title="지금 홈페이지에 보이는 것"
-      description="방문자가 지금 보는 팝업과 상단 고정 공지입니다."
-    >
-      <div className="grid gap-5">
-        {(["ko", "en"] as const).map((locale) => {
-          const popups = live.popups[locale];
-          const full = popups.length >= live.popupLimit;
-          return (
-            <div key={locale}>
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="text-sm font-semibold">
-                  {localeLabels[locale]} 팝업
-                </h3>
-                <span
-                  className={`text-xs font-semibold ${full ? "text-red-700" : "text-slate-500"}`}
-                >
-                  {popups.length}/{live.popupLimit}
-                  {full ? " 자리 없음" : ""}
-                </span>
-              </div>
-              {popups.length ? (
-                <ul className="mt-2 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+    <span className="inline-flex items-center gap-2">
+      <span aria-hidden className="flex gap-1">
+        {Array.from({ length: limit }, (_, index) => (
+          <span
+            key={index}
+            className={`h-2.5 w-4 rounded-sm ${index < used ? "bg-[var(--bw-color-ink)]" : "bg-white ring-1 ring-inset ring-slate-400"}`}
+          />
+        ))}
+      </span>
+      <span className="text-sm font-semibold tabular-nums text-[var(--bw-color-ink)]">
+        <span aria-hidden>
+          {used}/{limit}
+        </span>
+        <span className="sr-only">
+          동시에 띄울 수 있는 {limit}개 중 {used}개
+        </span>
+      </span>
+      {full ? <span className="text-sm font-semibold text-amber-800">가득 참</span> : null}
+    </span>
+  );
+}
+
+function Column({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className="grid min-w-0 content-start gap-4">
+      <h2
+        id={id}
+        className="border-b-2 border-[var(--bw-color-ink)] pb-2 text-base font-bold text-[var(--bw-color-ink)]"
+      >
+        {title}
+      </h2>
+      <div className="grid gap-6">{children}</div>
+    </section>
+  );
+}
+
+function LiveNow({ live }: { live: AdminDashboardData["live"] }) {
+  const locales = (["ko", "en"] as const).filter((locale) => live.popups[locale].length);
+  const missing = [
+    ...(["ko", "en"] as const)
+      .filter((locale) => !live.popups[locale].length)
+      .map((locale) => `${localeLabels[locale]} 팝업`),
+    ...(live.pinnedNotices.length ? [] : ["상단 고정 공지"]),
+  ];
+  const nothing = !locales.length && !live.pinnedNotices.length;
+  return (
+    <Panel id="live-heading" title="지금 홈페이지에 보이는 것">
+      {nothing ? (
+        <Callout>지금 홈페이지에 떠 있는 팝업과 고정 공지가 없습니다.</Callout>
+      ) : (
+        <div className="grid gap-5">
+          {locales.map((locale) => {
+            const popups = live.popups[locale];
+            const full = popups.length >= live.popupLimit;
+            return (
+              <div key={locale}>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h4 className="text-sm font-semibold text-slate-500">
+                    {localeLabels[locale]} 팝업
+                  </h4>
+                  <Slots used={popups.length} limit={live.popupLimit} />
+                </div>
+                {full ? (
+                  <p className="mt-1 text-xs text-amber-800">
+                    {live.popupLimit}개까지 동시에 띄울 수 있어 새 팝업을 올리려면 하나를 내려야 합니다.
+                  </p>
+                ) : null}
+                <ul className={`mt-2 ${listClass}`}>
                   {popups.map((popup) => (
-                    <li
+                    <Row
                       key={popup.contentId}
-                      className="flex items-center justify-between gap-3 py-2.5 text-sm"
-                    >
-                      <ItemLink href={popup.adminHref}>{popup.title}</ItemLink>
-                      <span className="shrink-0 text-xs text-slate-500">
-                        {popup.endsAt
+                      href={popup.adminHref}
+                      title={popup.title}
+                      meta={
+                        popup.endsAt
                           ? `${formatDateTime(popup.endsAt)} 종료`
-                          : "종료일 없음"}
-                      </span>
-                    </li>
+                          : "내릴 때까지 노출"
+                      }
+                    />
                   ))}
                 </ul>
-              ) : (
-                <div className="mt-2">
-                  <Empty>노출 중인 팝업이 없습니다.</Empty>
-                </div>
-              )}
-            </div>
-          );
-        })}
-        <div>
-          <h3 className="text-sm font-semibold">상단 고정 공지</h3>
+              </div>
+            );
+          })}
+          {/* 빠진 것은 콜아웃 하나로 모아 팝업 바로 아래, 고정 공지 위에 둔다. */}
+          {missing.length ? (
+            <Callout>
+              {missing.length === 1 && missing[0] === "상단 고정 공지"
+                ? "상단에 고정된 공지가 없습니다."
+                : `${joinKorean(missing)}${missing[missing.length - 1] === "상단 고정 공지" ? "는" : "은"} 지금 없습니다.`}
+            </Callout>
+          ) : null}
           {live.pinnedNotices.length ? (
-            <ul className="mt-2 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-              {live.pinnedNotices.map((notice) => (
-                <li
-                  key={notice.contentId}
-                  className="flex items-center justify-between gap-3 py-2.5 text-sm"
-                >
-                  <ItemLink href={notice.adminHref}>{notice.title}</ItemLink>
-                  <span className="shrink-0 text-xs text-slate-500">
-                    {notice.locales.map((locale) => localeLabels[locale]).join(", ")}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="mt-2">
-              <Empty>고정된 공지가 없습니다.</Empty>
+            <div>
+              <h4 className="text-sm font-semibold text-slate-500">상단 고정 공지</h4>
+              <ul className={`mt-2 ${listClass}`}>
+                {live.pinnedNotices.map((notice) => (
+                  <Row
+                    key={notice.contentId}
+                    href={notice.adminHref}
+                    title={notice.title}
+                    meta={`${notice.locales.map((locale) => localeLabels[locale]).join(", ")} 게시 중`}
+                  />
+                ))}
+              </ul>
             </div>
-          )}
+          ) : null}
         </div>
-      </div>
+      )}
     </Panel>
   );
 }
@@ -207,31 +335,32 @@ function Upcoming({ items }: { items: AdminDashboardData["upcoming"] }) {
   return (
     <Panel
       id="upcoming-heading"
-      title={`${UPCOMING_DAYS}일 안에 바뀌는 것`}
-      description="게시가 시작되거나 끝나는 공지와 팝업입니다. 날짜를 바꾸려면 편집 화면에서 저장합니다."
+      title={`${UPCOMING_DAYS}일 안에 바뀌는 공지와 팝업`}
+      count={<Count value={items.length} />}
     >
       {items.length ? (
-        <ul className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+        <ul className={listClass}>
           {items.map((item) => (
-            <li key={item.id} className="grid gap-1 py-3 text-sm">
-              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <StatusBadge
-                  status={item.change === "start" ? "SCHEDULED" : "ENDED"}
-                  label={item.change === "start" ? "게시 시작" : "게시 종료"}
-                />
-                <span>
-                  {contentLabels[item.contentType]} {localeLabels[item.locale]}
-                </span>
-                <span>
-                  {formatDateTime(item.at)}, {dayText(item.daysLeft)}
-                </span>
-              </div>
-              <ItemLink href={item.adminHref}>{item.title}</ItemLink>
-            </li>
+            <Row
+              key={item.id}
+              href={item.adminHref}
+              title={item.title}
+              meta={
+                <>
+                  <span className="font-semibold text-[var(--bw-color-ink)]">
+                    {dayText(item.daysLeft)} {item.change === "start" ? "시작" : "종료"}
+                  </span>
+                  <span>{formatDateTime(item.at)}</span>
+                  <span>
+                    {contentLabels[item.contentType]} {localeLabels[item.locale]}
+                  </span>
+                </>
+              }
+            />
           ))}
         </ul>
       ) : (
-        <Empty>{UPCOMING_DAYS}일 안에 시작하거나 끝나는 게시가 없습니다.</Empty>
+        <Callout>예정된 시작이나 종료가 없습니다.</Callout>
       )}
     </Panel>
   );
@@ -241,149 +370,143 @@ function OneLanguage({ items }: { items: AdminDashboardData["oneLanguage"] }) {
   return (
     <Panel
       id="one-language-heading"
-      title="한 언어만 게시된 항목"
-      description="한쪽 언어로만 공개 중이거나 공개를 예약한 글입니다. 일부러 한 언어만 쓰는 글이면 그대로 두면 됩니다."
+      title="한 언어만 게시된 글"
+      count={<Count value={items.length} strong />}
+      note={items.length ? "일부러 한 언어만 쓰는 글은 그대로 둬도 됩니다." : undefined}
     >
       {items.length ? (
-        <ul className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+        <ul className={listClass}>
           {items.map((item) => {
             const other = item.publicLocale === "ko" ? "en" : "ko";
+            const otherLabel =
+              item.otherState === "DRAFT" && !item.otherHasTitle
+                ? "비어 있음"
+                : stateLabels[item.otherState];
             return (
-              <li
+              <Row
                 key={`${item.contentType}:${item.contentId}`}
-                className="flex flex-col gap-1.5 py-3 text-sm md:flex-row md:items-center md:justify-between md:gap-4"
-              >
-                <div className="grid min-w-0 gap-1">
-                  <span className="text-xs text-slate-500">
-                    {contentLabels[item.contentType]}
-                  </span>
-                  <ItemLink href={item.adminHref}>{item.title}</ItemLink>
-                </div>
-                <div className="flex shrink-0 flex-wrap items-center gap-2 text-xs text-slate-600">
-                  <span className="inline-flex items-center gap-1.5">
-                    {localeLabels[item.publicLocale]}
-                    <StatusBadge status={item.publicState} label={stateLabels[item.publicState]} />
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    {localeLabels[other]}
-                    <StatusBadge
-                      status={item.otherState}
-                      label={
-                        item.otherState === "DRAFT" && !item.otherHasTitle
-                          ? "비어 있음"
-                          : stateLabels[item.otherState]
-                      }
-                    />
-                  </span>
-                </div>
-              </li>
+                href={item.adminHref}
+                title={item.title}
+                meta={`${contentLabels[item.contentType]} ${localeLabels[item.publicLocale]} ${stateLabels[item.publicState]}`}
+                badge={
+                  <StatusBadge status="DRAFT" label={`${localeLabels[other]} ${otherLabel}`} />
+                }
+              />
             );
           })}
         </ul>
       ) : (
-        <Empty>모든 게시물이 두 언어로 공개되어 있습니다.</Empty>
+        <Callout tone="ok">한 언어만 게시된 글이 없습니다.</Callout>
       )}
     </Panel>
   );
 }
 
-function Drafts({
-  drafts,
-  newsWithoutCover,
-}: {
-  drafts: AdminDashboardData["drafts"];
-  newsWithoutCover: AdminDashboardData["newsWithoutCover"];
-}) {
+function Drafts({ drafts }: { drafts: AdminDashboardData["drafts"] }) {
   return (
     <Panel
       id="drafts-heading"
       title="작성 중인 초안"
-      description={`모든 언어가 초안인 글입니다. 오래된 순으로 놓았고, ${STALE_DRAFT_DAYS}일 넘게 그대로인 글에 표시를 붙였습니다.`}
+      count={<Count value={drafts.length} strong />}
+      note={drafts.length ? "오래 손대지 않은 초안이 위에 있습니다." : undefined}
     >
       {drafts.length ? (
-        <ul className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+        <ul className={listClass}>
           {drafts.map((draft) => (
-            <li
+            <Row
               key={`${draft.contentType}:${draft.contentId}`}
-              className="flex flex-col gap-1.5 py-3 text-sm md:flex-row md:items-center md:justify-between md:gap-4"
-            >
-              <div className="grid min-w-0 gap-1">
-                <span className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                  {contentLabels[draft.contentType]}
+              href={draft.adminHref}
+              title={draft.title}
+              meta={
+                <>
                   <span>
+                    {contentLabels[draft.contentType]}{" "}
                     {draft.locales.map((locale) => localeLabels[locale]).join(", ")} 작성 중
                   </span>
-                  {draft.stale ? (
-                    <StatusBadge status="DRAFT" label={`${STALE_DRAFT_DAYS}일 넘게 그대로`} />
-                  ) : null}
-                </span>
-                <ItemLink href={draft.adminHref}>{draft.title}</ItemLink>
-              </div>
-              <span className="shrink-0 text-xs text-slate-500">
-                {formatDate(draft.updatedAt)} 수정
-              </span>
-            </li>
+                  <span
+                    className={draft.stale ? "font-semibold text-amber-800" : undefined}
+                  >
+                    {formatDate(draft.updatedAt)} 수정
+                    {draft.stale ? `, ${STALE_DRAFT_DAYS}일 넘게 손대지 않음` : ""}
+                  </span>
+                </>
+              }
+            />
           ))}
         </ul>
       ) : (
-        <Empty>작성 중인 초안이 없습니다.</Empty>
+        <Callout tone="ok">작성 중인 초안이 없습니다.</Callout>
       )}
-      {newsWithoutCover.length ? (
-        <div className="mt-5">
-          <h3 className="text-sm font-semibold">대표 이미지 없이 게시된 뉴스</h3>
-          <p className="mt-1 text-xs text-slate-500">
-            홈과 소식 목록에 이미지 대신 자리표시가 보입니다.
-          </p>
-          <ul className="mt-2 divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
-            {newsWithoutCover.map((news) => (
-              <li key={news.contentId} className="py-2.5 text-sm">
-                <ItemLink href={news.adminHref}>{news.title}</ItemLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </Panel>
+  );
+}
+
+function NewsWithoutCover({ items }: { items: AdminDashboardData["newsWithoutCover"] }) {
+  if (!items.length) return null;
+  return (
+    <Panel
+      id="no-cover-heading"
+      title="대표 이미지 없는 뉴스"
+      count={<Count value={items.length} strong />}
+      note="홈과 소식 목록에 사진 대신 '이미지 없음' 칸이 보입니다."
+    >
+      <ul className={listClass}>
+        {items.map((news) => (
+          <Row key={news.contentId} href={news.adminHref} title={news.title} meta="뉴스 게시 중" />
+        ))}
+      </ul>
+    </Panel>
+  );
+}
+
+function Todo({ dashboard }: { dashboard: AdminDashboardData }) {
+  const total =
+    dashboard.oneLanguage.length + dashboard.drafts.length + dashboard.newsWithoutCover.length;
+  if (!total) return <Callout tone="ok">확인할 항목이 없습니다.</Callout>;
+  return (
+    <>
+      <OneLanguage items={dashboard.oneLanguage} />
+      <Drafts drafts={dashboard.drafts} />
+      <NewsWithoutCover items={dashboard.newsWithoutCover} />
+    </>
   );
 }
 
 function Recent({ items }: { items: AdminDashboardData["recent"] }) {
   return (
-    <Panel
-      id="recent-heading"
-      title="최근 변경"
-      description="누가 언제 무엇을 고쳤는지 보여 줍니다."
-      className="xl:col-span-2"
-    >
+    <Column id="recent-heading" title="최근 변경">
       {items.length ? (
-        <ul className="divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]">
+        <ul className={`${cardClass} ${listClass} border-x py-0`}>
           {items.map((item) => (
-            <li
+            <Row
               key={`${item.contentType}:${item.contentId}`}
-              className="flex flex-col gap-1.5 py-3 text-sm md:flex-row md:items-center md:justify-between md:gap-4"
-            >
-              <div className="grid min-w-0 gap-1">
-                <span className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                  {contentLabels[item.contentType]} {localeLabels[item.locale]}
-                  {item.archived ? (
-                    <StatusBadge status="ARCHIVED" label="보관" />
-                  ) : (
-                    <StatusBadge status={item.state} label={stateLabels[item.state]} />
-                  )}
-                </span>
-                <ItemLink href={item.adminHref}>{item.title}</ItemLink>
-              </div>
-              <span className="shrink-0 text-xs text-slate-500">
-                {item.actorName ? `${item.actorName}, ` : ""}
-                {formatDateTime(item.updatedAt)}
-              </span>
-            </li>
+              href={item.adminHref}
+              title={item.title}
+              meta={
+                <>
+                  {item.actorName ? (
+                    <span className="font-semibold text-slate-700">{item.actorName}</span>
+                  ) : null}
+                  <span>{formatDateTime(item.updatedAt)}</span>
+                  <span>
+                    {contentLabels[item.contentType]} {localeLabels[item.locale]}
+                  </span>
+                </>
+              }
+              badge={
+                item.archived ? (
+                  <StatusBadge status="ARCHIVED" label="보관" />
+                ) : (
+                  <StatusBadge status={item.state} label={stateLabels[item.state]} />
+                )
+              }
+            />
           ))}
         </ul>
       ) : (
-        <Empty>아직 변경된 콘텐츠가 없습니다.</Empty>
+        <p className="text-sm text-slate-500">아직 변경된 콘텐츠가 없습니다.</p>
       )}
-    </Panel>
+    </Column>
   );
 }
 
@@ -396,7 +519,6 @@ export default function AdminHome({
     <AdminShell>
       <AdminPageHeader
         title="운영 현황"
-        description="지금 홈페이지에 보이는 것과 처리할 일을 모았습니다."
         action={
           <>
             <Link href="/admin/news/new" className={primaryButtonClass}>
@@ -412,11 +534,20 @@ export default function AdminHome({
         }
       />
       <Warnings warnings={dashboard.warnings} />
-      <div className="mt-8 grid gap-6 xl:grid-cols-2">
-        <LiveNow live={dashboard.live} />
-        <Upcoming items={dashboard.upcoming} />
-        <OneLanguage items={dashboard.oneLanguage} />
-        <Drafts drafts={dashboard.drafts} newsWithoutCover={dashboard.newsWithoutCover} />
+      {/*
+        왼쪽은 게시 현황, 오른쪽은 확인할 항목. 열마다 패널을 위아래로 쌓아서
+        짧은 패널 옆에 빈칸이 생기지 않는다. 좁은 화면에서는 왼쪽 열이 먼저 온다.
+      */}
+      <div className="mt-8 grid items-start gap-8 xl:grid-cols-2">
+        <Column id="status-column" title="게시 현황">
+          <LiveNow live={dashboard.live} />
+          <Upcoming items={dashboard.upcoming} />
+        </Column>
+        <Column id="todo-column" title="확인할 항목">
+          <Todo dashboard={dashboard} />
+        </Column>
+      </div>
+      <div className="mt-10">
         <Recent items={dashboard.recent} />
       </div>
     </AdminShell>

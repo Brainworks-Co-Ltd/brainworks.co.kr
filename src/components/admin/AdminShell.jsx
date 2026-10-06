@@ -49,7 +49,7 @@ export function AdminShell({ children, activePath = "/admin" }) {
       <Head>
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
-      <div className="grid min-h-screen grid-rows-[auto_1fr] lg:grid-cols-[232px_minmax(0,1fr)] lg:grid-rows-1">
+      <div className="grid min-h-screen grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr] lg:grid-cols-[232px_minmax(0,1fr)] lg:grid-rows-1">
         <aside className="flex flex-col border-b border-[var(--bw-color-line)] bg-[var(--bw-color-ink)] px-5 py-6 text-white lg:border-b-0">
           <Link
             href="/admin"
@@ -60,7 +60,7 @@ export function AdminShell({ children, activePath = "/admin" }) {
           </Link>
           <nav
             aria-label="관리자 메뉴"
-            className="mt-4 flex gap-1 overflow-x-auto pb-1 lg:mt-8 lg:grid lg:overflow-visible lg:pb-0"
+            className="mt-4 flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] lg:mt-8 lg:grid lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden"
           >
             {navigation.map((item) => {
               const active = activePath === item.href;
