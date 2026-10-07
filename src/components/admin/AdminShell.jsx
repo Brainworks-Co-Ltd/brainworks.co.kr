@@ -11,6 +11,7 @@ const navigation = [
   { href: "/admin/popup-notices", label: "팝업 공지" },
   { href: "/admin/honors", label: "수상 및 인증" },
   { href: "/admin/ai-solutions", label: "AI 솔루션" },
+  { href: "/admin/performance", label: "성능" },
 ];
 
 export function AdminShell({ children, activePath = "/admin" }) {

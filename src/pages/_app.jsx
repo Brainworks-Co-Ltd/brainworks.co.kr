@@ -1,9 +1,17 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useReportWebVitals } from "next/web-vitals";
 import "@/styles/globals.css";
 import "@/styles/industrial.css";
 import "@/styles/layout.css";
 import { SkipLink } from "@/components/public/SkipLink";
+import { reportNextMetric, reportWebVital } from "@/lib/web-vitals-reporter";
+
+// 성능 수집. LCP 같은 핵심 지표는 useReportWebVitals로, Next 전용 지표(화면 전환 등)는
+// 이 export로만 온다. 둘 다 써야 관리자 성능 화면이 채워진다.
+// `export { reportNextMetric as reportWebVitals }`로 다시 내보내면 next build가
+// 전역 CSS 오류로 실패한다(Turbopack, 2026-10-07 확인). 그래서 상수로 내보낸다.
+export const reportWebVitals = reportNextMetric;
 
 /**
  * 스크롤 진입 드러남. 지정한 항목이 화면에 들어오면 data-in을 한 번
@@ -51,6 +59,7 @@ function useReveal() {
 
 export default function App({ Component, pageProps }) {
   useReveal();
+  useReportWebVitals(reportWebVital);
 
   return (
     <>

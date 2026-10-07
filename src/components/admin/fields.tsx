@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CircleCheck, Inbox } from "lucide-react";
 
 /* 관리자 화면 공용 스타일. 공개 화면과 같은 토큰(잉크, 골드, 4px 모서리)을 쓴다. */
 
@@ -70,5 +71,103 @@ export function StatusBadge({ status, label }: { status: string; label: string }
     >
       {label}
     </span>
+  );
+}
+
+/*
+ * 현황 화면(운영 현황, 성능) 부품.
+ * 위계. 페이지 제목 > 열 제목(굵은 글자와 잉크 선) > 패널 제목(18px) >
+ * 항목 제목(15px 잉크) > 보조 정보(13px 회색). 안내 문장은 13px 회색으로만 쓰고,
+ * 비어 있다는 상태는 패널마다 콜아웃 하나로만 말한다.
+ */
+
+// 서버와 브라우저가 같은 글자를 그리도록 시간대를 고정한다.
+const dateTimeFormat = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
+  month: "long",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
+export function formatDateTime(value: string) {
+  return dateTimeFormat.format(new Date(value));
+}
+
+export const listClass =
+  "divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]";
+
+export function Panel({
+  id,
+  title,
+  count,
+  note,
+  children,
+}: {
+  id: string;
+  title: string;
+  count?: ReactNode;
+  note?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className={`${cardClass} min-w-0`}>
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 id={id} className="text-lg font-semibold tracking-[-0.02em]">
+          {title}
+        </h3>
+        {count}
+      </div>
+      {note ? (
+        <p className="mt-1 text-[13px] leading-5 text-slate-500">{note}</p>
+      ) : null}
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
+/** 비어 있음, 할 일 없음 같은 상태 문장. 노션 콜아웃처럼 면과 아이콘으로 안내 문장과 구분한다. */
+export function Callout({
+  tone = "empty",
+  children,
+}: {
+  tone?: "empty" | "ok";
+  children: ReactNode;
+}) {
+  const ok = tone === "ok";
+  const Icon = ok ? CircleCheck : Inbox;
+  return (
+    <p
+      className={`flex items-center gap-3 rounded-[var(--bw-radius-control)] px-4 py-3.5 text-[15px] font-semibold ${ok ? "bg-emerald-50 text-emerald-900" : "bg-slate-100 text-[var(--bw-color-ink)]"}`}
+    >
+      <Icon
+        aria-hidden
+        className={`size-5 shrink-0 ${ok ? "text-emerald-700" : "text-slate-500"}`}
+      />
+      {children}
+    </p>
+  );
+}
+
+export function Column({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <section aria-labelledby={id} className="grid min-w-0 content-start gap-4">
+      <h2
+        id={id}
+        className="border-b-2 border-[var(--bw-color-ink)] pb-2 text-base font-bold text-[var(--bw-color-ink)]"
+      >
+        {title}
+      </h2>
+      <div className="grid gap-6">{children}</div>
+    </section>
   );
 }

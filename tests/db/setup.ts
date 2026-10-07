@@ -32,6 +32,7 @@ const contentTables = [
   "ai_solution_locales",
   "ai_solutions",
   "contact_submission_receipts",
+  "web_vitals",
 ];
 
 async function truncateContentTables() {

@@ -1,11 +1,16 @@
 import Link from "next/link";
 import type { GetServerSideProps } from "next";
 import type { ReactNode } from "react";
-import { CircleCheck, Inbox, TriangleAlert } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
+  Callout,
   cardClass,
+  Column,
+  formatDateTime,
+  listClass,
+  Panel,
   primaryButtonClass,
   secondaryButtonClass,
   StatusBadge,
@@ -40,23 +45,11 @@ const stateLabels: Record<DashboardState, string> = {
 };
 
 // 서버와 브라우저가 같은 글자를 그리도록 시간대를 고정한다.
-const dateTimeFormat = new Intl.DateTimeFormat("ko-KR", {
-  timeZone: "Asia/Seoul",
-  month: "long",
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-});
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
   timeZone: "Asia/Seoul",
   month: "long",
   day: "numeric",
 });
-
-function formatDateTime(value: string) {
-  return dateTimeFormat.format(new Date(value));
-}
 
 function formatDate(value: string) {
   return dateFormat.format(new Date(value));
@@ -81,9 +74,7 @@ function joinKorean(words: string[]) {
 }
 
 /*
- * 위계. 페이지 제목 > 열 제목(굵은 글자와 잉크 선) > 패널 제목(18px) >
- * 항목 제목(15px 잉크) > 보조 정보(13px 회색). 안내 문장은 13px 회색으로만 쓰고,
- * 비어 있다는 상태는 패널마다 콜아웃 하나로만 말한다.
+ * 위계는 fields.tsx의 현황 화면 부품(Column, Panel, Callout)을 따른다.
  * 색은 이유가 있을 때만 쓴다. 할 일 건수는 잉크, 할 일이 없으면 초록, 경고는 빨강.
  */
 
@@ -96,56 +87,6 @@ function Count({ value, strong = false }: { value: number; strong?: boolean }) {
     >
       {value}건
     </span>
-  );
-}
-
-function Panel({
-  id,
-  title,
-  count,
-  note,
-  children,
-}: {
-  id: string;
-  title: string;
-  count?: ReactNode;
-  note?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section aria-labelledby={id} className={`${cardClass} min-w-0`}>
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 id={id} className="text-lg font-semibold tracking-[-0.02em]">
-          {title}
-        </h3>
-        {count}
-      </div>
-      {note ? <p className="mt-1 text-xs leading-5 text-slate-500">{note}</p> : null}
-      <div className="mt-4">{children}</div>
-    </section>
-  );
-}
-
-/** 비어 있음, 할 일 없음 같은 상태 문장. 노션 콜아웃처럼 면과 아이콘으로 안내 문장과 구분한다. */
-function Callout({
-  tone = "empty",
-  children,
-}: {
-  tone?: "empty" | "ok";
-  children: ReactNode;
-}) {
-  const ok = tone === "ok";
-  const Icon = ok ? CircleCheck : Inbox;
-  return (
-    <p
-      className={`flex items-center gap-3 rounded-[var(--bw-radius-control)] px-4 py-3.5 text-[15px] font-semibold ${ok ? "bg-emerald-50 text-emerald-900" : "bg-slate-100 text-[var(--bw-color-ink)]"}`}
-    >
-      <Icon
-        aria-hidden
-        className={`size-5 shrink-0 ${ok ? "text-emerald-700" : "text-slate-500"}`}
-      />
-      {children}
-    </p>
   );
 }
 
@@ -179,9 +120,6 @@ function Row({
     </li>
   );
 }
-
-const listClass =
-  "divide-y divide-[var(--bw-color-line)] border-y border-[var(--bw-color-line)]";
 
 function Warnings({ warnings }: { warnings: AdminDashboardData["warnings"] }) {
   if (!warnings.length) return null;
@@ -229,28 +167,6 @@ function Slots({ used, limit }: { used: number; limit: number }) {
       </span>
       {full ? <span className="text-sm font-semibold text-amber-800">가득 참</span> : null}
     </span>
-  );
-}
-
-function Column({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section aria-labelledby={id} className="grid min-w-0 content-start gap-4">
-      <h2
-        id={id}
-        className="border-b-2 border-[var(--bw-color-ink)] pb-2 text-base font-bold text-[var(--bw-color-ink)]"
-      >
-        {title}
-      </h2>
-      <div className="grid gap-6">{children}</div>
-    </section>
   );
 }
 

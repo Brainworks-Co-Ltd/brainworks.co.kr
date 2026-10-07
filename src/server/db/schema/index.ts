@@ -8,3 +8,4 @@ export * from "@/server/db/schema/honors";
 export * from "@/server/db/schema/news";
 export * from "@/server/db/schema/notices";
 export * from "@/server/db/schema/popup-notices";
+export * from "@/server/db/schema/web-vitals";
