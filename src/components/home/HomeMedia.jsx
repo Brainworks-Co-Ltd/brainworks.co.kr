@@ -199,7 +199,9 @@ export default function HomeMedia() {
 
   return (
     <section>
-      <div className="bw-reveal inner">
+      {/* 첫 화면 미디어라 등장 효과(.bw-reveal)를 걸지 않는다. 숨김 상태는
+          하이드레이션 뒤에야 풀려 LCP가 자바스크립트 실행까지 밀린다. */}
+      <div className="inner">
         <div className="relative aspect-[16/9] overflow-hidden rounded-[24px] bg-ink-strong lg:aspect-[1296/560]">
           {reduced ? (
             <>
