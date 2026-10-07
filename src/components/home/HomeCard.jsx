@@ -18,37 +18,43 @@ export default function HomeCard({
   className = "",
 }) {
   return (
-    <Link href={href} className={`group flex h-full flex-col ${className}`}>
-      <span className="relative block aspect-[409/268] overflow-hidden rounded-2xl">
+    <Link
+      href={href}
+      className={`group flex h-full items-center gap-4 md:flex-col md:items-stretch md:gap-0 ${className}`}
+    >
+      {/* 폰에서는 작은 정사각 그림 옆에 글을 두어 영역 머리를 한 줄로 줄인다. */}
+      <span className="relative block aspect-square w-24 shrink-0 overflow-hidden rounded-xl md:aspect-[409/268] md:w-auto md:rounded-2xl">
         <Image
           src={image}
           alt={alt}
           fill
-          sizes="409px"
+          sizes="(min-width: 768px) 409px, 96px"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </span>
-      {eyebrow ? (
-        <span className="mt-5 text-[13px] font-semibold text-[var(--bw-color-brand-strong)]">
-          {eyebrow}
-        </span>
-      ) : null}
-      <h3
-        className={`${eyebrow ? "mt-1.5" : "mt-6"} text-[18px] font-semibold text-ink-strong transition-colors group-hover:text-accent-text lg:text-[22px]`}
-      >
-        {title}
-      </h3>
-      {description ? (
-        <p className="mt-3 text-[15px] leading-[1.6] text-muted lg:text-[16px]">
-          {description}
-        </p>
-      ) : null}
-      {more ? (
-        <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[15px] font-semibold text-ink transition-colors group-hover:text-accent-text">
-          {more}{" "}
-          <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
-        </span>
-      ) : null}
+      <span className="flex min-w-0 flex-col md:contents">
+        {eyebrow ? (
+          <span className="mt-5 text-[13px] font-semibold text-[var(--bw-color-brand-strong)]">
+            {eyebrow}
+          </span>
+        ) : null}
+        <h3
+          className={`${eyebrow ? "mt-1.5" : "md:mt-6"} break-keep text-[20px] font-semibold leading-[1.3] text-ink-strong transition-colors group-hover:text-accent-text md:text-[18px] md:leading-[inherit] lg:text-[22px]`}
+        >
+          {title}
+        </h3>
+        {description ? (
+          <p className="mt-2 break-keep text-[14px] leading-[1.5] text-muted md:mt-3 md:text-[15px] md:leading-[1.6] lg:text-[16px]">
+            {description}
+          </p>
+        ) : null}
+        {more ? (
+          <span className="mt-auto inline-flex items-center gap-2 pt-4 text-[15px] font-semibold text-ink transition-colors group-hover:text-accent-text">
+            {more}{" "}
+            <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+          </span>
+        ) : null}
+      </span>
     </Link>
   );
 }

@@ -13,7 +13,9 @@ export default function NewsRail({ items = [] }) {
 
   return (
     <section className="py-[120px] lg:py-[250px]">
-      <SectionTitle>{homeCopy.newsSection.title[language]}</SectionTitle>
+      <div className="inner">
+        <SectionTitle>{homeCopy.newsSection.title[language]}</SectionTitle>
+      </div>
       <div className="bw-reveal">
         <Rail>
           {items.slice(0, 4).map((item) => (
