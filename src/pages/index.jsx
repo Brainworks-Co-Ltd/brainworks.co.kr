@@ -47,15 +47,16 @@ export default function Home({ newsItems, popupNotices, areas }) {
 
 export async function getServerSideProps({ locale }) {
   const currentLocale = locale === "en" ? "en" : "ko";
-  const [newsList, popupNotices, areas] = await Promise.all([
-    getPublishedNewsList({ locale: currentLocale }),
+  const [newsItems, popupNotices, areas] = await Promise.all([
+    // NewsRail이 보여 주는 네 건만 읽는다.
+    getPublishedNewsList({ locale: currentLocale, limit: 4 }),
     getPublishedPopupNotices(currentLocale),
     getPublishedBusinessAreas(currentLocale),
   ]);
 
   return {
     props: {
-      newsItems: newsList.items,
+      newsItems,
       popupNotices,
       areas,
     },

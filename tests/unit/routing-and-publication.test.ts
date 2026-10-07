@@ -3,7 +3,6 @@ import {
   assertPublishableNews,
   isPublishedNews,
   resolveSlugRedirect,
-  validateNewsQuery,
 } from "@/server/modules/news/publication-policy";
 import { markdownToHtml } from "@/lib/markdown";
 import { assertImageUploadMetadata } from "@/server/modules/assets/upload-policy";
@@ -38,19 +37,6 @@ describe("뉴스 공개·라우팅 정책", () => {
       "new-news",
     );
     expect(resolveSlugRedirect("unknown", "new-news", ["old-news"])).toBeNull();
-  });
-
-  it("목록 쿼리는 안전한 페이지 크기와 페이지 번호로 정규화된다", () => {
-    expect(
-      validateNewsQuery({ q: "AI", category: "company", page: "2" }),
-    ).toEqual({
-      q: "AI",
-      category: "company",
-      page: 2,
-      pageSize: 12,
-    });
-    expect(validateNewsQuery({ page: "0" }).page).toBe(1);
-    expect(validateNewsQuery({ page: "bad" }).page).toBe(1);
   });
 
   it("뉴스 Markdown은 원시 HTML과 스크립트 속성을 제거한다", () => {

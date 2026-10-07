@@ -115,7 +115,7 @@ describe.skipIf(!hasTestDatabase)("관리자 목록과 공개 목록 분리", ()
     expect(adminList.items.map((item) => item.id).sort()).toEqual(
       [draft.id, archived.id].sort(),
     );
-    expect((await readDatabaseNewsList("ko")).total).toBe(0);
+    expect(await readDatabaseNewsList("ko")).toEqual([]);
   });
 
   it("관리자 목록 반환값에 Date 인스턴스가 남지 않는다", async () => {

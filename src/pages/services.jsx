@@ -9,10 +9,12 @@ import { SeoMetadata } from "@/components/public/SeoMetadata";
 import { Arrow } from "@/components/public/SectionTitle";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedPath } from "@/shared/routing/routes";
-import { getPublishedBusinessAreas } from "@/server/modules/catalog/queries";
+import { getLocalizedBusinessAreas } from "@/data/businessAreas";
 
-export default function Services({ areas }) {
+// 영역 넷은 고정 분류라 DB를 읽지 않는다. 관리자가 바꾸는 솔루션은 이 화면에 나오지 않는다.
+export default function Services() {
   const { language } = useLocale();
+  const areas = getLocalizedBusinessAreas(language);
 
   return (
     <div className="min-h-screen bg-white text-[var(--bw-color-ink)]">
@@ -46,9 +48,7 @@ export default function Services({ areas }) {
               ? "제조, 에이전트, 헬스케어와 바이오, 스마트시티와 안전 네 영역의 솔루션을 다룹니다."
               : "Covers solutions across four domains: manufacturing, agents, healthcare and bio, and smart city and safety."
           }
-          chips={
-            areas && areas.length > 0 ? areas.map((area) => area.title) : null
-          }
+          chips={areas.map((area) => area.title)}
           action={{
             href: "/contact?topic=solution",
             label: language === "ko" ? "솔루션 문의" : "Discuss a solution",
@@ -58,7 +58,7 @@ export default function Services({ areas }) {
         <section>
           <div className="inner">
             <div className="grid grid-cols-1 gap-x-12 gap-y-14 lg:grid-cols-2">
-              {(areas || []).map((area, index) => (
+              {areas.map((area, index) => (
                 <Link
                   key={area.id}
                   href={getLocalizedPath("solutions.detail", language, {
@@ -133,12 +133,4 @@ export default function Services({ areas }) {
       <Footer />
     </div>
   );
-}
-
-export async function getServerSideProps({ locale }) {
-  return {
-    props: {
-      areas: await getPublishedBusinessAreas(locale === "en" ? "en" : "ko"),
-    },
-  };
 }

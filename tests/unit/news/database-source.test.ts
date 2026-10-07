@@ -22,6 +22,7 @@ function makeChain(result: unknown) {
     leftJoin: vi.fn().mockReturnThis(),
     where: vi.fn().mockReturnThis(),
     orderBy: vi.fn().mockReturnThis(),
+    $dynamic: vi.fn().mockReturnThis(),
     limit: vi.fn().mockResolvedValue(result),
     then: (resolve: (value: unknown) => unknown) =>
       Promise.resolve(result).then(resolve),
@@ -51,7 +52,7 @@ describe("DB 뉴스 목록 조회", () => {
     const result = await readDatabaseNewsList("ko");
 
     expect(chain.leftJoin).toHaveBeenCalled();
-    expect(result.items[0].thumbnail).toBe(
+    expect(result[0].thumbnail).toBe(
       resolvePublicAssetUrl("news/cover.webp"),
     );
   });
@@ -71,7 +72,7 @@ describe("DB 뉴스 목록 조회", () => {
 
     const result = await readDatabaseNewsList("ko");
 
-    expect(result.items[0].thumbnail).toBe("");
+    expect(result[0].thumbnail).toBe("");
   });
 });
 

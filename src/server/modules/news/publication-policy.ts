@@ -39,23 +39,3 @@ export function resolveSlugRedirect(
 ) {
   return slugHistory.includes(requestedSlug) ? currentSlug : null;
 }
-
-export function validateNewsQuery(query: {
-  q?: string | string[];
-  category?: string | string[];
-  page?: string | string[];
-  pageSize?: string | string[];
-}) {
-  const value = (input: string | string[] | undefined) =>
-    Array.isArray(input) ? input[0] || "" : input || "";
-  const page = Number.parseInt(value(query.page), 10);
-  const pageSize = Number.parseInt(value(query.pageSize), 10);
-
-  return {
-    q: value(query.q).trim().slice(0, 100),
-    category: value(query.category).trim().slice(0, 50),
-    page: Number.isFinite(page) && page > 0 ? Math.min(page, 1000) : 1,
-    pageSize:
-      Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 12) : 12,
-  };
-}

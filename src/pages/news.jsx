@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import { useLocale } from "@/shared/routing/useLocale";
 import { PageHero } from "@/components/public/PageHero";
 import { SeoMetadata } from "@/components/public/SeoMetadata";
-import { getAllPublishedNews } from "@/server/modules/news/query-service";
+import { getPublishedNewsList } from "@/server/modules/news/query-service";
 import { formatDate } from "@/lib/format-date";
 import { translate, filterNewsItems } from "@/lib/news-filter";
 import { NEWS_CATEGORIES, newsCategoryLabel } from "@/lib/news-categories";
@@ -308,10 +308,10 @@ export default function News({ newsItems }) {
   );
 }
 
-export async function getServerSideProps({ locale, query }) {
-  const newsItems = await getAllPublishedNews({
+// 탭과 검색은 화면 상태로 거르므로 주소의 query를 서버에 넘기지 않는다.
+export async function getServerSideProps({ locale }) {
+  const newsItems = await getPublishedNewsList({
     locale: locale === "en" ? "en" : "ko",
-    query,
   });
 
   return {

@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, ilike, or } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { markdownToHtml } from "@/lib/markdown";
 import { getDb } from "@/server/db/client";
 import { assets } from "@/server/db/schema/assets";
@@ -9,36 +9,13 @@ import {
   newsSlugs,
 } from "@/server/db/schema/news";
 import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
-import { validateNewsQuery } from "@/server/modules/news/publication-policy";
 
+/** 공개 기사를 최신순으로 한 번에 읽는다. 홈처럼 앞의 몇 건만 쓰면 limit으로 SQL에서 자른다. */
 export async function readDatabaseNewsList(
   locale: "ko" | "en",
-  query: Record<string, unknown> = {},
+  limit?: number,
 ) {
-  const options = validateNewsQuery(
-    query as {
-      q?: string;
-      category?: string;
-      page?: string;
-      pageSize?: string;
-    },
-  );
-  const filters = [
-    eq(newsSlugs.isCurrent, true),
-    eq(news.itemStatus, "ACTIVE"),
-    eq(newsLocales.locale, locale),
-    eq(newsLocales.publicationStatus, "PUBLISHED"),
-  ];
-  if (options.category)
-    filters.push(ilike(news.category, `%${options.category}%`));
-  if (options.q)
-    filters.push(
-      or(
-        ilike(newsLocales.title, `%${options.q}%`),
-        ilike(newsLocales.summary, `%${options.q}%`),
-      )!,
-    );
-  const rows = await getDb()
+  const query = getDb()
     .select({
       slug: newsSlugs.slug,
       date: news.displayDate,
@@ -54,23 +31,22 @@ export async function readDatabaseNewsList(
       assets,
       and(eq(assets.id, news.coverAssetId), eq(assets.status, "READY")),
     )
-    .where(and(...filters))
-    .orderBy(desc(news.displayDate));
-  const start = (options.page - 1) * options.pageSize;
-  return {
-    items: rows.slice(start, start + options.pageSize).map((row) => {
-      const { storageKey, ...rest } = row;
-      return {
-        ...rest,
-        date: String(row.date),
-        thumbnail: (storageKey && resolvePublicAssetUrl(storageKey)) || "",
-      };
-    }),
-    page: options.page,
-    pageSize: options.pageSize,
-    total: rows.length,
-    totalPages: Math.max(1, Math.ceil(rows.length / options.pageSize)),
-  };
+    .where(
+      and(
+        eq(newsSlugs.isCurrent, true),
+        eq(news.itemStatus, "ACTIVE"),
+        eq(newsLocales.locale, locale),
+        eq(newsLocales.publicationStatus, "PUBLISHED"),
+      ),
+    )
+    .orderBy(desc(news.displayDate))
+    .$dynamic();
+  const rows = await (limit === undefined ? query : query.limit(limit));
+  return rows.map(({ storageKey, ...rest }) => ({
+    ...rest,
+    date: String(rest.date),
+    thumbnail: (storageKey && resolvePublicAssetUrl(storageKey)) || "",
+  }));
 }
 
 export async function readDatabaseNewsDetail(
@@ -84,42 +60,45 @@ export async function readDatabaseNewsDetail(
     .where(eq(newsSlugs.slug, slug))
     .limit(1);
   if (!requested[0]) return null;
-  const currentSlug = await db
-    .select({ slug: newsSlugs.slug })
-    .from(newsSlugs)
-    .where(
-      and(
-        eq(newsSlugs.newsId, requested[0].newsId),
-        eq(newsSlugs.isCurrent, true),
-      ),
-    )
-    .limit(1);
+  // 현재 주소와 본문은 둘 다 newsId에만 기대므로 함께 보낸다. 외부 링크는 본문 id가 있어야 해서 뒤에 둔다.
+  const [currentSlug, row] = await Promise.all([
+    db
+      .select({ slug: newsSlugs.slug })
+      .from(newsSlugs)
+      .where(
+        and(
+          eq(newsSlugs.newsId, requested[0].newsId),
+          eq(newsSlugs.isCurrent, true),
+        ),
+      )
+      .limit(1),
+    db
+      .select({
+        newsLocaleId: newsLocales.id,
+        date: news.displayDate,
+        category: news.category,
+        title: newsLocales.title,
+        summary: newsLocales.summary,
+        bodyMarkdown: newsLocales.bodyMarkdown,
+        storageKey: assets.storageKey,
+      })
+      .from(news)
+      .innerJoin(newsLocales, eq(newsLocales.newsId, news.id))
+      .leftJoin(
+        assets,
+        and(eq(assets.id, news.coverAssetId), eq(assets.status, "READY")),
+      )
+      .where(
+        and(
+          eq(news.id, requested[0].newsId),
+          eq(news.itemStatus, "ACTIVE"),
+          eq(newsLocales.locale, locale),
+          eq(newsLocales.publicationStatus, "PUBLISHED"),
+        ),
+      )
+      .limit(1),
+  ]);
   if (!currentSlug[0]) return null;
-  const row = await db
-    .select({
-      newsLocaleId: newsLocales.id,
-      date: news.displayDate,
-      category: news.category,
-      title: newsLocales.title,
-      summary: newsLocales.summary,
-      bodyMarkdown: newsLocales.bodyMarkdown,
-      storageKey: assets.storageKey,
-    })
-    .from(news)
-    .innerJoin(newsLocales, eq(newsLocales.newsId, news.id))
-    .leftJoin(
-      assets,
-      and(eq(assets.id, news.coverAssetId), eq(assets.status, "READY")),
-    )
-    .where(
-      and(
-        eq(news.id, requested[0].newsId),
-        eq(news.itemStatus, "ACTIVE"),
-        eq(newsLocales.locale, locale),
-        eq(newsLocales.publicationStatus, "PUBLISHED"),
-      ),
-    )
-    .limit(1);
   if (!row[0])
     return requested[0].isCurrent
       ? null

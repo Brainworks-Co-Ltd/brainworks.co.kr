@@ -71,7 +71,7 @@ describe.skipIf(!hasTestDatabase)("뉴스 대표 이미지", () => {
 
     const list = await readDatabaseNewsList("ko");
     expect(
-      list.items.find((item) => item.slug === "news-cover-saved")?.thumbnail,
+      list.find((item) => item.slug === "news-cover-saved")?.thumbnail,
     ).toBe(resolvePublicAssetUrl(storageKey));
   });
 
