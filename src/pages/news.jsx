@@ -24,7 +24,10 @@ function NewsMeta({ item, language }) {
   );
 }
 
-function NewsImage({ item, language, className = "" }) {
+// 대표 소식 그림은 첫 화면에 걸리는 이 페이지의 LCP다. 지연 로딩이면 레이아웃 뒤에야
+// 받기 시작하므로 바로 높은 우선순위로 받는다. 넓은 화면에서는 max-w-6xl 카드의
+// 1.25fr 칸(약 690px)만 차지한다.
+function NewsImage({ item, language, className = "", featured = false }) {
   const title = translate(item.title, language);
 
   return (
@@ -36,7 +39,13 @@ function NewsImage({ item, language, className = "" }) {
           src={item.thumbnail}
           alt={title}
           fill
-          sizes="(min-width: 1024px) 55vw, 100vw"
+          sizes={
+            featured
+              ? "(min-width: 1024px) 690px, 100vw"
+              : "(min-width: 1024px) 55vw, 100vw"
+          }
+          loading={featured ? "eager" : undefined}
+          fetchPriority={featured ? "high" : undefined}
           className="object-cover transition duration-500 group-hover:scale-[1.03]"
         />
       ) : (
@@ -57,6 +66,7 @@ function FeaturedNews({ item, language }) {
       <NewsImage
         item={item}
         language={language}
+        featured
         className="aspect-[4/3] lg:aspect-auto lg:min-h-[420px]"
       />
       <div className="flex flex-col justify-between gap-10 p-6 md:p-10">

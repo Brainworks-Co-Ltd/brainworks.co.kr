@@ -41,6 +41,30 @@ describe("홈 영상 릴 조작", () => {
     expect(screen.getByText("03")).toBeInTheDocument();
   });
 
+  it("첫 컷만 먼저 받고 나머지 컷의 영상과 포스터는 1.5초 뒤에 받는다", () => {
+    const { container } = render(<HomeMedia />);
+    const videos = () => Array.from(container.querySelectorAll("video"));
+    expect(videos().map((v) => v.getAttribute("preload"))).toEqual([
+      "auto",
+      "none",
+      "none",
+      "none",
+    ]);
+    expect(videos().map((v) => v.hasAttribute("poster"))).toEqual([
+      true,
+      false,
+      false,
+      false,
+    ]);
+    act(() => {
+      vi.advanceTimersByTime(1500);
+    });
+    expect(videos().every((v) => v.getAttribute("preload") === "auto")).toBe(
+      true,
+    );
+    expect(videos().every((v) => v.hasAttribute("poster"))).toBe(true);
+  });
+
   it("일시정지하면 자동으로 넘어가지 않고, 이전/다음은 일시정지를 풀지 않는다", () => {
     render(<HomeMedia />);
     fireEvent.click(screen.getByRole("button", { name: "일시정지" }));

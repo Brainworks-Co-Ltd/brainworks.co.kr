@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Head from "next/head";
 import Image from "next/image";
 import { useLocale } from "@/shared/routing/useLocale";
 import client1 from "@/assets/clients/client1.png";
@@ -72,7 +73,8 @@ function ClipReel({ language, children }) {
   const playing = !userPaused && !focused && !hidden;
 
   // 첫 컷이 뜬 뒤에 나머지 컷을 미리 받아 둔다. 이전/다음을 눌렀을 때
-  // 그제야 받기 시작하면 2~3초 멈춘 것처럼 보인다.
+  // 그제야 받기 시작하면 2~3초 멈춘 것처럼 보인다. 나머지 컷의 영상과 포스터는
+  // 그 전에 받지 않는다. 첫 화면에서 첫 컷 포스터와 대역폭을 다투지 않게 한다.
   const [warm, setWarm] = useState(false);
 
   useEffect(() => {
@@ -133,6 +135,16 @@ function ClipReel({ language, children }) {
           setFocused(false);
       }}
     >
+      {/* 첫 컷 포스터가 이 페이지의 LCP다. 영상 포스터는 낮은 우선순위로 받으므로
+          높은 우선순위로 먼저 당겨 온다. */}
+      <Head>
+        <link
+          rel="preload"
+          as="image"
+          href={clips[0].poster}
+          fetchPriority="high"
+        />
+      </Head>
       {clips.map((clip, index) => (
         <video
           key={clip.id}
@@ -140,12 +152,10 @@ function ClipReel({ language, children }) {
             videos.current[index] = node;
           }}
           src={clip.src}
-          poster={clip.poster}
+          poster={warm || index === current ? clip.poster : undefined}
           muted
           playsInline
-          preload={
-            warm || index === current || index === next ? "auto" : "none"
-          }
+          preload={warm || index === current ? "auto" : "none"}
           aria-hidden="true"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`}
         />

@@ -52,7 +52,7 @@ export default function About() {
                         alt={language === "ko" ? "CEO 사진" : "CEO photo"}
                         width={1491}
                         height={1606}
-                        priority
+                        sizes="(min-width: 1024px) 400px, 100vw"
                         className="h-full w-full object-cover"
                       />
                     </div>
