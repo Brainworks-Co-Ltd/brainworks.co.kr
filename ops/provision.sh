@@ -46,8 +46,8 @@ BETTER_AUTH_SECRET=$(openssl rand -hex 32)
 CONTACT_RECIPIENT=austin@brainworks.co.kr
 SMTP_HOST=smtps.hiworks.com
 SMTP_PORT=465
-SMTP_USER=ppre1ude@brainworks.co.kr
-SMTP_FROM=ppre1ude@brainworks.co.kr
+SMTP_USER=
+SMTP_FROM=
 SMTP_PASSWORD=
 ASSET_LOCAL_DIR=/var/lib/brainworks/uploads
 EOF
@@ -70,4 +70,5 @@ systemctl reload nginx
 echo "== 결과"
 node -v; psql --version; nginx -v 2>&1
 sshd -T | grep -E '^(passwordauthentication|permitrootlogin)'
-echo "SMTP_PASSWORD는 nano /etc/brainworks/app.env 로 직접 넣는다"
+# 메일 계정은 공개 저장소에 두지 않는다. 서버에서 직접 채운다.
+echo "SMTP_USER, SMTP_FROM, SMTP_PASSWORD는 nano /etc/brainworks/app.env 로 직접 넣는다"
