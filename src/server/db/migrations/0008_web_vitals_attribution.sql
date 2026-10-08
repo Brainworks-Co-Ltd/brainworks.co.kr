@@ -1,0 +1,1 @@
+ALTER TABLE "web_vitals" ADD COLUMN "attribution" jsonb;

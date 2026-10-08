@@ -18,9 +18,19 @@ vi.mock("@/server/modules/web-vitals/service", () => ({
 }));
 
 import vitalsHandler from "@/pages/api/vitals";
-import { gradeVital } from "@/lib/performance-dashboard";
+import {
+  causeStages,
+  classifyCause,
+  gradeVital,
+  ROUTE_CHANGE,
+  splitServerWait,
+} from "@/lib/performance-dashboard";
 import { recordWebVitals } from "@/server/modules/web-vitals/service";
-import { webVitalsInputSchema } from "@/shared/schemas/web-vitals";
+import {
+  type LcpAttribution,
+  type NavTiming,
+  webVitalsInputSchema,
+} from "@/shared/schemas/web-vitals";
 
 const metric = {
   name: "LCP",
@@ -33,6 +43,30 @@ const metric = {
   device: "mobile",
   connection: "4g",
   metricId: null,
+  attribution: null,
+};
+
+const env = { viewport: 390, dpr: 3 };
+const nav: NavTiming = {
+  redirect: 0,
+  redirectCount: 0,
+  dns: 30,
+  connect: 80,
+  tls: 50,
+  wait: 120,
+  before: 5,
+};
+const lcp: LcpAttribution = {
+  ...env,
+  ttfb: 300,
+  loadDelay: 50,
+  loadDuration: 400,
+  renderDelay: 100,
+  element: "img.object-cover",
+  resource: "/images/about/hero.webp w828",
+  resourceKb: 120.5,
+  transfer: { doc: 12, js: 200, css: 30, font: 280, image: 120.5, other: 0 },
+  nav,
 };
 
 const accepts = (overrides: Record<string, unknown>) =>
@@ -58,6 +92,14 @@ describe("성능 지표 입력 스키마", () => {
     expect(webVitalsInputSchema.safeParse(Array(30).fill(metric)).success).toBe(
       true,
     );
+  });
+
+  it("모르는 탐색 유형은 묶음을 거절하지 않고 null로 저장한다", () => {
+    // Next 16.4의 web-vitals는 soft-navigation을 보낸다. 한 값 때문에 묶음 전체가 400이 되면 안 된다.
+    const parsed = webVitalsInputSchema.parse([
+      { ...metric, navigationType: "soft-navigation" },
+    ]);
+    expect(parsed[0].navigationType).toBeNull();
   });
 
   it("범위 밖이나 목록 밖 값은 거절한다", () => {
@@ -104,6 +146,165 @@ describe("성능 등급", () => {
 
   it("Next 전용 지표는 등급이 없다", () => {
     expect(gradeVital("Next.js-route-change-to-render", 100)).toBeNull();
+  });
+});
+
+describe("원인 내역 스키마", () => {
+  it("지표 이름에 맞는 모양만 받는다", () => {
+    expect(accepts({ attribution: lcp })).toBe(true);
+    expect(
+      accepts({
+        attribution: {
+          ...lcp,
+          loadDelay: null,
+          loadDuration: null,
+          resourceKb: null,
+        },
+      }),
+    ).toBe(true);
+    expect(
+      accepts({
+        name: "TTFB",
+        attribution: {
+          ...env,
+          ...nav,
+          serverTiming: [{ name: "db", duration: 40 }],
+        },
+      }),
+    ).toBe(true);
+    expect(
+      accepts({
+        name: ROUTE_CHANGE,
+        attribution: { ...env, data: 0, chunks: 80, render: 300 },
+      }),
+    ).toBe(true);
+    // 합집합에는 맞는 FCP 모양이라도 LCP 이름으로 오면 거절한다.
+    expect(
+      accepts({ attribution: { ...env, ttfb: 300, afterTtfb: 200, nav } }),
+    ).toBe(false);
+    expect(accepts({ name: "Next.js-hydration", attribution: lcp })).toBe(
+      false,
+    );
+    expect(accepts({ attribution: undefined })).toBe(false);
+    // 요소 이름에는 한글 id도 올 수 있다.
+    expect(accepts({ attribution: { ...lcp, element: "h2#회사-소개" } })).toBe(
+      true,
+    );
+  });
+
+  it("모르는 키와 범위 밖 값은 거절한다", () => {
+    const reject = (attribution: unknown) =>
+      expect(accepts({ attribution })).toBe(false);
+    reject({ ...lcp, text: "홍길동" });
+    reject({ ...lcp, nav: { ...nav, ip: "203.0.113.1" } });
+    reject({ ...lcp, transfer: { ...lcp.transfer, video: 1 } });
+    reject({ ...lcp, ttfb: -1 });
+    reject({ ...lcp, renderDelay: 600001 });
+    reject({ ...lcp, transfer: { ...lcp.transfer, js: 100001 } });
+    reject({ ...lcp, element: "a".repeat(81) });
+    reject({ ...lcp, resource: "a".repeat(121) });
+    reject({ ...lcp, viewport: 390.5 });
+    reject({
+      ...lcp,
+      nav: {
+        ...nav,
+        serverTiming: Array(4).fill({ name: "db", duration: 1 }),
+      },
+    });
+    reject({
+      ...lcp,
+      nav: { ...nav, serverTiming: [{ name: "db 조회", duration: 1 }] },
+    });
+    // jsonb가 거절하는 NUL과 짝 없는 서로게이트는 저장 전에 400으로 막는다.
+    reject({ ...lcp, element: "a\u0000b" });
+    reject({ ...lcp, element: "a\ud800" });
+    // 파일 경로는 URL 파서가 퍼센트 인코딩한 ASCII다.
+    reject({ ...lcp, resource: "/images/회사.webp" });
+    reject("lcp");
+  });
+});
+
+describe("원인 분류", () => {
+  it("가장 긴 단계를 원인으로 본다", () => {
+    expect(classifyCause("LCP", lcp)).toBe("load-duration");
+    expect(classifyCause("LCP", { ...lcp, ttfb: 4300 })).toBe("ttfb");
+    expect(classifyCause("LCP", { ...lcp, loadDelay: 900 })).toBe("load-delay");
+    expect(classifyCause("LCP", { ...lcp, renderDelay: 900 })).toBe(
+      "render-delay",
+    );
+    // DNS, 연결, 회선 왕복을 합쳐 회선과 연결로 센다.
+    expect(classifyCause("TTFB", { ...env, ...nav, wait: 100 })).toBe(
+      "connection",
+    );
+    expect(classifyCause("TTFB", { ...env, ...nav, redirect: 500 })).toBe(
+      "redirect",
+    );
+    expect(classifyCause("TTFB", { ...env, ...nav, before: 500 })).toBe(
+      "before-request",
+    );
+    expect(classifyCause("TTFB", { ...env, ...nav, wait: 400 })).toBe(
+      "server-wait",
+    );
+    // 느린 회선: 서버는 10ms 만에 답했지만 왕복 400ms가 서버 대기에 섞인다.
+    // 연결(TCP 400 + TLS 400)로 왕복을 추정해 빼면 서버 문제가 아니다.
+    const slowLine = { ...env, ...nav, connect: 800, tls: 400, wait: 410 };
+    expect(classifyCause("TTFB", slowLine)).toBe("connection");
+    expect(splitServerWait(slowLine)).toEqual({ rtt: 400, server: 10 });
+    // 연결을 다시 쓴 방문은 왕복을 알 수 없어 서버 대기를 그대로 둔다.
+    expect(splitServerWait({ ...nav, connect: 0, tls: 0, wait: 410 })).toEqual({
+      rtt: 0,
+      server: 410,
+    });
+    expect(
+      classifyCause("INP", {
+        ...env,
+        event: "pointerup",
+        target: "button.menu",
+        inputDelay: 20,
+        processing: 180,
+        presentation: 40,
+      }),
+    ).toBe("processing");
+    expect(
+      classifyCause("CLS", {
+        ...env,
+        element: "img",
+        largestShift: 0.2,
+        time: 900,
+      }),
+    ).toBe("layout-shift");
+    expect(
+      classifyCause(ROUTE_CHANGE, {
+        ...env,
+        data: 400,
+        chunks: 80,
+        render: 20,
+      }),
+    ).toBe("data");
+    expect(
+      classifyCause("FCP", { ...env, ttfb: 300, afterTtfb: 1900, nav }),
+    ).toBe("after-ttfb");
+  });
+
+  it("같으면 앞 단계, 내역이 없으면 unknown이다", () => {
+    expect(
+      classifyCause("FCP", { ...env, ttfb: 500, afterTtfb: 500, nav }),
+    ).toBe("ttfb");
+    expect(classifyCause("LCP", null)).toBe("unknown");
+  });
+
+  it("단계는 시간 순이고 resource 기록이 없는 단계는 null이다", () => {
+    expect(
+      causeStages({ ...lcp, loadDelay: null, loadDuration: null }),
+    ).toEqual([
+      { cause: "ttfb", ms: 300 },
+      { cause: "load-delay", ms: null },
+      { cause: "load-duration", ms: null },
+      { cause: "render-delay", ms: 100 },
+    ]);
+    expect(causeStages({ ...env, ...nav }).map((stage) => stage.cause)).toEqual(
+      ["redirect", "before-request", "connection", "server-wait"],
+    );
   });
 });
 

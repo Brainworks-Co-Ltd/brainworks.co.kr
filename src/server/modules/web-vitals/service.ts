@@ -1,15 +1,23 @@
-import { lt, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, lt, sql } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { webVitals } from "@/server/db/schema/web-vitals";
-import type { VitalName } from "@/lib/performance-dashboard";
-import type { WebVitalInput } from "@/shared/schemas/web-vitals";
+import {
+  classifyCause,
+  type SlowMetric,
+  type VitalCause,
+  type VitalName,
+} from "@/lib/performance-dashboard";
+import type {
+  VitalAttribution,
+  WebVitalInput,
+} from "@/shared/schemas/web-vitals";
 
 const PURGE_INTERVAL_MS = 60 * 60 * 1000;
 let lastPurgeAt = 0;
 
 /**
  * 받은 지표를 저장하고, 한 시간에 한 번 90일 지난 행을 지운다. now는 시험용이다.
- * 같은 id로 다시 온 CLS, INP는 새 행 대신 값만 고쳐 페이지 보기마다 마지막 값 하나를 남긴다.
+ * 같은 id로 다시 온 CLS, INP는 새 행 대신 값과 원인 내역만 고쳐 페이지 보기마다 마지막 값 하나를 남긴다.
  */
 export async function recordWebVitals(
   metrics: WebVitalInput[],
@@ -21,7 +29,11 @@ export async function recordWebVitals(
     .values(metrics)
     .onConflictDoUpdate({
       target: webVitals.metricId,
-      set: { value: sql`excluded.value`, rating: sql`excluded.rating` },
+      set: {
+        value: sql`excluded.value`,
+        rating: sql`excluded.rating`,
+        attribution: sql`excluded.attribution`,
+      },
     });
   if (now - lastPurgeAt < PURGE_INTERVAL_MS) return;
   lastPurgeAt = now;
@@ -155,5 +167,142 @@ export async function getPerformanceDashboard({
     },
     routes,
     builds,
+  };
+}
+
+/** 느린 방문 조회 조건. threshold를 넘은(초과) 값만 느린 방문이다. */
+export type SlowFilter = {
+  days: number;
+  metric: SlowMetric;
+  device: "all" | "mobile" | "desktop";
+  threshold: number;
+};
+
+export type SlowVisit = {
+  id: string;
+  /** ISO 시각 */
+  createdAt: string;
+  route: string;
+  device: string;
+  connection: string | null;
+  /** 화면 폭(CSS px). 원인 내역이 없는 예전 행은 null이다. */
+  viewport: number | null;
+  value: number;
+  rating: string | null;
+  attribution: VitalAttribution | null;
+  buildId: string;
+  navigationType: string | null;
+  cause: VitalCause;
+};
+
+export type CauseBreakdown = {
+  /** 기간, 지표, 기기에 맞는 전체 표본 수 */
+  total: number;
+  /** 그중 기준을 넘은 수 */
+  slow: number;
+  /** 원인을 센 느린 방문 수. 느린 방문이 CAUSE_SAMPLE보다 많으면 최근 것만 센다. */
+  sample: number;
+  /**
+   * 많은 순. share는 센 방문 중 그 원인의 비율(0~1)이다.
+   * CLS는 원인이 늘 레이아웃 밀림이라 밀린 요소(element)로 나눠 센다. 다른 지표는 element가 null이다.
+   */
+  causes: {
+    cause: VitalCause;
+    element: string | null;
+    count: number;
+    share: number;
+  }[];
+};
+
+/**
+ * ponytail: 분류가 TS 함수(classifyCause)라 내역을 읽어 센다. 수집 API로 행을 채워도
+ * 화면을 열 때 메모리가 버티게 최근 것만 읽는다. 전부 세야 하면 저장할 때 원인 열을 채워 SQL로 센다.
+ */
+const CAUSE_SAMPLE = 5_000;
+
+function matching(
+  { days, metric, device, threshold }: SlowFilter,
+  slowOnly = true,
+) {
+  return and(
+    eq(webVitals.name, metric),
+    gt(webVitals.createdAt, sql`now() - make_interval(days => ${days})`),
+    device === "all" ? undefined : eq(webVitals.device, device),
+    slowOnly ? gt(webVitals.value, threshold) : undefined,
+  );
+}
+
+/** 기준을 넘은 방문을 값이 큰 순으로 낸다. */
+export async function getSlowVisits({
+  limit = 50,
+  ...filter
+}: SlowFilter & { limit?: number }): Promise<SlowVisit[]> {
+  if (!process.env.DATABASE_URL) return [];
+  const rows = await getDb()
+    .select({
+      id: webVitals.id,
+      createdAt: webVitals.createdAt,
+      route: webVitals.route,
+      device: webVitals.device,
+      connection: webVitals.connection,
+      value: webVitals.value,
+      rating: webVitals.rating,
+      attribution: webVitals.attribution,
+      buildId: webVitals.buildId,
+      navigationType: webVitals.navigationType,
+    })
+    .from(webVitals)
+    .where(matching(filter))
+    .orderBy(desc(webVitals.value), desc(webVitals.createdAt))
+    .limit(limit);
+  return rows.map((row) => ({
+    ...row,
+    createdAt: row.createdAt.toISOString(),
+    viewport: row.attribution?.viewport ?? null,
+    cause: classifyCause(filter.metric, row.attribution),
+  }));
+}
+
+/** 기준을 넘은 방문의 원인별 건수와 전체 표본 수. 원인 내역이 없는 예전 행은 unknown으로 센다. */
+export async function getCauseBreakdown(
+  filter: SlowFilter,
+): Promise<CauseBreakdown> {
+  if (!process.env.DATABASE_URL)
+    return { total: 0, slow: 0, sample: 0, causes: [] };
+  const db = getDb();
+  const [rows, [{ slow }], [{ total }]] = await Promise.all([
+    db
+      .select({ attribution: webVitals.attribution })
+      .from(webVitals)
+      .where(matching(filter))
+      .orderBy(desc(webVitals.createdAt))
+      .limit(CAUSE_SAMPLE),
+    db.select({ slow: count() }).from(webVitals).where(matching(filter)),
+    db
+      .select({ total: count() })
+      .from(webVitals)
+      .where(matching(filter, false)),
+  ]);
+  const counts = new Map<string, CauseBreakdown["causes"][number]>();
+  for (const { attribution } of rows) {
+    const cause = classifyCause(filter.metric, attribution);
+    const element =
+      attribution && "largestShift" in attribution ? attribution.element : null;
+    const key = `${cause} ${element}`;
+    const item = counts.get(key) ?? { cause, element, count: 0, share: 0 };
+    item.count += 1;
+    item.share = item.count / rows.length;
+    counts.set(key, item);
+  }
+  return {
+    total,
+    slow,
+    sample: rows.length,
+    causes: [...counts]
+      // 건수가 같으면 원인과 요소 이름 순으로 두어 새로 고쳐도 순서가 바뀌지 않게 한다.
+      .sort(
+        ([keyA, a], [keyB, b]) => b.count - a.count || keyA.localeCompare(keyB),
+      )
+      .map(([, item]) => item),
   };
 }

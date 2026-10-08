@@ -8,8 +8,9 @@ import { parseBody } from "@/server/http/validate";
 import { recordWebVitals } from "@/server/modules/web-vitals/service";
 import { webVitalsInputSchema } from "@/shared/schemas/web-vitals";
 
-// 한 번에 많아야 30개라 16kb면 넉넉하다.
-export const config = { api: { bodyParser: { sizeLimit: "16kb" } } };
+// 한 번에 많아야 30개다. 원인 내역이 긴 LCP, FCP, TTFB(길어야 2kb)는 페이지마다 한 번이고
+// 나머지 지표는 1kb 안이라 32kb면 넉넉하다.
+export const config = { api: { bodyParser: { sizeLimit: "32kb" } } };
 
 const BOT_PATTERN = /bot|crawl|spider|headless|lighthouse|pagespeed/i;
 const WINDOW_MS = 60 * 1000;
