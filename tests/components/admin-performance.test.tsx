@@ -142,11 +142,11 @@ describe("관리자 성능 화면", () => {
     const causes = within(screen.getByRole("region", { name: "원인" }));
     const items = causes.getAllByRole("listitem");
     expect(items).toHaveLength(2);
-    expect(within(items[0]).getByText("첫 바이트")).toBeInTheDocument();
+    expect(within(items[0]).getByText("TTFB")).toBeInTheDocument();
     expect(within(items[0]).getByText("8건")).toBeInTheDocument();
     expect(within(items[0]).getByText("67%")).toBeInTheDocument();
     expect(
-      within(items[0]).getByText(/첫 바이트 내역에서 연결과 서버 대기/),
+      within(items[0]).getByText(/TTFB 내역에서 가장 긴 구간/),
     ).toBeInTheDocument();
     // 막대는 화면 읽기에서 빼고 건수와 비율 글자가 같은 내용을 말한다.
     const bar = items[0].querySelector<HTMLElement>("[aria-hidden] > span");
@@ -171,7 +171,7 @@ describe("관리자 성능 화면", () => {
 
     await user.click(within(first).getByText("7,800ms"));
     expect(table).toBeVisible();
-    const ttfb = within(table).getByRole("row", { name: /첫 바이트/ });
+    const ttfb = within(table).getByRole("row", { name: /TTFB/ });
     expect(ttfb).toHaveTextContent("4,300ms");
     expect(
       within(first).getByText("/images/about/hero.webp w828"),
@@ -180,11 +180,11 @@ describe("관리자 성능 화면", () => {
       within(first).getByText("크기").nextElementSibling,
     ).toHaveTextContent("182.4KB");
     expect(
-      within(first).getByText("서버 대기").nextElementSibling,
+      within(first).getByText("Request").nextElementSibling,
     ).toHaveTextContent("3,100ms");
     // TLS는 연결 안에 들어 있어 연결 값 옆에 붙인다.
     expect(
-      within(first).getByText("연결").nextElementSibling,
+      within(first).getByText("Connection").nextElementSibling,
     ).toHaveTextContent("900ms (TLS 400ms)");
     expect(within(first).queryByText("TLS")).toBeNull();
     expect(within(first).getByText("abcdefgh")).toBeVisible();
@@ -232,12 +232,12 @@ describe("관리자 성능 화면", () => {
     const causes = screen.getByRole("region", { name: "원인" });
     expect(
       within(causes).getByText(
-        /밀린 요소 위쪽에.*느린 방문 중 최근 5,000건으로 셉니다\./,
+        /그려진 뒤 밀렸습니다.*느린 방문 중 최근 5,000건으로 셉니다\./,
       ),
     ).toBeInTheDocument();
     const [element, unknown] = within(causes).getAllByRole("listitem");
     expect(within(element).getByText("img.hero")).toBeInTheDocument();
-    expect(within(element).queryByText(/밀린 요소 위쪽에/)).toBeNull();
+    expect(within(element).queryByText(/그려진 뒤 밀렸습니다/)).toBeNull();
     expect(
       within(unknown).getByText("원인 기록 없음(이전 버전)"),
     ).toBeInTheDocument();

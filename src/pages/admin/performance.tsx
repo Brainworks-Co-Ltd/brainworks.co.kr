@@ -449,24 +449,24 @@ function VisitDetail({
       ) : null}
       {nav ? (
         <Pairs
-          title="첫 바이트 내역"
+          title="TTFB 내역"
           items={[
             [
-              "리다이렉트",
+              "Waiting",
               `${formatMs(nav.redirect)}${nav.redirectCount ? ` (${nav.redirectCount}회)` : ""}`,
             ],
-            ["요청 전", formatMs(nav.before)],
+            ["Cache", formatMs(nav.before)],
             ["DNS", formatMs(nav.dns)],
             // TLS는 연결 안에 들어 있어 따로 두면 둘을 더해 읽는다.
             [
-              "연결",
+              "Connection",
               `${formatMs(nav.connect)}${nav.tls ? ` (TLS ${formatMs(nav.tls)})` : ""}`,
             ],
-            // 서버 대기에는 회선 왕복 1번이 섞여 있어, 추정한 왕복을 나눠 보여 준다.
+            // Request에는 회선 왕복(RTT) 1번이 섞여 있어, 추정한 RTT를 나눠 보여 준다.
             [
-              "서버 대기",
+              "Request",
               wait?.rtt
-                ? `${formatMs(nav.wait)} (회선 왕복 약 ${formatMs(wait.rtt)}, 서버 처리 약 ${formatMs(wait.server)})`
+                ? `${formatMs(nav.wait)} (RTT 약 ${formatMs(wait.rtt)}, 서버 약 ${formatMs(wait.server)})`
                 : formatMs(nav.wait),
             ],
           ]}
@@ -803,7 +803,7 @@ export default function AdminPerformance({
     <AdminShell activePath="/admin/performance">
       <AdminPageHeader
         title="성능"
-        description="기준보다 느렸던 방문과 그 원인을 봅니다."
+        description="실제 방문자 기록에서 기준보다 느렸던 방문과 그 원인을 확인합니다."
         action={[7, 30].map((days) => (
           <Chip
             key={days}

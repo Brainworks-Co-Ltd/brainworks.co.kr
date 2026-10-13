@@ -76,72 +76,76 @@ export const slowThresholds = {
 
 export type SlowMetric = keyof typeof slowThresholds;
 
-/** 느린 방문의 원인. label은 막대와 목록의 이름, hint는 어디를 보면 되는지다. ttfb는 LCP와 FCP가 같이 쓴다. */
+/**
+ * 느린 방문의 원인. label은 막대와 목록의 이름이다. hint는 그 단계가 길었다는 뜻과 흔한 원인을
+ * 두 문장으로 적는다. ttfb는 LCP와 FCP가 같이 쓴다.
+ */
 export const causeInfo = {
   ttfb: {
-    label: "첫 바이트",
-    hint: "첫 바이트까지가 길었습니다. 첫 바이트 내역에서 연결과 서버 대기 중 어느 쪽인지 봅니다.",
+    label: "TTFB",
+    hint: "HTML의 첫 바이트가 늦게 도착했습니다. 원인은 TTFB 내역에서 가장 긴 구간(Waiting, Network, Server)입니다.",
   },
   "load-delay": {
-    label: "발견 지연",
-    hint: "그림을 늦게 찾기 시작했습니다. 지연 로딩, 우선순위(priority, fetchPriority), CSS 배경 그림인지 봅니다.",
+    label: "Resource load delay",
+    hint: "LCP 리소스 요청이 첫 바이트보다 한참 늦게 시작됐습니다. 흔한 원인은 그림의 지연 로딩과 낮은 우선순위(priority, fetchPriority), CSS 배경 그림, 영상의 preload 설정과 미리 받기 시점입니다.",
   },
   "load-duration": {
-    label: "받기",
-    hint: "그림을 받는 데 오래 걸렸습니다. 파일 용량과 받는 너비(sizes)를 줄일 수 있는지 봅니다.",
+    label: "Resource load duration",
+    hint: "LCP 리소스를 받는 데 오래 걸렸습니다. 흔한 원인은 큰 파일 용량과 화면보다 넓게 받는 그림(sizes)입니다.",
   },
   "render-delay": {
-    label: "그리기",
-    hint: "받을 것은 다 받았는데 늦게 그려졌습니다. 자바스크립트 실행, 하이드레이션, 등장 효과 같은 숨김 처리를 봅니다.",
+    label: "Element render delay",
+    hint: "리소스를 다 받은 뒤에도 늦게 그려졌습니다. 흔한 원인은 자바스크립트 실행, 하이드레이션 대기, 등장 효과 같은 숨김 처리입니다.",
   },
+  // 저장 필드 이름은 redirect지만 값은 web-vitals의 waitingDuration(내비게이션 시작부터 fetchStart까지)이다.
   redirect: {
-    label: "리다이렉트",
-    hint: "리다이렉트에 시간이 갔습니다. www나 끝 슬래시 같은 주소 이동이 있었는지 봅니다.",
+    label: "Waiting",
+    hint: "요청을 시작하기 전 대기가 길었습니다. 흔한 원인은 www나 http 주소에서 넘어오는 리다이렉트, 검색이나 메신저 링크의 중간 이동, 이전 페이지 정리입니다.",
   },
   connection: {
-    label: "회선과 연결",
-    hint: "DNS, 연결(TLS), 회선 왕복에 시간이 갔습니다. 대개 방문자 회선 문제이고, 같은 원인이 많으면 리다이렉트와 연결 재사용을 봅니다.",
+    label: "Network",
+    hint: "DNS, 연결(TCP, TLS), 회선 왕복(RTT)에 시간이 걸렸습니다. 흔한 원인은 서버와 멀리 떨어진 방문자(해외 등)의 긴 왕복 시간입니다.",
   },
   "server-wait": {
-    label: "서버 처리",
-    hint: "회선 왕복을 뺀 서버 처리 추정치가 깁니다. 이 경로의 서버 렌더링과 DB 조회를 봅니다.",
+    label: "Server",
+    hint: "Request에서 RTT를 뺀 서버 처리 추정치가 깁니다. 흔한 원인은 서버 렌더링과 DB 조회입니다. 먼 방문에서는 왕복이 한 번 더 섞여 실제보다 크게 나올 수 있습니다.",
   },
   "before-request": {
-    label: "요청 전",
-    hint: "요청을 보내기 전에 시간이 갔습니다. 브라우저 캐시 확인 같은 방문자 쪽 처리라 대개 고칠 것이 없습니다.",
+    label: "Cache",
+    hint: "요청을 보내기 전 브라우저 안에서 시간이 걸렸습니다. 브라우저 캐시 확인 같은 방문자 쪽 처리라 대개 고칠 것이 없습니다.",
   },
   "input-delay": {
-    label: "입력 지연",
-    hint: "누른 뒤 처리가 시작되기까지 기다렸습니다. 그때 돌던 다른 자바스크립트(하이드레이션, 타이머, 등장 효과)를 봅니다.",
+    label: "Input delay",
+    hint: "누른 뒤 처리가 시작되기까지 기다렸습니다. 흔한 원인은 그때 돌던 다른 자바스크립트(하이드레이션, 타이머, 등장 효과)입니다.",
   },
   processing: {
-    label: "처리",
-    hint: "이벤트 처리 코드가 오래 걸렸습니다. 이 요소의 클릭 처리와 그 뒤 다시 그리는 컴포넌트를 봅니다.",
+    label: "Processing duration",
+    hint: "이벤트 처리 코드가 오래 걸렸습니다. 흔한 원인은 그 요소의 클릭 처리와 처리 뒤 다시 그려지는 컴포넌트입니다.",
   },
   presentation: {
-    label: "화면 반영",
-    hint: "처리 뒤 화면에 반영되기까지 오래 걸렸습니다. 한 번에 바뀌는 요소 수와 레이아웃 계산을 봅니다.",
+    label: "Presentation delay",
+    hint: "처리 뒤 화면에 반영되기까지 오래 걸렸습니다. 흔한 원인은 한 번에 바뀌는 요소가 많거나 레이아웃 계산이 큰 경우입니다.",
   },
   "layout-shift": {
-    label: "레이아웃 밀림",
-    hint: "밀린 요소 위쪽에 크기를 정하지 않은 그림이나 늦게 들어오는 글꼴, 배너가 있는지 봅니다.",
+    label: "Layout shift",
+    hint: "화면 요소가 그려진 뒤 밀렸습니다. 흔한 원인은 크기를 정하지 않은 그림, 늦게 적용되는 글꼴, 나중에 끼어드는 배너입니다.",
   },
   data: {
-    label: "데이터",
-    hint: "다음 화면의 데이터를 서버에서 받는 시간이 깁니다. 정적 생성(ISR) 도입을 검토할 근거입니다.",
+    label: "Data",
+    hint: "다음 화면의 데이터(/_next/data)를 받는 시간이 깁니다. 서버 렌더링 페이지는 클릭한 뒤에야 데이터를 받아서 생기며, 자주 길면 정적 생성(ISR)을 검토할 근거가 됩니다.",
   },
   chunks: {
-    label: "코드 받기",
-    hint: "다음 화면의 자바스크립트를 받는 시간이 깁니다. 미리 받기(prefetch)가 됐는지와 화면별 코드 크기를 봅니다.",
+    label: "JS chunks",
+    hint: "다음 화면의 자바스크립트를 받는 시간이 깁니다. 흔한 원인은 미리 받기(prefetch)가 안 된 링크와 큰 화면별 코드입니다.",
   },
   // Next의 화면 전환 지표는 그리기 시작(beforeRender 표시)에서 끝난다. 받은 뒤 그리기 시작까지가 이 구간이다.
   render: {
-    label: "실행",
-    hint: "받은 뒤 새 화면을 그리기 시작하기까지 오래 걸렸습니다. 새 화면 코드의 실행과 그때 돌던 다른 자바스크립트를 봅니다.",
+    label: "Render",
+    hint: "받은 뒤 새 화면을 그리기 시작하기까지 오래 걸렸습니다. 흔한 원인은 새 화면 코드의 실행과 그때 돌던 다른 자바스크립트입니다.",
   },
   "after-ttfb": {
-    label: "첫 바이트 뒤",
-    hint: "HTML을 받은 뒤 처음 그리기까지 오래 걸렸습니다. 렌더링을 막는 CSS와 글꼴, 자바스크립트를 봅니다.",
+    label: "First byte to FCP",
+    hint: "HTML을 받은 뒤 처음 그리기까지 오래 걸렸습니다. 흔한 원인은 렌더링을 막는 CSS와 글꼴, 자바스크립트이고, 먼 방문자는 이 파일들을 받는 왕복이 늘어 더 길어집니다.",
   },
   unknown: {
     label: "원인 기록 없음(이전 버전)",
@@ -198,7 +202,7 @@ export function splitServerWait(nav: NavTiming) {
   return { rtt, server: nav.wait - rtt };
 }
 
-/** 단계 하나. LCP 그림의 resource 기록이 없으면 발견 지연과 받기는 null이다. */
+/** 단계 하나. LCP 리소스의 resource 기록이 없으면 load delay와 load duration은 null이다. */
 export type VitalStage = { cause: VitalCause; ms: number | null };
 
 /** 가장 긴 단계를 원인으로 본다. 같으면 앞 단계다. 원인 내역이 없는 예전 행은 unknown이다. */
