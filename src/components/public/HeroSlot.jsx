@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { IBM_Plex_Mono } from "next/font/google";
 
 /*
@@ -23,26 +23,28 @@ const ERASE_MS = 55;
 const PAUSE_MS = 400;
 const REDUCED_MS = 3000;
 
+const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange) {
+  const query = window.matchMedia(REDUCED_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
 function useHeroTyping(slots) {
-  const [motionQuery] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(prefers-reduced-motion: reduce)")
-      : null,
+  // 하이드레이션 때는 서버와 같은 false로 그리고 바로 뒤 실제 값으로 바꾼다. 처음부터
+  // 실제 값을 쓰면 동작 줄이기 방문자에게 서버 HTML과 어긋나 화면을 통째로 다시 그린다.
+  const reduced = useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_QUERY).matches,
+    () => false,
   );
-  const [reduced, setReduced] = useState(() => motionQuery?.matches ?? false);
   const [paused, setPaused] = useState(
     () => typeof document !== "undefined" && document.hidden,
   );
   const [index, setIndex] = useState(0);
   const [typed, setTyped] = useState("");
   const [phase, setPhase] = useState("typing");
-
-  useEffect(() => {
-    if (!motionQuery) return undefined;
-    const onMotion = (event) => setReduced(event.matches);
-    motionQuery.addEventListener("change", onMotion);
-    return () => motionQuery.removeEventListener("change", onMotion);
-  }, [motionQuery]);
 
   useEffect(() => {
     const onVisibility = () => setPaused(document.hidden);

@@ -1,4 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { hydrateRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import HeroSlot from "@/components/public/HeroSlot";
 import Rail from "@/components/public/Rail";
@@ -139,6 +141,30 @@ describe("디자인 개선의 탐색과 제목", () => {
     );
     act(() => vi.advanceTimersByTime(3000));
     expect(reduced.querySelector(".bw-hero-caret")).toBeNull();
+  });
+
+  it("HeroSlot은 동작 줄이기 방문자에게도 서버 HTML과 어긋나지 않게 하이드레이션한다", async () => {
+    const ui = <HeroSlot slots={["제조 현장", "진료 현장"]} />;
+    const container = document.createElement("div");
+    // 서버는 방문자의 동작 줄이기 설정을 모른다(기본 matchMedia는 false).
+    container.innerHTML = renderToString(ui);
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    );
+    const onRecoverableError = vi.fn();
+    await act(async () => {
+      hydrateRoot(container, ui, { onRecoverableError });
+    });
+    expect(onRecoverableError).not.toHaveBeenCalled();
+    expect(container.querySelector(".bw-hero-live")?.textContent).toBe(
+      "제조 현장",
+    );
+    expect(container.querySelector(".bw-hero-caret")).toBeNull();
   });
 
   it("HeroSlot 슬롯 칸은 브라우저 번역에서 빠진다", () => {
