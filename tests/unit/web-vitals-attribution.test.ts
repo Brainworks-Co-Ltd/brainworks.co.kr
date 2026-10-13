@@ -86,7 +86,7 @@ function attribute(
 }
 
 describe("LCP 원인 내역", () => {
-  it("그림 LCP를 첫 바이트, 발견 지연, 받기, 그리기로 나누고 LCP 전에 받은 용량을 종류별로 센다", () => {
+  it("그림 LCP를 TTFB, load delay, load duration, render delay로 나누고 LCP 전에 받은 용량을 종류별로 센다", () => {
     const resources = [
       resource(heroUrl, 600, 1650, 120 * 1024, 650),
       resource("/_next/static/chunks/main.js", 410, 900, 50 * 1024),
@@ -132,7 +132,7 @@ describe("LCP 원인 내역", () => {
     });
   });
 
-  it("글자 LCP는 발견 지연과 받기가 0이고 글자 내용은 담지 않는다", () => {
+  it("글자 LCP는 load delay와 load duration이 0이고 글자 내용은 담지 않는다", () => {
     const heading = element("h1", {
       id: "title",
       className: "hero-title",
@@ -155,7 +155,26 @@ describe("LCP 원인 내역", () => {
     expect(JSON.stringify(attribution)).not.toContain("홍길동");
   });
 
-  it("그림의 resource 기록이 없으면 발견 지연과 받기는 모르고 그리기는 첫 바이트부터 잰다", () => {
+  it("영상처럼 다 받기 전에 그려지면 load duration을 LCP에서 자른다", () => {
+    const video = resource("/videos/home/smartcity.mp4", 3800, 4650, 1024);
+    expect(
+      attribute(
+        {
+          name: "LCP",
+          value: 4100,
+          entries: [{ url: video.name, element: element("video") }],
+        },
+        page({ resources: [video] }),
+      ),
+    ).toMatchObject({
+      ttfb: 400,
+      loadDelay: 3400,
+      loadDuration: 300,
+      renderDelay: 0,
+    });
+  });
+
+  it("그림의 resource 기록이 없으면 load delay와 load duration은 모르고 render delay는 TTFB부터 잰다", () => {
     expect(
       attribute({
         name: "LCP",

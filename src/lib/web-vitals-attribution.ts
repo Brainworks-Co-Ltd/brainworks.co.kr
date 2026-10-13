@@ -161,17 +161,24 @@ function lcpParts(
   const resource = entry.url
     ? page.resources.find((res) => res.name === entry.url)
     : undefined;
-  // 글자 LCP는 받을 그림이 없어 발견 지연과 받기가 0이다. 그림인데 resource 기록이 없으면(캐시 등) 모른다.
+  // 글자 LCP는 받을 리소스가 없어 load delay와 load duration이 0이다. 그림인데 resource 기록이 없으면(캐시 등) 모른다.
   let loadDelay: number | null = entry.url ? null : 0;
   let loadDuration: number | null = loadDelay;
   let responseEnd = ttfb;
   if (resource) {
     // web.dev "LCP 하위 부분": 요청 시작. 교차 출처라 requestStart가 0이면 startTime을 쓴다.
-    const requestStart = Math.max(
-      ttfb,
-      (resource.requestStart || resource.startTime) - activation,
+    // web-vitals처럼 LCP에서 자른다. 영상은 다 받기 전에 첫 프레임이 그려져 응답 끝이 LCP보다 늦다.
+    const requestStart = Math.min(
+      lcp,
+      Math.max(
+        ttfb,
+        (resource.requestStart || resource.startTime) - activation,
+      ),
     );
-    responseEnd = Math.max(requestStart, resource.responseEnd - activation);
+    responseEnd = Math.min(
+      lcp,
+      Math.max(requestStart, resource.responseEnd - activation),
+    );
     // web.dev "LCP 하위 부분": 로드 지연 = 요청 시작 - 첫 바이트
     loadDelay = clampMs(requestStart - ttfb);
     // web.dev "LCP 하위 부분": 로드 시간 = 응답 끝 - 요청 시작
