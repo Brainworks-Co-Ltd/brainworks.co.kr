@@ -141,6 +141,47 @@ describe("디자인 개선의 탐색과 제목", () => {
     expect(reduced.querySelector(".bw-hero-caret")).toBeNull();
   });
 
+  it("HeroSlot 슬롯 칸은 브라우저 번역에서 빠진다", () => {
+    const { container } = render(
+      <HeroSlot slots={["제조 현장", "진료 현장"]} />,
+    );
+    const slot = container.querySelector(".bw-hero-live")?.parentElement;
+    expect(slot).toHaveAttribute("translate", "no");
+    expect(slot).toHaveClass("notranslate");
+  });
+
+  it("HeroSlot은 번역기가 글자를 바꿔 끼운 뒤 언어가 바뀌어도 깨지지 않는다", () => {
+    const slots = ["Manufacturing AI", "Healthcare & Bio AI"];
+    const { container, rerender } = render(
+      <HeroSlot
+        slots={slots}
+        question={"{slot}를 도입하면\n업무가 달라질까요?"}
+      />,
+    );
+    // 브라우저 번역처럼 번역 대상 글자 노드를 <font>로 바꿔 끼운다(translate="no" 칸은 건너뛴다).
+    const walker = document.createTreeWalker(
+      container.querySelector("h2")!,
+      NodeFilter.SHOW_TEXT,
+    );
+    const texts: Text[] = [];
+    while (walker.nextNode()) texts.push(walker.currentNode as Text);
+    for (const text of texts) {
+      if (text.parentElement?.closest('[translate="no"]')) continue;
+      const font = document.createElement("font");
+      font.textContent = text.nodeValue;
+      text.replaceWith(font);
+    }
+    const errors = vi.spyOn(console, "error").mockImplementation(() => {});
+    rerender(
+      <HeroSlot
+        slots={slots}
+        question={"How could {slot}\nchange your work?"}
+      />,
+    );
+    errors.mockRestore();
+    expect(container.querySelector("h2")).toHaveTextContent("How could");
+  });
+
   it("HeroSlot은 슬롯이 비어 있어도 조사와 뒤 문장을 남긴다", () => {
     vi.useFakeTimers();
     const { container } = render(

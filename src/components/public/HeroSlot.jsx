@@ -120,7 +120,12 @@ export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
   ).split("\n");
 
   return (
-    <Heading className="text-[28px] font-semibold leading-[1.35] text-ink lg:text-[45px] lg:leading-[1.3]">
+    // 언어가 바뀌면 질문 앞뒤 글자 노드가 생기거나 없어진다. 번역기가 그 노드를 바꿔 끼운
+    // 뒤라면 하나씩 지우다 같은 오류가 나므로, 질문이 바뀌면 제목을 통째로 갈아 끼운다.
+    <Heading
+      key={question}
+      className="text-[28px] font-semibold leading-[1.35] text-ink lg:text-[45px] lg:leading-[1.3]"
+    >
       {lines.map((line, index) => {
         const lineBreak =
           index > 0 ? (
@@ -144,8 +149,12 @@ export default function HeroSlot({ slots, question = undefined, as = "h2" }) {
             {lineBreak}
             {before}
             <span className="whitespace-nowrap">
+              {/* 브라우저 번역이 이 칸의 글자 노드를 <font>로 바꿔 끼우면, 단어를 다 지우는
+                  순간 React가 원래 노드를 못 찾아 페이지 전체가 오류 화면이 된다.
+                  슬롯은 영문 제품 이름이라 번역에서 뺀다. */}
               <span
-                className={`${slotFont.className} relative inline-block text-[23px] font-semibold text-ink lg:text-[45px]`}
+                translate="no"
+                className={`${slotFont.className} notranslate relative inline-block text-[23px] font-semibold text-ink lg:text-[45px]`}
               >
                 <span aria-hidden="true" className="invisible">
                   {longest}
