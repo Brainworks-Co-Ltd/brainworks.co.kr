@@ -52,6 +52,12 @@ const nextConfig = {
           },
         ],
       },
+      // public 파일은 기본이 max-age=0이라 홈 영상을 재방문마다 통째로 다시 받는다.
+      // 파일 이름에 해시가 없으니 같은 이름으로 바꿔 넣으면 최대 7일 동안 예전 파일이 보인다.
+      ...["/fonts/:path*", "/videos/:path*"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800" }],
+      })),
     ];
   },
   images: {
