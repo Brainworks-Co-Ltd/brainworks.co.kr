@@ -23,6 +23,17 @@ describe("SeoMetadata", () => {
     expect(rels).toContain("canonical:");
   });
 
+  it("공유 카드 태그가 대표 주소와 절대 경로 그림을 가리킨다", () => {
+    render(<SeoMetadata title="t" description="d" />);
+    const og = (p: string) =>
+      document.querySelector(`meta[property="${p}"]`)?.getAttribute("content");
+    const canonical = document.querySelector('link[rel="canonical"]')?.getAttribute("href");
+    expect(og("og:url")).toBe(canonical);
+    expect(og("og:title")).toBe("t");
+    expect(og("og:description")).toBe("d");
+    expect(og("og:image")).toMatch(/^https:\/\/brainworks\.co\.kr\/.+\.png$/);
+  });
+
   it("소스의 link 태그마다 key가 있다", () => {
     const source = readFileSync("src/components/public/SeoMetadata.jsx", "utf8");
     const linkTags = source.match(/<link[^>]*>/g) ?? [];
