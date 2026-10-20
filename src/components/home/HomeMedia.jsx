@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Head from "next/head";
 import Image from "next/image";
 import { useLocale } from "@/shared/routing/useLocale";
 import client1 from "@/assets/clients/client1.png";
@@ -38,6 +37,22 @@ const clips = businessAreas.map((area) => ({
   poster: area.heroImage,
 }));
 
+// 첫 컷 그림이 이 페이지의 LCP다. 그 크기를 화면 폭에 맞춰 받도록 next/image로 그린다.
+const posterSizes = "(min-width: 1344px) 1296px, 100vw";
+
+// 영상은 페이지가 다 뜬(load) 뒤에 받기 시작한다. 그 전에 받으면 휴대폰 회선에서
+// 첫 컷 그림, 폰트, 스크립트와 대역폭을 다퉈 첫 화면이 늦어진다.
+function usePageLoaded() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const onLoad = () => setLoaded(true);
+    if (document.readyState === "complete") onLoad();
+    else window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+  return loaded;
+}
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -70,22 +85,36 @@ function ClipReel({ language, children }) {
   const videos = useRef([]);
   // 남은 시간을 들고 있다가 다시 재생할 때 이어 간다. 컷이 바뀌면 처음부터.
   const remaining = useRef(CLIP_MS);
-  const playing = !userPaused && !focused && !hidden;
+  const loaded = usePageLoaded();
+  // 페이지가 다 뜨기 전에는 첫 컷 그림만 보여 주고 넘기지도 않는다.
+  const playing = loaded && !userPaused && !focused && !hidden;
 
-  // 첫 컷이 뜬 뒤에 나머지 컷을 미리 받아 둔다. 이전/다음을 눌렀을 때
-  // 그제야 받기 시작하면 2~3초 멈춘 것처럼 보인다. 나머지 컷의 영상과 포스터는
-  // 그 전에 받지 않는다. 첫 화면에서 첫 컷 포스터와 대역폭을 다투지 않게 한다.
+  // 첫 컷 영상이 받아지기 시작한 뒤에 나머지 컷의 포스터와 영상 파일을 미리 받아 둔다.
+  // 이전/다음을 눌렀을 때 그제야 받기 시작하면 2~3초 멈춘 것처럼 보인다. 그 전에는
+  // 받지 않는다. 첫 화면에서 첫 컷 그림과 대역폭을 다투지 않게 한다.
   const [warm, setWarm] = useState(false);
 
   useEffect(() => {
     const onVisibility = () => setHidden(document.hidden);
     document.addEventListener("visibilitychange", onVisibility);
-    const warmTimer = setTimeout(() => setWarm(true), 1500);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisibility);
-      clearTimeout(warmTimer);
-    };
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
+
+  useEffect(() => {
+    if (!loaded) return undefined;
+    const warmTimer = setTimeout(() => setWarm(true), 1500);
+    return () => clearTimeout(warmTimer);
+  }, [loaded]);
+
+  // 안 보이는 컷의 video에 데이터를 채우면 크롬이 그 첫 프레임을 LCP로 다시 잰다
+  // (투명도 0이어도 잰다. 2026-10-20 확인). 그래서 video는 비워 두고 파일만
+  // HTTP 캐시(/videos 7일)에 받아 둔다. 차례가 오면 캐시에서 바로 읽는다.
+  useEffect(() => {
+    if (!warm) return;
+    clips.slice(1).forEach((clip) => {
+      fetch(clip.src).catch(() => {});
+    });
+  }, [warm]);
 
   useEffect(() => {
     remaining.current = CLIP_MS;
@@ -135,16 +164,16 @@ function ClipReel({ language, children }) {
           setFocused(false);
       }}
     >
-      {/* 첫 컷 포스터가 이 페이지의 LCP다. 영상 포스터는 낮은 우선순위로 받으므로
-          높은 우선순위로 먼저 당겨 온다. */}
-      <Head>
-        <link
-          rel="preload"
-          as="image"
-          href={clips[0].poster}
-          fetchPriority="high"
-        />
-      </Head>
+      {/* 첫 컷 영상의 포스터 대신 이 그림을 깐다. 영상 포스터는 크기를 고를 수 없어
+          휴대폰에도 1920px 원본이 가고, 우선순위도 낮다. 영상이 재생되면 위를 덮는다. */}
+      <Image
+        src={clips[0].poster}
+        alt=""
+        fill
+        preload
+        sizes={posterSizes}
+        className={`object-cover transition-opacity duration-700 ${current === 0 ? "opacity-100" : "opacity-0"}`}
+      />
       {clips.map((clip, index) => (
         <video
           key={clip.id}
@@ -152,10 +181,12 @@ function ClipReel({ language, children }) {
             videos.current[index] = node;
           }}
           src={clip.src}
-          poster={warm || index === current ? clip.poster : undefined}
+          poster={
+            index > 0 && (warm || index === current) ? clip.poster : undefined
+          }
           muted
           playsInline
-          preload={warm || index === current ? "auto" : "none"}
+          preload={loaded && index === current ? "auto" : "none"}
           aria-hidden="true"
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === current ? "opacity-100" : "opacity-0"}`}
         />
@@ -219,10 +250,8 @@ export default function HomeMedia() {
                 src={clips[0].poster}
                 alt=""
                 fill
-                priority
-                loading="eager"
-                fetchPriority="high"
-                sizes="1296px"
+                preload
+                sizes={posterSizes}
                 className="object-cover"
               />
               <MediaOverlay>{caption}</MediaOverlay>
