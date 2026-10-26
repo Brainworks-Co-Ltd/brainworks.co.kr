@@ -6,10 +6,10 @@ import { useLocale } from "@/shared/routing/useLocale";
 
 const offices = [
   {
-    label: { ko: "본사", en: "HQ (Gwangju)" },
+    label: { ko: "광주본사", en: "Gwangju" },
     address: {
-      ko: "광주 동구 금남로 193-22 광주AI창업캠프 1호, 4층 403호",
-      en: "403, 4F, Gwangju AI Startup Camp, 193-22 Geumnam-ro, Dong-gu, Gwangju",
+      ko: "광주 북구 치촌마을길 1-6, AICA 503호",
+      en: "503, AICA, 1-6 Chichonmaeul-gil, Buk-gu, Gwangju",
     },
   },
   {
