@@ -51,17 +51,18 @@ export function AdminShell({ children, activePath = "/admin" }) {
         <meta name="robots" content="noindex,nofollow" key="robots" />
       </Head>
       <div className="grid min-h-screen grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr] lg:grid-cols-[232px_minmax(0,1fr)] lg:grid-rows-1">
-        <aside className="flex flex-col border-b border-[var(--bw-color-line)] bg-[var(--bw-color-ink)] px-5 py-6 text-white lg:border-b-0">
+        {/* lg 미만은 상단바: 첫 줄에 이름과 계정 메뉴, 둘째 줄에 탭. lg부터는 왼쪽 사이드바. */}
+        <aside className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-[var(--bw-color-line)] bg-[var(--bw-color-ink)] px-3 pt-3 text-white md:px-7 lg:flex-col lg:flex-nowrap lg:items-stretch lg:gap-0 lg:border-b-0 lg:px-5 lg:py-6">
           <Link
             href="/admin"
-            className="flex items-center gap-2 px-3 text-base font-semibold tracking-[-0.02em]"
+            className="flex items-center gap-2 px-3 py-1.5 text-base font-semibold tracking-[-0.02em] lg:py-0"
           >
             <span className="inline-block h-2.5 w-2.5 rounded-sm bg-[var(--bw-accent-strong,#8b93ea)]" />
             Brainworks Admin
           </Link>
           <nav
             aria-label="관리자 메뉴"
-            className="mt-4 flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] lg:mt-8 lg:grid lg:overflow-visible lg:pb-0 [&::-webkit-scrollbar]:hidden"
+            className="order-3 flex w-full gap-1 overflow-x-auto [scrollbar-width:none] lg:order-none lg:mt-8 lg:grid lg:w-auto lg:overflow-visible [&::-webkit-scrollbar]:hidden"
           >
             {navigation.map((item) => {
               const active = activePath === item.href;
@@ -70,18 +71,19 @@ export function AdminShell({ children, activePath = "/admin" }) {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? "page" : undefined}
-                  className={`flex shrink-0 items-center gap-3 rounded-[var(--bw-radius-control)] px-3 py-2.5 text-sm font-medium transition ${active ? "bg-white/10 text-white" : "text-white/65 hover:bg-white/5 hover:text-white"}`}
+                  className={`relative flex shrink-0 items-center gap-3 px-3 py-3 text-sm font-medium transition lg:rounded-[var(--bw-radius-control)] lg:py-2.5 ${active ? "text-white lg:bg-white/10" : "text-white/65 hover:text-white lg:hover:bg-white/5"}`}
                 >
+                  {/* 현재 메뉴 표시: 상단바에서는 탭 밑줄, 사이드바에서는 왼쪽 세로 막대 */}
                   <span
                     aria-hidden
-                    className={`h-5 w-0.5 rounded-full ${active ? "bg-[var(--bw-accent-strong,#8b93ea)]" : "bg-transparent"}`}
+                    className={`absolute inset-x-3 bottom-0 h-[3px] rounded-full lg:static lg:h-5 lg:w-0.5 ${active ? "bg-[var(--bw-accent-strong,#8b93ea)]" : "bg-transparent"}`}
                   />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
-          <div className="mt-4 flex flex-wrap gap-1 border-t border-white/10 pt-4 text-sm lg:mt-auto lg:grid lg:pt-5">
+          <div className="order-2 ml-auto flex flex-wrap items-center justify-end gap-1 text-[13px] lg:order-none lg:ml-0 lg:mt-auto lg:grid lg:items-stretch lg:justify-normal lg:border-t lg:border-white/10 lg:pt-5 lg:text-sm">
             <Link
               href="/"
               className="rounded-[var(--bw-radius-control)] px-3 py-2 text-white/65 hover:bg-white/5 hover:text-white"
@@ -99,12 +101,12 @@ export function AdminShell({ children, activePath = "/admin" }) {
               type="button"
               disabled={isSigningOut}
               onClick={signOut}
-              className="rounded-[var(--bw-radius-control)] px-3 py-2 text-left text-white/65 hover:bg-white/5 hover:text-white disabled:opacity-60"
+              className="rounded-[var(--bw-radius-control)] border border-white/25 px-3 py-1.5 text-left text-white/65 hover:bg-white/5 hover:text-white disabled:opacity-60 lg:border-0 lg:py-2"
             >
               {isSigningOut ? "로그아웃 중…" : "로그아웃"}
             </button>
             {signOutError ? (
-              <p role="alert" className="px-3 text-xs leading-5 text-amber-300">
+              <p role="alert" className="w-full px-3 text-right text-xs leading-5 text-amber-300 lg:text-left">
                 {signOutError}
               </p>
             ) : null}
