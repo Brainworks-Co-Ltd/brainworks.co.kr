@@ -117,7 +117,7 @@ export const businessAreas = [
       en: 'Healthcare & Bio AI',
     },
     subtitle: {
-      ko: '의료·치과 데이터 분석으로 정밀 진단 구현',
+      ko: '의료, 치과 데이터 분석으로 정밀 진단 구현',
       en: 'Precision diagnostics for medical and dental specialists',
     },
     description: {
