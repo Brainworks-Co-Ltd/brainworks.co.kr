@@ -83,7 +83,6 @@ const copy = {
     // heroTitle은 SeoMetadata와 화면 h1이 함께 쓴다.
     heroSubtitle:
       "해외 비즈니스 네트워크 구축과 글로벌 확장, 글로벌 AI 전문 교육을 지원하는 풀 패키지 프로그램",
-    ctaPrimary: "상담 요청",
     sectionTitle: "주요 프로그램",
     aiSectionTitle: "글로벌 AI 전문 교육 프로그램",
     aiSectionSubtitle:
@@ -97,7 +96,6 @@ const copy = {
     heroTitle: "Global Program",
     heroSubtitle:
       "A full-service accelerator that secures overseas buyers and accelerates your global expansion, supporting global AI education.",
-    ctaPrimary: "Request a Consultation",
     sectionTitle: "Program Components",
     aiSectionTitle: "Global AI Professional Programs",
     aiSectionSubtitle:
@@ -295,10 +293,6 @@ export default function Outbound() {
           title={t.heroTitle}
           description={t.heroSubtitle}
           chips={programs.map((item) => item.badge[language])}
-          action={{
-            href: "/contact?topic=global",
-            label: t.ctaPrimary,
-          }}
         />
 
         {/* 파트너 망은 점 지도 위에서 나라를 차례로 짚어 보여준다. 나라 목록은

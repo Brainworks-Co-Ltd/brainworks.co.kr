@@ -203,15 +203,6 @@ export default function Consulting() {
           }
           description={t.heroSubtitle}
           chips={offerings.map((item) => item.title[language])}
-          action={{
-            href: "/contact?topic=consulting",
-            label: t.heroCta,
-          }}
-          secondaryAction={{
-            href: "/services",
-            label:
-              language === "ko" ? "AI 솔루션 보기" : "Explore AI solutions",
-          }}
         />
 
         <section>

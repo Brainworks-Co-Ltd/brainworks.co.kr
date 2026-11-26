@@ -4,7 +4,7 @@ import { PageHeroMedia } from "@/components/public/PageHeroMedia";
 /**
  * @typedef {{ kind: "image" | "gif" | "video", src: string, poster?: string, alt?: string, objectPosition?: string }} HeroMedia
  * @typedef {{ href: string, label: string }} HeroAction
- * @typedef {{ eyebrow?: string | null, title: string, heading?: import("react").ReactNode, description?: string | null, chips?: string[] | null, action?: HeroAction | null, secondaryAction?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
+ * @typedef {{ eyebrow?: string | null, title: string, heading?: import("react").ReactNode, description?: string | null, chips?: string[] | null, action?: HeroAction | null, dark?: boolean, children?: import("react").ReactNode, variant?: "plain" | "media" | "split", media?: HeroMedia | null, overlayClassName?: string }} PageHeroProps
  */
 
 /*
@@ -29,7 +29,6 @@ function HeroContent({
   description,
   chips,
   action,
-  secondaryAction,
   dark,
   children,
 }) {
@@ -65,24 +64,14 @@ function HeroContent({
           ))}
         </ul>
       ) : null}
-      {action || secondaryAction ? (
+      {action ? (
         <div className="mt-8 flex flex-wrap gap-3 [.text-center_&]:justify-center">
-          {action ? (
-            <Link
-              href={action.href}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
-            >
-              {action.label}
-            </Link>
-          ) : null}
-          {secondaryAction ? (
-            <Link
-              href={secondaryAction.href}
-              className={`inline-flex min-h-11 items-center rounded-full border px-6 py-3 text-sm font-semibold transition ${dark ? "border-white/30 text-white hover:bg-white/10" : "border-[var(--bw-color-ink)] text-[var(--bw-color-ink)] hover:bg-white"}`}
-            >
-              {secondaryAction.label}
-            </Link>
-          ) : null}
+          <Link
+            href={action.href}
+            className="inline-flex min-h-11 items-center rounded-full bg-[var(--bw-color-brand)] px-6 py-3 text-sm font-semibold text-[var(--bw-color-surface)] transition hover:brightness-95"
+          >
+            {action.label}
+          </Link>
         </div>
       ) : null}
       {children ? <div className="mt-8">{children}</div> : null}
@@ -97,7 +86,6 @@ export function PageHero({
   description,
   chips = null,
   action = null,
-  secondaryAction = null,
   dark = false,
   children = null,
   heading = null,
@@ -114,7 +102,6 @@ export function PageHero({
       description={description}
       chips={chips}
       action={action}
-      secondaryAction={secondaryAction}
       dark={dark || effectiveVariant === "media"}
     >
       {children}

@@ -539,10 +539,6 @@ export default function Education() {
               : "Practical AI and AX education programs from Brainworks."
           }
           chips={heroChips[language]}
-          action={{
-            href: "/contact?topic=education",
-            label: language === "ko" ? "상담 요청" : "Request a Consultation",
-          }}
         />
 
         <section>

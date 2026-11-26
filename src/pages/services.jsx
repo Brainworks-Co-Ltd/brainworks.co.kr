@@ -49,10 +49,6 @@ export default function Services() {
               : "Covers solutions across four domains: manufacturing, agents, healthcare and bio, and smart city and safety."
           }
           chips={areas.map((area) => area.title)}
-          action={{
-            href: "/contact?topic=solution",
-            label: language === "ko" ? "솔루션 문의" : "Discuss a solution",
-          }}
         />
 
         <section>

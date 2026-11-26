@@ -54,10 +54,6 @@ export default function BusinessAreaDetail({ area }) {
               ? area.solutions.map((solution) => solution.title)
               : null
           }
-          action={{
-            href: "/contact?topic=solution",
-            label: ko ? "솔루션 문의" : "Discuss a solution",
-          }}
         />
 
         {area.solutions.length > 0 ? (
