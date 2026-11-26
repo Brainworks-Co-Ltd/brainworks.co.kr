@@ -1,6 +1,6 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
-import { news, newsLocales, newsSlugs } from "@/server/db/schema/news";
+import { news, newsLocales } from "@/server/db/schema/news";
 import { newsCategoryLabel } from "@/lib/news-categories";
 
 export type AdminNewsQuery = {
@@ -23,20 +23,19 @@ export async function getAdminNewsList(query: AdminNewsQuery = {}) {
       itemStatus: news.itemStatus,
       category: news.category,
       displayDate: news.displayDate,
-      slug: newsSlugs.slug,
+      publicNumber: news.publicNumber,
       locale: newsLocales.locale,
       title: newsLocales.title,
       summary: newsLocales.summary,
       publicationStatus: newsLocales.publicationStatus,
     })
     .from(news)
-    .innerJoin(
-      newsSlugs,
-      eq(newsSlugs.newsId, news.id),
-    )
     .innerJoin(newsLocales, eq(newsLocales.newsId, news.id))
-    .where(eq(newsSlugs.isCurrent, true))
-    .orderBy(desc(news.updatedAt), desc(news.displayDate), asc(newsLocales.locale));
+    .orderBy(
+      desc(news.updatedAt),
+      desc(news.displayDate),
+      asc(newsLocales.locale),
+    );
 
   const grouped = new Map<
     string,
@@ -46,7 +45,7 @@ export async function getAdminNewsList(query: AdminNewsQuery = {}) {
       itemStatus: (typeof rows)[number]["itemStatus"];
       category: string;
       displayDate: string;
-      slug: string;
+      publicNumber: number;
       locales: Record<
         string,
         {
@@ -64,7 +63,7 @@ export async function getAdminNewsList(query: AdminNewsQuery = {}) {
       itemStatus: row.itemStatus,
       category: row.category,
       displayDate: String(row.displayDate),
-      slug: row.slug,
+      publicNumber: row.publicNumber,
       locales: {},
     };
     item.locales[row.locale] = {
@@ -80,7 +79,7 @@ export async function getAdminNewsList(query: AdminNewsQuery = {}) {
   const filtered = Array.from(grouped.values()).filter((item) => {
     const matchesQuery =
       !q ||
-      item.slug.toLocaleLowerCase().includes(q) ||
+      String(item.publicNumber) === q ||
       newsCategoryLabel(item.category).toLocaleLowerCase().includes(q) ||
       Object.values(item.locales).some(
         (locale) =>

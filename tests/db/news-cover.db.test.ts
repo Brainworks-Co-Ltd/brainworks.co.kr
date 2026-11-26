@@ -4,7 +4,6 @@ import { assets } from "@/server/db/schema/assets";
 import { resolvePublicAssetUrl } from "@/server/modules/assets/public-url";
 import { readDatabaseNewsList } from "@/server/modules/news/database-source";
 import {
-  changeNewsSlug,
   createNews,
   getAdminNews,
   publishNewsLocale,
@@ -16,11 +15,10 @@ import { getTestActorId, hasTestDatabase } from "./setup";
 const storageKey = "media/news-cover-test.webp";
 
 function newsInput(
-  slug: string,
+  _label: string,
   cover: { coverAssetId?: string | null; coverAlt?: string | null } = {},
 ): NewsCommandInput {
   return {
-    slug,
     category: "COMPANY",
     displayDate: "2026-10-01",
     coverAssetId: cover.coverAssetId,
@@ -71,7 +69,8 @@ describe.skipIf(!hasTestDatabase)("뉴스 대표 이미지", () => {
 
     const list = await readDatabaseNewsList("ko");
     expect(
-      list.find((item) => item.slug === "news-cover-saved")?.thumbnail,
+      list.find((item) => item.slug === String(created.publicNumber))
+        ?.thumbnail,
     ).toBe(resolvePublicAssetUrl(storageKey));
   });
 
@@ -95,16 +94,6 @@ describe.skipIf(!hasTestDatabase)("뉴스 대표 이미지", () => {
     ).rejects.toMatchObject({
       code: "PUBLICATION_INVALID",
       message: "영문 제목과 본문이 있어야 게시할 수 있습니다.",
-    });
-  });
-
-  it("주소 변경도 저장과 같은 주소 형식 검사를 거친다", async () => {
-    const created = await createNews(newsInput("news-cover-slug"), actorId);
-    await expect(
-      changeNewsSlug(created.id, "Bad Slug", created.version, actorId),
-    ).rejects.toMatchObject({
-      code: "PUBLICATION_INVALID",
-      message: "공개 주소 이름은 영문 소문자, 숫자, 하이픈만 쓸 수 있습니다.",
     });
   });
 });

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { eq, sql } from "drizzle-orm";
 import { beforeAll, describe, expect, it } from "vitest";
 import { getDb } from "@/server/db/client";
-import { news } from "@/server/db/schema/news";
+import { news, newsSlugs } from "@/server/db/schema/news";
 import { createNews } from "@/server/modules/news/repository";
 import { getTestActorId, hasTestDatabase } from "./setup";
 
@@ -14,7 +14,6 @@ const migrationSql = readFileSync(
 async function seedNews(actorId: string, slug: string, storedCategory: string) {
   const created = await createNews(
     {
-      slug,
       category: "COMPANY",
       displayDate: "2025-04-09",
       locales: {
@@ -24,6 +23,8 @@ async function seedNews(actorId: string, slug: string, storedCategory: string) {
     },
     actorId,
   );
+  // 이 마이그레이션은 슬러그로 기사를 가린다. 번호 주소 전에는 기사마다 슬러그가 있었다.
+  await getDb().insert(newsSlugs).values({ newsId: created.id, slug, createdByActorId: actorId });
   // 마이그레이션 이전 데이터처럼 분류를 표시 이름으로 되돌려 둔다.
   await getDb().update(news).set({ category: storedCategory }).where(eq(news.id, created.id));
   return created.id;

@@ -1,5 +1,10 @@
 import { type FormEvent, useCallback, useRef, useState } from "react";
-import { primaryButtonClass, secondaryButtonClass, inputClass, textareaClass } from "@/components/admin/fields";
+import {
+  primaryButtonClass,
+  secondaryButtonClass,
+  inputClass,
+  textareaClass,
+} from "@/components/admin/fields";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AdminFormFeedback } from "@/components/admin/AdminFormFeedback";
@@ -17,7 +22,6 @@ import {
   requestAdminApi,
 } from "@/lib/admin-api";
 import { todayInSeoul } from "@/lib/datetime-local";
-import { suggestSlug } from "@/lib/news-slug";
 import { NEWS_CATEGORIES } from "@/lib/news-categories";
 import { flushSync } from "react-dom";
 
@@ -33,7 +37,8 @@ export type NewsFormValue = {
   id?: string;
   version: number;
   itemStatus: "ACTIVE" | "ARCHIVED";
-  slug: string;
+  /** 저장하면 DB가 발급한다. 공개 주소는 /news/{publicNumber} */
+  publicNumber?: number;
   category: string;
   displayDate: string;
   coverAssetId: string;
@@ -57,7 +62,6 @@ export function createEmptyNews(): NewsFormValue {
   return {
     version: 1,
     itemStatus: "ACTIVE",
-    slug: "",
     category: "COMPANY",
     displayDate: todayInSeoul(),
     coverAssetId: "",
@@ -70,8 +74,6 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
   const router = useRouter();
   const [form, setForm] = useState(initial);
   const [version, setVersion] = useState(initial.version);
-  const [slugDraft, setSlugDraft] = useState(initial.slug);
-  const [slugTouched, setSlugTouched] = useState(Boolean(initial.id));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -83,7 +85,10 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
   const dirty = JSON.stringify(form) !== baseline;
   const confirmNavigation = useUnsavedChanges(dirty);
   const inFlight = useRef(false);
-  const restoreSnapshot = useCallback((value: NewsFormValue) => setForm(value), []);
+  const restoreSnapshot = useCallback(
+    (value: NewsFormValue) => setForm(value),
+    [],
+  );
   useSessionSnapshot<NewsFormValue>(
     snapshotKey("news", initial.id),
     restoreSnapshot,
@@ -94,8 +99,12 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     if (!isUnauthorized(caught)) return false;
     saveSnapshot(snapshotKey("news", form.id), form);
     flushSync(() => setBaseline(JSON.stringify(form)));
-    setError(`${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`);
-    router.push(`/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`);
+    setError(
+      `${adminApiErrorMessage(caught)} 입력 내용은 로그인 후 복원됩니다.`,
+    );
+    router.push(
+      `/admin/auth/sign-in?returnTo=${encodeURIComponent(router.asPath)}`,
+    );
     return true;
   }
 
@@ -104,25 +113,17 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     key: keyof NewsLocaleValue,
     value: string,
   ) {
-    setForm((current) => {
-      const next = {
-        ...current,
-        locales: {
-          ...current.locales,
-          [locale]: { ...current.locales[locale], [key]: value },
-        },
-      };
-      if (!current.id && key === "title" && !slugTouched) {
-        next.slug = suggestSlug(value, current.displayDate);
-        setSlugDraft(next.slug);
-      }
-      return next;
-    });
+    setForm((current) => ({
+      ...current,
+      locales: {
+        ...current.locales,
+        [locale]: { ...current.locales[locale], [key]: value },
+      },
+    }));
   }
 
   function inputPayload() {
     return {
-      slug: form.slug,
       category: form.category,
       displayDate: form.displayDate,
       coverAssetId: form.coverAssetId || null,
@@ -152,11 +153,14 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     setMessage("");
     try {
       if (!form.id) {
-        const created = await requestAdminApi<{ id: string }>("/api/admin/news", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(inputPayload()),
-        });
+        const created = await requestAdminApi<{ id: string }>(
+          "/api/admin/news",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(inputPayload()),
+          },
+        );
         // flushSync: router.push가 routeChangeStart를 emit하기 전에 dirty=false를 반영한다.
         flushSync(() => setBaseline(JSON.stringify(form)));
         await router.push(`/admin/news/${created.id}`);
@@ -185,42 +189,10 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
     }
   }
 
-  async function changeSlug() {
-    if (!form.id || slugDraft === form.slug) return;
-    if (
-      !window.confirm(
-        "공개 주소를 변경하면 기존 주소는 새 주소로 이동됩니다. 변경하시겠습니까?",
-      )
-    )
-      return;
-    if (inFlight.current) return;
-    inFlight.current = true;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await requestAdminApi<{
-        version: number;
-        slug: string;
-      }>(`/api/admin/news/${form.id}/slug`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: slugDraft, expectedVersion: version }),
-      });
-      const next = { ...form, slug: result.slug };
-      setVersion(result.version);
-      setForm(next);
-      setBaseline(JSON.stringify(next));
-      setMessage("뉴스 공개 주소를 변경했습니다.");
-    } catch (caught) {
-      if (handleUnauthorized(caught)) return;
-      setError(adminApiErrorMessage(caught));
-    } finally {
-      inFlight.current = false;
-      setBusy(false);
-    }
-  }
-
-  async function localeCommand(locale: "ko" | "en", action: "publish" | "hide") {
+  async function localeCommand(
+    locale: "ko" | "en",
+    action: "publish" | "hide",
+  ) {
     if (!form.id) return;
     if (dirty) {
       setError("변경 내용을 먼저 저장한 뒤 게시 상태를 변경해 주세요.");
@@ -299,7 +271,9 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       setVersion(result.version);
       setForm(next);
       setBaseline(JSON.stringify(next));
-      setMessage(action === "archive" ? "뉴스를 보관했습니다." : "뉴스를 복원했습니다.");
+      setMessage(
+        action === "archive" ? "뉴스를 보관했습니다." : "뉴스를 복원했습니다.",
+      );
     } catch (caught) {
       if (handleUnauthorized(caught)) return;
       setError(adminApiErrorMessage(caught));
@@ -339,44 +313,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
 
   return (
     <form onSubmit={save} className="grid gap-6">
-      <section className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-3">
-        <div className="grid gap-2">
-          <label htmlFor="news-slug" className="text-sm font-medium">
-            공개 주소 이름
-          </label>
-          <div className="flex gap-2">
-            <input
-              id="news-slug"
-              required
-              value={form.id ? slugDraft : form.slug}
-              onChange={(event) => {
-                setSlugTouched(true);
-                setSlugDraft(event.target.value);
-                if (!form.id)
-                  setForm((current) => ({
-                    ...current,
-                    slug: event.target.value,
-                  }));
-              }}
-              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-              className={`${inputClass} min-w-0 flex-1`}
-            />
-            {form.id ? (
-              <button
-                type="button"
-                disabled={busy || slugDraft === form.slug}
-                onClick={changeSlug}
-                className={secondaryButtonClass}
-              >
-                주소 변경
-              </button>
-            ) : null}
-          </div>
-          <span className="text-xs text-slate-500">
-            영문 소문자, 숫자와 하이픈만 사용합니다. 제목을 입력하면 초안을
-            제안합니다.
-          </span>
-        </div>
+      <section className="grid gap-5 rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6 md:grid-cols-2">
         <label className="grid content-start gap-2 text-sm font-medium">
           분류
           <select
@@ -414,7 +351,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
             className={inputClass}
           />
         </label>
-        <div className="md:col-span-3">
+        <div className="md:col-span-2">
           <AdminImageField
             label="대표 이미지"
             value={{
@@ -446,8 +383,15 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
               {locale === "ko" ? "한국어" : "English"}
             </h2>
             {(["title", "summary", "bodyMarkdown"] as const).map((key) => (
-              <label key={key} className="grid content-start gap-2 text-sm font-medium">
-                {key === "title" ? "제목" : key === "summary" ? "요약" : "Markdown 본문"}
+              <label
+                key={key}
+                className="grid content-start gap-2 text-sm font-medium"
+              >
+                {key === "title"
+                  ? "제목"
+                  : key === "summary"
+                    ? "요약"
+                    : "Markdown 본문"}
                 {key === "title" ? (
                   <input
                     value={form.locales[locale][key]}
@@ -502,8 +446,8 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
       {preview ? (
         <section className="rounded-[var(--bw-radius-card)] border border-[var(--bw-color-line)] bg-white p-6">
           <p className="text-xs font-semibold text-slate-500">
-            {preview.locale === "ko" ? "국문" : "영문"} 미리보기입니다. 공개 상태는
-            변경되지 않습니다
+            {preview.locale === "ko" ? "국문" : "영문"} 미리보기입니다. 공개
+            상태는 변경되지 않습니다
           </p>
           <h2 className="mt-4 text-2xl font-semibold">
             {form.locales[preview.locale].title || "제목 없음"}
@@ -529,11 +473,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         >
           목록으로
         </Link>
-        <button
-          type="submit"
-          disabled={busy}
-          className={primaryButtonClass}
-        >
+        <button type="submit" disabled={busy} className={primaryButtonClass}>
           {busy ? "처리 중…" : form.id ? "변경 저장" : "초안 저장"}
         </button>
         {(["ko", "en"] as const).map((locale) => (
@@ -563,7 +503,7 @@ export function NewsForm({ initial }: { initial: NewsFormValue }) {
         ) : null}
         {form.id ? (
           <Link
-            href={`/news/${form.slug}`}
+            href={`/news/${form.publicNumber}`}
             target="_blank"
             rel="noreferrer"
             className={secondaryButtonClass}

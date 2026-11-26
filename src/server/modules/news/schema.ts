@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { NEWS_CATEGORY_CODES } from "@/lib/news-categories";
-import {
-  dateOnlySchema,
-  expectedVersionSchema,
-  versionCommandSchema,
-} from "@/server/http/validate";
+import { dateOnlySchema, versionCommandSchema } from "@/server/http/validate";
 
 /** 초안 저장은 빈 제목을 허용하므로 형태만 본다. 필수값 검사는 integrity 정책이 맡는다. */
 const newsLocaleSchema = z.object({
@@ -15,7 +11,6 @@ const newsLocaleSchema = z.object({
 });
 
 export const newsCommandSchema = z.object({
-  slug: z.string(),
   category: z.enum(NEWS_CATEGORY_CODES),
   displayDate: dateOnlySchema,
   /** 두 언어가 같이 쓰는 대표 이미지. 빠지면 저장된 값을 그대로 둔다. */
@@ -27,9 +22,4 @@ export type NewsCommandInput = z.infer<typeof newsCommandSchema>;
 
 export const newsSaveSchema = versionCommandSchema.extend({
   input: newsCommandSchema,
-});
-
-export const newsSlugCommandSchema = z.object({
-  expectedVersion: expectedVersionSchema,
-  slug: z.string(),
 });

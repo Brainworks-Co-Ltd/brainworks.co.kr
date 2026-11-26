@@ -39,7 +39,7 @@ describe("DB 뉴스 목록 조회", () => {
     process.env.ASSET_PUBLIC_BASE_URL = "https://cdn.example.com";
     const chain = makeChain([
       {
-        slug: "news-1",
+        publicNumber: 1,
         date: "2026-01-01",
         category: "일반",
         title: "제목",
@@ -52,15 +52,14 @@ describe("DB 뉴스 목록 조회", () => {
     const result = await readDatabaseNewsList("ko");
 
     expect(chain.leftJoin).toHaveBeenCalled();
-    expect(result[0].thumbnail).toBe(
-      resolvePublicAssetUrl("news/cover.webp"),
-    );
+    expect(result[0].slug).toBe("1");
+    expect(result[0].thumbnail).toBe(resolvePublicAssetUrl("news/cover.webp"));
   });
 
   it("커버 자산이 없으면 thumbnail은 빈 문자열이다", async () => {
     const chain = makeChain([
       {
-        slug: "news-2",
+        publicNumber: 2,
         date: "2026-01-02",
         category: "일반",
         title: "제목2",
@@ -84,8 +83,6 @@ describe("DB 뉴스 상세 조회", () => {
 
   it("외부 링크를 표시 순서대로 매핑하고 커버 URL을 채운다", async () => {
     process.env.ASSET_PUBLIC_BASE_URL = "https://cdn.example.com";
-    const slugRow = [{ newsId: "news-id-1", isCurrent: true }];
-    const currentSlugRow = [{ slug: "news-1" }];
     const detailRow = [
       {
         newsLocaleId: "locale-1",
@@ -97,12 +94,10 @@ describe("DB 뉴스 상세 조회", () => {
         storageKey: "news/cover.webp",
       },
     ];
-    const externalLinksRows = [
-      { label: "원문", url: "https://example.com/a" },
-    ];
+    const externalLinksRows = [{ label: "원문", url: "https://example.com/a" }];
 
     let call = 0;
-    const selectResults = [slugRow, currentSlugRow, detailRow, externalLinksRows];
+    const selectResults = [detailRow, externalLinksRows];
     getDbMock.mockReturnValue({
       select: vi.fn(() => {
         const result = selectResults[call];
@@ -111,14 +106,26 @@ describe("DB 뉴스 상세 조회", () => {
       }),
     });
 
-    const detail = await readDatabaseNewsDetail("news-1", "ko");
+    const detail = await readDatabaseNewsDetail("1", "ko");
 
-    expect(detail?.news?.slug).toBe("news-1");
+    expect(detail?.news?.slug).toBe("1");
     expect(detail?.news?.thumbnail).toBe(
       resolvePublicAssetUrl("news/cover.webp"),
     );
     expect(detail?.news?.externalLinks).toEqual([
       { label: "원문", url: "https://example.com/a" },
     ]);
+  });
+
+  it("번호가 아닌 예전 슬러그는 그 기사의 번호 주소로 보낸다", async () => {
+    const select = vi.fn(() => makeChain([{ publicNumber: 14 }]));
+    getDbMock.mockReturnValue({ select });
+
+    await expect(readDatabaseNewsDetail("jakarta-mou", "ko")).resolves.toEqual({
+      redirect: "14",
+      news: null,
+    });
+    // 숫자 모양이 아니면 본문 조회 없이 예전 주소만 찾는다.
+    expect(select).toHaveBeenCalledTimes(1);
   });
 });

@@ -53,7 +53,7 @@ export default function AdminNews({
           <input
             name="q"
             defaultValue={query.q}
-            placeholder="제목, 요약, 분류, 공개 주소"
+            placeholder="제목, 요약, 분류, 번호"
             className={inputClass}
           />
         </label>
@@ -111,7 +111,7 @@ export default function AdminNews({
                   {item.locales.ko?.publicationStatus === "PUBLISHED" ||
                   item.locales.en?.publicationStatus === "PUBLISHED" ? (
                     <Link
-                      href={`/news/${item.slug}`}
+                      href={`/news/${item.publicNumber}`}
                       target="_blank"
                       rel="noreferrer"
                       className="font-semibold underline-offset-4 hover:underline"
