@@ -20,7 +20,6 @@ import { previewCommandSchema } from "@/server/modules/preview/schema";
 /** 관리자 폼이 실제로 보내는 본문. tests/components/admin-*-form*.test.tsx가 키 집합을 단언한다. */
 const bodies = {
   news: {
-    slug: "ai-news",
     category: "COMPANY",
     displayDate: "2026-09-14",
     coverAssetId: null,

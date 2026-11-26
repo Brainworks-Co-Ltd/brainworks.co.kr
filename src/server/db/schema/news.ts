@@ -24,6 +24,10 @@ export const news = pgTable(
   "news",
   {
     ...managedContentColumns(),
+    /** 공개 주소 `/news/{publicNumber}`. DB가 발급하고 관리자는 입력하지 않는다. */
+    publicNumber: integer("public_number")
+      .notNull()
+      .generatedAlwaysAsIdentity(),
     category: text("category").notNull(),
     displayDate: date("display_date").notNull(),
     bodyFormat: newsBodyFormatEnum("body_format")
@@ -32,6 +36,7 @@ export const news = pgTable(
     coverAssetId: uuid("cover_asset_id").references(() => assets.id),
   },
   (table) => [
+    uniqueIndex("news_public_number_uk").on(table.publicNumber),
     index("news_publication_idx").on(table.itemStatus, table.displayDate),
   ],
 );

@@ -2,16 +2,14 @@ import { describe, expect, it } from "vitest";
 import {
   assertPublishableNews,
   isPublishedNews,
-  resolveSlugRedirect,
 } from "@/server/modules/news/publication-policy";
 import { markdownToHtml } from "@/lib/markdown";
 import { assertImageUploadMetadata } from "@/server/modules/assets/upload-policy";
 
 describe("뉴스 공개·라우팅 정책", () => {
-  it("게시 가능한 뉴스는 안전한 슬러그와 두 로케일의 필수 본문을 가진다", () => {
+  it("게시 가능한 뉴스는 두 로케일의 필수 본문을 가진다", () => {
     expect(() =>
       assertPublishableNews({
-        slug: "ai-news-2025",
         locales: {
           ko: { title: "국문 제목", bodyMarkdown: "본문" },
           en: { title: "English title", bodyMarkdown: "Body" },
@@ -20,23 +18,15 @@ describe("뉴스 공개·라우팅 정책", () => {
     ).not.toThrow();
     expect(() =>
       assertPublishableNews({
-        slug: "잘못된 슬러그",
         locales: { ko: { title: "제목", bodyMarkdown: "본문" } },
       }),
-    ).toThrow("공개 주소 이름은 영문 소문자, 숫자, 하이픈만 쓸 수 있습니다.");
+    ).toThrow("PUBLICATION_INVALID");
   });
 
   it("공개 조건은 활성 부모와 게시 로케일을 모두 확인한다", () => {
     expect(isPublishedNews("ACTIVE", "PUBLISHED")).toBe(true);
     expect(isPublishedNews("ARCHIVED", "PUBLISHED")).toBe(false);
     expect(isPublishedNews("ACTIVE", "HIDDEN")).toBe(false);
-  });
-
-  it("과거 슬러그는 현재 슬러그로 영구 이동한다", () => {
-    expect(resolveSlugRedirect("old-news", "new-news", ["old-news"])).toEqual(
-      "new-news",
-    );
-    expect(resolveSlugRedirect("unknown", "new-news", ["old-news"])).toBeNull();
   });
 
   it("뉴스 Markdown은 원시 HTML과 스크립트 속성을 제거한다", () => {

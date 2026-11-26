@@ -1,34 +1,17 @@
 import { and, eq, sql } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
 import { auditActors } from "@/server/db/schema/audit";
-import { news, newsLocales, newsSlugs } from "@/server/db/schema/news";
+import { news, newsLocales } from "@/server/db/schema/news";
 import {
   assertCompleteLocales,
   assertDraftLocales,
   assertExpectedVersion,
 } from "@/server/db/integrity";
-import { assertValidNewsSlug } from "@/server/modules/news/publication-policy";
 import { HttpError } from "@/server/http/errors";
 
 import type { NewsCommandInput } from "@/server/modules/news/schema";
 
 export type { NewsCommandInput };
-
-/**
- * drizzle는 드라이버 오류를 DrizzleQueryError로 감싸므로 cause까지 본다.
- */
-function assertNotDuplicateSlug(error: unknown): never {
-  const codes = [error, (error as { cause?: unknown })?.cause].map(
-    (candidate) => (candidate as { code?: string } | undefined)?.code,
-  );
-  if (codes.includes("23505")) {
-    throw new HttpError(
-      "BAD_REQUEST",
-      "이미 사용 중인 공개 주소 이름입니다. 다른 이름을 입력해 주세요.",
-    );
-  }
-  throw error;
-}
 
 async function bumpNewsVersion(
   tx: Parameters<Parameters<ReturnType<typeof getDb>["transaction"]>[0]>[0],
@@ -52,7 +35,6 @@ async function bumpNewsVersion(
 export async function createNews(input: NewsCommandInput, actorId: string) {
   assertCompleteLocales(Object.keys(input.locales));
   assertDraftLocales(input.locales);
-  assertValidNewsSlug(input.slug);
   const db = getDb();
   return db.transaction(async (tx) => {
     const [created] = await tx
@@ -65,7 +47,11 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         createdByActorId: actorId,
         updatedByActorId: actorId,
       })
-      .returning({ id: news.id, version: news.version });
+      .returning({
+        id: news.id,
+        version: news.version,
+        publicNumber: news.publicNumber,
+      });
     await tx.insert(newsLocales).values(
       (Object.keys(input.locales) as ("ko" | "en")[]).map((locale) => ({
         newsId: created.id,
@@ -77,15 +63,6 @@ export async function createNews(input: NewsCommandInput, actorId: string) {
         updatedByActorId: actorId,
       })),
     );
-    try {
-      await tx.insert(newsSlugs).values({
-        newsId: created.id,
-        slug: input.slug,
-        createdByActorId: actorId,
-      });
-    } catch (error) {
-      assertNotDuplicateSlug(error);
-    }
     return created;
   });
 }
@@ -98,12 +75,7 @@ export async function getAdminNews(id: string) {
     .select()
     .from(newsLocales)
     .where(eq(newsLocales.newsId, id));
-  const slug = await db
-    .select({ slug: newsSlugs.slug })
-    .from(newsSlugs)
-    .where(and(eq(newsSlugs.newsId, id), eq(newsSlugs.isCurrent, true)))
-    .limit(1);
-  return { ...parent[0], slug: slug[0]?.slug || "", locales };
+  return { ...parent[0], locales };
 }
 
 export async function saveNews(
@@ -114,7 +86,6 @@ export async function saveNews(
 ) {
   assertCompleteLocales(Object.keys(input.locales));
   assertDraftLocales(input.locales);
-  assertValidNewsSlug(input.slug);
   const db = getDb();
   return db.transaction(async (tx) => {
     const current = await tx.query.news.findFirst({ where: eq(news.id, id) });
@@ -249,35 +220,6 @@ export async function restoreNews(
       })
       .where(eq(newsLocales.newsId, id));
     return { id, version: expectedVersion + 1 };
-  });
-}
-
-export async function changeNewsSlug(
-  id: string,
-  newSlug: string,
-  expectedVersion: number,
-  actorId: string,
-) {
-  assertValidNewsSlug(newSlug);
-  const db = getDb();
-  return db.transaction(async (tx) => {
-    const current = await tx.query.newsSlugs.findFirst({
-      where: and(eq(newsSlugs.newsId, id), eq(newsSlugs.isCurrent, true)),
-    });
-    if (!current) throw new HttpError("NOT_FOUND");
-    await bumpNewsVersion(tx, id, expectedVersion, actorId);
-    await tx
-      .update(newsSlugs)
-      .set({ isCurrent: false })
-      .where(eq(newsSlugs.id, current.id));
-    try {
-      await tx
-        .insert(newsSlugs)
-        .values({ newsId: id, slug: newSlug, createdByActorId: actorId });
-    } catch (error) {
-      assertNotDuplicateSlug(error);
-    }
-    return { id, slug: newSlug, version: expectedVersion + 1 };
   });
 }
 

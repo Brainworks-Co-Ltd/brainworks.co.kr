@@ -21,9 +21,8 @@ import { getTestActorId, hasTestDatabase } from "./setup";
 
 const day = 24 * 60 * 60 * 1000;
 
-function newsInput(slug: string, title: string): NewsCommandInput {
+function newsInput(_label: string, title: string): NewsCommandInput {
   return {
-    slug,
     category: "COMPANY",
     displayDate: "2025-06-16",
     locales: {

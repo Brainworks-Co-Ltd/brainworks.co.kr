@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           id: item.id,
           version: item.version,
           itemStatus: item.itemStatus,
-          slug: item.slug,
+          publicNumber: item.publicNumber,
           category: item.category,
           displayDate: String(item.displayDate),
           coverAssetId: item.coverAssetId || "",

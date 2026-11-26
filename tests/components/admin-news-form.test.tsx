@@ -17,7 +17,7 @@ function editingNews(): NewsFormValue {
     id: "news-1",
     version: 2,
     itemStatus: "ACTIVE",
-    slug: "ai-news",
+    publicNumber: 7,
     category: "COMPANY",
     displayDate: "2024-01-01",
     coverAssetId: "",
@@ -81,7 +81,7 @@ describe("NewsForm 저장 및 게시 검증", () => {
 
     const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]?.body as string);
     expect(Object.keys(body).sort()).toEqual(
-      ["category", "coverAssetId", "displayDate", "locales", "slug"].sort(),
+      ["category", "coverAssetId", "displayDate", "locales"].sort(),
     );
   });
 
@@ -144,6 +144,15 @@ describe("NewsForm 저장 및 게시 검증", () => {
     expect(body.input.locales.ko.coverAlt).toBe("협약식 사진");
   });
 
+  it("공개 주소는 입력받지 않고 저장된 공개 번호로 연다", () => {
+    render(<NewsForm initial={editingNews()} />);
+    expect(screen.queryByLabelText("공개 주소 이름")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "공개 페이지 열기" })).toHaveAttribute(
+      "href",
+      "/news/7",
+    );
+  });
+
   it("새 뉴스 표시일 기본값은 서울 날짜다", () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-09-30T15:30:00.000Z"));
@@ -166,10 +175,6 @@ describe("NewsForm 저장 및 게시 검증", () => {
     );
     render(<NewsForm initial={editingNews()} />);
 
-    fireEvent.change(screen.getByLabelText("공개 주소 이름"), {
-      target: { value: "ai-news-2" },
-    });
-    expect(screen.getByRole("button", { name: "주소 변경" })).not.toBeDisabled();
     fireEvent.change(screen.getByLabelText("대표 이미지"), {
       target: { files: [new File(["png"], "cover.png", { type: "image/png" })] },
     });
@@ -178,7 +183,6 @@ describe("NewsForm 저장 및 게시 검증", () => {
       expect(screen.getByText("이미지를 올리는 중입니다.")).toBeInTheDocument(),
     );
     expect(screen.getByRole("button", { name: "처리 중…" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "주소 변경" })).toBeDisabled();
     const koGroup = within(screen.getByRole("group", { name: "국문 게시 관리" }));
     expect(koGroup.getByRole("button", { name: "국문 게시" })).toBeDisabled();
 

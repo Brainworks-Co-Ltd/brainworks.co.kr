@@ -64,6 +64,13 @@
       "when": 1791420094690,
       "tag": "0008_web_vitals_attribution",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794905717292,
+      "tag": "0009_news_public_number",
+      "breakpoints": true
     }
   ]
 }
