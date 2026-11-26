@@ -77,7 +77,7 @@ export const businessAreas = [
       en: 'Conversational AI that automates work and elevates experiences',
     },
     description: {
-      ko: 'sLLM 기반 음성·텍스트 지능 에이전트가 통역, 상담, 교육까지 폭넓게 지원합니다.',
+      ko: 'sLLM 기반 음성과 텍스트 지능 에이전트가 통역, 상담, 교육까지 폭넓게 지원합니다.',
       en: 'Small LLM-powered voice and text agents cover translation, support, and learning scenarios.',
     },
     heroImage: '/images/services/hero/agent.webp',
@@ -189,7 +189,7 @@ export const businessAreas = [
           en: 'AI Micromobility Safety Monitoring',
         },
         description: {
-          ko: '이륜차·모빌리티 데이터를 분석해 사고 위험을 예측합니다.',
+          ko: '이륜차와 모빌리티 데이터를 분석해 사고 위험을 예측합니다.',
           en: 'Analyses micromobility data to predict and prevent incidents.',
         },
         image: '/images/services/solutions/micromobility.webp',
