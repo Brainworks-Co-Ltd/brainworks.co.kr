@@ -100,6 +100,16 @@
   color: white;
 }
 
+/* 주요 행동: 강조 면과 흰 글자(4.99). 누르면 한 단 어두운 강조색. */
+.pill-accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.pill-accent:hover {
+  background: var(--color-accent-text);
+}
+
 .pill-dark {
   background: #10191b;
   color: #fff;

@@ -2,83 +2,148 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLocale } from "@/shared/routing/useLocale";
 import { getLocalizedPath } from "@/shared/routing/routes";
-import HomeCard from "@/components/home/HomeCard";
 import SectionTitle, { Arrow } from "@/components/public/SectionTitle";
+import Rail from "@/components/public/Rail";
 import { homeCopy } from "@/data/homeCopy";
 
 /*
- * 사업 영역 넷을 한 줄에 고정하고, 각 영역 카드 아래에 그 영역의 솔루션을
- * 매단다. 영역이 분류, 솔루션이 그 안의 제품이라는 관계를 한 섹션에서 보인다.
- * 폰에서는 한 단으로 내리고, 영역은 작은 그림과 제목 한 줄, 솔루션은 그 제목에
- * 맞춰 들여 쓴 글자 목록으로 둬서 상하위가 글자 단계와 들여쓰기로 읽히게 한다.
- * 솔루션 줄은 기존 나타남 효과(.bw-reveal)에 순서 지연만 줘서 위에서부터
- * 차례로 드러난다. 모션 시간과 곡선은 --bw-motion-move 하나를 그대로 쓴다.
+ * 홈 사업 영역 구간. PC는 분야 하나를 연한 색 둥근 칸 하나로 세우고, 칸 안에
+ * 사진과 솔루션을 각각 도형으로 넣어 층마다 색으로 경계를 나눈다.
+ * 1024px보다 좁으면 사진 타일을 옆으로 넘긴다. 타일 넷을 세로로 쌓으면 폰에서
+ * 2,600px가 넘는다.
+ * 누를 곳은 분야마다 알약 버튼 하나다. 제목, 사진, 솔루션 칸은 링크가 아니다.
  */
-const STAGGER_MS = 90;
+
+// 주력 제품 둘(제조, 스마트시티)을 앞에 둔다.
+const AREA_ORDER = ["manufacturing", "smartcity", "agent", "healthcare"];
 
 export default function AreasRail({ areas = [] }) {
   const { language } = useLocale();
-  const listPath = getLocalizedPath("solutions.list", language);
+  const ordered = [...areas].sort(
+    (a, b) => AREA_ORDER.indexOf(a.id) - AREA_ORDER.indexOf(b.id),
+  );
+  const href = (area) =>
+    getLocalizedPath("solutions.detail", language, { area: area.id });
+  const more = language === "ko" ? "자세히 보기" : "Learn more";
 
   return (
-    <section className="py-[120px] lg:py-[250px]">
+    <section className="py-[120px] lg:py-[200px]">
       <div className="inner">
         <SectionTitle sub={homeCopy.solutionsSection.title[language]}>
           {homeCopy.areasSection.title[language]}
         </SectionTitle>
+        <ol className="hidden gap-6 lg:grid">
+          {ordered.map((area, index) => (
+            <AreaPanel
+              key={area.id}
+              area={area}
+              flip={index % 2 === 1}
+              delay={index * 100}
+              href={href(area)}
+              more={more}
+            />
+          ))}
+        </ol>
       </div>
-      <ul className="inner grid grid-cols-1 gap-y-12 md:grid-cols-2 md:gap-x-6 md:gap-y-14 lg:grid-cols-4">
-        {areas.map((area) => {
-          const href = `${listPath}?area=${encodeURIComponent(area.id)}#business-areas`;
-          const solutions = area.solutions || [];
-          return (
-            <li key={area.id}>
-              <div className="bw-reveal">
-                <HomeCard
-                  href={href}
-                  image={area.heroImage}
-                  alt={area.title || area.name || ""}
-                  title={area.title || area.name}
-                  description={area.subtitle}
-                />
-              </div>
-              {/* 들여쓰기는 폰 영역 머리의 그림 폭(96px)과 간격(16px)을 더한 값이다.
-                  게시된 솔루션이 없는 영역은 구분선만 남지 않게 목록을 그리지 않는다. */}
-              {solutions.length > 0 ? (
-                <ul className="mt-2 grid pl-[112px] md:mt-6 md:gap-4 md:border-t md:border-line md:pl-0 md:pt-5">
-                  {solutions.map((solution, index) => (
-                    <li
-                      key={solution.id}
-                      className="bw-reveal"
-                      style={{
-                        transitionDelay: `${(index + 1) * STAGGER_MS}ms`,
-                      }}
-                    >
-                      <Link
-                        href={href}
-                        className="group flex min-h-11 items-center gap-2 break-keep text-[15px] font-medium text-ink-strong transition-colors hover:text-accent-text md:min-h-0 md:gap-3 md:text-[16px] md:font-semibold"
-                      >
-                        <span className="relative hidden h-12 w-16 shrink-0 overflow-hidden rounded-lg md:block">
-                          <Image
-                            src={solution.image}
-                            alt=""
-                            fill
-                            sizes="64px"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        </span>
-                        <span className="leading-[1.4]">{solution.title}</span>
-                        {/* 폰에는 썸네일이 없어 글자만으로는 누를 수 있는 줄로 안 보인다. */}
-                        <Arrow className="shrink-0 text-accent-text transition-transform duration-200 group-hover:translate-x-1 md:hidden" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+      <div className="lg:hidden">
+        <Rail>
+          {ordered.map((area) => (
+            <li key={area.id} className="w-[76vw] max-w-[340px]">
+              <AreaTile area={area} href={href(area)} more={more} />
+            </li>
+          ))}
+        </Rail>
+      </div>
+    </section>
+  );
+}
+
+function AreaPanel({ area, flip, delay, href, more }) {
+  return (
+    <li
+      className="bw-reveal grid grid-cols-12 gap-8 rounded-[20px] bg-surface-muted p-8"
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <div
+        className={`relative col-span-5 min-h-[280px] overflow-hidden rounded-[14px] ${
+          flip ? "order-2" : ""
+        }`}
+      >
+        <Image
+          src={area.heroImage}
+          alt=""
+          fill
+          sizes="600px"
+          className="object-cover"
+        />
+      </div>
+      <div className={`col-span-7 flex flex-col py-3 ${flip ? "order-1" : ""}`}>
+        <h3 className="text-[30px] font-semibold leading-[1.3] text-ink">
+          {area.title}
+        </h3>
+        <p className="mt-2 break-keep text-[17px] leading-[1.6] text-muted">
+          {area.subtitle}
+        </p>
+        <ul className="mt-6 grid grid-cols-2 gap-3">
+          {(area.solutions || []).map((solution) => (
+            <li key={solution.id} className="rounded-[14px] bg-white p-5">
+              <p className="break-keep text-[16.5px] font-semibold text-ink">
+                {solution.title}
+              </p>
+              {solution.description ? (
+                <p className="mt-1 break-keep text-[14px] leading-[1.55] text-muted">
+                  {solution.description}
+                </p>
               ) : null}
             </li>
-          );
-        })}
-      </ul>
-    </section>
+          ))}
+        </ul>
+        <Link href={href} className="pill pill-accent mt-6 self-start">
+          {more} <Arrow />
+        </Link>
+      </div>
+    </li>
+  );
+}
+
+/* 분야 이름은 위, 솔루션 목록과 버튼은 아래에 얹어 솔루션 수가 달라도 타일 크기와
+   제목 높이가 같다. 흰 글자 대비는 글자 자리 밝기 95백분위로 재서 4.5 이상이다. */
+function AreaTile({ area, href, more }) {
+  return (
+    <div className="relative flex h-[540px] flex-col overflow-hidden rounded-[24px] bg-surface-dark-deep">
+      {/* 가로 사진을 세로 타일에 채우므로 높이 기준으로 받는다(540px 높이면 폭 960px). */}
+      <Image
+        src={area.heroImage}
+        alt=""
+        fill
+        sizes="960px"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.4)_22%,rgba(0,0,0,0.05)_38%,rgba(0,0,0,0.6)_55%,rgba(0,0,0,0.92)_100%)]" />
+      <div className="relative p-6">
+        {/* 네 제목이 모두 한 줄에 들어가는 크기로 둬서 부제 높이를 맞춘다. */}
+        <h3 className="whitespace-nowrap text-[20px] font-semibold leading-[1.3] text-white">
+          {area.title}
+        </h3>
+        <p className="mt-2 break-keep text-[15px] leading-[1.55] text-white/85">
+          {area.subtitle}
+        </p>
+      </div>
+      <div className="relative mt-auto px-6 pb-6">
+        <ul>
+          {(area.solutions || []).map((solution) => (
+            <li
+              key={solution.id}
+              className="break-keep border-t border-white/25 py-3 text-[15.5px] font-semibold leading-[1.4] text-white/90"
+            >
+              {solution.title}
+            </li>
+          ))}
+        </ul>
+        <Link href={href} className="pill pill-accent mt-4">
+          {more} <Arrow />
+        </Link>
+      </div>
+    </div>
   );
 }
