@@ -106,7 +106,9 @@
   color: #fff;
 }
 
-.pill-accent:hover {
+/* 카드 전체가 링크일 때는 카드에 마우스를 올려도 버튼이 같이 반응한다. */
+.pill-accent:hover,
+.group:hover .pill-accent {
   background: var(--color-accent-text);
 }
 

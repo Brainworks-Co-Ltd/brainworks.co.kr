@@ -53,7 +53,7 @@ export default function Services() {
 
         <section>
           <div className="inner">
-            <div className="grid grid-cols-1 gap-x-12 gap-y-14 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {areas.map((area, index) => (
                 <Link
                   key={area.id}
@@ -61,9 +61,9 @@ export default function Services() {
                     area: area.id,
                   })}
                   style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                  className="bw-reveal group flex flex-col"
+                  className="bw-reveal group flex h-full flex-col rounded-[20px] bg-surface-muted p-6 lg:p-8"
                 >
-                  <span className="relative block aspect-[16/10] overflow-hidden rounded-2xl">
+                  <span className="relative block aspect-[16/10] overflow-hidden rounded-[14px]">
                     <Image
                       src={area.heroImage}
                       alt={area.title}
@@ -72,18 +72,21 @@ export default function Services() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </span>
-                  <p className="mt-6 text-[15px] font-bold text-accent-text">
+                  <p className="mt-6 break-keep text-[15px] font-bold text-accent-text">
                     {area.subtitle}
                   </p>
                   <h3 className="mt-2 text-[22px] font-semibold text-ink-strong lg:text-[28px]">
                     {area.title}
                   </h3>
-                  <p className="mt-3 text-[18px] leading-[1.75]">
+                  <p className="mt-3 break-keep text-[18px] leading-[1.75]">
                     {area.description}
                   </p>
-                  <span className="mt-6 inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full border border-line bg-white px-6 text-[16px] font-semibold text-ink-strong transition-colors duration-200 group-hover:border-accent group-hover:text-accent-text">
-                    {language === "ko" ? "자세히 보기" : "Learn more"}
-                    <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                  {/* 칸 맨 아래에 붙여 설명 길이가 달라도 옆 칸과 버튼 높이를 맞춘다. */}
+                  <span className="mt-auto pt-6">
+                    <span className="pill pill-accent">
+                      {language === "ko" ? "자세히 보기" : "Learn more"}
+                      <Arrow className="transition-transform duration-200 group-hover:translate-x-1" />
+                    </span>
                   </span>
                 </Link>
               ))}
