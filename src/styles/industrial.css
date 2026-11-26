@@ -1350,11 +1350,6 @@ section[data-variant="cta"]::before {
 :root[data-design="industrial"] main .home-contact-cta {
   border-radius: 0;
   padding-block: var(--bw-space-9);
-  text-align: center;
-}
-
-:root[data-design="industrial"] main .home-contact-cta > * {
-  margin-inline: auto;
 }
 
 /* ---------------------------------------------------------------

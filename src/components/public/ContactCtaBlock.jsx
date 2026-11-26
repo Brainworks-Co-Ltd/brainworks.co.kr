@@ -10,11 +10,11 @@ export function ContactCtaBlock({
   return (
     <section
       data-variant="cta"
-      className={`rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] px-6 py-12 text-white md:px-10 ${className}`}
+      className={`rounded-[var(--bw-radius-feature)] bg-[var(--bw-color-ink)] px-6 py-12 text-center text-white md:px-10 ${className}`}
     >
-      <h2 className="bw-h1 max-w-3xl">{title}</h2>
+      <h2 className="bw-h1 mx-auto max-w-3xl">{title}</h2>
       {description ? (
-        <p className="bw-body mt-3 max-w-2xl text-white/70">{description}</p>
+        <p className="bw-body mx-auto mt-3 max-w-2xl text-white/70">{description}</p>
       ) : null}
       <Link
         href={href}
